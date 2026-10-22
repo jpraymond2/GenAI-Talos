@@ -1,0 +1,15 @@
+---
+description: Recall project rules
+alwaysApply: true
+---
+Project: Recall, a voice-first meeting-prep agent for the Open Agent Hackathon 2026 (Track 01, Fragmented Intelligence).
+Stack: Python 3.11, uv, FastAPI, Pydantic v2, SQLite, DuckDB; web/ is Vite + React + TypeScript + Tailwind.
+Rules:
+- Every LLM call goes through recall/llm/generator.py (generate() / generate_json()). Never call a provider SDK elsewhere.
+- Every agent step writes a JSONL event via recall/tracing.py to logs/<run_id>/trace.jsonl.
+- Every data read goes through recall/data/query_layer.py (Zetaris or DuckDB backend). Never open source files directly from agents.
+- SAMPLE_MODE=true must work with zero credentials: use data/sample and data/cache, and dry-run all actions.
+- No secrets in code, logs or examples. Config comes from .env via recall/config.py.
+- Bound everything: timeouts on HTTP calls (15 s), max 2 critic rounds, max 3 retries.
+- Pydantic models for every agent input/output, in recall/schemas.py.
+- Type hints everywhere, small functions, docstrings on public functions.

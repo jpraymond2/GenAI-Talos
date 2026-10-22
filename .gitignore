@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Recall runtime
+secrets/
+logs/*
+logs/**/*
+!logs/.gitkeep
+*.db
+data/live/
