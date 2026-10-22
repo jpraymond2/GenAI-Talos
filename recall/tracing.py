@@ -1,11 +1,17 @@
 """JSONL traces for every agent step, plus an in-process event queue."""
 
+from __future__ import annotations
+
 import asyncio
 import json
+from contextlib import contextmanager
+from contextvars import ContextVar, Token
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Iterator
 from uuid import uuid4
+
+_current_tracer: ContextVar[Tracer | None] = ContextVar("recall_current_tracer", default=None)
 
 
 class Tracer:
@@ -32,6 +38,30 @@ class Tracer:
         """Stop delivering events to a queue from subscribe()."""
         if queue in cls._subscribers:
             cls._subscribers.remove(queue)
+
+    @classmethod
+    def current(cls) -> Tracer | None:
+        """Return the tracer bound to this context, if any."""
+        return _current_tracer.get()
+
+    @classmethod
+    def set_current(cls, tracer: Tracer | None) -> Token[Tracer | None]:
+        """Bind a tracer for the current context (used by the LLM generator)."""
+        return _current_tracer.set(tracer)
+
+    @classmethod
+    def reset_current(cls, token: Token[Tracer | None]) -> None:
+        """Restore the previous current tracer."""
+        _current_tracer.reset(token)
+
+    @contextmanager
+    def activate(self) -> Iterator[Tracer]:
+        """Bind this tracer as current for the duration of the block."""
+        token = self.set_current(self)
+        try:
+            yield self
+        finally:
+            self.reset_current(token)
 
     def event(self, agent: str, kind: str, payload: dict[str, Any]) -> dict[str, Any]:
         """Append one JSON object and broadcast it.

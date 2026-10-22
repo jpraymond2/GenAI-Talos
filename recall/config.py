@@ -3,9 +3,10 @@
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
+from typing import Annotated, Any
 
-from pydantic import Field, SecretStr
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field, SecretStr, field_validator
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class DataBackend(StrEnum):
@@ -15,11 +16,22 @@ class DataBackend(StrEnum):
     DUCKDB = "duckdb"
 
 
-class LLMProvider(StrEnum):
-    """Which provider generator.py is allowed to call."""
+class ModelTier(StrEnum):
+    """Logical model tiers; ROLE_MODELS maps roles onto these."""
 
-    ANTHROPIC = "anthropic"
-    OPENAI = "openai"
+    MAIN = "main"
+    FAST = "fast"
+
+
+_DEFAULT_ROLE_MODELS: dict[str, str] = {
+    "router": "main",
+    "writer": "main",
+    "actions": "main",
+    "web_extract": "main",
+    "default": "main",
+    "critic": "fast",
+    "memory_extract": "fast",
+}
 
 
 class Settings(BaseSettings):
@@ -36,13 +48,33 @@ class Settings(BaseSettings):
         description="Use data/sample and data/cache, and dry-run every action.",
     )
     data_backend: DataBackend = DataBackend.DUCKDB
-    llm_provider: LLMProvider = LLMProvider.ANTHROPIC
 
-    anthropic_model: str = "your-anthropic-model"
-    openai_model: str = "your-openai-model"
+    nvidia_api_key: SecretStr = Field(default=SecretStr(""))
+    nvidia_main_model: str = Field(
+        default="nvidia/nemotron-3-ultra-550b-a55b",
+        description="Nemotron 3 Ultra slug for main-tier roles.",
+    )
+    nvidia_fast_model: str = Field(
+        default="nvidia/nemotron-3-super-120b-a12b",
+        description="Nemotron 3 Super slug for fast-tier roles.",
+    )
+    nvidia_embed_model: str = Field(
+        default="nvidia/nv-embedqa-e5-v5",
+        description="NVIDIA embedding model slug.",
+    )
+    role_models: dict[str, str] = Field(
+        default_factory=lambda: dict(_DEFAULT_ROLE_MODELS),
+        description='Map of agent role to model tier: "main" or "fast".',
+    )
+    record_llm_cache: bool = Field(
+        default=False,
+        description="When calling NVIDIA for real, also write responses into data/cache.",
+    )
+    reasoning_roles: Annotated[frozenset[str], NoDecode] = Field(
+        default_factory=frozenset,
+        description="Roles that send enable_thinking=true (comma-separated in env).",
+    )
 
-    anthropic_api_key: SecretStr = Field(default=SecretStr(""))
-    openai_api_key: SecretStr = Field(default=SecretStr(""))
     tavily_api_key: SecretStr = Field(default=SecretStr(""))
     zetaris_url: str = ""
     zetaris_api_key: SecretStr = Field(default=SecretStr(""))
@@ -52,12 +84,40 @@ class Settings(BaseSettings):
     riva_api_key: SecretStr = Field(default=SecretStr(""))
 
     http_timeout_seconds: float = Field(default=15.0, gt=0, le=15)
+    llm_timeout_seconds: float = Field(default=30.0, gt=0, le=30)
     max_critic_rounds: int = Field(default=2, ge=0, le=2)
     max_retries: int = Field(default=3, ge=0, le=3)
 
     sample_data_dir: Path = Path("data/sample")
     cache_dir: Path = Path("data/cache")
     logs_dir: Path = Path("logs")
+
+    @field_validator("role_models", mode="before")
+    @classmethod
+    def _parse_role_models(cls, value: Any) -> Any:
+        """Accept a JSON object from the environment."""
+        if value is None or value == "":
+            return dict(_DEFAULT_ROLE_MODELS)
+        if isinstance(value, str):
+            import json
+
+            parsed = json.loads(value)
+            if not isinstance(parsed, dict):
+                raise ValueError("ROLE_MODELS must be a JSON object")
+            return {str(key): str(item) for key, item in parsed.items()}
+        return value
+
+    @field_validator("reasoning_roles", mode="before")
+    @classmethod
+    def _parse_reasoning_roles(cls, value: Any) -> Any:
+        """Accept a comma-separated list from the environment."""
+        if value is None or value == "":
+            return frozenset()
+        if isinstance(value, str):
+            return frozenset(part.strip() for part in value.split(",") if part.strip())
+        if isinstance(value, (list, set, tuple, frozenset)):
+            return frozenset(str(item).strip() for item in value if str(item).strip())
+        return value
 
 
 @lru_cache(maxsize=1)
