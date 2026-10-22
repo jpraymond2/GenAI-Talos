@@ -219,3 +219,112 @@ def test_missing_sample_cache_raises(monkeypatch: pytest.MonkeyPatch, tmp_path: 
     get_settings.cache_clear()
     with pytest.raises(LLMUnavailable):
         asyncio.run(generate("no cache", role="router"))
+
+
+def test_empty_content_with_reasoning_retries_then_raises(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setenv("SAMPLE_MODE", "false")
+    monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test-key")
+    monkeypatch.setenv("REASONING_ROLES", "")
+    get_settings.cache_clear()
+    reset_client()
+
+    calls: list[dict[str, object]] = []
+    reasoning = "x" * 42
+
+    class _Message:
+        def __init__(self) -> None:
+            self.content = None
+            self.reasoning_content = reasoning
+
+    class _Choice:
+        def __init__(self) -> None:
+            self.message = _Message()
+
+    class _Response:
+        def __init__(self) -> None:
+            self.choices = [_Choice()]
+            self.usage = None
+
+    class _Completions:
+        async def create(self, **kwargs: object) -> _Response:
+            calls.append(kwargs)
+            return _Response()
+
+    class _Chat:
+        def __init__(self) -> None:
+            self.completions = _Completions()
+
+    class _Client:
+        def __init__(self) -> None:
+            self.chat = _Chat()
+
+    monkeypatch.setattr("recall.llm.generator._get_client", lambda settings: _Client())
+
+    tracer = Tracer(logs_dir=tmp_path / "logs")
+    with tracer.activate():
+        with pytest.raises(LLMOutputError, match="empty content") as exc_info:
+            asyncio.run(generate("Say hello in five words.", role="writer", max_tokens=1200))
+
+    assert exc_info.value.reasoning_chars == 84  # 42 + 42 from both attempts
+    assert len(calls) == 2
+    first_extra = calls[0]["extra_body"]
+    second_extra = calls[1]["extra_body"]
+    assert isinstance(first_extra, dict)
+    assert isinstance(second_extra, dict)
+    assert first_extra["chat_template_kwargs"]["enable_thinking"] is False
+    assert second_extra["chat_template_kwargs"]["enable_thinking"] is False
+    assert calls[1]["max_tokens"] == 2400
+
+    record = json.loads(tracer.path.read_text(encoding="utf-8").strip().splitlines()[-1])
+    assert record["payload"]["success"] is False
+    assert record["payload"]["reasoning_chars"] == 84
+
+
+def test_reasoning_role_enables_thinking_and_min_tokens(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("SAMPLE_MODE", "false")
+    monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test-key")
+    monkeypatch.setenv("REASONING_ROLES", "critic,memory_extract")
+    get_settings.cache_clear()
+    reset_client()
+
+    calls: list[dict[str, object]] = []
+
+    class _Message:
+        def __init__(self) -> None:
+            self.content = "ok"
+            self.reasoning_content = "short"
+
+    class _Choice:
+        def __init__(self) -> None:
+            self.message = _Message()
+
+    class _Response:
+        def __init__(self) -> None:
+            self.choices = [_Choice()]
+            self.usage = None
+
+    class _Completions:
+        async def create(self, **kwargs: object) -> _Response:
+            calls.append(kwargs)
+            return _Response()
+
+    class _Chat:
+        def __init__(self) -> None:
+            self.completions = _Completions()
+
+    class _Client:
+        def __init__(self) -> None:
+            self.chat = _Chat()
+
+    monkeypatch.setattr("recall.llm.generator._get_client", lambda settings: _Client())
+    text = asyncio.run(generate("review", role="critic", max_tokens=500))
+    assert text == "ok"
+    assert len(calls) == 1
+    assert calls[0]["max_tokens"] == 4000
+    extra = calls[0]["extra_body"]
+    assert isinstance(extra, dict)
+    assert extra["chat_template_kwargs"]["enable_thinking"] is True

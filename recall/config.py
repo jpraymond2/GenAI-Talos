@@ -3,10 +3,10 @@
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from pydantic import Field, SecretStr, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class DataBackend(StrEnum):
@@ -70,6 +70,10 @@ class Settings(BaseSettings):
         default=False,
         description="When calling NVIDIA for real, also write responses into data/cache.",
     )
+    reasoning_roles: Annotated[frozenset[str], NoDecode] = Field(
+        default_factory=frozenset,
+        description="Roles that send enable_thinking=true (comma-separated in env).",
+    )
 
     tavily_api_key: SecretStr = Field(default=SecretStr(""))
     zetaris_url: str = ""
@@ -101,6 +105,18 @@ class Settings(BaseSettings):
             if not isinstance(parsed, dict):
                 raise ValueError("ROLE_MODELS must be a JSON object")
             return {str(key): str(item) for key, item in parsed.items()}
+        return value
+
+    @field_validator("reasoning_roles", mode="before")
+    @classmethod
+    def _parse_reasoning_roles(cls, value: Any) -> Any:
+        """Accept a comma-separated list from the environment."""
+        if value is None or value == "":
+            return frozenset()
+        if isinstance(value, str):
+            return frozenset(part.strip() for part in value.split(",") if part.strip())
+        if isinstance(value, (list, set, tuple, frozenset)):
+            return frozenset(str(item).strip() for item in value if str(item).strip())
         return value
 
 

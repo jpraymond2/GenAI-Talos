@@ -31,6 +31,7 @@ _BACKOFF_SECONDS = (1.0, 3.0)
 _EMBED_BATCH_SIZE = 32
 _EMBED_DIM = 384
 _PROMPT_PREVIEW_CHARS = 200
+_REASONING_MIN_TOKENS = 4000
 _THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
 
 _client: AsyncOpenAI | None = None
@@ -43,6 +44,10 @@ class LLMUnavailable(Exception):
 
 class LLMOutputError(Exception):
     """Raised when the model response cannot be parsed or validated."""
+
+    def __init__(self, message: str, *, reasoning_chars: int = 0) -> None:
+        super().__init__(message)
+        self.reasoning_chars = reasoning_chars
 
 
 def reset_client() -> None:
@@ -106,11 +111,12 @@ async def generate(
             )
             return text
 
-        text, prompt_tokens, completion_tokens = await _with_retries(
+        text, prompt_tokens, completion_tokens, reasoning_chars = await _with_retries(
             lambda: _nvidia_chat(
                 prompt=prompt,
                 system=system,
                 model=model,
+                role=role,
                 max_tokens=max_tokens,
                 temperature=temperature,
                 json_mode=False,
@@ -128,6 +134,7 @@ async def generate(
             completion_tokens=completion_tokens,
             success=True,
             prompt=prompt,
+            reasoning_chars=reasoning_chars,
         )
         return text
     except Exception as exc:
@@ -140,6 +147,7 @@ async def generate(
             success=False,
             prompt=prompt,
             error=str(exc),
+            reasoning_chars=getattr(exc, "reasoning_chars", 0),
         )
         raise
 
@@ -274,16 +282,18 @@ async def _generate_json_once(
     model = resolve_model(role, settings)
     started = time.perf_counter()
     try:
+        reasoning_chars = 0
         if use_sample_provider(settings):
             raw = _sample_text(prompt, role=role, settings=settings)
             prompt_tokens = _estimate_tokens(prompt)
             completion_tokens = _estimate_tokens(raw)
         else:
-            raw, prompt_tokens, completion_tokens = await _with_retries(
+            raw, prompt_tokens, completion_tokens, reasoning_chars = await _with_retries(
                 lambda: _nvidia_chat(
                     prompt=prompt,
                     system=system,
                     model=model,
+                    role=role,
                     max_tokens=max_tokens,
                     temperature=0.2,
                     json_mode=True,
@@ -306,6 +316,7 @@ async def _generate_json_once(
             completion_tokens=completion_tokens,
             success=True,
             prompt=prompt,
+            reasoning_chars=reasoning_chars,
         )
         return model_obj
     except Exception as exc:
@@ -318,6 +329,7 @@ async def _generate_json_once(
             success=False,
             prompt=prompt,
             error=str(exc),
+            reasoning_chars=getattr(exc, "reasoning_chars", 0),
         )
         raise
 
@@ -327,11 +339,71 @@ async def _nvidia_chat(
     prompt: str,
     system: str | None,
     model: str,
+    role: str,
     max_tokens: int,
     temperature: float,
     json_mode: bool,
     settings: Settings,
-) -> tuple[str, int, int]:
+) -> tuple[str, int, int, int]:
+    """Call NVIDIA chat. Never treats reasoning_content as the answer.
+
+    By default thinking is off. Roles in REASONING_ROLES get enable_thinking
+    and at least 4000 max_tokens. Empty message.content triggers one retry with
+    thinking forced off and doubled max_tokens.
+    """
+    enable_thinking = role in settings.reasoning_roles
+    effective_max = max(max_tokens, _REASONING_MIN_TOKENS) if enable_thinking else max_tokens
+
+    text, prompt_tokens, completion_tokens, reasoning_chars = await _nvidia_chat_once(
+        prompt=prompt,
+        system=system,
+        model=model,
+        max_tokens=effective_max,
+        temperature=temperature,
+        json_mode=json_mode,
+        enable_thinking=enable_thinking,
+        settings=settings,
+    )
+    if _has_content(text):
+        return text, prompt_tokens, completion_tokens, reasoning_chars
+
+    logger.warning(
+        "Empty message.content for role=%s model=%s; retrying with thinking disabled",
+        role,
+        model,
+    )
+    text2, prompt_tokens2, completion_tokens2, reasoning_chars2 = await _nvidia_chat_once(
+        prompt=prompt,
+        system=system,
+        model=model,
+        max_tokens=effective_max * 2,
+        temperature=temperature,
+        json_mode=json_mode,
+        enable_thinking=False,
+        settings=settings,
+    )
+    total_reasoning = reasoning_chars + reasoning_chars2
+    if _has_content(text2):
+        return text2, prompt_tokens2, completion_tokens2, total_reasoning
+
+    raise LLMOutputError(
+        f"Model returned empty content for role={role!r} model={model!r} "
+        f"(reasoning_chars={total_reasoning})",
+        reasoning_chars=total_reasoning,
+    )
+
+
+async def _nvidia_chat_once(
+    *,
+    prompt: str,
+    system: str | None,
+    model: str,
+    max_tokens: int,
+    temperature: float,
+    json_mode: bool,
+    enable_thinking: bool,
+    settings: Settings,
+) -> tuple[str, int, int, int]:
     client = _get_client(settings)
     messages: list[dict[str, str]] = []
     if system:
@@ -343,6 +415,7 @@ async def _nvidia_chat(
         "messages": messages,
         "max_tokens": max_tokens,
         "temperature": temperature,
+        "extra_body": {"chat_template_kwargs": {"enable_thinking": enable_thinking}},
     }
     if json_mode:
         kwargs["response_format"] = {"type": "json_object"}
@@ -362,11 +435,37 @@ async def _nvidia_chat(
         else:
             raise
 
-    text = response.choices[0].message.content or ""
+    message = response.choices[0].message
+    text = _message_content(message)
+    reasoning_chars = _reasoning_chars(message)
     usage = response.usage
     prompt_tokens = int(getattr(usage, "prompt_tokens", 0) or 0) if usage else 0
     completion_tokens = int(getattr(usage, "completion_tokens", 0) or 0) if usage else 0
-    return text, prompt_tokens, completion_tokens
+    return text, prompt_tokens, completion_tokens, reasoning_chars
+
+
+def _has_content(text: str) -> bool:
+    return bool(text and text.strip())
+
+
+def _message_content(message: Any) -> str:
+    """Return message.content only. Never fall back to reasoning_content."""
+    content = getattr(message, "content", None)
+    if content is None:
+        return ""
+    return str(content)
+
+
+def _reasoning_chars(message: Any) -> int:
+    """Character length of reasoning_content when the SDK exposes it."""
+    reasoning = getattr(message, "reasoning_content", None)
+    if reasoning is None:
+        extra = getattr(message, "model_extra", None) or {}
+        if isinstance(extra, dict):
+            reasoning = extra.get("reasoning_content")
+    if not isinstance(reasoning, str):
+        return 0
+    return len(reasoning)
 
 
 async def _nvidia_embed(
@@ -562,6 +661,7 @@ def _log_call(
     success: bool,
     prompt: str,
     error: str | None = None,
+    reasoning_chars: int = 0,
 ) -> None:
     """Write one LLM event. Never logs the API key or the full prompt."""
     payload: dict[str, Any] = {
@@ -572,6 +672,7 @@ def _log_call(
         "completion_tokens": completion_tokens,
         "success": success,
         "prompt_preview": prompt[:_PROMPT_PREVIEW_CHARS],
+        "reasoning_chars": reasoning_chars,
     }
     if error is not None:
         payload["error"] = error
