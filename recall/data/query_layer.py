@@ -34,7 +34,7 @@ class FallbackQueryLayer:
         self,
         primary: QueryLayer,
         fallback: QueryLayer,
-        tracer: Tracer,
+        tracer: Tracer | None,
         *,
         primary_name: str = "zetaris",
         fallback_name: str = "duckdb",
@@ -57,16 +57,17 @@ class FallbackQueryLayer:
         try:
             return self._primary.query(sql, params, source_tag=source_tag)
         except DataUnavailable as exc:
-            self._tracer.event(
-                "query_layer",
-                "fallback",
-                {
-                    "from_backend": self._primary_name,
-                    "to_backend": self._fallback_name,
-                    "source_tag": source_tag,
-                    "reason": str(exc),
-                },
-            )
+            if self._tracer is not None:
+                self._tracer.event(
+                    "query_layer",
+                    "fallback",
+                    {
+                        "from_backend": self._primary_name,
+                        "to_backend": self._fallback_name,
+                        "source_tag": source_tag,
+                        "reason": str(exc),
+                    },
+                )
             return self._fallback.query(sql, params, source_tag=source_tag)
 
 
@@ -79,7 +80,7 @@ def get_query_layer(
 ) -> QueryLayer:
     """Build the configured query layer (DuckDB, or Zetaris with DuckDB fallback)."""
     active = settings if settings is not None else get_settings()
-    active_tracer = tracer if tracer is not None else Tracer(logs_dir=active.logs_dir)
+    active_tracer = tracer if tracer is not None else Tracer.current()
 
     from recall.data.duckdb_backend import DuckDBBackend
     from recall.data.zetaris_backend import ZetarisBackend
