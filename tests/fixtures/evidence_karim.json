@@ -1,0 +1,98 @@
+[
+  {
+    "id": "e1",
+    "source": "whatsapp",
+    "source_ref": "wa:chat:karim-haddad:msg:e1",
+    "ts": "2026-10-01T20:36:10Z",
+    "text": "Karim Haddad: Ledgerly (my fintech startup) is closing its seed round this week. How is your internship search going, Alex?",
+    "url": null
+  },
+  {
+    "id": "e2",
+    "source": "gmail",
+    "source_ref": "gmail:thread:karim-intro-lina:msg:e2",
+    "ts": "2026-10-03T20:36:10Z",
+    "text": "From: Karim Haddad <karim@ledgerly.example>\nSubject: Intro to Lina Chen?\n\nHey Alex \u2014 any chance you could intro me to Lina Chen (VC associate)? Would love a warm intro. No reply from Alex is on this thread.",
+    "url": null
+  },
+  {
+    "id": "e3",
+    "source": "gmail",
+    "source_ref": "gmail:thread:karim-signature:msg:e3",
+    "ts": "2026-08-23T20:36:10Z",
+    "text": "From: Karim Haddad <karim@ledgerly.example>\n\nQuick note on the deck.\n\n--\nKarim Haddad\nFounder, Ledgerly\nMontreal",
+    "url": null
+  },
+  {
+    "id": "e4",
+    "source": "whatsapp",
+    "source_ref": "wa:chat:karim-haddad:msg:e4",
+    "ts": "2026-10-10T20:36:10Z",
+    "text": "Karim Haddad: Heads up \u2014 I'm moving to Toronto in January. Still figuring out the apartment hunt.",
+    "url": null
+  },
+  {
+    "id": "e5",
+    "source": "calendar",
+    "source_ref": "gcal:event:coffee-karim-june",
+    "ts": "2026-06-15T15:00:00Z",
+    "text": "Coffee w/ Karim \u2014 Caf\u00e9 Olimpico, Mile End, Montreal.",
+    "url": null
+  },
+  {
+    "id": "e6",
+    "source": "web",
+    "source_ref": "web:example.com/ledgerly-seed",
+    "ts": "2026-10-16T20:36:10Z",
+    "text": "[FICTIONAL] Ledgerly announced it closed its seed round, according to a short press note.",
+    "url": "https://example.com/ledgerly-seed"
+  },
+  {
+    "id": "e7",
+    "source": "imessage",
+    "source_ref": "imessage:chat:karim-haddad:msg:e7",
+    "ts": "2026-09-22T20:36:10Z",
+    "text": "Karim Haddad: \ud83c\udfd2 night out \u2014 Habs game was loud and perfect.",
+    "url": null
+  },
+  {
+    "id": "e8",
+    "source": "whatsapp",
+    "source_ref": "wa:chat:karim-haddad:msg:e8",
+    "ts": "2026-07-24T20:36:10Z",
+    "text": "Karim Haddad: lol yeah that lunch place was mediocre, next time we pick.",
+    "url": null
+  },
+  {
+    "id": "e9",
+    "source": "whatsapp",
+    "source_ref": "wa:group:mtl-friends:msg:e9",
+    "ts": "2026-09-07T20:36:10Z",
+    "text": "Group chat: Karim Haddad \u2014 can everyone confirm Saturday 7pm at Parc Laurier? Bring cash for the pitch.",
+    "url": null
+  },
+  {
+    "id": "e10",
+    "source": "gmail",
+    "source_ref": "gmail:thread:forwarded-newsletter:msg:e10",
+    "ts": "2026-09-12T20:36:10Z",
+    "text": "From: Karim Haddad\nSubject: Fwd: Fintech Weekly\n\nFYI \u2014 unrelated industry newsletter about card rails. Not about Ledgerly.",
+    "url": null
+  },
+  {
+    "id": "e11",
+    "source": "imessage",
+    "source_ref": "imessage:chat:karim-saleh:msg:e11",
+    "ts": "2026-09-27T20:36:10Z",
+    "text": "Karim Saleh: hey can you send the finance assignment answers from last week's tutorial?",
+    "url": null
+  },
+  {
+    "id": "e12",
+    "source": "whatsapp",
+    "source_ref": "wa:chat:karim-haddad:msg:e12",
+    "ts": "2025-03-18T18:22:00Z",
+    "text": "Karim Haddad: old thread \u2014 congrats on finishing exams in 2025, catch up soon.",
+    "url": null
+  }
+]
