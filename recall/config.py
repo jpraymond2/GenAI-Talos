@@ -78,6 +78,8 @@ class Settings(BaseSettings):
     tavily_api_key: SecretStr = Field(default=SecretStr(""))
     zetaris_url: str = ""
     zetaris_api_key: SecretStr = Field(default=SecretStr(""))
+    zetaris_user: str = ""
+    zetaris_password: SecretStr = Field(default=SecretStr(""))
     google_client_id: str = ""
     google_client_secret: SecretStr = Field(default=SecretStr(""))
     riva_server: str = ""
@@ -89,6 +91,7 @@ class Settings(BaseSettings):
     max_retries: int = Field(default=3, ge=0, le=3)
 
     sample_data_dir: Path = Path("data/sample")
+    live_data_dir: Path = Path("data/live")
     cache_dir: Path = Path("data/cache")
     logs_dir: Path = Path("logs")
 
