@@ -1,4 +1,4 @@
-"""Skeleton checks: ask clarifies then continues, health responds, sample reads stay empty."""
+"""Skeleton checks: ask clarifies then continues, health responds, sample backends agree."""
 
 import json
 from collections.abc import Iterator
