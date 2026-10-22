@@ -27,7 +27,8 @@ async def run(state: RunState, deps: Any) -> RunState:
         prompt_parts.extend(["CRITIC_FEEDBACK:", feedback])
 
     prompt = with_today("\n".join(prompt_parts))
-    brief = await generate_json(prompt, WRITER_SYSTEM, Brief, role="writer")
+    generate_json_fn = getattr(deps, "generate_json", None) or generate_json
+    brief = await generate_json_fn(prompt, WRITER_SYSTEM, Brief, role="writer")
     assert isinstance(brief, Brief)
     state.drafts.append(brief)
     summary = (

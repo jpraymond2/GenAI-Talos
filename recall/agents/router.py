@@ -18,7 +18,8 @@ async def run(state: RunState, deps: Any) -> RunState:
         f"MODE: {state.utterance.mode}\n"
         f"TS: {state.utterance.ts.isoformat()}"
     )
-    intent = await generate_json(prompt, ROUTER_SYSTEM, Intent, role="router")
+    generate_json_fn = getattr(deps, "generate_json", None) or generate_json
+    intent = await generate_json_fn(prompt, ROUTER_SYSTEM, Intent, role="router")
     assert isinstance(intent, Intent)
     state.intent = intent
     summary = (

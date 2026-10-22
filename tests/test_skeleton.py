@@ -1,4 +1,4 @@
-"""Skeleton checks: ask writes a trace, health responds, sample reads stay empty."""
+"""Skeleton checks: ask clarifies then continues, health responds, sample reads stay empty."""
 
 import json
 from collections.abc import Iterator
@@ -23,23 +23,47 @@ def _clear_settings() -> Iterator[None]:
     get_settings.cache_clear()
 
 
-def test_ask_prints_ok_and_writes_a_trace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_ask_ambiguous_karim_then_select_one(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     logs = tmp_path / "logs"
     monkeypatch.setenv("LOGS_DIR", str(logs))
     monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("CACHE_DIR", str(Path("data/cache").resolve()))
     get_settings.cache_clear()
 
-    result = runner.invoke(cli, ["ask", "I'm meeting Karim", "--sample"])
+    result = runner.invoke(
+        cli,
+        ["ask", "I'm meeting Karim", "--sample"],
+        input="1\n",
+    )
 
-    assert result.exit_code == 0
-    assert "Recall skeleton OK" in result.stdout
-    traces = list(logs.glob("*/trace.jsonl"))
-    assert len(traces) == 1
-    record = json.loads(traces[0].read_text(encoding="utf-8").strip())
-    assert record["agent"] == "cli"
-    assert record["kind"] == "ask"
-    assert record["payload"]["utterance"] == "I'm meeting Karim"
-    assert record["payload"]["sample_mode"] is True
+    assert result.exit_code == 0, result.stdout + result.stderr
+    assert "Karim Haddad or Karim Saleh?" in result.stdout
+    assert "1. Karim Haddad" in result.stdout
+    assert "resolved: Karim Haddad (karim-haddad)" in result.stdout
+    assert "headline:" in result.stdout
+    runs = list(logs.glob("*/run.json"))
+    assert len(runs) >= 1
+    # Last completed run should be the resolved brief.
+    payloads = [json.loads(path.read_text(encoding="utf-8")) for path in runs]
+    assert any(p.get("status") == "done" and p.get("entity_name") == "Karim Haddad" for p in payloads)
+
+
+def test_ask_eof_leaves_clarification(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    logs = tmp_path / "logs"
+    monkeypatch.setenv("LOGS_DIR", str(logs))
+    monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("CACHE_DIR", str(Path("data/cache").resolve()))
+    get_settings.cache_clear()
+
+    result = runner.invoke(cli, ["ask", "I'm meeting Karim", "--sample"], input="")
+
+    assert result.exit_code == 0, result.stdout + result.stderr
+    assert "needs_clarification" in result.stdout
+    assert "headline:" not in result.stdout
 
 
 def test_health() -> None:

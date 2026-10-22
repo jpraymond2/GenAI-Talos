@@ -18,7 +18,7 @@ from recall.agents import critic, router, writer
 from recall.config import get_settings
 from recall.fixtures import load_fixture_evidence
 from recall.llm.generator import embed, generate, generate_json, resolve_model
-from recall.schemas import RunState, Utterance
+from recall.schemas import Candidate, RunState, Utterance
 from recall.tracing import Tracer
 
 app = typer.Typer(no_args_is_help=True, help="Recall, a voice-first meeting-prep agent.")
@@ -39,18 +39,124 @@ def ask(
         bool,
         typer.Option("--sample", help="Use sample data and do not require credentials."),
     ] = False,
+    entity_id: Annotated[
+        str | None,
+        typer.Option("--entity-id", help="Resolved entity id when disambiguating."),
+    ] = None,
 ) -> None:
-    """Log one trace event and confirm the skeleton runs."""
+    """Run the meeting-prep orchestrator and print the brief."""
     if sample:
         _enable_sample_mode()
-    settings = get_settings()
-    tracer = Tracer(logs_dir=settings.logs_dir)
-    tracer.event(
-        "cli",
-        "ask",
-        {"utterance": utterance, "sample_mode": settings.sample_mode},
-    )
-    print("Recall skeleton OK")
+    asyncio.run(_run_ask(utterance, entity_id=entity_id))
+
+
+async def _run_ask(utterance: str, *, entity_id: str | None) -> None:
+    from recall.orchestrator import run as orchestrate
+
+    state = await orchestrate(utterance, entity_id=entity_id)
+    if state.status == "needs_clarification" and state.candidates:
+        chosen = _prompt_for_candidate(state)
+        if chosen is None:
+            _print_ask_result(state)
+            return
+        print(f"resolved: {chosen[1]} ({chosen[0]})")
+        state = await orchestrate(utterance, entity_id=chosen[0])
+    _print_ask_result(state)
+
+
+def _prompt_for_candidate(state: RunState) -> tuple[str, str] | None:
+    """Ask which candidate, accepting 1/2, full name, or last name."""
+    _print_clarification_prompt(state)
+    try:
+        reply = input("Which one? (number, full name, or last name): ")
+    except EOFError:
+        print()
+        return None
+    if not reply.strip():
+        return None
+    matched = match_clarification_reply(reply, state.candidates)
+    if matched is None:
+        print(f"Could not match {reply!r} to a candidate.")
+        return None
+    return matched.entity_id, matched.name
+
+
+def _print_clarification_prompt(state: RunState) -> None:
+    print("status: needs_clarification")
+    print(f"question: {state.question}")
+    print("candidates:")
+    for index, candidate in enumerate(state.candidates, start=1):
+        print(f"{index}. {candidate.name} ({candidate.entity_id}) — {candidate.reason}")
+
+
+def match_clarification_reply(
+    reply: str, candidates: list[Candidate]
+) -> Candidate | None:
+    """Map a user reply to one Candidate: index, full name, or unique last name."""
+    text = reply.strip()
+    if not text or not candidates:
+        return None
+
+    if text.isdigit():
+        index = int(text) - 1
+        if 0 <= index < len(candidates):
+            return candidates[index]
+        return None
+
+    lowered = text.lower()
+
+    exact = [c for c in candidates if c.name.lower() == lowered]
+    if len(exact) == 1:
+        return exact[0]
+
+    last_name = [c for c in candidates if c.name.lower().rsplit(" ", 1)[-1] == lowered]
+    if len(last_name) == 1:
+        return last_name[0]
+
+    contains = [c for c in candidates if lowered in c.name.lower()]
+    if len(contains) == 1:
+        return contains[0]
+
+    return None
+
+
+def _print_ask_result(state: RunState) -> None:
+    latency_ms = state.context.get("latency_ms", "?")
+    rounds = state.context.get("critic_rounds", state.round)
+
+    if state.status == "needs_clarification":
+        _print_clarification_prompt(state)
+        print(f"critic_rounds: {rounds}")
+        print(f"latency_ms: {latency_ms}")
+        return
+
+    brief = state.final_brief
+    if brief is None:
+        print(f"status: {state.status}")
+        print(f"latency_ms: {latency_ms}")
+        return
+
+    print(f"headline: {brief.headline}")
+    for index, point in enumerate(brief.points, start=1):
+        sources = _sources_for_point(state, point.evidence_ids)
+        ids = ", ".join(point.evidence_ids)
+        source_note = f" ({sources})" if sources else ""
+        print(f"{index}. {point.text} [{ids}]{source_note}")
+    if brief.caveats:
+        print("caveats:")
+        for caveat in brief.caveats:
+            print(f"- {caveat}")
+    print(f"critic_rounds: {rounds}")
+    print(f"latency_ms: {latency_ms}")
+
+
+def _sources_for_point(state: RunState, evidence_ids: list[str]) -> str:
+    labels: list[str] = []
+    for evidence_id in evidence_ids:
+        item = state.evidence.get(evidence_id)
+        if item is not None:
+            labels.append(item.source)
+    return ", ".join(labels)
 
 
 @app.command()

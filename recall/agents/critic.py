@@ -30,7 +30,8 @@ async def run(state: RunState, deps: Any) -> RunState:
             ]
         )
     )
-    verdict = await generate_json(prompt, CRITIC_SYSTEM, CriticVerdict, role="critic")
+    generate_json_fn = getattr(deps, "generate_json", None) or generate_json
+    verdict = await generate_json_fn(prompt, CRITIC_SYSTEM, CriticVerdict, role="critic")
     assert isinstance(verdict, CriticVerdict)
     state.verdicts.append(verdict)
     if verdict.overall == "pass":
