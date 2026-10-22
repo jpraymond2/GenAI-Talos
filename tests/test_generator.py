@@ -14,17 +14,21 @@ from pydantic import BaseModel
 from recall.config import ModelTier, get_settings
 from recall.llm.generator import (
     LLMOutputError,
+    LLMSchemaEchoError,
     LLMUnavailable,
+    build_json_instructions,
     embed,
     extract_json_value,
     generate,
     generate_json,
+    is_echoed_schema,
     reset_client,
     resolve_model,
     resolve_tier,
     strip_think,
     use_sample_provider,
 )
+from recall.schemas import CriticVerdict
 from recall.tracing import Tracer
 
 
@@ -280,6 +284,71 @@ def test_empty_content_with_reasoning_retries_then_raises(
     record = json.loads(tracer.path.read_text(encoding="utf-8").strip().splitlines()[-1])
     assert record["payload"]["success"] is False
     assert record["payload"]["reasoning_chars"] == 84
+
+
+def test_build_json_instructions_uses_compact_fields_and_critic_example() -> None:
+    text = build_json_instructions(CriticVerdict)
+    assert "$defs" not in text
+    assert '"properties"' not in text
+    assert "overall:" in text
+    assert '"pass"' in text or '"revise"' in text
+    assert "EXAMPLE:" in text
+    assert "Apartment search is not in e4." in text
+    assert "Do not return the schema." in text
+
+
+def test_is_echoed_schema_detects_json_schema_shape() -> None:
+    assert is_echoed_schema(CriticVerdict.model_json_schema()) is True
+    assert is_echoed_schema({"type": "object", "properties": {"overall": {"type": "string"}}})
+    assert is_echoed_schema({"overall": "pass", "verdicts": []}) is False
+
+
+def test_extract_json_value_rejects_echoed_schema() -> None:
+    raw = json.dumps(CriticVerdict.model_json_schema())
+    with pytest.raises(LLMSchemaEchoError, match="schema, not an answer"):
+        extract_json_value(raw)
+
+
+def test_generate_json_retries_when_model_echoes_schema(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("SAMPLE_MODE", "false")
+    monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test-key")
+    get_settings.cache_clear()
+    reset_client()
+
+    valid = {
+        "overall": "pass",
+        "verdicts": [
+            {
+                "index": 0,
+                "decision": "keep",
+                "reason": "Supported by e2.",
+                "fix_hint": None,
+            }
+        ],
+        "missing": [],
+        "refetch": [],
+    }
+    calls: list[str] = []
+
+    async def fake_nvidia_chat(**kwargs: object) -> tuple[str, int, int, int]:
+        prompt = str(kwargs.get("prompt", ""))
+        calls.append(prompt)
+        if len(calls) == 1:
+            return json.dumps(CriticVerdict.model_json_schema()), 10, 20, 0
+        return json.dumps(valid), 10, 20, 0
+
+    monkeypatch.setattr("recall.llm.generator._nvidia_chat", fake_nvidia_chat)
+
+    result = asyncio.run(
+        generate_json("Review this draft brief.", "You are the critic.", CriticVerdict, role="critic")
+    )
+    assert isinstance(result, CriticVerdict)
+    assert result.overall == "pass"
+    assert result.verdicts[0].decision == "keep"
+    assert len(calls) == 2
+    assert "You returned the schema, not an answer" in calls[1]
 
 
 def test_reasoning_role_enables_thinking_and_min_tokens(

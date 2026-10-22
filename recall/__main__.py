@@ -1,20 +1,29 @@
-"""Typer CLI: ask, ingest, serve, voice, and llm-test."""
+"""Typer CLI: ask, ingest, serve, voice, llm-test, and agent-test."""
 
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 import time
-from typing import Annotated
+import uuid
+from datetime import datetime, timezone
+from types import SimpleNamespace
+from typing import Annotated, Literal
 
 import typer
 from pydantic import BaseModel, Field
 
+from recall.agents import critic, router, writer
 from recall.config import get_settings
+from recall.fixtures import load_fixture_evidence
 from recall.llm.generator import embed, generate, generate_json, resolve_model
+from recall.schemas import RunState, Utterance
 from recall.tracing import Tracer
 
 app = typer.Typer(no_args_is_help=True, help="Recall, a voice-first meeting-prep agent.")
+
+AgentName = Literal["router", "writer", "critic"]
 
 
 def _enable_sample_mode() -> None:
@@ -131,6 +140,107 @@ async def _print_embed() -> None:
     print(
         f"[embed] model={embed_model} latency_ms={latency_ms} "
         f"count={len(vectors)} dim={len(vectors[0]) if vectors else 0} preview={preview!r}"
+    )
+
+
+@app.command("agent-test")
+def agent_test(
+    agent: Annotated[
+        AgentName,
+        typer.Argument(help="Agent to run: router, writer, or critic."),
+    ],
+    text: Annotated[str, typer.Argument(help="Utterance text to feed the agent.")],
+) -> None:
+    """Run one agent against sample or live LLM settings and print its output."""
+    asyncio.run(_run_agent_test(agent, text))
+
+
+async def _run_agent_test(agent: AgentName, text: str) -> None:
+    settings = get_settings()
+    tracer = Tracer(logs_dir=settings.logs_dir)
+    deps = SimpleNamespace(tracer=tracer)
+    with tracer.activate():
+        if agent == "router":
+            await _agent_test_router(text, deps)
+        elif agent == "writer":
+            await _agent_test_writer(text, deps)
+        else:
+            await _agent_test_critic(text, deps)
+
+
+def _new_state(text: str) -> RunState:
+    return RunState(
+        run_id=str(uuid.uuid4()),
+        utterance=Utterance(text=text, ts=datetime.now(timezone.utc), mode="text"),
+    )
+
+
+def _karim_state(text: str) -> RunState:
+    state = _new_state(text)
+    state.entity_name = "Karim Haddad"
+    state.evidence = load_fixture_evidence("Karim Haddad")
+    return state
+
+
+async def _agent_test_router(text: str, deps: SimpleNamespace) -> None:
+    model = resolve_model("router")
+    state = _new_state(text)
+    started = time.perf_counter()
+    state = await router.run(state, deps)
+    latency_ms = int((time.perf_counter() - started) * 1000)
+    assert state.intent is not None
+    print(json.dumps(state.intent.model_dump(mode="json"), indent=2))
+    print(f"model={model} latency_ms={latency_ms}")
+
+
+async def _agent_test_writer(text: str, deps: SimpleNamespace) -> None:
+    model = resolve_model("writer")
+    state = _karim_state(text)
+    started = time.perf_counter()
+    state = await writer.run(state, deps)
+    latency_ms = int((time.perf_counter() - started) * 1000)
+    brief = state.drafts[-1]
+    print(f"headline: {brief.headline}")
+    for index, point in enumerate(brief.points, start=1):
+        ids = ", ".join(point.evidence_ids)
+        print(f"{index}. {point.text} [{ids}]")
+    if brief.caveats:
+        print("caveats:")
+        for caveat in brief.caveats:
+            print(f"- {caveat}")
+    print(f"model={model} latency_ms={latency_ms}")
+
+
+async def _agent_test_critic(text: str, deps: SimpleNamespace) -> None:
+    writer_model = resolve_model("writer")
+    critic_model = resolve_model("critic")
+    state = _karim_state(text)
+
+    started = time.perf_counter()
+    state = await writer.run(state, deps)
+    writer_ms = int((time.perf_counter() - started) * 1000)
+
+    started = time.perf_counter()
+    state = await critic.run(state, deps)
+    critic_ms = int((time.perf_counter() - started) * 1000)
+
+    verdict = state.verdicts[-1]
+    print(f"overall: {verdict.overall}")
+    for item in verdict.verdicts:
+        print(f"point {item.index}: {item.decision} — {item.reason}")
+        if item.fix_hint:
+            print(f"  fix_hint: {item.fix_hint}")
+    if verdict.missing:
+        print("missing:")
+        for note in verdict.missing:
+            print(f"- {note}")
+    if verdict.refetch:
+        print("refetch:")
+        for source in verdict.refetch:
+            print(f"- {source}")
+    print(
+        f"writer_model={writer_model} writer_latency_ms={writer_ms} "
+        f"critic_model={critic_model} critic_latency_ms={critic_ms}"
     )
 
 

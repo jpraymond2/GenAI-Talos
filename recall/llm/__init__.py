@@ -2,11 +2,14 @@
 
 from recall.llm.generator import (
     LLMOutputError,
+    LLMSchemaEchoError,
     LLMUnavailable,
+    build_json_instructions,
     embed,
     extract_json_value,
     generate,
     generate_json,
+    is_echoed_schema,
     resolve_model,
     resolve_tier,
     strip_think,
@@ -15,11 +18,14 @@ from recall.llm.generator import (
 
 __all__ = [
     "LLMOutputError",
+    "LLMSchemaEchoError",
     "LLMUnavailable",
+    "build_json_instructions",
     "embed",
     "extract_json_value",
     "generate",
     "generate_json",
+    "is_echoed_schema",
     "resolve_model",
     "resolve_tier",
     "strip_think",
