@@ -1,0 +1,406 @@
+interaction_id,source,thread_id,handle_value,direction,ts_utc,subject,text,source_ref
+i_92129ba320,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-06-18T15:19:00Z,,reminder about the group meeting tomorrow,whatsapp:02f182da82
+i_60c0544d4b,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-06-18T16:10:00Z,Study group this weekend?,thanks! that helps a lot,gmail:fcc03c83f9
+i_510672ddf2,imessage,th_c_sophie_tremblay_imessage,+15145550111,in,2026-06-18T19:24:00Z,,I'll take the first half of the deck,imessage:aa6420a10c
+i_cf5acdb46b,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-06-18T19:36:00Z,"Quick question, Nadine","running 10 min late, start without me",gmail:bd0c4ecb8b
+i_054abfb59f,gmail,th_kh_gmail,karim@ledgerly.io,in,2026-06-18T20:03:00Z,Syllabus clarification,reminder about the group meeting tomorrow,gmail:c6a07d1696
+i_1826513246,imessage,th_c_emma_rossi_imessage,+15145550121,in,2026-06-18T23:16:00Z,,"running 10 min late, start without me",imessage:783058da20
+i_8b36923cbf,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-06-19T07:23:00Z,Study group this weekend?,reminder about the group meeting tomorrow,gmail:a8c563f3d1
+i_a10fed187d,gmail,th_c_maya_martin_mail,maya.martin@example.com,out,2026-06-19T09:14:00Z,Study group this weekend?,reminder about the group meeting tomorrow,gmail:67739701b1
+i_1732b62dd0,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-06-19T10:56:00Z,Syllabus clarification,did you see the announcement on MyCourses?,gmail:184305295e
+i_46ca4584ab,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-06-19T11:32:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:3f95de54c3
+i_1867384a0a,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-06-19T15:29:00Z,,I'll take the first half of the deck,whatsapp:ccbc0c7585
+i_3c6c8877cc,imessage,th_c_maya_martin_imessage,+16135550177,out,2026-06-19T18:32:00Z,,thanks! that helps a lot,imessage:4963f7c008
+i_b27b3f963c,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,out,2026-06-20T07:16:00Z,Notes from yesterday,"running 10 min late, start without me",gmail:1c406be36e
+i_081cfaa62c,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-06-20T12:06:00Z,Syllabus clarification,I'll take the first half of the deck,gmail:39d16b11c6
+i_b8af96f5aa,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-06-20T14:13:00Z,,"hey — circling back on class stuff, free later?",imessage:587026731f
+i_0d96d3714e,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,in,2026-06-20T16:57:00Z,,thanks! that helps a lot,whatsapp:33fd245145
+i_0601da44ff,imessage,th_c_marcus_wei_imessage,+15145550112,in,2026-06-20T20:35:00Z,,reminder about the group meeting tomorrow,imessage:bb3cca1f5f
+i_58ce0a9ad1,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-06-21T07:11:00Z,,did you see the announcement on MyCourses?,imessage:e3ed000779
+i_1bc2727a32,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-06-21T16:35:00Z,,can you send the notes when you get a chance?,whatsapp:ab9555361d
+i_876c0ce67a,whatsapp,th_kh_whatsapp,+15145550142,out,2026-06-21T17:12:00Z,,did you see the announcement on MyCourses?,whatsapp:59ce22456a
+i_982c620127,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-06-21T17:53:00Z,Re: internship deadlines,did you see the announcement on MyCourses?,gmail:c024b67443
+i_0bd7e8b966,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-06-21T20:26:00Z,Syllabus clarification,coffee before the midterm?,gmail:3b5f1a6f9a
+i_0fa15b0e3f,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-06-21T22:10:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:240440e0eb
+i_9da9184028,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,out,2026-06-22T11:44:00Z,"Quick question, Sophie",did you see the announcement on MyCourses?,gmail:cc24132bd3
+i_15282b67fb,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-06-22T16:10:00Z,Re: internship deadlines,can you send the notes when you get a chance?,gmail:01ecdf2153
+i_3fa1beaec6,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-06-22T21:29:00Z,,coffee before the midterm?,whatsapp:7ad745dad1
+i_911fdfae49,whatsapp,th_kh_whatsapp,+15145550142,out,2026-06-23T09:22:00Z,,can you send the notes when you get a chance?,whatsapp:f161150b51
+i_f357b64fe6,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-06-23T15:47:00Z,,reminder about the group meeting tomorrow,whatsapp:9d1916151d
+i_4fc773158e,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-06-24T07:26:00Z,Re: internship deadlines,coffee before the midterm?,gmail:0088f8fb89
+i_39bf623dce,gmail,th_kh_gmail,karim@ledgerly.io,in,2026-06-24T10:42:00Z,Re: internship deadlines,can you send the notes when you get a chance?,gmail:ebe2375ea9
+i_aaf16bb661,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-06-24T13:40:00Z,,did you see the announcement on MyCourses?,whatsapp:793c8f2cff
+i_400929518f,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-06-24T16:30:00Z,"Quick question, Nadine","hey — circling back on McGill University stuff, free later?",gmail:c6de05c16e
+i_b9191d0bfa,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-06-25T07:15:00Z,"Quick question, Nadine",I'll take the first half of the deck,gmail:b48c061bbf
+i_cda85ff937,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-06-25T17:37:00Z,Re: internship deadlines,reminder about the group meeting tomorrow,gmail:91b0cca932
+i_73b21dad55,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-06-25T22:01:00Z,,"running 10 min late, start without me",imessage:018135d887
+i_5c1f8dd568,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-06-25T22:32:00Z,,thanks! that helps a lot,whatsapp:3e872aa792
+i_70875c2d19,whatsapp,th_c_lina_chen_whatsapp,+14165550188,out,2026-06-26T08:18:00Z,,thanks! that helps a lot,whatsapp:1f2f68ce5e
+i_401c93b7b3,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,in,2026-06-26T22:30:00Z,Study group this weekend?,I'll take the first half of the deck,gmail:3bf8a3d489
+i_35c9cdd46c,whatsapp,th_kh_whatsapp,+15145550142,in,2026-06-26T22:36:00Z,,"hey — circling back on Ledgerly stuff, free later?",whatsapp:dc2723f009
+i_d269f32a58,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-06-27T09:27:00Z,,I'll take the first half of the deck,whatsapp:674926c3ce
+i_77c7cc1fdb,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-06-27T11:10:00Z,"Quick question, Maya","running 10 min late, start without me",gmail:ad5464c682
+i_51c2086bfa,imessage,th_c_emma_rossi_imessage,+15145550121,in,2026-06-27T12:04:00Z,,can you send the notes when you get a chance?,imessage:48a9134d2d
+i_ad55ae9bae,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-06-28T19:15:00Z,,thanks! that helps a lot,whatsapp:8eae804efa
+i_d00309e7a3,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-06-29T14:04:00Z,,"running 10 min late, start without me",whatsapp:3c9f1c0ed7
+i_088e92300e,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-06-29T19:16:00Z,,"hey — circling back on Northstar Recruiting stuff, free later?",whatsapp:2bfeb95a58
+i_1c7a66a153,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-07-01T12:31:00Z,,coffee before the midterm?,whatsapp:9ddf8a0ac3
+i_f1d9e17d61,gmail,th_c_maya_martin_mail,maya.martin@example.com,out,2026-07-02T07:46:00Z,"Quick question, Maya",reminder about the group meeting tomorrow,gmail:722106ad57
+i_6ecf901942,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-07-02T12:28:00Z,,did you see the announcement on MyCourses?,whatsapp:6fdadb8fb1
+i_16ca85e43c,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-07-02T19:32:00Z,,can you send the notes when you get a chance?,whatsapp:9b5255d16b
+i_64dd628824,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,in,2026-07-02T20:51:00Z,Study group this weekend?,coffee before the midterm?,gmail:0e8af230d6
+i_fbd20f4e52,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-07-03T12:04:00Z,,coffee before the midterm?,whatsapp:0421c4ba5b
+i_a16be0fefb,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-07-03T15:21:00Z,,reminder about the group meeting tomorrow,whatsapp:1c23c21043
+i_6a70cfc210,imessage,th_c_lina_chen_imessage,+14165550188,out,2026-07-03T15:40:00Z,,I'll take the first half of the deck,imessage:98b6edda95
+i_d882359334,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-07-04T08:25:00Z,,can you send the notes when you get a chance?,whatsapp:16c9e9ab69
+i_2aa63e9bfe,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-07-04T08:39:00Z,,"running 10 min late, start without me",imessage:7ce8d1ebca
+i_c21f459674,whatsapp,th_kh_whatsapp,+15145550142,out,2026-07-04T10:23:00Z,,reminder about the group meeting tomorrow,whatsapp:31bcf0ff5a
+i_c88b1ae0f6,gmail,th_kh_gmail,karim@ledgerly.io,in,2026-07-04T14:24:00Z,Study group this weekend?,I'll take the first half of the deck,gmail:c9ccf06442
+i_9a49ad5eec,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-07-04T17:01:00Z,,I'll take the first half of the deck,whatsapp:d3ed4a2e43
+i_cd4a143d64,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-07-05T11:58:00Z,Notes from yesterday,can you send the notes when you get a chance?,gmail:ba642e340f
+i_40f72095fc,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-07-05T14:48:00Z,Notes from yesterday,reminder about the group meeting tomorrow,gmail:7202075035
+i_b2377c1e11,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-07-06T14:51:00Z,,did you see the announcement on MyCourses?,whatsapp:ffda50412b
+i_0c82a9a918,imessage,th_kh_imessage,+15145550142,out,2026-07-06T16:07:00Z,,"hey — circling back on Ledgerly stuff, free later?",imessage:df11f06345
+i_1a2dd58c49,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,out,2026-07-06T17:27:00Z,,reminder about the group meeting tomorrow,whatsapp:283dcb9c9f
+i_650d155626,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-07-07T11:24:00Z,Study group this weekend?,reminder about the group meeting tomorrow,gmail:d6614c533a
+i_e6b85a834e,gmail,th_kh_gmail,karim@ledgerly.io,out,2026-07-07T14:17:00Z,Study group this weekend?,"hey — circling back on Ledgerly stuff, free later?",gmail:77bc9ac207
+i_0800c24e93,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-07-07T14:19:00Z,"Quick question, Nadine",did you see the announcement on MyCourses?,gmail:137df9a6a1
+i_d6f0620a48,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-07-07T19:48:00Z,,coffee before the midterm?,imessage:468bf950a9
+i_8a12edcfff,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-07-07T23:45:00Z,,did you see the announcement on MyCourses?,imessage:baad941c39
+i_e85b8677c7,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-07-08T09:01:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:48e3da9dde
+i_de3da28bb0,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-07-08T14:21:00Z,Syllabus clarification,"running 10 min late, start without me",gmail:cf4ce1cd83
+i_23f193515b,imessage,th_c_sophie_tremblay_imessage,+15145550111,in,2026-07-08T21:16:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:76edeb7a5c
+i_3617f3e122,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-07-09T13:01:00Z,"Quick question, Diego",can you send the notes when you get a chance?,gmail:968d69e9d1
+i_7e4d30b40e,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-07-09T13:09:00Z,Notes from yesterday,"running 10 min late, start without me",gmail:3ec330d416
+i_5c73c109a6,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-07-09T13:27:00Z,,reminder about the group meeting tomorrow,imessage:68fdedd4e8
+i_e2a4992ec7,imessage,th_c_lina_chen_imessage,+14165550188,in,2026-07-09T23:41:00Z,,reminder about the group meeting tomorrow,imessage:ec771cebd4
+i_7fad588286,whatsapp,th_c_maya_martin_whatsapp,+16135550177,in,2026-07-11T09:19:00Z,,can you send the notes when you get a chance?,whatsapp:2708ac6c2f
+i_f8ffdf466b,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-07-12T20:28:00Z,Syllabus clarification,"running 10 min late, start without me",gmail:3e0643c4f5
+i_2b7bd17a45,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-07-12T20:32:00Z,,can you send the notes when you get a chance?,imessage:ba28ba8926
+i_5643dbc9b3,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-07-13T08:00:00Z,,did you see the announcement on MyCourses?,whatsapp:ab8700cda0
+i_585032bfda,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-07-13T10:28:00Z,,reminder about the group meeting tomorrow,whatsapp:26704fc56a
+i_e68852933b,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,in,2026-07-14T08:35:00Z,Study group this weekend?,reminder about the group meeting tomorrow,gmail:6ddae2539f
+i_7c851ab4c3,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,out,2026-07-15T21:55:00Z,Notes from yesterday,I'll take the first half of the deck,gmail:26454e3a04
+i_75fec8d273,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-07-16T12:27:00Z,,can you send the notes when you get a chance?,whatsapp:1c5ebdd998
+i_6d6eca1e0a,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-07-16T12:55:00Z,Notes from yesterday,"hey — circling back on McGill University stuff, free later?",gmail:84a30777f5
+i_6aac127bf6,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-07-16T21:10:00Z,,reminder about the group meeting tomorrow,whatsapp:4c524ba116
+i_913ddeb2d8,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-07-17T17:09:00Z,,coffee before the midterm?,whatsapp:1de41902b9
+i_7d7a6cfea6,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-07-17T19:35:00Z,,did you see the announcement on MyCourses?,imessage:d52e035cc5
+i_8d1599408c,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-07-17T23:45:00Z,,reminder about the group meeting tomorrow,imessage:59da0f78be
+i_d0a4d0dd20,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-07-18T09:09:00Z,,reminder about the group meeting tomorrow,whatsapp:867f6983a8
+i_a32619aefb,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-07-18T10:17:00Z,,can you send the notes when you get a chance?,imessage:d6e17ccc26
+i_8016393b36,imessage,th_kh_imessage,+15145550142,out,2026-07-18T13:14:00Z,,I'll take the first half of the deck,imessage:56cd0839bd
+i_1972caeebb,imessage,th_c_lina_chen_imessage,+14165550188,out,2026-07-18T14:40:00Z,,coffee before the midterm?,imessage:4f82bb7ddd
+i_0dc4e41903,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-07-18T15:27:00Z,,"running 10 min late, start without me",imessage:70e18ef30e
+i_b0554379ee,imessage,th_c_lina_chen_imessage,+14165550188,in,2026-07-19T08:03:00Z,,coffee before the midterm?,imessage:37c52f9cdc
+i_59138f5065,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,out,2026-07-19T10:16:00Z,Syllabus clarification,I'll take the first half of the deck,gmail:58b19000b7
+i_ce60d27c17,whatsapp,th_c_lina_chen_whatsapp,+14165550188,out,2026-07-19T14:43:00Z,,can you send the notes when you get a chance?,whatsapp:951c145add
+i_d76e210d2d,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-07-19T17:24:00Z,,"running 10 min late, start without me",whatsapp:45b9b203ed
+i_b979dc9f73,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-07-19T18:34:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:add52c3b12
+i_266e285359,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-07-20T09:50:00Z,,coffee before the midterm?,imessage:a6b6985763
+i_71f79eeb54,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-07-20T11:15:00Z,,coffee before the midterm?,imessage:e54801c066
+i_bf23f635b1,imessage,th_c_emma_rossi_imessage,+15145550121,in,2026-07-20T17:42:00Z,,"running 10 min late, start without me",imessage:c583ebcc5f
+i_4adc57d146,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-07-20T18:56:00Z,"Quick question, Diego",coffee before the midterm?,gmail:a3007f93b9
+i_a4d3288a1b,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-07-20T19:10:00Z,Syllabus clarification,thanks! that helps a lot,gmail:80fe505a0b
+i_bd44ed0828,imessage,th_c_marcus_wei_imessage,+15145550112,out,2026-07-20T20:14:00Z,,can you send the notes when you get a chance?,imessage:db53a44bc5
+i_3413a65db3,imessage,th_c_diego_alvarez_imessage,+15145550119,out,2026-07-21T11:20:00Z,,can you send the notes when you get a chance?,imessage:71c55a7580
+i_7ca36a5f55,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,out,2026-07-21T13:02:00Z,"Quick question, Marcus",did you see the announcement on MyCourses?,gmail:31d659bc3e
+i_12bcc26bc0,imessage,th_c_emma_rossi_imessage,+15145550121,in,2026-07-21T18:28:00Z,,reminder about the group meeting tomorrow,imessage:a78813cfae
+i_0aa55ae2c6,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-07-22T09:36:00Z,,thanks! that helps a lot,whatsapp:cd23daab3a
+i_8b9691876f,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-07-22T15:50:00Z,,"running 10 min late, start without me",whatsapp:57fad35e36
+i_ef1f3ae8cb,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-07-22T17:38:00Z,,can you send the notes when you get a chance?,whatsapp:006a274525
+i_77e78ed6b9,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-07-22T19:45:00Z,Notes from yesterday,thanks! that helps a lot,gmail:aee7dbf927
+i_b750805240,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-07-23T08:18:00Z,,reminder about the group meeting tomorrow,whatsapp:9cb1082447
+i_0d74ad751b,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-07-23T12:19:00Z,,can you send the notes when you get a chance?,whatsapp:becc037de4
+i_e6e6dacf07,whatsapp,th_kh_whatsapp,+15145550142,out,2026-07-23T20:55:00Z,,reminder about the group meeting tomorrow,whatsapp:23166deee9
+i_bb78cc2bb9,gmail,th_kh_gmail,karim@ledgerly.io,in,2026-07-23T21:14:00Z,Study group this weekend?,did you see the announcement on MyCourses?,gmail:b01d0ba0b1
+i_1c0cc7ba75,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-07-24T11:41:00Z,,"running 10 min late, start without me",imessage:71d02b224f
+i_4affb6294b,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,in,2026-07-24T17:49:00Z,Re: internship deadlines,"running 10 min late, start without me",gmail:85766c1912
+i_4407cfae5e,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-07-24T22:35:00Z,,coffee before the midterm?,whatsapp:8e2b4a8679
+i_a220598a95,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-07-25T11:48:00Z,,can you send the notes when you get a chance?,imessage:b8f6ef8428
+i_fa9221cb99,imessage,th_c_diego_alvarez_imessage,+15145550119,out,2026-07-25T14:29:00Z,,thanks! that helps a lot,imessage:baf88ebb04
+i_f322dbd305,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-07-26T21:14:00Z,,did you see the announcement on MyCourses?,whatsapp:59eba6f6b0
+i_8b88533718,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,out,2026-07-27T07:09:00Z,Notes from yesterday,thanks! that helps a lot,gmail:8a45480b4d
+i_297adc3f2a,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,out,2026-07-27T09:05:00Z,,reminder about the group meeting tomorrow,whatsapp:8c65561572
+i_7342fd01fc,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-07-27T19:48:00Z,,"hey — circling back on Northstar Recruiting stuff, free later?",imessage:e113bda49c
+i_02a31d9317,imessage,th_c_marcus_wei_imessage,+15145550112,in,2026-07-28T09:47:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:b83325fb68
+i_933efd80e8,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-07-28T17:15:00Z,,"running 10 min late, start without me",whatsapp:3e8fe81b2c
+i_e0e9c82f68,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-07-28T21:05:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:7c36f6246c
+i_3e193982e8,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-07-29T08:58:00Z,,did you see the announcement on MyCourses?,whatsapp:b685247cc3
+i_6bb252d97b,imessage,th_c_lina_chen_imessage,+14165550188,out,2026-07-29T11:58:00Z,,"running 10 min late, start without me",imessage:11edd242a0
+i_8ae2413677,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-07-29T12:03:00Z,"Quick question, Nadine",coffee before the midterm?,gmail:4059617062
+i_57ea09cb97,imessage,th_c_lina_chen_imessage,+14165550188,in,2026-07-29T19:18:00Z,,can you send the notes when you get a chance?,imessage:b2d43452af
+i_c4f90e3a5e,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-07-30T14:08:00Z,,coffee before the midterm?,imessage:a692a09268
+i_5214cfa231,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-07-30T19:27:00Z,"Quick question, Nadine",reminder about the group meeting tomorrow,gmail:e22707763a
+i_775cdd0e06,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-07-30T23:54:00Z,Syllabus clarification,can you send the notes when you get a chance?,gmail:3c72a15d4f
+i_aad464e5d8,gmail,th_kh_gmail,karim@ledgerly.io,in,2026-07-31T10:47:00Z,Notes from yesterday,"running 10 min late, start without me",gmail:2e8a8bf24d
+i_886383c72f,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,out,2026-07-31T17:49:00Z,"Quick question, Lina","hey — circling back on Northbridge Ventures stuff, free later?",gmail:77cb445109
+i_1d9c32db73,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-07-31T18:59:00Z,,"hey — circling back on Northstar Recruiting stuff, free later?",whatsapp:70aa43030d
+i_8b75829217,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,in,2026-07-31T20:41:00Z,"Quick question, Emma",reminder about the group meeting tomorrow,gmail:1298d166d7
+i_c907111fe4,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,in,2026-07-31T20:50:00Z,Notes from yesterday,thanks! that helps a lot,gmail:3deb97ee14
+i_5f8de19d91,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-07-31T22:18:00Z,,thanks! that helps a lot,whatsapp:003b00f1db
+i_8f6128168d,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-08-01T11:10:00Z,Syllabus clarification,thanks! that helps a lot,gmail:24d8543722
+i_a6892cccfa,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-08-02T10:36:00Z,Study group this weekend?,reminder about the group meeting tomorrow,gmail:a0939a2918
+i_bf2381a780,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-08-02T16:00:00Z,,thanks! that helps a lot,imessage:2a77915cb0
+i_be2325075e,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-08-02T18:34:00Z,Study group this weekend?,"hey — circling back on McGill University stuff, free later?",gmail:f298b09f8f
+i_2514370910,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,out,2026-08-03T09:25:00Z,Re: internship deadlines,coffee before the midterm?,gmail:b1954493cd
+i_93b162618e,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,in,2026-08-03T12:25:00Z,Notes from yesterday,coffee before the midterm?,gmail:1e8b57bd40
+i_c768bf9da2,whatsapp,th_c_maya_martin_whatsapp,+16135550177,in,2026-08-03T15:02:00Z,,"running 10 min late, start without me",whatsapp:0930521e49
+i_d65517a3e7,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-08-03T15:50:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:0110ef1f6d
+i_a76779c882,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-08-03T22:54:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:127c913529
+i_518599e706,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-08-04T10:51:00Z,,reminder about the group meeting tomorrow,whatsapp:60327a8dbd
+i_6e9283e120,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-08-04T16:26:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:67dcefe302
+i_90177aa0d5,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-08-04T23:31:00Z,Notes from yesterday,reminder about the group meeting tomorrow,gmail:d2d94ca942
+i_07cdeabc7b,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-08-05T07:04:00Z,Syllabus clarification,"running 10 min late, start without me",gmail:2698eb16a1
+i_1bd489b9bb,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-08-05T08:43:00Z,,thanks! that helps a lot,imessage:9c17cb8ffd
+i_b6e300ad2b,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-08-05T10:50:00Z,"Quick question, Jordan",did you see the announcement on MyCourses?,gmail:f6c9a3430f
+i_0e592c6481,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-08-05T11:55:00Z,,I'll take the first half of the deck,whatsapp:d70a95a13c
+i_a996b9f3df,whatsapp,th_kh_whatsapp,+15145550142,in,2026-08-05T18:46:00Z,,did you see the announcement on MyCourses?,whatsapp:b60941877e
+i_ca78db8c02,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-08-05T21:58:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:2564c872a2
+i_1d7859cdb0,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,in,2026-08-06T08:59:00Z,Notes from yesterday,"running 10 min late, start without me",gmail:c56daabe64
+i_093bb4fbcf,gmail,th_lina,lina.chen@northbridge.vc,in,2026-08-06T15:10:00Z,Intro: Alex Martin <> Lina Chen,"Alex, looping in Lina Chen (Associate, Northbridge). Lina, Alex is a McGill BCom student exploring fintech ops roles.",gmail:a695cdb290
+i_c3e6b47dec,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-08-07T11:42:00Z,,did you see the announcement on MyCourses?,imessage:7eb41c04e9
+i_8dc58a6e2e,imessage,th_c_sophie_tremblay_imessage,+15145550111,in,2026-08-07T12:59:00Z,,I'll take the first half of the deck,imessage:6b9230f30f
+i_32cfdf0363,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,in,2026-08-07T17:47:00Z,"Quick question, Emma",did you see the announcement on MyCourses?,gmail:a08e902696
+i_4812f54060,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-08-09T09:22:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:e343a5c1ae
+i_4e644b2f04,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-08-09T12:11:00Z,,I'll take the first half of the deck,whatsapp:9ee44220f7
+i_0967c68c1b,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-08-09T15:35:00Z,Study group this weekend?,"hey — circling back on McGill University stuff, free later?",gmail:dafbc4006f
+i_d91812c56c,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,out,2026-08-09T23:24:00Z,Syllabus clarification,"running 10 min late, start without me",gmail:362dccdb48
+i_107553e795,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-08-10T10:29:00Z,,"running 10 min late, start without me",whatsapp:c8a5b06c5f
+i_61bb339561,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-08-10T17:57:00Z,Syllabus clarification,reminder about the group meeting tomorrow,gmail:a030543672
+i_f6ec051be7,imessage,th_c_sophie_tremblay_imessage,+15145550111,in,2026-08-11T08:40:00Z,,reminder about the group meeting tomorrow,imessage:27519abaa6
+i_9d53b06a85,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-08-11T15:54:00Z,Notes from yesterday,did you see the announcement on MyCourses?,gmail:0936072ae1
+i_649981ec56,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-08-11T18:32:00Z,,thanks! that helps a lot,imessage:266fe55f9f
+i_ecdb5c748a,whatsapp,th_c_lina_chen_whatsapp,+14165550188,out,2026-08-12T07:54:00Z,,coffee before the midterm?,whatsapp:11ea8405a8
+i_7e1432a14b,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-08-12T09:25:00Z,,coffee before the midterm?,whatsapp:a0423e29d1
+i_004c44411c,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,in,2026-08-12T09:39:00Z,Study group this weekend?,thanks! that helps a lot,gmail:983a677d67
+i_31e5f6c3f0,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-08-12T15:46:00Z,,thanks! that helps a lot,whatsapp:fe3a264134
+i_1a616c162e,imessage,th_c_marcus_wei_imessage,+15145550112,out,2026-08-13T21:27:00Z,,reminder about the group meeting tomorrow,imessage:a077698511
+i_64986377a6,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-08-14T08:46:00Z,,"running 10 min late, start without me",whatsapp:0539db8607
+i_93651bc6ae,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-08-14T09:42:00Z,Notes from yesterday,I'll take the first half of the deck,gmail:1564a5b848
+i_c8181d9690,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,out,2026-08-14T13:17:00Z,Re: internship deadlines,"hey — circling back on Northbridge Ventures stuff, free later?",gmail:5e890248b0
+i_36704cb4d6,imessage,th_c_lina_chen_imessage,+14165550188,in,2026-08-14T16:27:00Z,,thanks! that helps a lot,imessage:08b14db612
+i_1e5df427a1,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,out,2026-08-14T17:59:00Z,Study group this weekend?,thanks! that helps a lot,gmail:6d8c5de788
+i_c9a610e8d8,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-08-15T14:06:00Z,,thanks! that helps a lot,imessage:59b40dcf40
+i_0d49daa67d,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-08-15T20:21:00Z,,did you see the announcement on MyCourses?,imessage:f07260a26c
+i_cb5734a4d5,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-08-16T11:55:00Z,Study group this weekend?,"running 10 min late, start without me",gmail:5027e2ee96
+i_ac5656b30b,gmail,th_kh_product,karim@ledgerly.io,in,2026-08-16T16:22:00Z,Ledgerly product pulse,"Hey Alex — quick update from Ledgerly. We're iterating on the spend dashboard and would love your take on the student-card use case when you have a sec.
+
+—
+Karim Haddad
+Founder, Ledgerly
+Montreal, QC",gmail:73ac38fa30
+i_1f44f98f68,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-08-16T18:14:00Z,,can you send the notes when you get a chance?,whatsapp:314da9aa3b
+i_5b17d45ee5,gmail,th_kh_product,karim@ledgerly.io,out,2026-08-17T11:05:00Z,Re: Ledgerly product pulse,Sounds good — send the latest mock when you can. Happy to skim this week.,gmail:8d3a2caf9d
+i_e6a72be361,gmail,th_c_maya_martin_mail,maya.martin@example.com,out,2026-08-17T15:56:00Z,Notes from yesterday,coffee before the midterm?,gmail:c0a42b7bd5
+i_6c13841d9e,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,in,2026-08-17T16:05:00Z,,thanks! that helps a lot,whatsapp:264b9c37ee
+i_d915f244db,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-08-18T14:19:00Z,Notes from yesterday,did you see the announcement on MyCourses?,gmail:c4a0e5c0f5
+i_6ca7a9e557,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-08-18T14:50:00Z,Syllabus clarification,reminder about the group meeting tomorrow,gmail:13e5447bb2
+i_67d5d4a4db,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-08-18T16:14:00Z,,"running 10 min late, start without me",imessage:3ef3d66d83
+i_6b0d906e00,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-08-19T09:18:00Z,,"hey — circling back on Northstar Recruiting stuff, free later?",imessage:8fb976f279
+i_090f4fb19b,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-08-19T20:41:00Z,,thanks! that helps a lot,imessage:8e37c05623
+i_0dfc976e3d,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-08-20T08:41:00Z,,can you send the notes when you get a chance?,whatsapp:953cd19560
+i_7d7b884fee,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-08-20T11:27:00Z,,thanks! that helps a lot,whatsapp:a8cd992d9e
+i_b306c36b10,imessage,th_c_marcus_wei_imessage,+15145550112,in,2026-08-20T12:46:00Z,,coffee before the midterm?,imessage:fa1a0b9603
+i_bafaeac542,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,out,2026-08-20T17:55:00Z,,thanks! that helps a lot,whatsapp:e49449c57a
+i_1fa1bc6def,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-08-20T18:32:00Z,Notes from yesterday,"hey — circling back on McGill University stuff, free later?",gmail:e52e882860
+i_977f12569a,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-08-20T18:32:00Z,Notes from yesterday,did you see the announcement on MyCourses?,gmail:519dbf6857
+i_16f698834d,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-08-20T19:57:00Z,,I'll take the first half of the deck,imessage:5ebf239836
+i_959f904431,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-08-21T13:48:00Z,Re: internship deadlines,reminder about the group meeting tomorrow,gmail:cc03c9076f
+i_dca664fcf6,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,in,2026-08-21T16:04:00Z,,coffee before the midterm?,whatsapp:20746ea3d2
+i_e058a25542,gmail,th_c_maya_martin_mail,maya.martin@example.com,out,2026-08-21T19:39:00Z,Re: internship deadlines,coffee before the midterm?,gmail:78182407f8
+i_7004089744,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,out,2026-08-21T21:39:00Z,Syllabus clarification,coffee before the midterm?,gmail:16642d3d06
+i_d76931b89e,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,out,2026-08-22T07:16:00Z,Notes from yesterday,did you see the announcement on MyCourses?,gmail:248df504cd
+i_cb80a9ddfb,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-08-22T10:08:00Z,Re: internship deadlines,"running 10 min late, start without me",gmail:6ea16c3c73
+i_20c0faf7d7,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-08-22T21:16:00Z,,reminder about the group meeting tomorrow,imessage:21dd31de52
+i_467156aa38,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-08-22T21:43:00Z,Re: internship deadlines,"hey — circling back on McGill University stuff, free later?",gmail:c96329bde3
+i_b378e51f3a,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,out,2026-08-22T23:59:00Z,Syllabus clarification,I'll take the first half of the deck,gmail:2b4372971c
+i_a9b46dea62,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-08-23T09:57:00Z,,reminder about the group meeting tomorrow,imessage:1a25857354
+i_7e5d71af72,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-08-23T14:45:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:28a42cf7d9
+i_f5a10c3a6b,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-08-23T18:34:00Z,Notes from yesterday,can you send the notes when you get a chance?,gmail:254844fd58
+i_da18d610c2,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-08-23T18:55:00Z,Study group this weekend?,"running 10 min late, start without me",gmail:d2518032a7
+i_a612e09d08,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-08-23T20:17:00Z,,reminder about the group meeting tomorrow,whatsapp:a68a602679
+i_7fe3330092,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-08-23T23:18:00Z,,thanks! that helps a lot,whatsapp:aa43412c22
+i_972dae1f4e,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,out,2026-08-24T17:42:00Z,Study group this weekend?,"hey — circling back on McGill University stuff, free later?",gmail:e128a7cb48
+i_5c6de6a937,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-08-24T19:33:00Z,Study group this weekend?,I'll take the first half of the deck,gmail:8c73c536f1
+i_75c4eae195,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-08-25T16:13:00Z,,"running 10 min late, start without me",whatsapp:e6b3b91350
+i_3b8005b858,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-08-26T16:30:00Z,,did you see the announcement on MyCourses?,imessage:4a0f7543cb
+i_d81b73ea4f,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-08-26T16:46:00Z,,coffee before the midterm?,whatsapp:19cef46398
+i_9db35fb49f,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-08-26T19:32:00Z,"Quick question, Nadine",can you send the notes when you get a chance?,gmail:39cc2153de
+i_b68bebcb20,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-08-26T20:32:00Z,,"running 10 min late, start without me",whatsapp:27d2b146db
+i_e78f00c200,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-08-27T12:28:00Z,,"hey — circling back on Northstar Recruiting stuff, free later?",imessage:e4186e0110
+i_9b188f3bf6,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-08-28T09:42:00Z,"Quick question, Maya",reminder about the group meeting tomorrow,gmail:d494171f8d
+i_3825198397,imessage,th_kh_imessage,+15145550142,out,2026-08-28T10:15:00Z,,thanks! that helps a lot,imessage:86195ed1f1
+i_d9e561e309,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,out,2026-08-28T13:26:00Z,,thanks! that helps a lot,whatsapp:ff2a32423f
+i_2fdbdb17a2,imessage,th_c_marcus_wei_imessage,+15145550112,out,2026-08-29T07:19:00Z,,can you send the notes when you get a chance?,imessage:32bb598791
+i_ac157c6590,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-08-29T11:39:00Z,Study group this weekend?,reminder about the group meeting tomorrow,gmail:444375a6b8
+i_733cd12934,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-08-29T19:07:00Z,,reminder about the group meeting tomorrow,imessage:c4f9af7eb5
+i_b79775ab3c,gmail,th_c_maya_martin_mail,maya.martin@example.com,out,2026-08-29T22:49:00Z,Notes from yesterday,thanks! that helps a lot,gmail:8ea5fcad8f
+i_69bd7c74fa,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-08-30T10:08:00Z,Syllabus clarification,did you see the announcement on MyCourses?,gmail:cb94f15380
+i_4587a15901,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-08-30T18:09:00Z,,reminder about the group meeting tomorrow,imessage:eab7267fdd
+i_0e0877f85b,imessage,th_c_lina_chen_imessage,+14165550188,in,2026-08-30T19:54:00Z,,did you see the announcement on MyCourses?,imessage:78a1425aec
+i_0bae62fb81,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,in,2026-08-30T20:26:00Z,Study group this weekend?,can you send the notes when you get a chance?,gmail:8d7c71b7eb
+i_e5b8b971d4,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-08-30T22:45:00Z,,coffee before the midterm?,imessage:c2febccf9f
+i_f217b3a876,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-08-30T23:36:00Z,Study group this weekend?,can you send the notes when you get a chance?,gmail:65411e1070
+i_9c850c64d1,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-08-31T11:12:00Z,,coffee before the midterm?,whatsapp:efa588f035
+i_3a17bc5d53,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,out,2026-08-31T14:19:00Z,Re: internship deadlines,"running 10 min late, start without me",gmail:c1f33ca5f3
+i_be5294ff9b,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-08-31T16:54:00Z,,"running 10 min late, start without me",whatsapp:905d9be70c
+i_4b87a3f4cc,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-08-31T17:43:00Z,,I'll take the first half of the deck,whatsapp:e58344d841
+i_72967cafd7,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-08-31T18:01:00Z,,thanks! that helps a lot,whatsapp:115b274f0f
+i_a0db68f705,imessage,th_c_emma_rossi_imessage,+15145550121,in,2026-08-31T18:43:00Z,,coffee before the midterm?,imessage:e168b069b3
+i_bf32407b08,imessage,th_c_marcus_wei_imessage,+15145550112,in,2026-08-31T21:02:00Z,,thanks! that helps a lot,imessage:073243b428
+i_3d8cdf0235,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-09-01T07:46:00Z,Syllabus clarification,thanks! that helps a lot,gmail:cbf178ff30
+i_dd4cd84314,gmail,th_ks_fina,karim.saleh@mcgill.ca,in,2026-09-01T09:30:00Z,FINA 341 — guest speaker reminder,Reminder: guest speaker Friday. Attendance counts toward participation.,gmail:02a84eb2af
+i_4c05966312,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-09-01T18:35:00Z,,"running 10 min late, start without me",whatsapp:905f933505
+i_38349affe6,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-09-01T22:12:00Z,Study group this weekend?,coffee before the midterm?,gmail:c5dcd1a897
+i_08fc6ee365,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-09-02T16:38:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:e5bbaf2907
+i_d95d189325,imessage,th_kh_imessage,+15145550142,in,2026-09-02T16:46:00Z,,can you send the notes when you get a chance?,imessage:928ce1e0b8
+i_a3631c95fc,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-09-03T13:25:00Z,,"hey — circling back on Northstar Recruiting stuff, free later?",whatsapp:e006c2a8a8
+i_894a34709b,imessage,th_c_lina_chen_imessage,+14165550188,out,2026-09-03T23:23:00Z,,can you send the notes when you get a chance?,imessage:a7fe13fb25
+i_61eb4d6a41,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,out,2026-09-04T10:20:00Z,,I'll take the first half of the deck,whatsapp:79e86eb05e
+i_a991c453d3,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-09-04T10:52:00Z,,reminder about the group meeting tomorrow,whatsapp:827dd2e456
+i_eb47056339,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-09-04T15:57:00Z,,reminder about the group meeting tomorrow,imessage:eb43808e82
+i_1c731a0187,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-09-04T22:52:00Z,Syllabus clarification,did you see the announcement on MyCourses?,gmail:6f3958ced1
+i_4d34e7a5a1,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-09-05T07:38:00Z,,did you see the announcement on MyCourses?,whatsapp:fdb04d9e48
+i_47cd1694ff,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-09-05T09:34:00Z,Re: internship deadlines,coffee before the midterm?,gmail:eec8a3ae24
+i_64add874b5,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-09-05T13:44:00Z,,coffee before the midterm?,whatsapp:3e0fbac644
+i_d723bf06cf,gmail,th_lina,lina.chen@northbridge.vc,in,2026-09-05T15:10:00Z,Northbridge coffee chat follow-up,"Great chatting, Alex. Attaching a one-pager on our student-founder thesis. Happy to reconnect after midterms.",gmail:8ce22c6b9d
+i_333228b9e2,whatsapp,th_c_maya_martin_whatsapp,+16135550177,in,2026-09-05T20:44:00Z,,coffee before the midterm?,whatsapp:5963569fff
+i_cec2b44a07,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-09-06T12:25:00Z,,coffee before the midterm?,whatsapp:1b6f3bf89f
+i_cf7460cf79,gmail,th_lina,lina.chen@northbridge.vc,out,2026-09-06T15:10:00Z,Re: Northbridge coffee chat follow-up,Thanks Lina — one-pager was helpful. I'll ping after exams.,gmail:3b256b2d64
+i_843da74dd5,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,in,2026-09-06T18:27:00Z,Notes from yesterday,coffee before the midterm?,gmail:c4520839a5
+i_9adccacb1a,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-09-06T21:26:00Z,,"hey — circling back on class stuff, free later?",whatsapp:80f4021bab
+i_c924ecf8b8,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,out,2026-09-07T18:00:00Z,Syllabus clarification,"hey — circling back on McGill University stuff, free later?",gmail:a6552bc15a
+i_1b7ceecc8f,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,out,2026-09-07T22:16:00Z,Syllabus clarification,I'll take the first half of the deck,gmail:51efdc5c1c
+i_696962d331,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-09-07T23:19:00Z,,did you see the announcement on MyCourses?,imessage:410014f50b
+i_b471c23db1,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-09-08T10:00:00Z,,can you send the notes when you get a chance?,imessage:87176604f0
+i_0c7a7ee439,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-09-08T10:47:00Z,,"running 10 min late, start without me",whatsapp:c58418ba71
+i_9de958754b,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-09-08T21:05:00Z,,reminder about the group meeting tomorrow,imessage:06472eaa67
+i_482bd94a2c,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-09-09T08:35:00Z,Notes from yesterday,"hey — circling back on class stuff, free later?",gmail:6ed05466d6
+i_09436fabc8,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-09-09T10:48:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:af9f576cee
+i_ce17001437,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-09-09T12:27:00Z,,can you send the notes when you get a chance?,whatsapp:42f3f4acd6
+i_fdc543ef01,imessage,th_kh_imessage,+15145550142,in,2026-09-09T13:48:00Z,,"running 10 min late, start without me",imessage:eee617c586
+i_05caf6f30b,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-09-09T14:46:00Z,Notes from yesterday,did you see the announcement on MyCourses?,gmail:2d3c7c9fda
+i_00331cab06,imessage,th_c_maya_martin_imessage,+16135550177,out,2026-09-09T15:00:00Z,,I'll take the first half of the deck,imessage:c2b673ba1d
+i_6701a5691d,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,in,2026-09-09T18:19:00Z,"Quick question, Emma",thanks! that helps a lot,gmail:c6b7d6f4ce
+i_2977287e25,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-09-09T20:35:00Z,,thanks! that helps a lot,whatsapp:c4000e1b18
+i_9a224d3af9,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-09-10T09:08:00Z,,coffee before the midterm?,imessage:a7c0cf1daa
+i_6e2baf249f,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,out,2026-09-10T12:49:00Z,Study group this weekend?,did you see the announcement on MyCourses?,gmail:2b25c93a05
+i_26134ab80c,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,out,2026-09-10T14:55:00Z,Syllabus clarification,I'll take the first half of the deck,gmail:210341e076
+i_b9e0e44658,imessage,th_c_marcus_wei_imessage,+15145550112,in,2026-09-10T16:19:00Z,,coffee before the midterm?,imessage:1f57e2cd5a
+i_08dd41becd,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-09-10T20:11:00Z,,reminder about the group meeting tomorrow,whatsapp:772740c5b8
+i_fde6ae413c,imessage,th_kh_imessage,+15145550142,in,2026-09-10T20:12:00Z,,you free for coffee in Mile End sometime? same café as June works,imessage:0f007d4e76
+i_3668c178c0,whatsapp,th_c_lina_chen_whatsapp,+14165550188,out,2026-09-10T21:28:00Z,,coffee before the midterm?,whatsapp:8a8569f131
+i_afcef70e0a,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-09-11T11:28:00Z,Syllabus clarification,reminder about the group meeting tomorrow,gmail:8d75c085f3
+i_b3a0fe31a7,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-09-11T12:23:00Z,Syllabus clarification,can you send the notes when you get a chance?,gmail:644f52e30e
+i_66c6e0b82b,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-09-11T15:28:00Z,,"running 10 min late, start without me",imessage:f8895a20cf
+i_7c4256f530,whatsapp,th_c_maya_martin_whatsapp,+16135550177,out,2026-09-11T22:01:00Z,,can you send the notes when you get a chance?,whatsapp:7aafea0037
+i_b731d56df1,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-09-13T13:30:00Z,"Quick question, Jordan","running 10 min late, start without me",gmail:af9ece07ea
+i_c9b4d0bfac,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-09-13T15:37:00Z,Re: internship deadlines,coffee before the midterm?,gmail:b2fb92bb61
+i_0659344806,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-09-14T12:04:00Z,Re: internship deadlines,did you see the announcement on MyCourses?,gmail:753ff26650
+i_2b5aaef8ff,imessage,th_c_emma_rossi_imessage,+15145550121,in,2026-09-14T16:36:00Z,,coffee before the midterm?,imessage:ac300c5ac7
+i_674d08306e,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-09-14T18:15:00Z,,can you send the notes when you get a chance?,whatsapp:4203864c8b
+i_5bcfc2e37c,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-09-15T08:19:00Z,,can you send the notes when you get a chance?,imessage:d50e9e9bdb
+i_4f9bd2eb5b,gmail,th_c_maya_martin_mail,maya.martin@example.com,in,2026-09-15T11:27:00Z,Syllabus clarification,reminder about the group meeting tomorrow,gmail:eb0b7fc263
+i_4b153cef1d,whatsapp,th_kh_whatsapp,+15145550142,in,2026-09-15T18:20:00Z,,did you see the announcement on MyCourses?,whatsapp:c4a2098509
+i_713f1c6a93,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,out,2026-09-15T21:26:00Z,Syllabus clarification,can you send the notes when you get a chance?,gmail:dea0beee31
+i_84af8c6d03,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-09-16T12:25:00Z,,did you see the announcement on MyCourses?,imessage:a95c6c4d33
+i_339160feec,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,in,2026-09-16T14:09:00Z,,reminder about the group meeting tomorrow,whatsapp:5813fa1730
+i_c0c96b385f,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,out,2026-09-16T22:38:00Z,"Quick question, Sophie",can you send the notes when you get a chance?,gmail:3cea68ff8c
+i_f00bdab31c,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-09-17T19:05:00Z,,thanks! that helps a lot,whatsapp:e0763bd754
+i_3ba06f1d66,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-09-18T07:15:00Z,,"hey — circling back on Northbridge Ventures stuff, free later?",whatsapp:59eeb2e31c
+i_0f091ea6d3,gmail,th_ks_fina,karim.saleh@mcgill.ca,in,2026-09-18T09:30:00Z,Re: FINA 341 problem set 4,Your WACC setup looks right; double-check the tax shield on the lease item.,gmail:99cc21f99c
+i_c209a2ff72,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-09-18T16:13:00Z,"Quick question, Nadine","running 10 min late, start without me",gmail:23dcdce550
+i_85207266b9,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-09-18T16:41:00Z,,reminder about the group meeting tomorrow,imessage:7037155994
+i_95a0bf9d5b,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,out,2026-09-18T22:42:00Z,Notes from yesterday,"hey — circling back on McGill University stuff, free later?",gmail:69890aa857
+i_f48a0c89bc,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-09-19T09:18:00Z,,thanks! that helps a lot,imessage:da236303df
+i_104f2d7664,imessage,th_c_jordan_blake_imessage,+14165550133,in,2026-09-19T12:35:00Z,,"running 10 min late, start without me",imessage:e039fcebc9
+i_f522491c23,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-09-19T16:31:00Z,"Quick question, Emma","hey — circling back on McGill University stuff, free later?",gmail:8ca5b032af
+i_77d86f28bd,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-09-20T11:06:00Z,Syllabus clarification,did you see the announcement on MyCourses?,gmail:27745dd95e
+i_b1e22c645a,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-09-20T18:35:00Z,Notes from yesterday,reminder about the group meeting tomorrow,gmail:97fec7d7b0
+i_f8880884bc,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-09-20T20:43:00Z,,can you send the notes when you get a chance?,imessage:37befad4fc
+i_2829119a4a,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,out,2026-09-21T12:16:00Z,Syllabus clarification,did you see the announcement on MyCourses?,gmail:68660e5c79
+i_2923adec35,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-09-21T12:49:00Z,,can you send the notes when you get a chance?,whatsapp:f806d288cd
+i_3e505eca10,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-09-21T20:43:00Z,Syllabus clarification,reminder about the group meeting tomorrow,gmail:7cc19bfdbf
+i_a4d0cdce31,imessage,th_c_lina_chen_imessage,+14165550188,out,2026-09-22T15:07:00Z,,coffee before the midterm?,imessage:a4cf89ef44
+i_a98ff76cad,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-09-22T18:27:00Z,,I'll take the first half of the deck,whatsapp:c0e2f69d37
+i_ebda66e583,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-09-23T09:30:00Z,,reminder about the group meeting tomorrow,whatsapp:93007fb00d
+i_0feaccf0c1,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-09-23T20:22:00Z,,can you send the notes when you get a chance?,whatsapp:944f7e9092
+i_98b373161f,imessage,th_c_maya_martin_imessage,+16135550177,out,2026-09-24T12:51:00Z,,reminder about the group meeting tomorrow,imessage:c31963d6bf
+i_64563d5bf8,whatsapp,th_kh_wa,+15145550142,in,2026-09-24T18:03:00Z,,we're closing a seed round this month 🤞 how is your internship search going? happy to intro you to a couple operators if useful,whatsapp:5cfdd02c24
+i_a8e733ae43,whatsapp,th_kh_wa,+15145550142,out,2026-09-24T18:40:00Z,,congrats!! search is okay — a few second rounds. would love intros next week,whatsapp:5d54267f99
+i_e61f7196f5,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,out,2026-09-24T18:45:00Z,,coffee before the midterm?,whatsapp:8f789047b0
+i_f1aa2ecda2,imessage,th_kh_imessage,+15145550142,out,2026-09-25T08:07:00Z,,coffee before the midterm?,imessage:800b9f6cb8
+i_4021aec7f1,imessage,th_c_emma_rossi_imessage,+15145550121,out,2026-09-25T16:25:00Z,,"running 10 min late, start without me",imessage:cebf0fcf86
+i_64e69c5878,gmail,th_kh_gmail,karim@ledgerly.io,in,2026-09-25T21:40:00Z,Notes from yesterday,thanks! that helps a lot,gmail:baedfae75c
+i_5bd575dcf6,gmail,th_kh_lina_intro,karim@ledgerly.io,in,2026-09-26T10:14:00Z,Intro ask: Lina Chen?,Alex — any chance you could intro me to Lina Chen at Northbridge? She's the associate I mentioned; would love 20 minutes on the seed narrative.,gmail:644c7c5984
+i_05e0061946,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,out,2026-09-26T14:31:00Z,,I'll take the first half of the deck,whatsapp:9c1b7323de
+i_6d3a7fe585,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,out,2026-09-26T17:56:00Z,"Quick question, Jordan","hey — circling back on Northstar Recruiting stuff, free later?",gmail:c1b1dbecba
+i_500c162625,imessage,th_c_lina_chen_imessage,+14165550188,out,2026-09-26T21:48:00Z,,coffee before the midterm?,imessage:dcc78d9caf
+i_ba35b3e494,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-09-26T22:14:00Z,,"hey — circling back on Northstar Recruiting stuff, free later?",whatsapp:0958b4bfb4
+i_5bb757a74c,imessage,th_c_sophie_tremblay_imessage,+15145550111,in,2026-09-27T18:17:00Z,,did you see the announcement on MyCourses?,imessage:3d89daee4a
+i_7db05a77d1,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,out,2026-09-27T22:09:00Z,Study group this weekend?,I'll take the first half of the deck,gmail:98a4eaab9c
+i_14116acb34,gmail,th_c_diego_alvarez_mail,diego.alvarez@mail.mcgill.ca,in,2026-09-28T10:06:00Z,Notes from yesterday,reminder about the group meeting tomorrow,gmail:3639703e93
+i_24db7ac29c,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-09-28T11:56:00Z,,I'll take the first half of the deck,imessage:b3ce60465f
+i_42bf959bed,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-09-28T15:15:00Z,,coffee before the midterm?,imessage:916380b433
+i_a1c5c90e5e,imessage,th_c_maya_martin_imessage,+16135550177,out,2026-09-28T19:27:00Z,,thanks! that helps a lot,imessage:2529771388
+i_e9c7d6565a,gmail,th_c_maya_martin_mail,maya.martin@example.com,out,2026-09-28T23:02:00Z,Study group this weekend?,"hey — circling back on class stuff, free later?",gmail:558c72f3a6
+i_36c114ad6c,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-09-29T09:00:00Z,Re: internship deadlines,coffee before the midterm?,gmail:dbc2d0052d
+i_595fd828e5,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-09-29T09:30:00Z,Syllabus clarification,can you send the notes when you get a chance?,gmail:ab5956fd23
+i_d0d4654bb0,imessage,th_c_sophie_tremblay_imessage,+15145550111,in,2026-09-29T10:11:00Z,,did you see the announcement on MyCourses?,imessage:fb557b9f3b
+i_a290ca21e8,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-09-29T16:29:00Z,,"hey — circling back on McGill University stuff, free later?",imessage:a60b8ee9f1
+i_dead5c374e,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,out,2026-09-29T18:13:00Z,,"hey — circling back on McGill University stuff, free later?",whatsapp:0fadca385c
+i_107cf7c0ad,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,in,2026-09-29T19:36:00Z,Notes from yesterday,coffee before the midterm?,gmail:7b788335c6
+i_cd3cf75ac9,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,out,2026-09-29T21:32:00Z,Re: internship deadlines,did you see the announcement on MyCourses?,gmail:7649abfe36
+i_4003381c4a,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-09-30T11:18:00Z,Re: internship deadlines,coffee before the midterm?,gmail:8cd74aa02a
+i_082c15577d,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-09-30T12:12:00Z,Notes from yesterday,can you send the notes when you get a chance?,gmail:d3facd3e08
+i_c4e2390a8b,imessage,th_kh_imessage,+15145550142,in,2026-09-30T12:27:00Z,,coffee before the midterm?,imessage:43d00de43c
+i_13bde88ac1,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-10-01T14:08:00Z,Notes from yesterday,"running 10 min late, start without me",gmail:fcc282ea52
+i_a8b244f081,whatsapp,th_c_marcus_wei_whatsapp,+15145550112,in,2026-10-01T15:18:00Z,,thanks! that helps a lot,whatsapp:497ba05176
+i_4051fa1468,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-10-01T15:52:00Z,,thanks! that helps a lot,whatsapp:fa84ce64a9
+i_40222fd229,imessage,th_c_diego_alvarez_imessage,+15145550119,out,2026-10-01T16:58:00Z,,thanks! that helps a lot,imessage:91552dc44b
+i_b67b58e229,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-10-01T21:53:00Z,,thanks! that helps a lot,whatsapp:25ac2c8dbd
+i_325c4a9f15,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-10-01T22:33:00Z,,did you see the announcement on MyCourses?,imessage:67923a550b
+i_2b12e65913,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-10-01T23:11:00Z,,"running 10 min late, start without me",imessage:e993984018
+i_e161b02e92,imessage,th_kh_imessage,+15145550142,out,2026-10-02T08:01:00Z,,can you send the notes when you get a chance?,imessage:3f633f35fb
+i_a11a88522d,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,out,2026-10-02T11:27:00Z,,reminder about the group meeting tomorrow,whatsapp:201e7034c6
+i_855ccace9b,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-10-02T14:47:00Z,Re: internship deadlines,"hey — circling back on Northstar Recruiting stuff, free later?",gmail:2a52039480
+i_24bb0fdb62,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-10-02T14:54:00Z,Study group this weekend?,reminder about the group meeting tomorrow,gmail:36493880d6
+i_9a3c4d6a3a,imessage,th_c_jordan_blake_imessage,+14165550133,out,2026-10-02T14:55:00Z,,thanks! that helps a lot,imessage:3c61634343
+i_2ec0352656,whatsapp,th_c_maya_martin_whatsapp,+16135550177,in,2026-10-02T23:47:00Z,,"running 10 min late, start without me",whatsapp:dfea2b89c6
+i_064739e6ba,imessage,th_c_lina_chen_imessage,+14165550188,out,2026-10-03T09:50:00Z,,coffee before the midterm?,imessage:38f5744711
+i_b026ec50e6,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,out,2026-10-03T12:28:00Z,"Quick question, Lina",can you send the notes when you get a chance?,gmail:d901727652
+i_911fc3a680,imessage,th_c_diego_alvarez_imessage,+15145550119,out,2026-10-03T15:02:00Z,,I'll take the first half of the deck,imessage:5d4eac071d
+i_cd75f00b6b,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,out,2026-10-03T18:20:00Z,,"running 10 min late, start without me",whatsapp:d6583fc111
+i_52065d29f6,whatsapp,th_kh_wa,+15145550142,in,2026-10-03T19:41:00Z,,btw big news — I'm moving to Toronto in January. Lease is almost signed.,whatsapp:b3dc0144ac
+i_e6e1134e04,gmail,th_kh_gmail,karim@ledgerly.io,in,2026-10-03T19:41:00Z,Syllabus clarification,"hey — circling back on Ledgerly stuff, free later?",gmail:32b6b6224e
+i_021bbced47,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-10-04T13:33:00Z,"Quick question, Nadine",did you see the announcement on MyCourses?,gmail:ac3bd3201d
+i_329bce87b1,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-10-04T21:28:00Z,,"running 10 min late, start without me",imessage:3c3dc82c86
+i_4b0689a311,whatsapp,th_c_jordan_blake_whatsapp,+14165550133,in,2026-10-05T07:00:00Z,,reminder about the group meeting tomorrow,whatsapp:bf85111160
+i_1c519d12cf,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-10-05T10:11:00Z,,coffee before the midterm?,whatsapp:70258f6950
+i_446dbcabb6,imessage,th_c_diego_alvarez_imessage,+15145550119,out,2026-10-05T17:40:00Z,,I'll take the first half of the deck,imessage:20f8b23751
+i_b994ce8640,whatsapp,th_c_sophie_tremblay_whatsapp,+15145550111,in,2026-10-05T23:09:00Z,,reminder about the group meeting tomorrow,whatsapp:a5e02a7315
+i_a22687ef22,imessage,th_kh_imessage,+15145550142,in,2026-10-06T18:31:00Z,,coffee before the midterm?,imessage:a8c6017031
+i_de23f621f4,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,in,2026-10-06T18:37:00Z,Syllabus clarification,"hey — circling back on Northbridge Ventures stuff, free later?",gmail:f0efcdeb63
+i_b46eb3c182,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,in,2026-10-06T23:15:00Z,Notes from yesterday,can you send the notes when you get a chance?,gmail:9b19d8ccc3
+i_868bfb05c3,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-10-07T07:54:00Z,,can you send the notes when you get a chance?,whatsapp:96a6c0be16
+i_9a672d3e42,gmail,th_ks_fina,karim.saleh@mcgill.ca,in,2026-10-07T09:30:00Z,FINA 341 — office hours this week,"Hi Alex, office hours Thursday 3–5pm in Bronfman 310. Bring midterm questions.",gmail:c9ef448754
+i_73c877936a,gmail,th_c_marcus_wei_mail,marcus.wei@mail.mcgill.ca,out,2026-10-07T21:07:00Z,Syllabus clarification,did you see the announcement on MyCourses?,gmail:783223ad08
+i_0496e7bc2e,gmail,th_c_jordan_blake_mail,jordan.blake@northstar-recruiting.com,in,2026-10-08T10:26:00Z,Study group this weekend?,"hey — circling back on Northstar Recruiting stuff, free later?",gmail:d9786ded54
+i_9816c53afc,whatsapp,th_c_emma_rossi_whatsapp,+15145550121,in,2026-10-09T08:11:00Z,,did you see the announcement on MyCourses?,whatsapp:6fa28ec720
+i_800b25fd3c,imessage,th_c_sophie_tremblay_imessage,+15145550111,in,2026-10-09T14:04:00Z,,thanks! that helps a lot,imessage:7c6fc1ab90
+i_cc4bf1ac72,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-10-09T21:20:00Z,Notes from yesterday,"running 10 min late, start without me",gmail:9363e7b6ce
+i_76241ce065,imessage,th_c_diego_alvarez_imessage,+15145550119,out,2026-10-10T10:49:00Z,,can you send the notes when you get a chance?,imessage:8b7b98b48b
+i_cb7b78b401,imessage,th_c_emma_rossi_imessage,+15145550121,in,2026-10-10T14:47:00Z,,did you see the announcement on MyCourses?,imessage:db6b4d355c
+i_fa2f27eae1,imessage,th_c_maya_martin_imessage,+16135550177,in,2026-10-10T15:41:00Z,,"hey — circling back on class stuff, free later?",imessage:a728b1f513
+i_8a1f8cb863,imessage,th_c_diego_alvarez_imessage,+15145550119,in,2026-10-10T22:33:00Z,,coffee before the midterm?,imessage:a0e5542fcc
+i_cd4703fd14,whatsapp,th_c_diego_alvarez_whatsapp,+15145550119,in,2026-10-11T19:00:00Z,,I'll take the first half of the deck,whatsapp:2de7a4d953
+i_659e3ab151,imessage,th_c_sophie_tremblay_imessage,+15145550111,out,2026-10-11T19:45:00Z,,I'll take the first half of the deck,imessage:85a30053b1
+i_df9df4c443,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,out,2026-10-12T09:02:00Z,"Quick question, Nadine","running 10 min late, start without me",gmail:c4f504fbec
+i_45091adf09,whatsapp,th_c_lina_chen_whatsapp,+14165550188,in,2026-10-12T19:45:00Z,,I'll take the first half of the deck,whatsapp:973f1efb77
+i_b448bf8dff,gmail,th_c_lina_chen_mail,lina.chen@northbridge.vc,in,2026-10-13T07:11:00Z,Syllabus clarification,coffee before the midterm?,gmail:8d1b7c26db
+i_937b5468e5,gmail,th_kh_gmail,karim@ledgerly.io,out,2026-10-13T10:13:00Z,Re: internship deadlines,coffee before the midterm?,gmail:01a9d59329
+i_7239bf6127,gmail,th_c_nadine_okonkwo_mail,nadine.okonkwo@mcgill.ca,in,2026-10-13T20:31:00Z,"Quick question, Nadine","running 10 min late, start without me",gmail:35acde316a
+i_c7eaf682dd,imessage,th_c_marcus_wei_imessage,+15145550112,in,2026-10-14T12:07:00Z,,did you see the announcement on MyCourses?,imessage:19a84bb1f3
+i_49c687068e,gmail,th_c_sophie_tremblay_mail,sophie.tremblay@mail.mcgill.ca,out,2026-10-14T16:02:00Z,Syllabus clarification,reminder about the group meeting tomorrow,gmail:b26b3bd0e7
+i_b2cbe50566,gmail,th_c_emma_rossi_mail,emma.rossi@mail.mcgill.ca,out,2026-10-14T23:46:00Z,"Quick question, Emma","hey — circling back on McGill University stuff, free later?",gmail:1fbebfaac3
