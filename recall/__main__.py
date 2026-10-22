@@ -45,9 +45,45 @@ def ask(
 
 
 @app.command()
-def ingest() -> None:
-    """Load source data into the world store."""
-    print("ingest is not implemented yet")
+def ingest(
+    live: Annotated[
+        bool,
+        typer.Option("--live", help="Pull Gmail, Calendar, WhatsApp, and iMessage into data/live/."),
+    ] = False,
+) -> None:
+    """Ingest live connectors into data/live/*.parquet (requires --live)."""
+    if not live:
+        print("Live ingest needs --live (refuses to run without it).")
+        raise typer.Exit(code=1)
+
+    settings = get_settings()
+    # Live pulls must not stay in SAMPLE_MODE (DuckDB would ignore parquet).
+    os.environ["SAMPLE_MODE"] = "false"
+    get_settings.cache_clear()
+    settings = get_settings()
+
+    tracer = Tracer(logs_dir=settings.logs_dir)
+    with tracer.activate():
+        from recall.connectors.ingest import run_live_ingest
+
+        summary = run_live_ingest(settings=settings, tracer=tracer)
+
+    print("Live ingest complete.")
+    for source, info in summary["per_source"].items():
+        skipped = info.get("skipped")
+        if skipped:
+            print(f"  {source}: {skipped}")
+        else:
+            print(
+                f"  {source}: handles={info['handles']} interactions={info['interactions']} "
+                f"events={info['events']} contacts={info['contacts']}"
+            )
+    totals = summary["totals"]
+    print(
+        "  totals: "
+        f"handles={totals['handles']} interactions={totals['interactions']} "
+        f"events={totals['events']} contacts={totals['contacts']}"
+    )
 
 
 @app.command()
