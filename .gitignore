@@ -226,3 +226,7 @@ logs/**/*
 !logs/.gitkeep
 *.db
 data/live/
+
+# Recall web (Vite)
+web/node_modules/
+web/dist/
