@@ -2,29 +2,48 @@
 
 from __future__ import annotations
 
+import json
+import logging
 import time
+import uuid
 from typing import Any
 
 import httpx
 
-from recall.config import Settings
+from pydantic import SecretStr
+
+from recall.config import DataBackend, Settings, ZetarisReadMode
 from recall.data.query_layer import DataUnavailable, timed_query_event
-from recall.data.sql_bind import to_qmark
+from recall.data.zetaris_sql import prepare_zetaris_sql
 from recall.tracing import Tracer
 
-# Provisional path until docs/zetaris_notes.md is filled in.
-_QUERY_PATH = "/query"
+logger = logging.getLogger(__name__)
+
+
+def _secret_text(value: SecretStr | str | None) -> str:
+    """Read a SecretStr or plain string without assuming the wrapper type."""
+    if value is None:
+        return ""
+    if isinstance(value, SecretStr):
+        return value.get_secret_value()
+    return str(value)
+
 _ZETARIS_RETRIES = 2
+_DEFAULT_LIMIT = 1000
+_SQL_RUN_PATH = "/sql-editor/sqls/run"
+_LOGIN_PATH = "/api/auth/login"
 
 
 class ZetarisBackend:
-    """Remote SQL reads against the Zetaris query API."""
+    """Remote Spark SQL reads against Zetaris ``sql-editor/sqls/run``."""
 
     def __init__(self, settings: Settings, tracer: Tracer | None = None) -> None:
         """Bind settings and an optional tracer for successful query events."""
         self._settings = settings
         self._tracer = tracer
         self._backend_name = "zetaris"
+        self._cached_token: str | None = None
+        self._auth_method: str | None = None  # "api_key" | "login" (for smoke/diagnostics)
 
     def query(
         self,
@@ -33,20 +52,38 @@ class ZetarisBackend:
         *,
         source_tag: str,
     ) -> list[dict[str, Any]]:
-        """POST a parameterized query. Raises DataUnavailable on any failure."""
+        """POST one rendered SQL statement. Raises DataUnavailable on any failure."""
         started = time.perf_counter()
-        base = (self._settings.zetaris_url or "").strip().rstrip("/")
-        if not base:
-            raise DataUnavailable("ZETARIS_URL is not configured")
+        rest = self._rest_url()
         if self._settings.sample_mode:
-            # SAMPLE_MODE must not contact live systems; FallbackQueryLayer uses DuckDB.
-            raise DataUnavailable("Zetaris is not called in SAMPLE_MODE")
+            # Sample data can live in Zetaris too: call when backend+URL are configured.
+            if self._settings.data_backend is not DataBackend.ZETARIS or not rest:
+                raise DataUnavailable(
+                    "Zetaris skipped in SAMPLE_MODE (need DATA_BACKEND=zetaris and ZETARIS_REST_URL)"
+                )
 
-        bound_sql, bound_params = to_qmark(sql, params)
-        url = f"{base}{_QUERY_PATH}"
-        body: dict[str, Any] = {"sql": bound_sql, "params": bound_params}
+        if not rest:
+            raise DataUnavailable("ZETARIS_REST_URL is not configured")
 
-        rows = self._request_with_retries(url, body)
+        mode = self._read_mode()
+        try:
+            rendered, usl_meta = prepare_zetaris_sql(
+                sql,
+                params,
+                schema=self._settings.zetaris_schema or "recall",
+                read_mode=mode.value,
+                usl_namespace=self._settings.zetaris_usl_namespace
+                or "lightning.metastore.recallai.recall",
+            )
+        except DataUnavailable:
+            raise
+        except Exception as exc:  # noqa: BLE001
+            raise DataUnavailable(f"Zetaris SQL prepare failed: {type(exc).__name__}") from exc
+
+        rows = self._request_with_retries(rest, rendered)
+        extra: dict[str, Any] = {"zetaris_mode": mode.value}
+        if mode is ZetarisReadMode.USL:
+            extra["usl_tables"] = list(usl_meta.usl_tables) if usl_meta else []
         timed_query_event(
             self._tracer,
             backend=self._backend_name,
@@ -54,60 +91,313 @@ class ZetarisBackend:
             sql=sql,
             row_count=len(rows),
             started=started,
+            extra=extra,
         )
         return rows
 
-    def _request_with_retries(self, url: str, body: dict[str, Any]) -> list[dict[str, Any]]:
-        timeout = self._settings.http_timeout_seconds
+    def _read_mode(self) -> ZetarisReadMode:
+        mode = self._settings.zetaris_read_mode
+        if isinstance(mode, ZetarisReadMode):
+            return mode
+        text = str(mode or "usl").strip().lower()
+        return ZetarisReadMode.TABLES if text == "tables" else ZetarisReadMode.USL
+
+    def run_raw(
+        self,
+        sql: str,
+        *,
+        source_tag: str,
+        timeout: float | None = None,
+    ) -> dict[str, Any]:
+        """POST one SQL statement as-is (allows COMPILE USL internal semicolons).
+
+        Returns the full JSON payload. Does not apply ``:param`` binding or
+        ``recall.*`` schema rewriting. Never logs tokens.
+        """
+        started = time.perf_counter()
+        rest = self._rest_url()
+        if not rest:
+            raise DataUnavailable("ZETARIS_REST_URL is not configured")
+        text = sql.strip().rstrip(";").strip()
+        if not text:
+            raise DataUnavailable("Zetaris SQL is empty")
+        active_timeout = float(timeout) if timeout is not None else float(
+            self._settings.http_timeout_seconds
+        )
+        payload = self._request_payload_with_retries(
+            rest, text, timeout=active_timeout, full_errors=True
+        )
+        # DDL / Lightning commands often omit tabular headers — that is OK here.
+        row_count = 0
+        try:
+            row_count = len(self._extract_rows(payload))
+        except DataUnavailable:
+            data = payload.get("data") if isinstance(payload, dict) else None
+            if isinstance(data, list):
+                row_count = len(data)
+        timed_query_event(
+            self._tracer,
+            backend=self._backend_name,
+            source_tag=source_tag,
+            sql=text[:500],
+            row_count=row_count,
+            started=started,
+        )
+        return payload if isinstance(payload, dict) else {"data": payload}
+
+    def _rest_url(self) -> str:
+        return (
+            self._settings.zetaris_rest_url
+            or self._settings.zetaris_url
+            or ""
+        ).strip().rstrip("/")
+
+    def _base_url(self) -> str:
+        return (self._settings.zetaris_base_url or "").strip().rstrip("/")
+
+    def _request_with_retries(self, rest: str, sql: str) -> list[dict[str, Any]]:
+        payload = self._request_payload_with_retries(
+            rest, sql, timeout=float(self._settings.http_timeout_seconds)
+        )
+        return self._extract_rows(payload)
+
+    def _request_payload_with_retries(
+        self,
+        rest: str,
+        sql: str,
+        *,
+        timeout: float,
+        full_errors: bool = False,
+    ) -> Any:
         attempts = _ZETARIS_RETRIES + 1
         last_error: Exception | None = None
         for attempt in range(attempts):
             try:
-                return self._once(url, body, timeout=timeout)
+                return self._run_sql_payload(
+                    rest, sql, timeout=timeout, full_errors=full_errors
+                )
             except DataUnavailable as exc:
                 last_error = exc
                 if attempt + 1 >= attempts:
                     break
         raise DataUnavailable(str(last_error) if last_error else "Zetaris request failed")
 
-    def _once(self, url: str, body: dict[str, Any], *, timeout: float) -> list[dict[str, Any]]:
-        headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        auth: httpx.Auth | None = None
-        api_key = self._settings.zetaris_api_key.get_secret_value()
-        if api_key:
-            headers["Authorization"] = f"Bearer {api_key}"
-        elif self._settings.zetaris_user and self._settings.zetaris_password.get_secret_value():
-            auth = httpx.BasicAuth(
-                self._settings.zetaris_user,
-                self._settings.zetaris_password.get_secret_value(),
-            )
+    def _run_sql(self, rest: str, sql: str, *, timeout: float) -> list[dict[str, Any]]:
+        return self._extract_rows(
+            self._run_sql_payload(rest, sql, timeout=timeout, full_errors=False)
+        )
 
-        try:
-            with httpx.Client(timeout=timeout) as client:
-                response = client.post(url, json=body, headers=headers, auth=auth)
-        except httpx.HTTPError as exc:
-            # Never include request headers/body credentials in the message.
-            raise DataUnavailable(f"Zetaris transport error: {type(exc).__name__}") from exc
+    def _run_sql_payload(
+        self,
+        rest: str,
+        sql: str,
+        *,
+        timeout: float,
+        full_errors: bool,
+    ) -> Any:
+        token = self._resolve_token(timeout=timeout)
+        url = f"{rest}{_SQL_RUN_PATH}"
+        body = {
+            "queryId": str(uuid.uuid4()),
+            "sql": sql,
+            "source": "SqlEditor",
+            "limit": _DEFAULT_LIMIT,
+        }
+        response = self._post_json(url, body, token=token, timeout=timeout)
+
+        # Known local bug: API key returns 400 {"msg":"Not Allowed"} — login and retry once.
+        if response.status_code == 400 and self._is_not_allowed(response):
+            logger.info("Zetaris API key rejected (Not Allowed); falling back to login token")
+            self._cached_token = None
+            token = self._login(timeout=timeout)
+            self._cached_token = token
+            self._auth_method = "login"
+            response = self._post_json(url, body, token=token, timeout=timeout)
 
         if response.status_code >= 400:
-            raise DataUnavailable(f"Zetaris HTTP {response.status_code}")
+            if full_errors:
+                raise DataUnavailable(self._full_error(response))
+            detail = self._error_detail(response)
+            raise DataUnavailable(f"Zetaris HTTP {response.status_code}{detail}")
 
         try:
-            payload = response.json()
+            return response.json()
         except ValueError as exc:
             raise DataUnavailable("Zetaris returned non-JSON") from exc
 
-        return self._extract_rows(payload)
+    def _resolve_token(self, *, timeout: float) -> str:
+        if self._cached_token:
+            return self._cached_token
+        api_key = _secret_text(self._settings.zetaris_api_key).strip()
+        if api_key:
+            self._auth_method = "api_key"
+            return api_key
+        token = self._login(timeout=timeout)
+        self._cached_token = token
+        self._auth_method = "login"
+        return token
+
+    def _login(self, *, timeout: float) -> str:
+        base = self._base_url()
+        if not base:
+            raise DataUnavailable("ZETARIS_BASE_URL is not configured for login")
+        user = (self._settings.zetaris_user or "").strip()
+        password = _secret_text(self._settings.zetaris_password)
+        if not user or not password:
+            raise DataUnavailable("Zetaris login requires ZETARIS_USER and ZETARIS_PASSWORD")
+        url = f"{base}{_LOGIN_PATH}"
+        # Never log username/password/token.
+        try:
+            with httpx.Client(timeout=timeout) as client:
+                response = client.post(
+                    url,
+                    json={"username": user, "password": password},
+                    headers={"Content-Type": "application/json", "Accept": "application/json"},
+                )
+        except httpx.HTTPError as exc:
+            raise DataUnavailable(f"Zetaris login transport error: {type(exc).__name__}") from exc
+        if response.status_code >= 400:
+            raise DataUnavailable(f"Zetaris login HTTP {response.status_code}")
+        try:
+            payload = response.json()
+        except ValueError as exc:
+            raise DataUnavailable("Zetaris login returned non-JSON") from exc
+        if not isinstance(payload, dict):
+            raise DataUnavailable("Zetaris login response is not an object")
+        token = (
+            payload.get("idToken")
+            or payload.get("token")
+            or payload.get("accessToken")
+            or ""
+        )
+        if not isinstance(token, str) or not token.strip():
+            raise DataUnavailable("Zetaris login response missing idToken")
+        return token.strip()
+
+    def _post_json(
+        self,
+        url: str,
+        body: dict[str, Any],
+        *,
+        token: str,
+        timeout: float,
+    ) -> httpx.Response:
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "X-Org-ID": str(self._settings.zetaris_org_id or "1"),
+            "X-Request-ID": str(uuid.uuid4()),
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+        try:
+            with httpx.Client(timeout=timeout) as client:
+                return client.post(url, json=body, headers=headers)
+        except httpx.HTTPError as exc:
+            raise DataUnavailable(f"Zetaris transport error: {type(exc).__name__}") from exc
+
+    @staticmethod
+    def _is_not_allowed(response: httpx.Response) -> bool:
+        try:
+            payload = response.json()
+        except ValueError:
+            return False
+        if not isinstance(payload, dict):
+            return False
+        msg = str(payload.get("msg") or payload.get("message") or "")
+        return msg.strip().lower() == "not allowed"
+
+    @staticmethod
+    def _error_detail(response: httpx.Response) -> str:
+        """Safe short error snippet (never includes Authorization / tokens)."""
+        try:
+            payload = response.json()
+        except ValueError:
+            text = (response.text or "")[:160].replace("\n", " ")
+            return f": {text}" if text else ""
+        if not isinstance(payload, dict):
+            return ""
+        msg = payload.get("msg") or payload.get("message") or payload.get("error")
+        if msg is None:
+            return ""
+        return f": {str(msg)[:160]}"
+
+    @staticmethod
+    def _full_error(response: httpx.Response) -> str:
+        """Full server error body for admin scripts (still never includes tokens)."""
+        try:
+            payload = response.json()
+        except ValueError:
+            text = (response.text or "").strip()
+            return f"Zetaris HTTP {response.status_code}: {text[:4000]}"
+        try:
+            body = json.dumps(payload, indent=2, default=str)
+        except TypeError:
+            body = str(payload)
+        return f"Zetaris HTTP {response.status_code}:\n{body[:8000]}"
 
     @staticmethod
     def _extract_rows(payload: Any) -> list[dict[str, Any]]:
-        if isinstance(payload, list):
-            if all(isinstance(row, dict) for row in payload):
-                return payload
-            raise DataUnavailable("Zetaris array response must contain objects")
-        if isinstance(payload, dict) and "rows" in payload:
-            rows = payload["rows"]
-            if isinstance(rows, list) and all(isinstance(row, dict) for row in rows):
-                return rows
-            raise DataUnavailable("Zetaris rows field must be a list of objects")
-        raise DataUnavailable("Zetaris response missing rows")
+        if not isinstance(payload, dict):
+            raise DataUnavailable("Zetaris response must be a JSON object")
+        # Prefer documented "headers"; accept a few alternate shapes seen in the wild.
+        headers = (
+            payload.get("headers")
+            or payload.get("columns")
+            or payload.get("columnNames")
+            or payload.get("fields")
+        )
+        if headers is None and isinstance(payload.get("schema"), dict):
+            headers = payload["schema"].get("fields") or payload["schema"].get("columns")
+        if headers is None:
+            raise DataUnavailable(
+                "Zetaris response missing headers (column names required to map data rows); "
+                f"keys={sorted(payload.keys())}"
+            )
+        if not isinstance(headers, list) or not headers:
+            raise DataUnavailable("Zetaris headers must be a non-empty list")
+
+        names: list[str] = []
+        for item in headers:
+            if isinstance(item, str):
+                names.append(item)
+            elif isinstance(item, dict):
+                name = item.get("name") or item.get("columnName") or item.get("field")
+                if name is None:
+                    raise DataUnavailable(
+                        "Zetaris header entries must be strings or {name: ...}"
+                    )
+                names.append(str(name))
+            else:
+                raise DataUnavailable("Zetaris header entries must be strings or {name: ...}")
+
+        data = payload.get("data")
+        if data is None:
+            data = payload.get("rows") or payload.get("result")
+        if data is None:
+            return []
+        if not isinstance(data, list):
+            raise DataUnavailable("Zetaris data must be a list of row arrays")
+
+        rows: list[dict[str, Any]] = []
+        for raw in data:
+            if isinstance(raw, dict):
+                # Some proxies return objects; coerce to header order as strings.
+                rows.append(
+                    {
+                        name: None if raw.get(name) is None else str(raw.get(name))
+                        for name in names
+                    }
+                )
+                continue
+            if not isinstance(raw, list):
+                raise DataUnavailable("Zetaris data rows must be arrays")
+            # Pad / trim to header width; keep values as strings (API contract).
+            cells: list[Any] = []
+            for index in range(len(names)):
+                if index < len(raw):
+                    value = raw[index]
+                    cells.append(None if value is None else str(value))
+                else:
+                    cells.append(None)
+            rows.append(dict(zip(names, cells, strict=True)))
+        return rows

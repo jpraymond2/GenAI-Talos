@@ -34,6 +34,27 @@ def _enable_sample_mode() -> None:
     get_settings.cache_clear()
 
 
+_WORLD_EMPTY_MSG = "World model is empty. Run: recall ingest --sample (or --live)"
+
+
+def _require_world_entities() -> None:
+    """Exit if the world DB is missing or has zero entities (do not create an empty DB)."""
+    from recall.engines.world.store import WorldStore, world_db_path
+
+    settings = get_settings()
+    path = world_db_path(settings)
+    if not path.is_file():
+        print(_WORLD_EMPTY_MSG)
+        raise typer.Exit(code=1)
+    store = WorldStore(path=path, settings=settings)
+    try:
+        if store.count_entities() == 0:
+            print(_WORLD_EMPTY_MSG)
+            raise typer.Exit(code=1)
+    finally:
+        store.close()
+
+
 @app.command()
 def ingest(
     sample: Annotated[

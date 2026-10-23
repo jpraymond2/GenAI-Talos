@@ -10,6 +10,7 @@ every run.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
@@ -1053,11 +1054,13 @@ configured provider and `SAMPLE_MODE=false`).
     )
 
 
-def generate_dataset() -> dict[str, int]:
+def generate_dataset(out_dir: Path | None = None) -> dict[str, int]:
     """Build all tables, write CSVs + README + text cache, return row counts."""
+    destination = Path(out_dir) if out_dir is not None else OUT_DIR
+    cache_path = destination / "_text_cache.json"
     rng = random.Random(RANDOM_SEED)
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    cache = load_text_cache(CACHE_PATH)
+    destination.mkdir(parents=True, exist_ok=True)
+    cache = load_text_cache(cache_path)
 
     contacts = build_contacts()
     handles = build_handles(contacts)
@@ -1067,12 +1070,12 @@ def generate_dataset() -> dict[str, int]:
     contact_rows = contacts_to_rows(contacts)
 
     write_csv(
-        OUT_DIR / "handles.csv",
+        destination / "handles.csv",
         ["handle_id", "kind", "value", "display_name", "source"],
         handles,
     )
     write_csv(
-        OUT_DIR / "interactions.csv",
+        destination / "interactions.csv",
         [
             "interaction_id",
             "source",
@@ -1087,12 +1090,12 @@ def generate_dataset() -> dict[str, int]:
         interactions,
     )
     write_csv(
-        OUT_DIR / "events.csv",
+        destination / "events.csv",
         ["event_id", "title", "start_utc", "end_utc", "location", "attendees", "source_ref"],
         events,
     )
     write_csv(
-        OUT_DIR / "contacts.csv",
+        destination / "contacts.csv",
         ["contact_id", "full_name", "org", "title", "city", "emails", "phones", "source"],
         contact_rows,
     )
@@ -1103,17 +1106,26 @@ def generate_dataset() -> dict[str, int]:
         "interactions": len(interactions),
         "events": len(events),
     }
-    write_readme(OUT_DIR / "README.md", counts)
-    save_text_cache(CACHE_PATH, cache)
+    write_readme(destination / "README.md", counts)
+    save_text_cache(cache_path, cache)
     return counts
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
     """CLI entrypoint."""
-    counts = generate_dataset()
+    parser = argparse.ArgumentParser(description="Generate synthetic Recall sample CSVs.")
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        default=None,
+        help="Output directory (default: data/sample). Tests should pass a tmp path.",
+    )
+    args = parser.parse_args(argv)
+    destination = args.out_dir if args.out_dir is not None else OUT_DIR
+    counts = generate_dataset(destination)
     print(
         "Wrote sample data to "
-        f"{OUT_DIR}: contacts={counts['contacts']} handles={counts['handles']} "
+        f"{destination}: contacts={counts['contacts']} handles={counts['handles']} "
         f"interactions={counts['interactions']} events={counts['events']}"
     )
 

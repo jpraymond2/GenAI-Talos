@@ -3,9 +3,9 @@
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Self
 
-from pydantic import Field, SecretStr, field_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
@@ -14,6 +14,13 @@ class DataBackend(StrEnum):
 
     ZETARIS = "zetaris"
     DUCKDB = "duckdb"
+
+
+class ZetarisReadMode(StrEnum):
+    """Zetaris source: activated USL tables, or raw FILESTORE tables."""
+
+    USL = "usl"
+    TABLES = "tables"
 
 
 class ModelTier(StrEnum):
@@ -76,7 +83,31 @@ class Settings(BaseSettings):
     )
 
     tavily_api_key: SecretStr = Field(default=SecretStr(""))
-    zetaris_url: str = ""
+    zetaris_rest_url: str = Field(
+        default="http://localhost:8888/api/v1.0",
+        description="Direct Zetaris REST base (POST …/sql-editor/sqls/run).",
+    )
+    zetaris_base_url: str = Field(
+        default="http://localhost:3000",
+        description="UI base for POST /api/auth/login (idToken fallback).",
+    )
+    zetaris_org_id: str = Field(default="1", description="X-Org-ID header value.")
+    zetaris_schema: str = Field(
+        default="recall",
+        description="Lightning/Spark schema prefix for recall.<table> queries.",
+    )
+    zetaris_read_mode: ZetarisReadMode = Field(
+        default=ZetarisReadMode.USL,
+        description="usl = lightning.metastore.recallai.recall.*; tables = raw recall.*",
+    )
+    zetaris_usl_namespace: str = Field(
+        default="lightning.metastore.recallai.recall",
+        description="Fully-qualified USL model path (without the table leaf).",
+    )
+    zetaris_url: str = Field(
+        default="",
+        description="Deprecated alias for ZETARIS_REST_URL.",
+    )
     zetaris_api_key: SecretStr = Field(default=SecretStr(""))
     zetaris_user: str = ""
     zetaris_password: SecretStr = Field(default=SecretStr(""))
@@ -94,6 +125,25 @@ class Settings(BaseSettings):
     live_data_dir: Path = Path("data/live")
     cache_dir: Path = Path("data/cache")
     logs_dir: Path = Path("logs")
+
+    @model_validator(mode="after")
+    def _alias_zetaris_url(self) -> Self:
+        """Map deprecated ZETARIS_URL onto ZETARIS_REST_URL when set."""
+        legacy = (self.zetaris_url or "").strip()
+        if not legacy:
+            return self
+        return self.model_copy(update={"zetaris_rest_url": legacy})
+
+    @model_validator(mode="after")
+    def _default_zetaris_read_mode(self) -> Self:
+        """When DATA_BACKEND=zetaris, prefer USL reads unless tables was set."""
+        # Field default is already USL; keep tables when explicitly chosen.
+        if self.data_backend is DataBackend.ZETARIS and self.zetaris_read_mode not in (
+            ZetarisReadMode.USL,
+            ZetarisReadMode.TABLES,
+        ):
+            return self.model_copy(update={"zetaris_read_mode": ZetarisReadMode.USL})
+        return self
 
     @field_validator("role_models", mode="before")
     @classmethod

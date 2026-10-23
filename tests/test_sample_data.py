@@ -1,4 +1,4 @@
-"""Checks for the synthetic Alex Martin sample corpus under data/sample/."""
+"""Checks for the synthetic Alex Martin sample corpus generator."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import csv
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -21,8 +22,8 @@ CSV_FILES = ("handles.csv", "interactions.csv", "events.csv", "contacts.csv")
 ANCHOR = datetime(2026, 10, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 
-def _read_csv(name: str) -> list[dict[str, str]]:
-    path = SAMPLE / name
+def _read_csv(sample_dir: Path, name: str) -> list[dict[str, str]]:
+    path = sample_dir / name
     with path.open(encoding="utf-8", newline="") as fh:
         return list(csv.DictReader(fh))
 
@@ -31,11 +32,11 @@ def _file_digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _run_generator() -> None:
+def _run_generator(out_dir: Path) -> None:
     env = os.environ.copy()
     env["SAMPLE_MODE"] = "true"
     result = subprocess.run(
-        [sys.executable, str(SCRIPT)],
+        [sys.executable, str(SCRIPT), "--out-dir", str(out_dir)],
         cwd=str(ROOT),
         check=False,
         capture_output=True,
@@ -45,17 +46,22 @@ def _run_generator() -> None:
     assert result.returncode == 0, result.stdout + "\n" + result.stderr
 
 
-@pytest.fixture(scope="module", autouse=True)
-def _ensure_sample_data() -> None:
-    """Generate sample CSVs once before this module's tests."""
-    _run_generator()
+@pytest.fixture(scope="module")
+def sample_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Regenerate sample CSVs into a temp dir — never overwrite data/sample."""
+    out = tmp_path_factory.mktemp("sample_data")
+    cache_src = SAMPLE / "_text_cache.json"
+    if cache_src.is_file():
+        shutil.copy2(cache_src, out / "_text_cache.json")
+    _run_generator(out)
+    return out
 
 
-def test_row_counts() -> None:
-    contacts = _read_csv("contacts.csv")
-    interactions = _read_csv("interactions.csv")
-    events = _read_csv("events.csv")
-    handles = _read_csv("handles.csv")
+def test_row_counts(sample_dir: Path) -> None:
+    contacts = _read_csv(sample_dir, "contacts.csv")
+    interactions = _read_csv(sample_dir, "interactions.csv")
+    events = _read_csv(sample_dir, "events.csv")
+    handles = _read_csv(sample_dir, "handles.csv")
 
     assert len(contacts) == 10
     assert len(interactions) == 400
@@ -63,15 +69,15 @@ def test_row_counts() -> None:
     assert len(handles) >= 15
 
 
-def test_both_karims_present() -> None:
-    names = {row["full_name"] for row in _read_csv("contacts.csv")}
+def test_both_karims_present(sample_dir: Path) -> None:
+    names = {row["full_name"] for row in _read_csv(sample_dir, "contacts.csv")}
     assert "Karim Haddad" in names
     assert "Karim Saleh" in names
 
 
-def test_planted_fact_identity_merge_handles() -> None:
+def test_planted_fact_identity_merge_handles(sample_dir: Path) -> None:
     """Karim Haddad appears under Gmail, WhatsApp (flag nick), and iMessage phone."""
-    handles = _read_csv("handles.csv")
+    handles = _read_csv(sample_dir, "handles.csv")
     by_value = {(h["kind"], h["value"]): h for h in handles}
 
     email = by_value[("email", "karim@ledgerly.io")]
@@ -85,8 +91,8 @@ def test_planted_fact_identity_merge_handles() -> None:
     assert imessage["value"] == "+15145550142"
 
 
-def test_planted_fact_montreal_vs_toronto_conflict() -> None:
-    interactions = _read_csv("interactions.csv")
+def test_planted_fact_montreal_vs_toronto_conflict(sample_dir: Path) -> None:
+    interactions = _read_csv(sample_dir, "interactions.csv")
     montreal = [
         r
         for r in interactions
@@ -111,8 +117,8 @@ def test_planted_fact_montreal_vs_toronto_conflict() -> None:
     assert abs((ANCHOR - toronto_ts).days - 12) <= 1
 
 
-def test_planted_fact_open_loop_lina_intro() -> None:
-    interactions = _read_csv("interactions.csv")
+def test_planted_fact_open_loop_lina_intro(sample_dir: Path) -> None:
+    interactions = _read_csv(sample_dir, "interactions.csv")
     intros = [
         r
         for r in interactions
@@ -134,8 +140,8 @@ def test_planted_fact_open_loop_lina_intro() -> None:
     assert replies == [], "Alex must not have replied to the Lina intro ask"
 
 
-def test_planted_fact_seed_round_whatsapp() -> None:
-    interactions = _read_csv("interactions.csv")
+def test_planted_fact_seed_round_whatsapp(sample_dir: Path) -> None:
+    interactions = _read_csv(sample_dir, "interactions.csv")
     hits = [
         r
         for r in interactions
@@ -149,8 +155,8 @@ def test_planted_fact_seed_round_whatsapp() -> None:
     assert abs((ANCHOR - ts).days - 21) <= 1
 
 
-def test_planted_fact_coffee_event_june() -> None:
-    events = _read_csv("events.csv")
+def test_planted_fact_coffee_event_june(sample_dir: Path) -> None:
+    events = _read_csv(sample_dir, "events.csv")
     coffee = [e for e in events if e["title"] == "Coffee w/ Karim"]
     assert len(coffee) == 1
     assert "Mile End" in coffee[0]["location"]
@@ -160,37 +166,49 @@ def test_planted_fact_coffee_event_june() -> None:
     assert "karim@ledgerly.io" in attendees
 
 
-def test_planted_fact_lina_chen_contact() -> None:
-    contacts = {c["full_name"]: c for c in _read_csv("contacts.csv")}
+def test_planted_fact_lina_chen_contact(sample_dir: Path) -> None:
+    contacts = {c["full_name"]: c for c in _read_csv(sample_dir, "contacts.csv")}
     assert "Lina Chen" in contacts
     emails = json.loads(contacts["Lina Chen"]["emails"])
     assert len(emails) >= 2
     assert any("northbridge" in e for e in emails)
 
-    interactions = _read_csv("interactions.csv")
+    interactions = _read_csv(sample_dir, "interactions.csv")
     lina_mail = [r for r in interactions if r["handle_value"] == "lina.chen@northbridge.vc"]
     assert len(lina_mail) >= 2
 
 
-def test_csv_total_size_under_1mb() -> None:
-    total = sum((SAMPLE / name).stat().st_size for name in CSV_FILES)
+def test_csv_total_size_under_1mb(sample_dir: Path) -> None:
+    total = sum((sample_dir / name).stat().st_size for name in CSV_FILES)
     assert total < 1_000_000, f"sample CSVs total {total} bytes"
 
 
-def test_two_runs_produce_identical_files() -> None:
-    """Re-running the generator must not change CSV or cache bytes."""
-    before = {name: _file_digest(SAMPLE / name) for name in CSV_FILES}
-    before_cache = _file_digest(SAMPLE / "_text_cache.json")
+def test_two_runs_produce_identical_files(sample_dir: Path) -> None:
+    """Re-running the generator into the same tmp dir must not change bytes."""
+    before = {name: _file_digest(sample_dir / name) for name in CSV_FILES}
+    before_cache = _file_digest(sample_dir / "_text_cache.json")
 
-    _run_generator()
+    _run_generator(sample_dir)
 
-    after = {name: _file_digest(SAMPLE / name) for name in CSV_FILES}
-    after_cache = _file_digest(SAMPLE / "_text_cache.json")
+    after = {name: _file_digest(sample_dir / name) for name in CSV_FILES}
+    after_cache = _file_digest(sample_dir / "_text_cache.json")
     assert before == after
     assert before_cache == after_cache
 
 
-def test_readme_exists() -> None:
-    readme = (SAMPLE / "README.md").read_text(encoding="utf-8")
+def test_readme_exists(sample_dir: Path) -> None:
+    readme = (sample_dir / "README.md").read_text(encoding="utf-8")
     assert "synthetic" in readme.lower() or "fictional" in readme.lower()
     assert "make_sample_data.py" in readme
+
+
+def test_generator_does_not_touch_repo_sample(tmp_path: Path) -> None:
+    """Regression: regenerating must not rewrite data/sample in the repo."""
+    before = {name: _file_digest(SAMPLE / name) for name in CSV_FILES if (SAMPLE / name).is_file()}
+    out = tmp_path / "isolated"
+    out.mkdir()
+    if (SAMPLE / "_text_cache.json").is_file():
+        shutil.copy2(SAMPLE / "_text_cache.json", out / "_text_cache.json")
+    _run_generator(out)
+    after = {name: _file_digest(SAMPLE / name) for name in CSV_FILES if (SAMPLE / name).is_file()}
+    assert before == after

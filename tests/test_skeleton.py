@@ -92,6 +92,7 @@ def test_sample_backends_return_same_rows(
     monkeypatch.setenv("LOGS_DIR", str(logs))
     monkeypatch.setenv("SAMPLE_MODE", "true")
     monkeypatch.delenv("ZETARIS_URL", raising=False)
+    monkeypatch.delenv("ZETARIS_REST_URL", raising=False)
     get_settings.cache_clear()
 
     sql = "SELECT handle_id, kind, value FROM recall.handles ORDER BY handle_id"
