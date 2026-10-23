@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import time
 import uuid
@@ -11,7 +12,7 @@ import httpx
 
 from pydantic import SecretStr
 
-from recall.config import DataBackend, Settings
+from recall.config import DataBackend, Settings, ZetarisReadMode
 from recall.data.query_layer import DataUnavailable, timed_query_event
 from recall.data.zetaris_sql import prepare_zetaris_sql
 from recall.tracing import Tracer
@@ -64,11 +65,15 @@ class ZetarisBackend:
         if not rest:
             raise DataUnavailable("ZETARIS_REST_URL is not configured")
 
+        mode = self._read_mode()
         try:
-            rendered = prepare_zetaris_sql(
+            rendered, usl_meta = prepare_zetaris_sql(
                 sql,
                 params,
                 schema=self._settings.zetaris_schema or "recall",
+                read_mode=mode.value,
+                usl_namespace=self._settings.zetaris_usl_namespace
+                or "lightning.metastore.recallai.recall",
             )
         except DataUnavailable:
             raise
@@ -76,6 +81,9 @@ class ZetarisBackend:
             raise DataUnavailable(f"Zetaris SQL prepare failed: {type(exc).__name__}") from exc
 
         rows = self._request_with_retries(rest, rendered)
+        extra: dict[str, Any] = {"zetaris_mode": mode.value}
+        if mode is ZetarisReadMode.USL:
+            extra["usl_tables"] = list(usl_meta.usl_tables) if usl_meta else []
         timed_query_event(
             self._tracer,
             backend=self._backend_name,
@@ -83,8 +91,59 @@ class ZetarisBackend:
             sql=sql,
             row_count=len(rows),
             started=started,
+            extra=extra,
         )
         return rows
+
+    def _read_mode(self) -> ZetarisReadMode:
+        mode = self._settings.zetaris_read_mode
+        if isinstance(mode, ZetarisReadMode):
+            return mode
+        text = str(mode or "usl").strip().lower()
+        return ZetarisReadMode.TABLES if text == "tables" else ZetarisReadMode.USL
+
+    def run_raw(
+        self,
+        sql: str,
+        *,
+        source_tag: str,
+        timeout: float | None = None,
+    ) -> dict[str, Any]:
+        """POST one SQL statement as-is (allows COMPILE USL internal semicolons).
+
+        Returns the full JSON payload. Does not apply ``:param`` binding or
+        ``recall.*`` schema rewriting. Never logs tokens.
+        """
+        started = time.perf_counter()
+        rest = self._rest_url()
+        if not rest:
+            raise DataUnavailable("ZETARIS_REST_URL is not configured")
+        text = sql.strip().rstrip(";").strip()
+        if not text:
+            raise DataUnavailable("Zetaris SQL is empty")
+        active_timeout = float(timeout) if timeout is not None else float(
+            self._settings.http_timeout_seconds
+        )
+        payload = self._request_payload_with_retries(
+            rest, text, timeout=active_timeout, full_errors=True
+        )
+        # DDL / Lightning commands often omit tabular headers — that is OK here.
+        row_count = 0
+        try:
+            row_count = len(self._extract_rows(payload))
+        except DataUnavailable:
+            data = payload.get("data") if isinstance(payload, dict) else None
+            if isinstance(data, list):
+                row_count = len(data)
+        timed_query_event(
+            self._tracer,
+            backend=self._backend_name,
+            source_tag=source_tag,
+            sql=text[:500],
+            row_count=row_count,
+            started=started,
+        )
+        return payload if isinstance(payload, dict) else {"data": payload}
 
     def _rest_url(self) -> str:
         return (
@@ -97,12 +156,26 @@ class ZetarisBackend:
         return (self._settings.zetaris_base_url or "").strip().rstrip("/")
 
     def _request_with_retries(self, rest: str, sql: str) -> list[dict[str, Any]]:
-        timeout = self._settings.http_timeout_seconds
+        payload = self._request_payload_with_retries(
+            rest, sql, timeout=float(self._settings.http_timeout_seconds)
+        )
+        return self._extract_rows(payload)
+
+    def _request_payload_with_retries(
+        self,
+        rest: str,
+        sql: str,
+        *,
+        timeout: float,
+        full_errors: bool = False,
+    ) -> Any:
         attempts = _ZETARIS_RETRIES + 1
         last_error: Exception | None = None
         for attempt in range(attempts):
             try:
-                return self._run_sql(rest, sql, timeout=timeout)
+                return self._run_sql_payload(
+                    rest, sql, timeout=timeout, full_errors=full_errors
+                )
             except DataUnavailable as exc:
                 last_error = exc
                 if attempt + 1 >= attempts:
@@ -110,6 +183,18 @@ class ZetarisBackend:
         raise DataUnavailable(str(last_error) if last_error else "Zetaris request failed")
 
     def _run_sql(self, rest: str, sql: str, *, timeout: float) -> list[dict[str, Any]]:
+        return self._extract_rows(
+            self._run_sql_payload(rest, sql, timeout=timeout, full_errors=False)
+        )
+
+    def _run_sql_payload(
+        self,
+        rest: str,
+        sql: str,
+        *,
+        timeout: float,
+        full_errors: bool,
+    ) -> Any:
         token = self._resolve_token(timeout=timeout)
         url = f"{rest}{_SQL_RUN_PATH}"
         body = {
@@ -130,15 +215,15 @@ class ZetarisBackend:
             response = self._post_json(url, body, token=token, timeout=timeout)
 
         if response.status_code >= 400:
+            if full_errors:
+                raise DataUnavailable(self._full_error(response))
             detail = self._error_detail(response)
             raise DataUnavailable(f"Zetaris HTTP {response.status_code}{detail}")
 
         try:
-            payload = response.json()
+            return response.json()
         except ValueError as exc:
             raise DataUnavailable("Zetaris returned non-JSON") from exc
-
-        return self._extract_rows(payload)
 
     def _resolve_token(self, *, timeout: float) -> str:
         if self._cached_token:
@@ -235,6 +320,20 @@ class ZetarisBackend:
         if msg is None:
             return ""
         return f": {str(msg)[:160]}"
+
+    @staticmethod
+    def _full_error(response: httpx.Response) -> str:
+        """Full server error body for admin scripts (still never includes tokens)."""
+        try:
+            payload = response.json()
+        except ValueError:
+            text = (response.text or "").strip()
+            return f"Zetaris HTTP {response.status_code}: {text[:4000]}"
+        try:
+            body = json.dumps(payload, indent=2, default=str)
+        except TypeError:
+            body = str(payload)
+        return f"Zetaris HTTP {response.status_code}:\n{body[:8000]}"
 
     @staticmethod
     def _extract_rows(payload: Any) -> list[dict[str, Any]]:

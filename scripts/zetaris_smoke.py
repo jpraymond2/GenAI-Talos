@@ -1,4 +1,4 @@
-"""Live smoke check: auth, row counts, named-query parity vs DuckDB.
+"""Live smoke check: auth, counts, named-query parity (USL / tables / DuckDB).
 
 Never prints tokens or passwords. Loads settings from .env via recall.config.
 """
@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from recall.config import DataBackend, Settings, get_settings  # noqa: E402
+from recall.config import DataBackend, Settings, ZetarisReadMode, get_settings  # noqa: E402
 from recall.data.duckdb_backend import DuckDBBackend  # noqa: E402
 from recall.data.queries import (  # noqa: E402
     SAMPLE_ANCHOR,
@@ -49,73 +49,118 @@ def main() -> int:
     print(f"  BASE={settings.zetaris_base_url}")
     print(f"  ORG={settings.zetaris_org_id} SCHEMA={settings.zetaris_schema}")
     print(f"  SAMPLE_MODE={settings.sample_mode} DATA_BACKEND={settings.data_backend}")
+    print(f"  ZETARIS_READ_MODE={settings.zetaris_read_mode}")
     print()
 
     results: list[tuple[str, str, str]] = []
     overall_ok = True
 
-    auth_label, zetaris = _probe_auth(settings)
+    auth_label, base_backend = _probe_auth(settings)
     results.append(("auth", auth_label, "PASS" if auth_label != "FAIL" else "FAIL"))
     if auth_label == "FAIL":
         _print_table(results)
         return 1
 
-    count_ok = True
+    usl = ZetarisBackend(
+        base_backend._settings.model_copy(
+            update={"zetaris_read_mode": ZetarisReadMode.USL}
+        )
+    )
+    # Reuse cached login token from the probe backend.
+    usl._cached_token = base_backend._cached_token
+    usl._auth_method = base_backend._auth_method
+
+    tables = ZetarisBackend(
+        base_backend._settings.model_copy(
+            update={"zetaris_read_mode": ZetarisReadMode.TABLES}
+        )
+    )
+    tables._cached_token = base_backend._cached_token
+    tables._auth_method = base_backend._auth_method
+
+    # Row counts against raw FILESTORE tables (stable expected sizes).
     for table, expected in _EXPECTED_COUNTS.items():
         try:
-            got = _count(zetaris, table)
+            got = _count(tables, table)
             status = "PASS" if got == expected else "FAIL"
             if status == "FAIL":
-                count_ok = False
                 overall_ok = False
-            results.append((f"count.{table}", f"{got} (want {expected})", status))
+            results.append((f"count.tables.{table}", f"{got} (want {expected})", status))
             if table == "interactions" and got != expected:
                 print(
                     f"NOTE: interactions count is {got}, not {expected}. "
                     "CSV may need different multiLine/escape options — recreate the table."
                 )
         except DataUnavailable as exc:
-            count_ok = False
             overall_ok = False
-            results.append((f"count.{table}", str(exc)[:80], "FAIL"))
+            results.append((f"count.tables.{table}", str(exc)[:80], "FAIL"))
 
-    duck_settings = settings.model_copy(
-        update={"data_backend": DataBackend.DUCKDB, "sample_mode": True}
+    # USL counts (event is federated via calendar_pg through the USL).
+    for table, expected in _EXPECTED_COUNTS.items():
+        try:
+            got = _count(usl, table)
+            status = "PASS" if got == expected else "FAIL"
+            if status == "FAIL":
+                overall_ok = False
+            results.append((f"count.usl.{table}", f"{got} (want {expected})", status))
+        except DataUnavailable as exc:
+            overall_ok = False
+            results.append((f"count.usl.{table}", str(exc)[:80], "FAIL"))
+
+    duck = DuckDBBackend(
+        settings.model_copy(
+            update={"data_backend": DataBackend.DUCKDB, "sample_mode": True}
+        )
     )
-    duck = DuckDBBackend(duck_settings)
 
     for name, runner in _named_query_cases():
         try:
-            z_rows = runner(zetaris)
-            d_rows = runner(duck)
-            match = _rows_match(z_rows, d_rows)
+            usl_rows = runner(usl)
+            tab_rows = runner(tables)
+            duck_rows = runner(duck)
+            match = (
+                _rows_match(usl_rows, tab_rows)
+                and _rows_match(tab_rows, duck_rows)
+            )
             status = "PASS" if match else "FAIL"
             if not match:
                 overall_ok = False
-            detail = f"zetaris={len(z_rows)} duckdb={len(d_rows)}"
+            detail = (
+                f"usl={len(usl_rows)} tables={len(tab_rows)} duckdb={len(duck_rows)}"
+            )
             if not match:
-                detail += f" sample_z={_preview(z_rows)} sample_d={_preview(d_rows)}"
+                detail += (
+                    f" u={_preview(usl_rows)} t={_preview(tab_rows)} "
+                    f"d={_preview(duck_rows)}"
+                )
             results.append((f"query.{name}", detail, status))
         except Exception as exc:  # noqa: BLE001
             overall_ok = False
-            results.append((f"query.{name}", f"{type(exc).__name__}: {exc}"[:100], "FAIL"))
+            results.append(
+                (f"query.{name}", f"{type(exc).__name__}: {exc}"[:100], "FAIL")
+            )
 
     _print_table(results)
-    if not count_ok:
-        print("Row-count check incomplete or mismatched.")
     return 0 if overall_ok else 1
 
 
 def _probe_auth(settings: Settings) -> tuple[str, ZetarisBackend]:
     """Try API key first, then login idToken. Never print secrets."""
     live = settings.model_copy(
-        update={"sample_mode": False, "data_backend": DataBackend.ZETARIS}
+        update={
+            "sample_mode": False,
+            "data_backend": DataBackend.ZETARIS,
+            "zetaris_read_mode": ZetarisReadMode.TABLES,
+        }
     )
-    api_key = live.zetaris_api_key.get_secret_value().strip()
+    api_key = ""
+    try:
+        api_key = live.zetaris_api_key.get_secret_value().strip()
+    except AttributeError:
+        api_key = str(live.zetaris_api_key or "").strip()
+
     if api_key:
-        key_backend = ZetarisBackend(live)
         try:
-            # Force key path: empty password so Not-Allowed cannot silently login mid-probe.
             key_only = live.model_copy(update={"zetaris_password": ""})
             key_backend = ZetarisBackend(key_only)
             key_backend.query("SELECT 1 AS n", source_tag="smoke.auth.key")
@@ -125,9 +170,7 @@ def _probe_auth(settings: Settings) -> tuple[str, ZetarisBackend]:
         except DataUnavailable:
             print("Auth: API key rejected; trying login…")
 
-    login_backend = ZetarisBackend(
-        live.model_copy(update={"zetaris_api_key": ""})
-    )
+    login_backend = ZetarisBackend(live.model_copy(update={"zetaris_api_key": ""}))
     try:
         login_backend.query("SELECT 1 AS n", source_tag="smoke.auth.login")
         print("Auth: login idToken")
@@ -145,7 +188,6 @@ def _count(backend: ZetarisBackend, table: str) -> int:
     if not rows:
         raise DataUnavailable(f"empty count for {table}")
     row = rows[0]
-    # Column name may be cnt, COUNT(*), count(1), etc.
     for key in ("cnt", "COUNT(*)", "count(1)", "count"):
         if key in row and row[key] is not None:
             return int(str(row[key]))
@@ -250,24 +292,21 @@ def _as_str(value: Any) -> str:
         text = json.dumps(value, sort_keys=True, default=str)
     else:
         text = str(value)
-    # DuckDB on Windows CSVs keeps CRLF; Zetaris/Spark normalizes to LF.
     return text.replace("\r\n", "\n").replace("\r", "\n")
 
 
 def _preview(rows: Sequence[Any], n: int = 1) -> str:
     if not rows:
         return "[]"
-    sample = _normalize(rows[:n])
-    text = str(sample)
-    return text[:120]
+    return str(_normalize(rows[:n]))[:100]
 
 
 def _print_table(rows: list[tuple[str, str, str]]) -> None:
     print()
-    print(f"{'check':<32} {'detail':<48} {'result'}")
-    print("-" * 96)
+    print(f"{'check':<36} {'detail':<52} {'result'}")
+    print("-" * 100)
     for name, detail, status in rows:
-        print(f"{name:<32} {detail[:48]:<48} {status}")
+        print(f"{name:<36} {detail[:52]:<52} {status}")
     print()
     failed = sum(1 for *_, s in rows if s == "FAIL")
     print(f"SUMMARY: {len(rows) - failed}/{len(rows)} PASS")

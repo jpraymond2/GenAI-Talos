@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 import pytest
 
-from recall.config import DataBackend, Settings, get_settings
+from recall.config import DataBackend, Settings, ZetarisReadMode, get_settings
 from recall.data.duckdb_backend import DuckDBBackend
 from recall.data.query_layer import (
     DataUnavailable,
@@ -153,6 +153,8 @@ def _settings(rest: str, base: str, **kwargs: Any) -> Settings:
         "zetaris_base_url": base,
         "zetaris_org_id": "1",
         "zetaris_schema": "recall",
+        # HTTP mock tests assert raw FILESTORE SQL; USL mapping covered separately.
+        "zetaris_read_mode": ZetarisReadMode.TABLES,
         "zetaris_api_key": "test-api-key",
         "zetaris_user": "demo",
         "zetaris_password": "demo-pass",
@@ -238,35 +240,38 @@ def test_sql_literal_escaping(value: Any, expected: str) -> None:
 
 
 def test_prepare_rejects_injection_and_bad_types() -> None:
-    rendered = prepare_zetaris_sql(
+    rendered, _meta = prepare_zetaris_sql(
         "SELECT * FROM recall.handles WHERE value = :v",
         {"v": "x'; DROP TABLE handles; --"},
         schema="recall",
+        read_mode="tables",
     )
     # Quote-doubling keeps the attack inside one literal (prepare would raise otherwise).
     assert "WHERE value = 'x''; DROP TABLE handles; --'" in rendered
 
     with pytest.raises(DataUnavailable, match="one statement"):
-        prepare_zetaris_sql("SELECT 1; SELECT 2", None)
+        prepare_zetaris_sql("SELECT 1; SELECT 2", None, read_mode="tables")
 
     with pytest.raises(DataUnavailable, match="not allowed"):
-        prepare_zetaris_sql("SELECT :v", {"v": {"nested": 1}})
+        prepare_zetaris_sql("SELECT :v", {"v": {"nested": 1}}, read_mode="tables")
 
     with pytest.raises(DataUnavailable, match="not allowed"):
-        prepare_zetaris_sql("SELECT :v", {"v": object()})
+        prepare_zetaris_sql("SELECT :v", {"v": object()}, read_mode="tables")
 
-    in_sql = prepare_zetaris_sql(
+    in_sql, _ = prepare_zetaris_sql(
         "SELECT * FROM recall.handles WHERE kind IN (:kinds)",
         {"kinds": ["email", "phone"]},
+        read_mode="tables",
     )
     assert "IN ('email', 'phone')" in in_sql
 
 
 def test_schema_qualify() -> None:
-    sql = prepare_zetaris_sql(
+    sql, _ = prepare_zetaris_sql(
         "SELECT * FROM recall.handles JOIN recall.contacts c ON 1=1",
         None,
         schema="demo_db",
+        read_mode="tables",
     )
     assert "demo_db.handles" in sql
     assert "demo_db.contacts" in sql
