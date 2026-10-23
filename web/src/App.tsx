@@ -3,6 +3,7 @@ import { ask, confirm, isMockMode, onTrace } from "./api";
 import { CenterPanel } from "./components/CenterPanel";
 import { LeftPanel } from "./components/LeftPanel";
 import { RightPanel } from "./components/RightPanel";
+import { speakBrief, speakText, unlockSpeech } from "./speech";
 import type { Candidate, RunState, TraceEvent, TranscriptEntry } from "./types";
 
 export default function App() {
@@ -30,7 +31,21 @@ export default function App() {
     ]);
   }, []);
 
-  async function handleAsk(text: string) {
+  function speakFromState(state: RunState) {
+    if (state.status === "needs_clarification" && state.question) {
+      speakText(state.question);
+      return;
+    }
+    const brief = state.final_brief;
+    if (brief) {
+      speakBrief(
+        brief.headline,
+        brief.points.map((p) => p.text),
+      );
+    }
+  }
+
+  async function handleAsk(text: string, fromVoice = false) {
     setBusy(true);
     setEvents([]);
     pushTranscript("user", text);
@@ -42,6 +57,7 @@ export default function App() {
       } else if (state.final_brief) {
         pushTranscript("assistant", state.final_brief.headline);
       }
+      if (fromVoice) speakFromState(state);
     } catch (err) {
       pushTranscript("system", err instanceof Error ? err.message : "Ask failed");
     } finally {
@@ -49,7 +65,13 @@ export default function App() {
     }
   }
 
+  async function handleVoice(transcriptText: string) {
+    // speechSynthesis already unlocked in the pointer handler.
+    await handleAsk(transcriptText, true);
+  }
+
   async function handlePick(candidate: Candidate) {
+    unlockSpeech();
     setBusy(true);
     setEvents([]);
     pushTranscript("user", candidate.name);
@@ -61,6 +83,7 @@ export default function App() {
       setRun(state);
       if (state.final_brief) {
         pushTranscript("assistant", state.final_brief.headline);
+        speakFromState(state);
       }
     } finally {
       setBusy(false);
@@ -104,6 +127,7 @@ export default function App() {
             busy={busy}
             sampleMode={sampleMode}
             onSubmit={(t) => void handleAsk(t)}
+            onVoiceResult={(t) => void handleVoice(t)}
           />
         </div>
         <div className="lg:col-span-5">

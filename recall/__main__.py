@@ -282,9 +282,24 @@ def serve(
 
 
 @app.command()
-def voice() -> None:
-    """Listen and answer by voice."""
-    print("voice is not implemented yet")
+def voice(
+    check: Annotated[
+        bool,
+        typer.Option(
+            "--check",
+            help="Validate NVIDIA_API_KEY + Riva ASR (no microphone).",
+        ),
+    ] = False,
+) -> None:
+    """Push-to-talk: hold right Ctrl (Windows) / right Option (macOS), then release."""
+    if check:
+        from recall.voice.check import print_voice_checks
+
+        raise typer.Exit(code=print_voice_checks())
+
+    from recall.voice.loop import run_voice_loop
+
+    run_voice_loop()
 
 
 class _TinySchema(BaseModel):

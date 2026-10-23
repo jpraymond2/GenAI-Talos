@@ -2,6 +2,7 @@ import { pickScenario } from "./mock/scenarios";
 import type { RunState, TraceEvent } from "./types";
 
 const MOCK_FLAG = String(import.meta.env.VITE_MOCK ?? "true").toLowerCase() === "true";
+const MOCK_VOICE_TRANSCRIPT = "I'm meeting Karim Haddad";
 
 type TraceListener = (event: TraceEvent) => void;
 
@@ -150,16 +151,29 @@ export async function confirm(payload: {
   return (await res.json()) as RunState;
 }
 
-/** MediaRecorder blob → POST /api/voice (inert in mock). */
-export async function sendVoice(blob: Blob): Promise<{ text: string } | null> {
+export interface VoiceResult {
+  transcript: string;
+  engine?: string;
+  speech?: string;
+  status?: string;
+  headline?: string;
+  points?: string[];
+  question?: string;
+}
+
+/** MediaRecorder blob → POST /api/voice (mock returns fixed transcript). */
+export async function sendVoice(blob: Blob): Promise<VoiceResult | null> {
   if (await shouldMock()) {
-    return null;
+    return { transcript: MOCK_VOICE_TRANSCRIPT, engine: "sample" };
   }
   const body = new FormData();
-  body.append("audio", blob, "utterance.webm");
+  const ext = blob.type.includes("mp4") ? "mp4" : "webm";
+  body.append("audio", blob, `utterance.${ext}`);
   const res = await fetch("/api/voice", { method: "POST", body });
   if (!res.ok) return null;
-  return (await res.json()) as { text: string };
+  const data = (await res.json()) as VoiceResult;
+  if (!data.transcript) return null;
+  return data;
 }
 
 export function isMockMode(): boolean {
