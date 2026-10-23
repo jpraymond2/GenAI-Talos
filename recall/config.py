@@ -16,6 +16,13 @@ class DataBackend(StrEnum):
     DUCKDB = "duckdb"
 
 
+class ZetarisReadMode(StrEnum):
+    """Zetaris source: activated USL tables, or raw FILESTORE tables."""
+
+    USL = "usl"
+    TABLES = "tables"
+
+
 class ModelTier(StrEnum):
     """Logical model tiers; ROLE_MODELS maps roles onto these."""
 
@@ -89,6 +96,14 @@ class Settings(BaseSettings):
         default="recall",
         description="Lightning/Spark schema prefix for recall.<table> queries.",
     )
+    zetaris_read_mode: ZetarisReadMode = Field(
+        default=ZetarisReadMode.USL,
+        description="usl = lightning.metastore.recallai.recall.*; tables = raw recall.*",
+    )
+    zetaris_usl_namespace: str = Field(
+        default="lightning.metastore.recallai.recall",
+        description="Fully-qualified USL model path (without the table leaf).",
+    )
     zetaris_url: str = Field(
         default="",
         description="Deprecated alias for ZETARIS_REST_URL.",
@@ -118,6 +133,17 @@ class Settings(BaseSettings):
         if not legacy:
             return self
         return self.model_copy(update={"zetaris_rest_url": legacy})
+
+    @model_validator(mode="after")
+    def _default_zetaris_read_mode(self) -> Self:
+        """When DATA_BACKEND=zetaris, prefer USL reads unless tables was set."""
+        # Field default is already USL; keep tables when explicitly chosen.
+        if self.data_backend is DataBackend.ZETARIS and self.zetaris_read_mode not in (
+            ZetarisReadMode.USL,
+            ZetarisReadMode.TABLES,
+        ):
+            return self.model_copy(update={"zetaris_read_mode": ZetarisReadMode.USL})
+        return self
 
     @field_validator("role_models", mode="before")
     @classmethod

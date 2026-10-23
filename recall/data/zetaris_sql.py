@@ -7,6 +7,7 @@ import re
 from typing import Any
 
 from recall.data.query_layer import DataUnavailable
+from recall.data.zetaris_usl import UslRewriteResult, rewrite_sql_for_usl
 
 _PLACEHOLDER = re.compile(r":([A-Za-z_][A-Za-z0-9_]*)")
 _RECALL_TABLE = re.compile(r"\brecall\.([A-Za-z_][A-Za-z0-9_]*)")
@@ -85,9 +86,19 @@ def prepare_zetaris_sql(
     params: dict[str, Any] | None,
     *,
     schema: str = "recall",
-) -> str:
-    """Qualify tables, bind params client-side, strip trailing semicolon."""
-    text = qualify_recall_tables(sql, schema)
+    read_mode: str = "tables",
+    usl_namespace: str = "lightning.metastore.recallai.recall",
+) -> tuple[str, UslRewriteResult | None]:
+    """Qualify or USL-rewrite tables, bind params, strip trailing semicolon.
+
+    Returns ``(rendered_sql, usl_rewrite_or_none)``.
+    """
+    usl_meta: UslRewriteResult | None = None
+    if (read_mode or "").strip().lower() == "usl":
+        usl_meta = rewrite_sql_for_usl(sql, namespace=usl_namespace)
+        text = usl_meta.sql
+    else:
+        text = qualify_recall_tables(sql, schema)
     text = render_params(text, params)
     text = text.strip().rstrip(";").strip()
     if not text:
@@ -95,7 +106,7 @@ def prepare_zetaris_sql(
     # Reject a second statement terminator outside of string literals.
     if _has_statement_separator(text):
         raise DataUnavailable("Zetaris accepts one statement per request (no ';')")
-    return text
+    return text, usl_meta
 
 
 def _has_statement_separator(sql: str) -> bool:

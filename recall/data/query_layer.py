@@ -114,19 +114,19 @@ def timed_query_event(
     sql: str,
     row_count: int,
     started: float,
+    extra: dict[str, Any] | None = None,
 ) -> None:
     """Write a standard query_layer query event when a tracer is present."""
     if tracer is None:
         return
     latency_ms = (time.perf_counter() - started) * 1000.0
-    tracer.event(
-        "query_layer",
-        "query",
-        {
-            "backend": backend,
-            "source_tag": source_tag,
-            "sql": sql,
-            "row_count": row_count,
-            "latency_ms": round(latency_ms, 3),
-        },
-    )
+    payload: dict[str, Any] = {
+        "backend": backend,
+        "source_tag": source_tag,
+        "sql": sql,
+        "row_count": row_count,
+        "latency_ms": round(latency_ms, 3),
+    }
+    if extra:
+        payload.update(extra)
+    tracer.event("query_layer", "query", payload)
