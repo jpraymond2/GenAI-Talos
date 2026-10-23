@@ -23,6 +23,27 @@ def _enable_sample_mode() -> None:
     get_settings.cache_clear()
 
 
+_WORLD_EMPTY_MSG = "World model is empty. Run: recall ingest --sample (or --live)"
+
+
+def _require_world_entities() -> None:
+    """Exit if the world DB is missing or has zero entities (do not create an empty DB)."""
+    from recall.engines.world.store import WorldStore, world_db_path
+
+    settings = get_settings()
+    path = world_db_path(settings)
+    if not path.is_file():
+        print(_WORLD_EMPTY_MSG)
+        raise typer.Exit(code=1)
+    store = WorldStore(path=path, settings=settings)
+    try:
+        if store.count_entities() == 0:
+            print(_WORLD_EMPTY_MSG)
+            raise typer.Exit(code=1)
+    finally:
+        store.close()
+
+
 @app.command()
 def ask(
     utterance: Annotated[str, typer.Argument(help="What you said, in your own words.")],
@@ -174,6 +195,79 @@ def who(
                 )
                 print(f"      conflict[{conflict.field}]: {vals}")
         store.close()
+
+
+@app.command()
+def note(
+    text: Annotated[str, typer.Argument(help="Note text to mine into H-MEM.")],
+    sample: Annotated[
+        bool,
+        typer.Option("--sample", help="Use SAMPLE_MODE (hmem_sample.db + offline LLM)."),
+    ] = False,
+) -> None:
+    """Mine a user note into hierarchical memory and print created memories."""
+    if sample:
+        _enable_sample_mode()
+    _require_world_entities()
+    settings = get_settings()
+    tracer = Tracer(logs_dir=settings.logs_dir)
+    with tracer.activate():
+        from recall.engines import hmem as hmem_mod
+
+        hmem_mod.hmem.reset()
+        created = hmem_mod.hmem.mine({"kind": "user_note", "text": text})
+    if not created:
+        print("No memories created.")
+        return
+    print(f"Created {len(created)} memor{'y' if len(created) == 1 else 'ies'}:")
+    for mem in created:
+        print(f"  [{mem.layer}/{mem.type}] {mem.id}: {mem.content}")
+        if mem.entity_ids:
+            print(f"      entities: {', '.join(mem.entity_ids)}")
+
+
+@app.command()
+def memories(
+    name: Annotated[str, typer.Argument(help="Person name to resolve, then list memories.")],
+    sample: Annotated[
+        bool,
+        typer.Option("--sample", help="Use SAMPLE_MODE world + hmem sample DBs."),
+    ] = False,
+) -> None:
+    """Resolve a name via the world model and print ranked memories with why."""
+    if sample:
+        _enable_sample_mode()
+    _require_world_entities()
+    settings = get_settings()
+    tracer = Tracer(logs_dir=settings.logs_dir)
+    with tracer.activate():
+        from recall.engines import hmem as hmem_mod
+        from recall.engines.world import world
+
+        world.reset()
+        hmem_mod.hmem.reset()
+        candidates = world.resolve(name)
+        if not candidates:
+            print(f"No candidates for {name!r}.")
+            return
+        # Ambiguous if top two scores are close and query is not an exact full-name hit.
+        top = candidates[:2]
+        exact = [c for c in candidates if c.name.lower() == name.strip().lower()]
+        if not exact and len(top) >= 2 and abs(top[0].score - top[1].score) < 0.08:
+            print(f"Ambiguous name {name!r}. Candidates:")
+            for cand in candidates:
+                print(f"  [{cand.score:.2f}] {cand.name} ({cand.entity_id}) — {cand.reason}")
+            return
+        chosen = exact[0] if exact else candidates[0]
+        result = hmem_mod.hmem.retrieve(f"meeting {chosen.name}", [chosen.entity_id])
+        print(f"Memories for {chosen.name} ({chosen.entity_id}):")
+        hits = result.get("memories") or []
+        if not hits:
+            print("  (none)")
+            return
+        for hit in hits:
+            print(f"  [{hit['score']:.2f}] {hit['content']}")
+            print(f"      why: {hit['why']}")
 
 
 @app.command()
