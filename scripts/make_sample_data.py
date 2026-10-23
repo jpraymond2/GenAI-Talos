@@ -43,6 +43,10 @@ ALEX_DISPLAY = "Alex Martin"
 KARIM_H_EMAIL = "karim@ledgerly.io"
 KARIM_H_PHONE = "+15145550142"
 KARIM_S_EMAIL = "karim.saleh@mcgill.ca"
+KARIM_S_PHONE = "+15145550143"
+KARIM_PWC_EMAIL = "karim@pwc.com"
+KARIM_KH_ALT_EMAIL = "kh@ledgerly.io"
+KARIM_GMAIL92 = "karim.k92@gmail.com"
 LINA_EMAIL = "lina.chen@northbridge.vc"
 LINA_EMAIL_ALT = "lchen@northbridge.vc"
 
@@ -139,11 +143,11 @@ def build_contacts() -> list[ContactSpec]:
         ContactSpec(
             contact_id="c_karim_saleh",
             full_name="Karim Saleh",
-            org="McGill University",
-            title="Teaching Assistant",
+            org="PwC Advisory",
+            title="Incoming Associate",
             city="Montreal",
             emails=[KARIM_S_EMAIL],
-            phones=[],
+            phones=[KARIM_S_PHONE],
             source="gmail",
         ),
         ContactSpec(
@@ -292,6 +296,35 @@ def build_handles(contacts: list[ContactSpec]) -> list[dict[str, str]]:
                 "value": KARIM_H_PHONE,
                 "display_name": "Karim Haddad",
                 "source": "imessage",
+            },
+            # Unlinked emails for identity-scoring fixtures (not on contact cards).
+            {
+                "handle_id": "h_karim_pwc",
+                "kind": "email",
+                "value": KARIM_PWC_EMAIL,
+                "display_name": "Karim",
+                "source": "gmail",
+            },
+            {
+                "handle_id": "h_kh_ledgerly",
+                "kind": "email",
+                "value": KARIM_KH_ALT_EMAIL,
+                "display_name": "Karim H.",
+                "source": "gmail",
+            },
+            {
+                "handle_id": "h_karim_gmail92",
+                "kind": "email",
+                "value": KARIM_GMAIL92,
+                "display_name": "Karim",
+                "source": "gmail",
+            },
+            {
+                "handle_id": "h_karim_generic",
+                "kind": "email",
+                "value": "karim.catchup@gmail.com",
+                "display_name": "Karim",
+                "source": "gmail",
             },
         ]
     )
@@ -511,7 +544,142 @@ def plant_karim_interactions(cache: dict[str, str]) -> list[dict[str, str]]:
         )
     )
 
-    # Karim Saleh (TA) — Gmail only, ordinary course thread noise + a few planted.
+    # Karim Saleh — PwC career messages on WhatsApp / iMessage (identity scoring).
+    for days_ago, source, handle, key, template in [
+        (
+            56,
+            "whatsapp",
+            f"{KARIM_S_PHONE.lstrip('+')}@s.whatsapp.net",
+            "ks_pwc_1",
+            "Just accepted — starting at PwC Advisory in January. Wild.",
+        ),
+        (
+            40,
+            "imessage",
+            KARIM_S_PHONE,
+            "ks_pwc_2",
+            "Prep for consulting case interviews this weekend if you're free?",
+        ),
+        (
+            23,
+            "whatsapp",
+            f"{KARIM_S_PHONE.lstrip('+')}@s.whatsapp.net",
+            "ks_pwc_3",
+            "First client engagement briefing at the firm next month — nervous but excited.",
+        ),
+        (
+            14,
+            "whatsapp",
+            f"{KARIM_S_PHONE.lstrip('+')}@s.whatsapp.net",
+            "ks_pwc_5",
+            "PricewaterhouseCoopers badge photo day — still surreal.",
+        ),
+        (
+            10,
+            "imessage",
+            KARIM_S_PHONE,
+            "ks_pwc_6",
+            "Coffee with a PwC mentor tomorrow about the advisory track.",
+        ),
+        (
+            7,
+            "imessage",
+            KARIM_S_PHONE,
+            "ks_pwc_4",
+            "PwC Advisory onboarding packet landed. January start is real.",
+        ),
+        (
+            6,
+            "whatsapp",
+            f"{KARIM_S_PHONE.lstrip('+')}@s.whatsapp.net",
+            "ks_pwc_review",
+            "TA review session Thursday — bring the case notes from last week.",
+        ),
+    ]:
+        rows.append(
+            _interaction(
+                source=source,
+                thread_id="th_ks_pwc",
+                handle_value=handle,
+                direction="in",
+                ts=_utc(days_ago, hour=18, minute=0),
+                subject="",
+                text=template,
+                token=_token(source, "ks_pwc", str(days_ago)),
+            )
+        )
+
+    # Karim Haddad — Habs game (content congruence for karim.k92@gmail.com).
+    rows.append(
+        _interaction(
+            source="imessage",
+            thread_id="th_kh_habs",
+            handle_value=KARIM_H_PHONE,
+            direction="in",
+            ts=_utc(9, hour=22, minute=10),
+            subject="",
+            text="Habs game Saturday was loud and perfect — thanks for the tickets.",
+            token=_token("imessage", "kh_habs", "9"),
+        )
+    )
+
+    # Unlinked Gmail fixtures for identity scoring (fixed copy; no LLM).
+    rows.append(
+        _interaction(
+            source="gmail",
+            thread_id="th_pwc_coffee",
+            handle_value=KARIM_PWC_EMAIL,
+            direction="in",
+            ts=_utc(5, hour=15, minute=0),
+            subject="PwC Advisory round",
+            text=(
+                "Thanks again for the case interview tips last week, the PwC Advisory "
+                "round went well. Still on for the review session Thursday?\n\nKarim"
+            ),
+            token=_token("gmail", "pwc_coffee", "5"),
+        )
+    )
+    rows.append(
+        _interaction(
+            source="gmail",
+            thread_id="th_kh_alt",
+            handle_value=KARIM_KH_ALT_EMAIL,
+            direction="in",
+            ts=_utc(4, hour=11, minute=0),
+            subject="Deck follow-up",
+            text=(
+                "Quick follow-up on the seed deck.\n\n"
+                "Karim Haddad\nFounder & CEO, Ledgerly\n+1 (514) 555-0142"
+            ),
+            token=_token("gmail", "kh_alt", "4"),
+        )
+    )
+    rows.append(
+        _interaction(
+            source="gmail",
+            thread_id="th_karim_gmail92",
+            handle_value=KARIM_GMAIL92,
+            direction="in",
+            ts=_utc(3, hour=9, minute=0),
+            subject="Habs",
+            text="Great seeing you at the Habs game Saturday! Let's grab dinner soon.",
+            token=_token("gmail", "karim_k92", "3"),
+        )
+    )
+    rows.append(
+        _interaction(
+            source="gmail",
+            thread_id="th_karim_generic",
+            handle_value="karim.catchup@gmail.com",
+            direction="in",
+            ts=_utc(2, hour=10, minute=0),
+            subject="Hi",
+            text="Hope you're well, let's catch up.",
+            token=_token("gmail", "karim_generic", "2"),
+        )
+    )
+
+    # Karim Saleh — Gmail course thread noise + a few planted.
     for days_ago, subject, key, template in [
         (
             8,

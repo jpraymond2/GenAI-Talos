@@ -1,0 +1,32 @@
+id: B3
+title: Role address
+description: >
+  recruiting@pwc.com is an organization (PwC), never a person.
+handle:
+  kind: email
+  value: recruiting@pwc.com
+extra:
+  contacts: []
+  handles:
+    - handle_id: h_b3_recruiting
+      kind: email
+      value: recruiting@pwc.com
+      display_name: PwC Recruiting
+      source: gmail
+  interactions:
+    - interaction_id: i_b3_recruiting
+      source: gmail
+      thread_id: th_b3_recruiting
+      handle_value: recruiting@pwc.com
+      direction: in
+      ts_utc: "2026-10-11T09:00:00Z"
+      subject: "PwC campus recruiting"
+      text: |
+        Thanks for your interest in PwC Advisory. Campus interviews start next month.
+
+        — PwC Recruiting Team
+      source_ref: gmail:b3recruiting
+  events: []
+expected:
+  decision: organization
+  entity: null

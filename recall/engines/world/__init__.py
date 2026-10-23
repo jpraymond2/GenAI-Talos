@@ -13,6 +13,7 @@ from typing import Any
 
 from recall.config import Settings, get_settings
 from recall.engines.world.context_builder import ContextBuilderService
+from recall.engines.world.identity_service import IdentityService
 from recall.engines.world.ingest import IngestPipelineService, run_world_ingest
 from recall.engines.world.models import ResolveCandidate
 from recall.engines.world.store import WorldStore, world_db_path
@@ -64,6 +65,7 @@ world = _WorldFacade()
 
 __all__ = [
     "ContextBuilderService",
+    "IdentityService",
     "IngestPipelineService",
     "WorldStore",
     "person_context",

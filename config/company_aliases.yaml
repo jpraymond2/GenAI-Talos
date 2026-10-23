@@ -1,0 +1,41 @@
+seed:
+  pwc.com:
+    company: PwC
+    aliases:
+    - PwC
+    - PricewaterhouseCoopers
+    - Price Waterhouse
+    industry:
+    - consulting
+    - audit
+    - advisory
+    - tax
+  ledgerly.io:
+    company: Ledgerly
+    aliases:
+    - Ledgerly
+    industry:
+    - fintech
+    - startup
+    - fundraising
+learned:
+  s.whatsapp.net:
+    company: S
+    aliases:
+    - S
+    industry: []
+  mail.mcgill.ca:
+    company: Mail
+    aliases:
+    - Mail
+    industry: []
+  northstar.vc:
+    company: Northstar
+    aliases:
+    - Northstar
+    industry: []
+  mailbox.example:
+    company: Mailbox
+    aliases:
+    - Mailbox
+    industry: []

@@ -1,6 +1,6 @@
 contact_id,full_name,org,title,city,emails,phones,source
 c_karim_haddad,Karim Haddad,Ledgerly,Founder,Montreal,"[""karim@ledgerly.io""]","[""+15145550142""]",manual
-c_karim_saleh,Karim Saleh,McGill University,Teaching Assistant,Montreal,"[""karim.saleh@mcgill.ca""]",[],gmail
+c_karim_saleh,Karim Saleh,PwC Advisory,Incoming Associate,Montreal,"[""karim.saleh@mcgill.ca""]","[""+15145550143""]",gmail
 c_lina_chen,Lina Chen,Northbridge Ventures,Associate,Toronto,"[""lina.chen@northbridge.vc"", ""lchen@northbridge.vc""]","[""+14165550188""]",gmail
 c_sophie_tremblay,Sophie Tremblay,McGill University,BCom Student,Montreal,"[""sophie.tremblay@mail.mcgill.ca""]","[""+15145550111""]",imessage
 c_marcus_wei,Marcus Wei,McGill University,BCom Student,Montreal,"[""marcus.wei@mail.mcgill.ca""]","[""+15145550112""]",whatsapp

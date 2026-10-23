@@ -1,0 +1,39 @@
+id: A2
+title: New number announcement
+description: >
+  iMessage from Karim Haddad's known phone announcing a new number, then
+  messages from that number, should auto-link to Karim Haddad.
+handle:
+  kind: phone
+  value: "+14385550199"
+extra:
+  contacts: []
+  handles:
+    - handle_id: h_a2_new
+      kind: phone
+      value: "+14385550199"
+      display_name: ""
+      source: imessage
+  interactions:
+    - interaction_id: i_a2_announce
+      source: imessage
+      thread_id: th_a2_announce
+      handle_value: "+15145550142"
+      direction: in
+      ts_utc: "2026-10-05T09:00:00Z"
+      subject: ""
+      text: "New number, save it: +1 438 555 0199"
+      source_ref: imessage:a2announce
+    - interaction_id: i_a2_new1
+      source: imessage
+      thread_id: th_a2_new
+      handle_value: "+14385550199"
+      direction: in
+      ts_utc: "2026-10-06T12:00:00Z"
+      subject: ""
+      text: "hey it's me — texting from the new number"
+      source_ref: imessage:a2new1
+  events: []
+expected:
+  decision: auto_linked
+  entity: Karim Haddad

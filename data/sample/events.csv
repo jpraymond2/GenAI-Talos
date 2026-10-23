@@ -1,26 +1,26 @@
 event_id,title,start_utc,end_utc,location,attendees,source_ref
-e_78739ba6f1,Finance club workshop,2026-06-20T16:00:00Z,2026-06-20T17:30:00Z,Notman House,"[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:78739ba6f1
-e_bfdaa3de90,Coffee w/ Sophie,2026-06-21T10:15:00Z,2026-06-21T11:45:00Z,Desautels,"[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:bfdaa3de90
+e_3c7f2153c1,Office hours — Prof Okonkwo,2026-06-19T16:30:00Z,2026-06-19T17:15:00Z,Downtown Montreal,"[""alex.martin@mail.mcgill.ca""]",calendar:3c7f2153c1
 e_coffee_karim,Coffee w/ Karim,2026-06-22T15:00:00Z,2026-06-22T15:45:00Z,"Café Olimpico, Mile End, Montreal","[""alex.martin@mail.mcgill.ca"", ""karim@ledgerly.io""]",calendar:f48c9c2c5a
-e_8769603a9d,TA review session,2026-06-27T11:00:00Z,2026-06-27T12:30:00Z,McLennan Library,"[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:8769603a9d
-e_5ce6f164fa,Startup meetup — Notman House,2026-07-04T13:00:00Z,2026-07-04T14:30:00Z,Zoom,"[""alex.martin@mail.mcgill.ca"", ""karim.saleh@mcgill.ca""]",calendar:5ce6f164fa
-e_b9bc4cb35c,Club executive meeting,2026-07-14T14:30:00Z,2026-07-14T15:00:00Z,Notman House,"[""alex.martin@mail.mcgill.ca""]",calendar:b9bc4cb35c
-e_e2613f1928,Zoom: alumni chat,2026-07-15T14:15:00Z,2026-07-15T14:45:00Z,Desautels,"[""alex.martin@mail.mcgill.ca"", ""karim.saleh@mcgill.ca""]",calendar:e2613f1928
-e_c921e5ec51,Gym,2026-07-22T09:00:00Z,2026-07-22T10:30:00Z,Zoom,"[""alex.martin@mail.mcgill.ca"", ""lina.chen@northbridge.vc""]",calendar:c921e5ec51
-e_2eb82a9603,Internship prep call,2026-07-31T10:15:00Z,2026-07-31T11:45:00Z,,"[""alex.martin@mail.mcgill.ca"", ""maya.martin@example.com""]",calendar:2eb82a9603
-e_0ebd2c705c,Group project sync,2026-08-03T09:15:00Z,2026-08-03T10:00:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca""]",calendar:0ebd2c705c
-e_3c7f2153c1,Office hours — Prof Okonkwo,2026-08-12T11:15:00Z,2026-08-12T11:45:00Z,Zoom,"[""alex.martin@mail.mcgill.ca""]",calendar:3c7f2153c1
-e_28831975e4,Family dinner,2026-08-14T14:00:00Z,2026-08-14T15:00:00Z,McLennan Library,"[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:28831975e4
-e_632b96783e,Career centre drop-in,2026-08-15T13:00:00Z,2026-08-15T14:00:00Z,Downtown Montreal,"[""alex.martin@mail.mcgill.ca"", ""lina.chen@northbridge.vc""]",calendar:632b96783e
-e_65d2376f00,MGCR study group,2026-08-16T16:15:00Z,2026-08-16T17:45:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:65d2376f00
-e_f4da48c5bb,Case competition briefing,2026-09-04T16:15:00Z,2026-09-04T16:45:00Z,Zoom,"[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:f4da48c5bb
-e_00a671640a,Dentist,2026-09-15T15:15:00Z,2026-09-15T15:45:00Z,Desautels,"[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:00a671640a
-e_958ddde557,Lab booking,2026-09-15T15:30:00Z,2026-09-15T17:00:00Z,Notman House,"[""alex.martin@mail.mcgill.ca"", ""maya.martin@example.com""]",calendar:958ddde557
-e_0f658f2024,Northstar recruiting webinar,2026-09-16T13:00:00Z,2026-09-16T14:30:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""karim.saleh@mcgill.ca""]",calendar:0f658f2024
-e_b949c33f21,Team standup (case),2026-09-17T15:30:00Z,2026-09-17T16:00:00Z,Zoom,"[""alex.martin@mail.mcgill.ca""]",calendar:b949c33f21
-e_36182de580,Resume clinic,2026-09-21T13:00:00Z,2026-09-21T13:30:00Z,Downtown Montreal,"[""alex.martin@mail.mcgill.ca""]",calendar:36182de580
-e_46afb040a4,Hackathon planning,2026-09-30T09:00:00Z,2026-09-30T09:45:00Z,Notman House,"[""alex.martin@mail.mcgill.ca"", ""lina.chen@northbridge.vc""]",calendar:46afb040a4
-e_95e15c686d,Mock interview,2026-10-02T10:00:00Z,2026-10-02T10:30:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""maya.martin@example.com""]",calendar:95e15c686d
-e_5007ae014e,Library block,2026-10-07T11:15:00Z,2026-10-07T12:00:00Z,Zoom,"[""alex.martin@mail.mcgill.ca"", ""maya.martin@example.com""]",calendar:5007ae014e
-e_af18a07524,FINA 341 lecture,2026-10-07T16:30:00Z,2026-10-07T17:30:00Z,,"[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:af18a07524
-e_80299d30bb,Brunch w/ Maya,2026-10-13T13:15:00Z,2026-10-13T14:15:00Z,,"[""alex.martin@mail.mcgill.ca"", ""lina.chen@northbridge.vc""]",calendar:80299d30bb
+e_8769603a9d,TA review session,2026-06-23T10:00:00Z,2026-06-23T10:30:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:8769603a9d
+e_0f658f2024,Northstar recruiting webinar,2026-07-17T11:30:00Z,2026-07-17T12:15:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""lina.chen@northbridge.vc""]",calendar:0f658f2024
+e_b949c33f21,Team standup (case),2026-07-22T09:00:00Z,2026-07-22T10:30:00Z,Zoom,"[""alex.martin@mail.mcgill.ca"", ""lina.chen@northbridge.vc""]",calendar:b949c33f21
+e_f4da48c5bb,Case competition briefing,2026-07-30T13:30:00Z,2026-07-30T14:30:00Z,Notman House,"[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:f4da48c5bb
+e_80299d30bb,Brunch w/ Maya,2026-07-31T10:15:00Z,2026-07-31T11:45:00Z,,"[""alex.martin@mail.mcgill.ca"", ""maya.martin@example.com""]",calendar:80299d30bb
+e_c921e5ec51,Gym,2026-08-01T11:15:00Z,2026-08-01T12:45:00Z,Notman House,"[""alex.martin@mail.mcgill.ca"", ""sophie.tremblay@mail.mcgill.ca""]",calendar:c921e5ec51
+e_36182de580,Resume clinic,2026-08-03T09:15:00Z,2026-08-03T10:00:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca""]",calendar:36182de580
+e_0ebd2c705c,Group project sync,2026-08-09T11:15:00Z,2026-08-09T12:15:00Z,,"[""alex.martin@mail.mcgill.ca"", ""sophie.tremblay@mail.mcgill.ca""]",calendar:0ebd2c705c
+e_78739ba6f1,Finance club workshop,2026-08-12T11:15:00Z,2026-08-12T11:45:00Z,Zoom,"[""alex.martin@mail.mcgill.ca""]",calendar:78739ba6f1
+e_e2613f1928,Zoom: alumni chat,2026-08-15T13:00:00Z,2026-08-15T14:00:00Z,Downtown Montreal,"[""alex.martin@mail.mcgill.ca"", ""lina.chen@northbridge.vc""]",calendar:e2613f1928
+e_46afb040a4,Hackathon planning,2026-08-16T16:15:00Z,2026-08-16T17:45:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:46afb040a4
+e_65d2376f00,MGCR study group,2026-08-22T09:30:00Z,2026-08-22T10:30:00Z,Notman House,"[""alex.martin@mail.mcgill.ca""]",calendar:65d2376f00
+e_b9bc4cb35c,Club executive meeting,2026-08-30T16:15:00Z,2026-08-30T17:00:00Z,McLennan Library,"[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:b9bc4cb35c
+e_2eb82a9603,Internship prep call,2026-09-01T14:00:00Z,2026-09-01T15:30:00Z,Notman House,"[""alex.martin@mail.mcgill.ca"", ""maya.martin@example.com""]",calendar:2eb82a9603
+e_5007ae014e,Library block,2026-09-09T09:00:00Z,2026-09-09T10:30:00Z,Downtown Montreal,"[""alex.martin@mail.mcgill.ca""]",calendar:5007ae014e
+e_95e15c686d,Mock interview,2026-09-16T10:30:00Z,2026-09-16T11:00:00Z,Zoom,"[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:95e15c686d
+e_958ddde557,Lab booking,2026-09-16T13:00:00Z,2026-09-16T14:30:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""karim.saleh@mcgill.ca""]",calendar:958ddde557
+e_632b96783e,Career centre drop-in,2026-09-17T10:30:00Z,2026-09-17T11:00:00Z,"Bronfman Building, McGill","[""alex.martin@mail.mcgill.ca"", ""marcus.wei@mail.mcgill.ca""]",calendar:632b96783e
+e_00a671640a,Dentist,2026-09-19T09:15:00Z,2026-09-19T10:15:00Z,,"[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:00a671640a
+e_af18a07524,FINA 341 lecture,2026-09-19T10:00:00Z,2026-09-19T10:45:00Z,Desautels,"[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:af18a07524
+e_5ce6f164fa,Startup meetup — Notman House,2026-09-28T16:15:00Z,2026-09-28T17:00:00Z,Notman House,"[""alex.martin@mail.mcgill.ca"", ""karim.saleh@mcgill.ca""]",calendar:5ce6f164fa
+e_28831975e4,Family dinner,2026-10-04T10:00:00Z,2026-10-04T10:30:00Z,Desautels,"[""alex.martin@mail.mcgill.ca"", ""jordan.blake@northstar-recruiting.com""]",calendar:28831975e4
+e_bfdaa3de90,Coffee w/ Sophie,2026-10-11T14:00:00Z,2026-10-11T14:45:00Z,,"[""alex.martin@mail.mcgill.ca"", ""karim.saleh@mcgill.ca""]",calendar:bfdaa3de90

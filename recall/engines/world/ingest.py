@@ -478,6 +478,9 @@ class IngestPipelineService:
             for rel in relationships:
                 self._store.upsert_relationship(rel)
 
+        self._store.set_meta("ingest_stage", "identity")
+        identity_counts = self._run_identity_scoring(run_id=run_id, layer=layer)
+
         self._store.set_meta("ingest_stage", "done")
         self._store.set_meta("last_run_id", run_id)
 
@@ -487,10 +490,38 @@ class IngestPipelineService:
             "observations": observation_count,
             "handles_in": len(handles),
             "contacts_in": len(contacts),
+            "identity_scored": int(identity_counts.get("scored", 0)),
         }
         if self._tracer is not None:
             self._tracer.event("world", "ingest", counts)
         return counts
+
+    def _run_identity_scoring(self, *, run_id: str, layer: QueryLayer) -> dict[str, int]:
+        """Score unlinked handles once after entities are written."""
+        import asyncio
+
+        from recall.data.duckdb_backend import DuckDBBackend
+        from recall.engines.world.identity_service import IdentityService
+
+        # Ensure CSV edits are visible even if a prior DuckDB connection was cached.
+        DuckDBBackend.clear_connection_cache()
+        service = IdentityService(
+            store=self._store,
+            settings=self._settings,
+            tracer=self._tracer,
+            query_layer=get_query_layer(self._settings, tracer=self._tracer),
+        )
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if loop is not None and loop.is_running():
+            # Ingest is sync; schedule a dedicated loop when already inside async.
+            import concurrent.futures
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                return pool.submit(lambda: asyncio.run(service.run_for_ingest(run_id=run_id))).result()
+        return asyncio.run(service.run_for_ingest(run_id=run_id))
 
     def _build_person(
         self,

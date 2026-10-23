@@ -1,0 +1,44 @@
+id: A5
+title: Job change
+description: >
+  2025 emails from karim@pwc.com with PwC signature and known phone should
+  still auto-link to Karim Haddad (now at Ledgerly) without the conflicting-
+  employer penalty for the past job.
+handle:
+  kind: email
+  value: karim@pwc.com
+extra:
+  contacts: []
+  handles: []
+  interactions:
+    - interaction_id: i_a5_pwc_2025
+      source: gmail
+      thread_id: th_a5_pwc
+      handle_value: karim@pwc.com
+      direction: in
+      ts_utc: "2025-03-12T15:00:00Z"
+      subject: "Advisory case notes"
+      text: |
+        Sharing the case notes from yesterday's workshop.
+
+        —
+        Karim Haddad
+        Consultant, PwC
+        +1 514-555-0142
+      source_ref: gmail:a5pwc2025
+  events: []
+seed_employment:
+  - entity_name: Karim Haddad
+    company: Ledgerly
+    valid_from: "2026-01-15T00:00:00Z"
+    valid_to: ""
+    updated_at: "2026-10-01T00:00:00Z"
+  - entity_name: Karim Haddad
+    company: PwC
+    valid_from: "2024-01-01T00:00:00Z"
+    valid_to: "2025-12-31T00:00:00Z"
+    updated_at: "2025-12-31T00:00:00Z"
+expected:
+  decision: auto_linked
+  entity: Karim Haddad
+  no_penalty: p1_conflicting_employer

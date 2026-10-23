@@ -1,3 +1,33 @@
 {
-  "default": "Brief looks solid overall."
+  "default": {
+    "overall": "pass",
+    "verdicts": [
+      {
+        "index": 0,
+        "decision": "keep",
+        "reason": "job_change at Ledgerly within 60 days, matches company in other evidence.",
+        "fix_hint": null
+      },
+      {
+        "index": 1,
+        "decision": "keep",
+        "reason": "Supported by the unanswered intro email.",
+        "fix_hint": null
+      },
+      {
+        "index": 2,
+        "decision": "keep",
+        "reason": "Seed round is backed by WhatsApp and the public note.",
+        "fix_hint": null
+      },
+      {
+        "index": 3,
+        "decision": "keep",
+        "reason": "Toronto move is explicitly in recent WhatsApp.",
+        "fix_hint": null
+      }
+    ],
+    "missing": [],
+    "refetch": []
+  }
 }

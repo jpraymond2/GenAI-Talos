@@ -1,0 +1,259 @@
+{
+  "handle": {
+    "kind": "email",
+    "value": "kh@ledgerly.io"
+  },
+  "parsed": {
+    "local_tokens": [
+      "kh"
+    ],
+    "display_name": "Karim H.",
+    "domain": "ledgerly.io",
+    "domain_class": "corporate",
+    "company": "Ledgerly",
+    "aliases": [
+      "Ledgerly"
+    ],
+    "industry": [
+      "fintech",
+      "startup",
+      "fundraising"
+    ],
+    "signature_phones": [
+      "+15145550142"
+    ],
+    "signature_name": "Karim Haddad",
+    "signature_title": "Founder & CEO",
+    "signature_company": "Ledgerly"
+  },
+  "candidates": [
+    {
+      "entity_id": "ent_e52558eb0987",
+      "name": "Karim Haddad",
+      "raw_score": 0.6,
+      "probability": 0.948775936133783,
+      "probability_pct": 94.88,
+      "rank": 1,
+      "features": [
+        {
+          "name": "f1",
+          "value": 1.0,
+          "weight": 0.3,
+          "contribution": 0.3,
+          "source_refs": [
+            "sig-phone:+15145550142"
+          ],
+          "detail": "signature phone on card",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.1,
+          "contribution": 0.020000000000000004,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 1.0,
+          "weight": 0.15,
+          "contribution": 0.15,
+          "source_refs": [
+            "gmail:83d87e3dc1",
+            "gmail:32b6b6224e",
+            "gmail:8d3a2caf9d",
+            "gmail:73ac38fa30",
+            "gmail:77bc9ac207",
+            "imessage:df11f06345",
+            "whatsapp:dc2723f009"
+          ],
+          "detail": "weighted_mentions=7.0",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.1,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "keyword industry fallback",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 1.0,
+          "weight": 0.1,
+          "contribution": 0.1,
+          "source_refs": [
+            "attr:org:Ledgerly"
+          ],
+          "detail": "org matches",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.6,
+          "weight": 0.05,
+          "contribution": 0.03,
+          "source_refs": [
+            "gmail:83d87e3dc1"
+          ],
+          "detail": "shared thread",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no references",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=0.051",
+          "matches": [],
+          "similarity": 0.05101077283003171
+        }
+      ],
+      "penalties": []
+    },
+    {
+      "entity_id": null,
+      "name": "none of these",
+      "raw_score": 0.1,
+      "probability": 0.03384662643366975,
+      "probability_pct": 3.38,
+      "rank": 2,
+      "features": [],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_97d72126743f",
+      "name": "Karim Saleh",
+      "raw_score": 0.0,
+      "probability": 0.01737743743254709,
+      "probability_pct": 1.74,
+      "rank": 3,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.3,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.1,
+          "contribution": 0.020000000000000004,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "weighted_mentions=0.0",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.1,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "keyword industry fallback",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.1,
+          "contribution": 0.0,
+          "source_refs": [
+            "attr:org:PwC Advisory"
+          ],
+          "detail": "conflicting employer",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no thread overlap",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no references",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=0.048",
+          "matches": [],
+          "similarity": 0.047880984642731425
+        }
+      ],
+      "penalties": [
+        {
+          "name": "p1_conflicting_employer",
+          "value": -0.25,
+          "detail": "org=PwC Advisory vs company=Ledgerly"
+        }
+      ]
+    }
+  ],
+  "hard_rules": [
+    "force_auto_linked"
+  ],
+  "decision": "auto_linked",
+  "top_entity_id": "ent_e52558eb0987",
+  "top_probability": 0.948775936133783,
+  "thresholds": {
+    "auto_link_probability": 0.8,
+    "auto_link_margin": 0.2,
+    "tentative_min": 0.55
+  },
+  "scoring_version": 2,
+  "run_id": "rescore-2-07d8861997fb",
+  "score_file": "/Users/jpraymond/Desktop/GenAI-Talos/data/identity_scores/kh_ledgerly.io/rescore-2-07d8861997fb_7.json"
+}

@@ -1,0 +1,38 @@
+id: D3
+title: User correction
+description: >
+  After rejecting karim@pwc.com for Karim Saleh, a rescore must not link it to
+  Karim Saleh again.
+handle:
+  kind: email
+  value: karim@pwc.com
+extra:
+  contacts: []
+  handles: []
+  interactions:
+    - interaction_id: i_d3_pwc
+      source: gmail
+      thread_id: th_d3_pwc
+      handle_value: karim@pwc.com
+      direction: in
+      ts_utc: "2026-10-16T10:00:00Z"
+      subject: "PwC Advisory round"
+      text: |
+        Thanks again for the tips — still on for Thursday?
+
+        Karim
+      source_ref: gmail:d3pwc
+  events: []
+pre_actions:
+  - type: reject
+    handle: karim@pwc.com
+    entity_name: Karim Saleh
+expected:
+  decision:
+    - auto_linked
+    - tentative
+    - needs_user
+    - new_person
+    - unmatched
+  entity: null
+  never_entity: Karim Saleh

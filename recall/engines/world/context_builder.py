@@ -193,6 +193,36 @@ class ContextBuilderService:
         past.sort(key=lambda e: e["start_utc"], reverse=True)
 
         conflicts = self._store.list_conflicts(entity_id)
+        handle_links = self._store.list_handle_links(entity_id=entity_id)
+        linked_handles = [
+            {
+                "handle_kind": row.get("handle_kind"),
+                "handle_value": row.get("handle_value"),
+                "probability": float(row.get("confidence") or 0),
+                "status": row.get("status"),
+                "source_ref": row.get("source_ref"),
+            }
+            for row in handle_links
+        ]
+        tentative_values = {
+            str(h["handle_value"]).lower()
+            for h in linked_handles
+            if h.get("status") in {"assumed", "tentative"}
+        }
+        for item in recent:
+            # Mark evidence from tentative handles for writer/critic.
+            # source_ref alone may not include handle; use interaction join via text path.
+            item["assumption"] = "assumed" if item.get("source") == "gmail" and tentative_values else "anchored"
+
+        # Refine assumption using handle_value when present on interaction rows
+        related_by_id = {row.interaction_id: row for row in related}
+        for item in recent:
+            src_row = related_by_id.get(item["interaction_id"])
+            if src_row is None:
+                continue
+            hv = (src_row.handle_value or "").lower()
+            item["assumption"] = "assumed" if hv in tentative_values else "anchored"
+
         ctx = PersonContext(
             entity=entity,
             aliases=list(entity.aliases),
@@ -204,6 +234,8 @@ class ContextBuilderService:
             conflicts=conflicts,
             selection_reason=f"entity_id={entity_id}",
         )
+        payload = ctx.model_dump()
+        payload["linked_handles"] = linked_handles
         if self._tracer is not None:
             self._tracer.event(
                 "world",
@@ -214,9 +246,10 @@ class ContextBuilderService:
                     "open_loops": len(open_loops),
                     "past_events": len(past),
                     "conflicts": len(conflicts),
+                    "linked_handles": len(linked_handles),
                 },
             )
-        return ctx.model_dump()
+        return payload
 
     @staticmethod
     def _find_open_loops(related: list[InteractionRow]) -> list[dict[str, Any]]:
