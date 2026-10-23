@@ -273,6 +273,97 @@ def contact_cards(
     return matches
 
 
+_CONTACTS_ALL_SQL = """
+SELECT contact_id, full_name, org, title, city, emails, phones, source
+FROM recall.contacts
+ORDER BY contact_id
+"""
+
+_INTERACTIONS_ALL_SQL = """
+SELECT interaction_id, source, thread_id, handle_value, direction,
+       ts_utc, subject, text, source_ref
+FROM recall.interactions
+WHERE ts_utc >= :since_ts
+ORDER BY ts_utc DESC
+LIMIT :limit_n
+"""
+
+_EVENTS_ALL_SQL = """
+SELECT event_id, title, start_utc, end_utc, location, attendees, source_ref
+FROM recall.events
+WHERE start_utc >= :window_start
+  AND start_utc <= :window_end
+ORDER BY start_utc
+"""
+
+
+def all_handles(
+    *,
+    source_tag: str,
+    layer: QueryLayer | None = None,
+) -> list[HandleRow]:
+    """Return every handle row (world ingest)."""
+    ql = _resolve_layer(layer)
+    rows = ql.query(_HANDLES_ALL_SQL, source_tag=source_tag)
+    return [HandleRow.model_validate(_stringify_row(row)) for row in rows]
+
+
+def all_contacts(
+    *,
+    source_tag: str,
+    layer: QueryLayer | None = None,
+) -> list[ContactRow]:
+    """Return every contact row (world ingest)."""
+    ql = _resolve_layer(layer)
+    rows = ql.query(_CONTACTS_ALL_SQL, source_tag=source_tag)
+    return [_parse_contact(row) for row in rows]
+
+
+def all_interactions(
+    *,
+    source_tag: str,
+    since_days: int = 400,
+    limit: int = 5000,
+    now: datetime | None = None,
+    settings: Settings | None = None,
+    layer: QueryLayer | None = None,
+) -> list[InteractionRow]:
+    """Return recent interactions across all handles (world ingest / context)."""
+    active = settings if settings is not None else get_settings()
+    ql = _resolve_layer(layer)
+    anchor = resolve_now(active, now)
+    since_ts = (anchor - timedelta(days=since_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    rows = ql.query(
+        _INTERACTIONS_ALL_SQL,
+        {"since_ts": since_ts, "limit_n": int(limit)},
+        source_tag=source_tag,
+    )
+    return [InteractionRow.model_validate(_stringify_row(row)) for row in rows]
+
+
+def all_events_in_window(
+    *,
+    source_tag: str,
+    days_back: int = 400,
+    days_forward: int = 60,
+    now: datetime | None = None,
+    settings: Settings | None = None,
+    layer: QueryLayer | None = None,
+) -> list[EventRow]:
+    """Return events in a wide window (world context); filter attendees in Python."""
+    active = settings if settings is not None else get_settings()
+    ql = _resolve_layer(layer)
+    anchor = resolve_now(active, now)
+    window_start = (anchor - timedelta(days=days_back)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    window_end = (anchor + timedelta(days=days_forward)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    rows = ql.query(
+        _EVENTS_ALL_SQL,
+        {"window_start": window_start, "window_end": window_end},
+        source_tag=source_tag,
+    )
+    return [_parse_event(row) for row in rows]
+
+
 def _resolve_layer(layer: QueryLayer | None) -> QueryLayer:
     return layer if layer is not None else get_default_query_layer()
 
