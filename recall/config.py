@@ -3,9 +3,9 @@
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Self
 
-from pydantic import Field, SecretStr, field_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
@@ -76,7 +76,23 @@ class Settings(BaseSettings):
     )
 
     tavily_api_key: SecretStr = Field(default=SecretStr(""))
-    zetaris_url: str = ""
+    zetaris_rest_url: str = Field(
+        default="http://localhost:8888/api/v1.0",
+        description="Direct Zetaris REST base (POST …/sql-editor/sqls/run).",
+    )
+    zetaris_base_url: str = Field(
+        default="http://localhost:3000",
+        description="UI base for POST /api/auth/login (idToken fallback).",
+    )
+    zetaris_org_id: str = Field(default="1", description="X-Org-ID header value.")
+    zetaris_schema: str = Field(
+        default="recall",
+        description="Lightning/Spark schema prefix for recall.<table> queries.",
+    )
+    zetaris_url: str = Field(
+        default="",
+        description="Deprecated alias for ZETARIS_REST_URL.",
+    )
     zetaris_api_key: SecretStr = Field(default=SecretStr(""))
     zetaris_user: str = ""
     zetaris_password: SecretStr = Field(default=SecretStr(""))
@@ -94,6 +110,14 @@ class Settings(BaseSettings):
     live_data_dir: Path = Path("data/live")
     cache_dir: Path = Path("data/cache")
     logs_dir: Path = Path("logs")
+
+    @model_validator(mode="after")
+    def _alias_zetaris_url(self) -> Self:
+        """Map deprecated ZETARIS_URL onto ZETARIS_REST_URL when set."""
+        legacy = (self.zetaris_url or "").strip()
+        if not legacy:
+            return self
+        return self.model_copy(update={"zetaris_rest_url": legacy})
 
     @field_validator("role_models", mode="before")
     @classmethod

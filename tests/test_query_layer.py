@@ -30,6 +30,7 @@ def _reset_settings_and_duckdb(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     monkeypatch.setenv("SAMPLE_MODE", "true")
     monkeypatch.setenv("DATA_BACKEND", "duckdb")
     monkeypatch.delenv("ZETARIS_URL", raising=False)
+    monkeypatch.delenv("ZETARIS_REST_URL", raising=False)
     get_settings.cache_clear()
     clear_default_query_layer()
     DuckDBBackend.clear_connection_cache()
@@ -159,13 +160,18 @@ def test_june_coffee_with_karim_event(tracer: Tracer) -> None:
 def test_zetaris_without_url_falls_back_and_traces(
     tracer: Tracer, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    """SAMPLE_MODE + zetaris + empty REST URL → skip network, DuckDB fallback."""
     monkeypatch.setenv("DATA_BACKEND", "zetaris")
-    monkeypatch.delenv("ZETARIS_URL", raising=False)
+    monkeypatch.setenv("ZETARIS_REST_URL", "")
+    monkeypatch.setenv("ZETARIS_URL", "")
+    monkeypatch.delenv("ZETARIS_USER", raising=False)
+    monkeypatch.delenv("ZETARIS_PASSWORD", raising=False)
     get_settings.cache_clear()
     clear_default_query_layer()
     settings = get_settings()
     assert settings.data_backend is DataBackend.ZETARIS
-    assert not settings.zetaris_url
+    assert settings.sample_mode is True
+    assert not (settings.zetaris_rest_url or "").strip()
 
     queue = Tracer.subscribe()
     try:
@@ -185,6 +191,8 @@ def test_zetaris_without_url_falls_back_and_traces(
         assert fallback_events, "expected a fallback trace event"
         assert fallback_events[0]["payload"]["from_backend"] == "zetaris"
         assert fallback_events[0]["payload"]["to_backend"] == "duckdb"
+        reason = fallback_events[0]["payload"]["reason"]
+        assert "SAMPLE_MODE" in reason or "ZETARIS_REST_URL" in reason
     finally:
         Tracer.unsubscribe(queue)
 
