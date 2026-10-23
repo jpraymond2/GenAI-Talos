@@ -1,0 +1,166 @@
+{
+  "handle": {
+    "kind": "email",
+    "value": "karim.k92@gmail.com"
+  },
+  "parsed": {
+    "local_tokens": [
+      "karim",
+      "k"
+    ],
+    "display_name": "Karim",
+    "domain": "gmail.com",
+    "domain_class": "free-mail",
+    "company": "",
+    "aliases": [],
+    "industry": [],
+    "signature_phones": [],
+    "signature_name": "",
+    "signature_title": "",
+    "signature_company": ""
+  },
+  "candidates": [
+    {
+      "entity_id": null,
+      "name": "none of these",
+      "raw_score": 0.25,
+      "probability": 0.6842817370445008,
+      "probability_pct": 68.43,
+      "rank": 1,
+      "features": [],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_e52558eb0987",
+      "name": "Karim Haddad",
+      "raw_score": 0.03,
+      "probability": 0.15785913147774955,
+      "probability_pct": 15.79,
+      "rank": 2,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.35,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match"
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.15,
+          "contribution": 0.03,
+          "source_refs": [],
+          "detail": "first name only"
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.2,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no company"
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "fallback no terms"
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.1,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no known employer match"
+        },
+        {
+          "name": "f6",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no thread overlap"
+        }
+      ],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_97d72126743f",
+      "name": "Karim Saleh",
+      "raw_score": 0.03,
+      "probability": 0.15785913147774955,
+      "probability_pct": 15.79,
+      "rank": 3,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.35,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match"
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.15,
+          "contribution": 0.03,
+          "source_refs": [],
+          "detail": "first name only"
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.2,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no company"
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "fallback no terms"
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.1,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no known employer match"
+        },
+        {
+          "name": "f6",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no thread overlap"
+        }
+      ],
+      "penalties": []
+    }
+  ],
+  "hard_rules": [
+    "block_auto_link"
+  ],
+  "decision": "needs_user",
+  "top_entity_id": "ent_e52558eb0987",
+  "top_probability": 0.15785913147774955,
+  "thresholds": {
+    "auto_link_probability": 0.8,
+    "auto_link_margin": 0.2,
+    "tentative_min": 0.55
+  },
+  "scoring_version": 1,
+  "run_id": "8f06da0d-dfde-4784-b55f-42cb0c305eea-1135149f9760",
+  "score_file": "/Users/jpraymond/Desktop/GenAI-Talos/data/identity_scores/karim.k92_gmail.com/8f06da0d-dfde-4784-b55f-42cb0c305eea-1135149f9760.json"
+}

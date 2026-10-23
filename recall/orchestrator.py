@@ -233,6 +233,7 @@ def _resolve_stub(state: RunState) -> RunState:
     """Temporary person resolution until world/hmem resolver exists.
 
     TODO(step3): replace with engines.world + hmem entity resolution.
+    Accepts an email in the utterance/person_name via identity_assumptions.
     """
     if state.entity_id:
         resolved = _entity_from_id(state.entity_id)
@@ -242,6 +243,51 @@ def _resolve_stub(state: RunState) -> RunState:
 
     name = (state.intent.person_name if state.intent else None) or ""
     name = name.strip()
+
+    # Email handle in the utterance → identity assumptions / anchors
+    email_match = None
+    if "@" in name:
+        email_match = name
+    else:
+        import re
+
+        found = re.search(r"[\w.+-]+@[\w.-]+\.\w+", state.utterance.text)
+        if found:
+            email_match = found.group(0)
+    if email_match:
+        try:
+            from recall.engines.world.identity_service import IdentityService
+
+            hit = IdentityService().resolve_handle(email_match)
+        except Exception:  # noqa: BLE001 - world DB may be missing
+            hit = None
+        if hit and hit.get("entity_id") and hit.get("decision") in {
+            "auto_linked",
+            "tentative",
+        }:
+            state.entity_id = str(hit["entity_id"])
+            state.entity_name = str(hit.get("name") or email_match)
+            state.context["identity_probability"] = hit.get("probability")
+            state.context["identity_status"] = hit.get("status")
+            return state
+        if hit and hit.get("decision") == "needs_user":
+            state.status = "needs_clarification"
+            state.question = f"Is {email_match} Karim Haddad or Karim Saleh?"
+            state.candidates = [
+                Candidate(
+                    entity_id="karim-haddad",
+                    name="Karim Haddad",
+                    score=0.5,
+                    reason="Ledgerly founder",
+                ),
+                Candidate(
+                    entity_id="karim-saleh",
+                    name="Karim Saleh",
+                    score=0.5,
+                    reason="PwC / McGill",
+                ),
+            ]
+            return state
 
     if name == "Karim":
         state.status = "needs_clarification"

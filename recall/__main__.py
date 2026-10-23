@@ -22,6 +22,8 @@ from recall.schemas import Candidate, RunState, Utterance
 from recall.tracing import Tracer
 
 app = typer.Typer(no_args_is_help=True, help="Recall, a voice-first meeting-prep agent.")
+identity_app = typer.Typer(no_args_is_help=True, help="Identity assumptions and scoring.")
+app.add_typer(identity_app, name="identity")
 
 AgentName = Literal["router", "writer", "critic"]
 
@@ -30,6 +32,151 @@ def _enable_sample_mode() -> None:
     """Force SAMPLE_MODE for this process so the run needs no credentials."""
     os.environ["SAMPLE_MODE"] = "true"
     get_settings.cache_clear()
+
+
+@app.command()
+def ingest(
+    sample: Annotated[
+        bool,
+        typer.Option("--sample", help="Build data/world_sample.db from sample CSVs."),
+    ] = False,
+) -> None:
+    """Ingest sample/live data into the World Model and run identity scoring."""
+    if sample:
+        _enable_sample_mode()
+    settings = get_settings()
+    tracer = Tracer(logs_dir=settings.logs_dir)
+    with tracer.activate():
+        from recall.engines.world import run_world_ingest, world
+
+        world.reset()
+        counts = run_world_ingest(sample=sample or settings.sample_mode, settings=None, tracer=tracer)
+    db = "data/world_sample.db" if (sample or get_settings().sample_mode) else "data/world.db"
+    print(
+        "World ingest complete: "
+        f"entities={counts.get('entities')} conflicts={counts.get('conflicts')} "
+        f"identity_scored={counts.get('identity_scored')} -> {db}"
+    )
+
+
+@identity_app.command("list")
+def identity_list(
+    status: Annotated[
+        str | None,
+        typer.Option("--status", help="Filter by decision: needs_user|tentative|auto_linked."),
+    ] = None,
+    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+) -> None:
+    """List identity assumptions (latest active rows)."""
+    if sample:
+        _enable_sample_mode()
+    from recall.engines.world.store import WorldStore, world_db_path
+
+    store = WorldStore(path=world_db_path())
+    rows = store.list_identity_assumptions(status=status, active_only=False)
+    # Prefer one row per handle: latest active/user status
+    seen: set[str] = set()
+    for row in rows:
+        key = str(row["handle_value"]).lower()
+        if key in seen:
+            continue
+        if row["status"] == "superseded":
+            continue
+        seen.add(key)
+        print(
+            f"{row['handle_value']}\t{row['decision']}\t"
+            f"p={float(row['probability']):.2%}\t"
+            f"entity={row['candidate_entity_id']}\tstatus={row['status']}"
+        )
+
+
+@identity_app.command("explain")
+def identity_explain(
+    handle: Annotated[str, typer.Argument(help="Handle to explain, e.g. karim@pwc.com")],
+    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+) -> None:
+    """Print the latest score file as a readable table."""
+    if sample:
+        _enable_sample_mode()
+    from recall.engines.world.identity_service import format_explain_table
+    from recall.engines.world.store import WorldStore, world_db_path
+
+    store = WorldStore(path=world_db_path())
+    rows = store.list_identity_assumptions(handle_value=handle)
+    score_file = next((r["score_file"] for r in rows if r.get("score_file")), "")
+    if not score_file:
+        latest = store.latest_identity_for_handle(handle)
+        score_file = (latest or {}).get("score_file") or ""
+    if not score_file:
+        print(f"No score file for {handle}")
+        raise typer.Exit(code=1)
+    print(format_explain_table(score_file))
+
+
+@identity_app.command("confirm")
+def identity_confirm(
+    handle: Annotated[str, typer.Argument()],
+    entity_id: Annotated[str, typer.Argument()],
+    sample: Annotated[bool, typer.Option("--sample")] = True,
+) -> None:
+    """Confirm a handle → entity link (permanent)."""
+    if sample:
+        _enable_sample_mode()
+    from recall.engines.world.identity_service import IdentityService
+
+    row = IdentityService().confirm(handle, entity_id)
+    print(f"confirmed {handle} -> {entity_id} status={row['status']} p=1.0")
+
+
+@identity_app.command("reject")
+def identity_reject(
+    handle: Annotated[str, typer.Argument()],
+    entity_id: Annotated[str, typer.Argument()],
+    sample: Annotated[bool, typer.Option("--sample")] = True,
+) -> None:
+    """Reject a handle → entity candidate."""
+    if sample:
+        _enable_sample_mode()
+    from recall.engines.world.identity_service import IdentityService
+
+    row = IdentityService().reject(handle, entity_id)
+    print(f"rejected {handle} -/-> {entity_id} status={row['status']}")
+
+
+@identity_app.command("questions")
+def identity_questions(
+    sample: Annotated[bool, typer.Option("--sample")] = True,
+) -> None:
+    """List batched needs_user questions grouped by candidate pair."""
+    if sample:
+        _enable_sample_mode()
+    from recall.engines.world.identity_service import IdentityService
+
+    groups = IdentityService().list_questions()
+    if not groups:
+        print("No open identity questions.")
+        return
+    for group in groups:
+        print(
+            f"pair={group.get('candidate_a')}|{group.get('candidate_b')} "
+            f"count={group.get('count')}"
+        )
+        for handle in group.get("handles") or []:
+            print(f"  - {handle}")
+        for q in group.get("questions") or []:
+            print(f"    {q.get('question')}")
+
+
+@identity_app.command("bench")
+def identity_bench() -> None:
+    """Run identity scenario fixtures and print pass/fail table."""
+    _enable_sample_mode()
+    from recall.engines.world.identity_bench import format_bench_table, run_bench
+
+    payload = run_bench()
+    print(format_bench_table(payload))
+    if int(payload.get("passed", 0)) < int(payload.get("total", 0)):
+        raise typer.Exit(code=1)
 
 
 @app.command()
@@ -157,12 +304,6 @@ def _sources_for_point(state: RunState, evidence_ids: list[str]) -> str:
         if item is not None:
             labels.append(item.source)
     return ", ".join(labels)
-
-
-@app.command()
-def ingest() -> None:
-    """Load source data into the world store."""
-    print("ingest is not implemented yet")
 
 
 @app.command()

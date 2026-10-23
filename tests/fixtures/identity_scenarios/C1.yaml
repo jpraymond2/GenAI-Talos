@@ -1,0 +1,39 @@
+id: C1
+title: New person
+description: >
+  Email from a never-seen person at PwC with no history creates a new person entity.
+handle:
+  kind: email
+  value: a.cote@pwc.com
+extra:
+  contacts: []
+  handles:
+    - handle_id: h_c1_amelie
+      kind: email
+      value: a.cote@pwc.com
+      display_name: Amélie Côté
+      source: gmail
+  interactions:
+    - interaction_id: i_c1_amelie
+      source: gmail
+      thread_id: th_c1_amelie
+      handle_value: a.cote@pwc.com
+      direction: in
+      ts_utc: "2026-10-14T11:00:00Z"
+      subject: "Coffee next week?"
+      text: |
+        Hi Alex — I'm new on the PwC Advisory team and would love to connect.
+
+        —
+        Amélie Côté
+        Associate, PwC
+      source_ref: gmail:c1amelie
+  events: []
+expected:
+  # Ingest may create the entity as new_person; a follow-up score then
+  # auto_links the same new entity — both are acceptable.
+  decision:
+    - new_person
+    - auto_linked
+  entity: Amélie Côté
+  entity_status: new

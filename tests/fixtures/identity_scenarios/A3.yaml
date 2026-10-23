@@ -1,0 +1,37 @@
+id: A3
+title: Transliteration
+description: >
+  WhatsApp push name "كريم حداد" on an unknown number whose messages mention
+  Ledgerly should tentatively or auto-link to Karim Haddad.
+handle:
+  kind: phone
+  value: "+14385550200"
+extra:
+  contacts: []
+  handles:
+    - handle_id: h_a3_wa
+      kind: wa_jid
+      value: "14385550200@s.whatsapp.net"
+      display_name: "كريم حداد"
+      source: whatsapp
+    - handle_id: h_a3_phone
+      kind: phone
+      value: "+14385550200"
+      display_name: "كريم حداد"
+      source: whatsapp
+  interactions:
+    - interaction_id: i_a3_wa
+      source: whatsapp
+      thread_id: th_a3_wa
+      handle_value: "+14385550200"
+      direction: in
+      ts_utc: "2026-10-08T18:00:00Z"
+      subject: ""
+      text: "circling back on Ledgerly stuff — free later?"
+      source_ref: whatsapp:a3wa
+  events: []
+expected:
+  decision:
+    - tentative
+    - auto_linked
+  entity: Karim Haddad

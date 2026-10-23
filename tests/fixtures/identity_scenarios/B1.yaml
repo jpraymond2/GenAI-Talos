@@ -1,0 +1,47 @@
+id: B1
+title: Namesakes
+description: >
+  A third Karim (Mansour) also at PwC; email from "Karim <k.m@pwc.com>" with
+  generic content should need_user under the margin rule.
+handle:
+  kind: email
+  value: k.m@pwc.com
+extra:
+  contacts:
+    - contact_id: c_karim_mansour
+      full_name: Karim Mansour
+      org: PwC
+      title: Consultant
+      city: Montreal
+      emails: []
+      phones:
+        - "+15145550999"
+      source: gmail
+  handles:
+    - handle_id: h_b1_km
+      kind: email
+      value: k.m@pwc.com
+      display_name: Karim
+      source: gmail
+    - handle_id: h_b1_km_phone
+      kind: phone
+      value: "+15145550999"
+      display_name: Karim Mansour
+      source: contacts
+  interactions:
+    - interaction_id: i_b1_generic
+      source: gmail
+      thread_id: th_b1_generic
+      handle_value: k.m@pwc.com
+      direction: in
+      ts_utc: "2026-10-10T14:00:00Z"
+      subject: "Hello"
+      text: |
+        Hope you're well, let's catch up sometime.
+
+        Karim
+      source_ref: gmail:b1generic
+  events: []
+expected:
+  decision: needs_user
+  entity: null

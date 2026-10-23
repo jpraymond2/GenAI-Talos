@@ -1,0 +1,71 @@
+version: 3
+weights:
+  f1: 0.25
+  f2: 0.08
+  f3: 0.12
+  f4: 0.08
+  f5: 0.08
+  f6: 0.05
+  f7a: 0.14
+  f7b: 0.05
+  f8: 0.15
+penalties:
+  p1_conflicting_employer: -0.25
+none_baseline: 0.10
+softmax_temperature: 0.15
+thresholds:
+  auto_link_probability: 0.80
+  auto_link_margin: 0.20
+  tentative_min: 0.55
+  new_person_none_probability: 0.60
+free_mail_domains:
+  - gmail.com
+  - outlook.com
+  - hotmail.com
+  - live.com
+  - icloud.com
+  - me.com
+  - yahoo.com
+  - proton.me
+  - protonmail.com
+  - aol.com
+role_local_parts:
+  - info
+  - team
+  - hello
+  - contact
+  - recruiting
+  - careers
+  - hr
+  - support
+  - noreply
+  - no-reply
+  - notifications
+  - billing
+  - admin
+brand_domains:
+  - pwc.com
+  - linkedin.com
+  - google.com
+  - apple.com
+  - microsoft.com
+work_prefilter_keywords:
+  - work
+  - job
+  - client
+  - office
+  - intern
+  - offer
+  - project
+  - team
+  - boss
+  - firm
+announcement_phrases:
+  - new number
+  - my new number
+  - new email
+  - my new email
+  - reach me at
+  - use my work email
+  - save it
+  - save this number
