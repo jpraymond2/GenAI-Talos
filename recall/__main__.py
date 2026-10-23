@@ -50,13 +50,35 @@ def ingest(
         bool,
         typer.Option("--live", help="Pull Gmail, Calendar, WhatsApp, and iMessage into data/live/."),
     ] = False,
+    sample: Annotated[
+        bool,
+        typer.Option("--sample", help="Build data/world_sample.db from sample CSVs via the query layer."),
+    ] = False,
 ) -> None:
-    """Ingest live connectors into data/live/*.parquet (requires --live)."""
-    if not live:
-        print("Live ingest needs --live (refuses to run without it).")
+    """Ingest live connectors and/or build the world model SQLite store."""
+    if live and sample:
+        print("Pass only one of --live or --sample.")
+        raise typer.Exit(code=1)
+    if not live and not sample:
+        print("Ingest needs --live or --sample.")
         raise typer.Exit(code=1)
 
-    settings = get_settings()
+    if sample:
+        _enable_sample_mode()
+        settings = get_settings()
+        tracer = Tracer(logs_dir=settings.logs_dir)
+        with tracer.activate():
+            from recall.engines.world import run_world_ingest, world
+
+            world.reset()
+            counts = run_world_ingest(sample=True, settings=settings, tracer=tracer)
+        print(
+            "Sample world ingest complete: "
+            f"entities={counts['entities']} conflicts={counts['conflicts']} "
+            f"observations={counts['observations']} -> data/world_sample.db"
+        )
+        return
+
     # Live pulls must not stay in SAMPLE_MODE (DuckDB would ignore parquet).
     os.environ["SAMPLE_MODE"] = "false"
     get_settings.cache_clear()
@@ -65,8 +87,11 @@ def ingest(
     tracer = Tracer(logs_dir=settings.logs_dir)
     with tracer.activate():
         from recall.connectors.ingest import run_live_ingest
+        from recall.engines.world import run_world_ingest, world
 
         summary = run_live_ingest(settings=settings, tracer=tracer)
+        world.reset()
+        world_counts = run_world_ingest(sample=False, settings=settings, tracer=tracer)
 
     print("Live ingest complete.")
     for source, info in summary["per_source"].items():
@@ -84,6 +109,71 @@ def ingest(
         f"handles={totals['handles']} interactions={totals['interactions']} "
         f"events={totals['events']} contacts={totals['contacts']}"
     )
+    print(
+        "  world: "
+        f"entities={world_counts['entities']} conflicts={world_counts['conflicts']} "
+        f"-> data/world.db"
+    )
+
+
+@app.command()
+def who(
+    name: Annotated[str, typer.Argument(help="Person name to resolve.")],
+    sample: Annotated[
+        bool,
+        typer.Option("--sample", help="Read data/world_sample.db (SAMPLE_MODE)."),
+    ] = False,
+) -> None:
+    """Print ranked world-model candidates with attributes and conflicts."""
+    if sample:
+        _enable_sample_mode()
+    settings = get_settings()
+    tracer = Tracer(logs_dir=settings.logs_dir)
+    with tracer.activate():
+        from recall.engines.world import world
+        from recall.engines.world.store import WorldStore, world_db_path
+
+        world.reset()
+        db = world_db_path(settings)
+        if not db.is_file():
+            print(f"No world DB at {db}. Run: recall ingest --sample")
+            raise typer.Exit(code=1)
+        candidates = world.resolve(name)
+        store = WorldStore(path=db, settings=settings)
+        if not candidates:
+            print(f"No candidates for {name!r}.")
+            return
+        print(f"Candidates for {name!r}:")
+        for cand in candidates:
+            entity = store.get_entity(cand.entity_id)
+            print(f"  [{cand.score:.2f}] {cand.name} ({cand.entity_id}) — {cand.reason}")
+            if entity is None:
+                continue
+            # Merged channels inferred from aliases / attribute history source_refs.
+            channel_hints: set[str] = set()
+            for alias in entity.aliases:
+                if "@s.whatsapp.net" in alias:
+                    channel_hints.add("whatsapp")
+                elif "@" in alias:
+                    channel_hints.add("gmail")
+                elif alias.startswith("+"):
+                    channel_hints.add("imessage/phone")
+            for hist in entity.attribute_history:
+                prefix = hist.source_ref.split(":", 1)[0]
+                if prefix in {"gmail", "whatsapp", "imessage", "calendar", "contact"}:
+                    channel_hints.add(prefix)
+            if channel_hints:
+                print(f"      sources: {', '.join(sorted(channel_hints))}")
+            if entity.attributes:
+                attrs = ", ".join(f"{k}={v}" for k, v in entity.attributes.items())
+                print(f"      attributes: {attrs}")
+            conflicts = store.list_conflicts(entity.id)
+            for conflict in conflicts:
+                vals = "; ".join(
+                    f"{item.value} ({item.source_ref})" for item in conflict.values
+                )
+                print(f"      conflict[{conflict.field}]: {vals}")
+        store.close()
 
 
 @app.command()
