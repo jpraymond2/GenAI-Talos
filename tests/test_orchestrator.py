@@ -140,7 +140,11 @@ def test_critic_revise_once_triggers_exactly_one_rewrite(tmp_path: Path) -> None
     assert critic_calls["n"] == 2
     assert state.round == 2
     assert state.final_brief is not None
-    assert len(state.final_brief.points) == 2
+    # Matching LinkedIn job_change (e13) is injected if the draft omitted it.
+    assert len(state.final_brief.points) == 3
+    cited = {eid for p in state.final_brief.points for eid in p.evidence_ids}
+    assert "e13" in cited
+    assert "e14" not in cited
 
     events = [
         __import__("json").loads(line)

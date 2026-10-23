@@ -19,6 +19,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from recall.agents import critic, router, writer
+from recall.agents.job_change import sanitize_brief_job_changes
 from recall.config import get_settings
 from recall.fixtures import load_fixture_evidence
 from recall.llm import generator as llm
@@ -211,8 +212,11 @@ async def _pipeline(state: RunState, deps: Deps) -> RunState:
             },
         )
 
-    # 6. Final brief = last draft minus dropped points
-    state.final_brief = _apply_drops(state.drafts[-1], _last_verdict(state))
+    # 6. Final brief = last draft minus dropped points; enforce LinkedIn job_change rules
+    state.final_brief = sanitize_brief_job_changes(
+        _apply_drops(state.drafts[-1], _last_verdict(state)),
+        state.evidence,
+    )
     state.status = "done"
 
     # 7. Actions

@@ -4,7 +4,7 @@
     "person_name": "Karim",
     "when": null,
     "action_request": null,
-    "sources_plan": ["gmail", "imessage", "whatsapp", "calendar", "web", "memory"],
+    "sources_plan": ["gmail", "imessage", "whatsapp", "linkedin", "calendar", "web", "memory"],
     "confidence": 0.9
   }
 }

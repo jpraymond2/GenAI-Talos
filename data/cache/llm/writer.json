@@ -4,22 +4,28 @@
     "headline": "Karim Haddad, Ledgerly founder; you last spoke about three weeks ago on WhatsApp.",
     "points": [
       {
+        "text": "Congrats on becoming Founder and CEO at Ledgerly.",
+        "evidence_ids": ["e13"],
+        "kind": "news",
+        "priority": 1
+      },
+      {
         "text": "He asked for an intro to Lina Chen and you have not replied yet.",
         "evidence_ids": ["e2"],
         "kind": "open_loop",
-        "priority": 1
+        "priority": 2
       },
       {
         "text": "Ledgerly is closing its seed round; a public note also covered the raise.",
         "evidence_ids": ["e1", "e6"],
         "kind": "news",
-        "priority": 2
+        "priority": 3
       },
       {
         "text": "He said he is moving to Toronto in January.",
         "evidence_ids": ["e4"],
         "kind": "logistics",
-        "priority": 3
+        "priority": 4
       }
     ],
     "caveats": []

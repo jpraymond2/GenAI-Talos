@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from recall.agents.job_change import job_change_guidance
 from recall.agents.prompts import WRITER_SYSTEM
 from recall.agents.time_context import with_today
 from recall.llm.generator import generate_json
@@ -19,6 +20,7 @@ async def run(state: RunState, deps: Any) -> RunState:
         "Use relative times anchored to TODAY (e.g. '3 weeks ago'), not exact calendar dates.",
         f"PERSON: {person}",
         f"UTTERANCE: {state.utterance.text}",
+        job_change_guidance(state.evidence),
         "EVIDENCE:",
         format_evidence_list(state.evidence),
     ]
@@ -40,14 +42,18 @@ async def run(state: RunState, deps: Any) -> RunState:
 
 
 def format_evidence_list(evidence: dict[str, Evidence]) -> str:
-    """Compact evidence lines for writer/critic prompts."""
+    """Compact evidence lines for writer/critic prompts.
+
+    Example with tags: ``[e13] linkedin 2026-10-09 (job_change): text``.
+    """
     if not evidence:
         return "(none)"
     lines: list[str] = []
     for item in sorted(evidence.values(), key=lambda e: (e.ts, e.id), reverse=True):
         day = item.ts.date().isoformat()
         text = " ".join(item.text.split())
-        lines.append(f"[{item.id}] {item.source} {day}: {text}")
+        tags = f" ({', '.join(item.tags)})" if item.tags else ""
+        lines.append(f"[{item.id}] {item.source} {day}{tags}: {text}")
     return "\n".join(lines)
 
 

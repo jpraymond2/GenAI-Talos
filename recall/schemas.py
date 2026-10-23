@@ -7,6 +7,27 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+EvidenceSource = Literal[
+    "gmail",
+    "imessage",
+    "whatsapp",
+    "calendar",
+    "web",
+    "memory",
+    "linkedin",
+]
+
+# Default sources_plan for briefs (router prompt: "default to all for briefs").
+DEFAULT_SOURCES_PLAN: list[str] = [
+    "gmail",
+    "imessage",
+    "whatsapp",
+    "linkedin",
+    "calendar",
+    "web",
+    "memory",
+]
+
 
 class Utterance(BaseModel):
     """One spoken or typed user turn."""
@@ -23,7 +44,7 @@ class Intent(BaseModel):
     person_name: str | None = None
     when: str | None = None
     action_request: str | None = None
-    sources_plan: list[str]
+    sources_plan: list[str] = Field(default_factory=lambda: list(DEFAULT_SOURCES_PLAN))
     confidence: float
 
 
@@ -47,11 +68,12 @@ class Evidence(BaseModel):
     """A sourced snippet used to build or critique a brief."""
 
     id: str
-    source: Literal["gmail", "imessage", "whatsapp", "calendar", "web", "memory"]
+    source: EvidenceSource
     source_ref: str
     ts: datetime
     text: str
     url: str | None = None
+    tags: list[str] = Field(default_factory=list)
 
 
 class TalkingPoint(BaseModel):
