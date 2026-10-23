@@ -1,0 +1,8 @@
+# Nickname / transliteration clusters (any form matches any other in the set).
+variants:
+  - [Karim, Kareem, "كريم"]
+  - [Haddad, "حداد"]
+  - [Mohamed, Mohammed, Muhammad, "محمد"]
+  - [Elie, Élie, Elias, "إيلي"]
+  - [Joseph, Youssef, "يوسف"]
+  - [Georges, George, "جورج"]

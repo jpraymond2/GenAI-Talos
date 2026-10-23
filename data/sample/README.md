@@ -15,7 +15,7 @@ deterministic templates instead.
 | File | Rows |
 |------|------|
 | `contacts.csv` | 10 |
-| `handles.csv` | 30 |
+| `handles.csv` | 35 |
 | `interactions.csv` | 400 |
 | `events.csv` | 25 |
 

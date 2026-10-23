@@ -1,0 +1,51 @@
+id: A1
+title: Work + personal email
+description: >
+  Personal Gmail replying in the same thread as karim@ledgerly.io with the
+  same signature phone should auto-link to Karim Haddad.
+handle:
+  kind: email
+  value: karim.haddad.perso@gmail.com
+extra:
+  contacts: []
+  handles:
+    - handle_id: h_a1_perso
+      kind: email
+      value: karim.haddad.perso@gmail.com
+      display_name: Karim Haddad
+      source: gmail
+  interactions:
+    - interaction_id: i_a1_ledgerly
+      source: gmail
+      thread_id: th_a1_seed
+      handle_value: karim@ledgerly.io
+      direction: in
+      ts_utc: "2026-10-01T10:00:00Z"
+      subject: "Seed update"
+      text: |
+        Quick follow-up on the Ledgerly seed deck.
+
+        —
+        Karim Haddad
+        Founder, Ledgerly
+        +1 514-555-0142
+      source_ref: gmail:a1ledgerly
+    - interaction_id: i_a1_perso
+      source: gmail
+      thread_id: th_a1_seed
+      handle_value: karim.haddad.perso@gmail.com
+      direction: in
+      ts_utc: "2026-10-01T11:00:00Z"
+      subject: "Re: Seed update"
+      text: |
+        Sending from my personal inbox — same thread.
+
+        —
+        Karim Haddad
+        Founder, Ledgerly
+        +1 514-555-0142
+      source_ref: gmail:a1perso
+  events: []
+expected:
+  decision: auto_linked
+  entity: Karim Haddad

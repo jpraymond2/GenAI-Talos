@@ -25,6 +25,7 @@ dependencies = [
     "pynput",
     "tavily-python",
     "pytest",
+    "pyyaml>=6.0.3",
 ]
 
 [project.optional-dependencies]

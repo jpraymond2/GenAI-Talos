@@ -1,0 +1,40 @@
+id: D1
+title: Spoof
+description: >
+  Display-name spoof "Karim Haddad <x9z7@mailbox.example>" with unrelated crypto
+  content must not auto-link; needs_user or rejected with possible_spoof flag.
+handle:
+  kind: email
+  value: x9z7@mailbox.example
+extra:
+  contacts: []
+  handles:
+    - handle_id: h_d1_spoof
+      kind: email
+      value: x9z7@mailbox.example
+      display_name: Karim Haddad
+      source: gmail
+  interactions:
+    - interaction_id: i_d1_spoof
+      source: gmail
+      thread_id: th_d1_spoof
+      handle_value: x9z7@mailbox.example
+      direction: in
+      ts_utc: "2026-10-15T08:00:00Z"
+      subject: "Exclusive crypto opportunity"
+      text: |
+        Hi — limited-time token sale, send BTC to claim your allocation.
+        This is unrelated to any prior work.
+
+        Best,
+        Karim Haddad
+      source_ref: gmail:d1spoof
+  events: []
+expected:
+  decision:
+    - needs_user
+    - unmatched
+  entity: null
+  never_decision: auto_linked
+  flags:
+    - possible_spoof

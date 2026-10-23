@@ -1,0 +1,57 @@
+id: B5
+title: Mentioned name
+description: >
+  Email from lina.chen@northstar.vc saying "Karim told me to reach out"
+  auto-links Lina Chen; Karim gets no link from this email.
+handle:
+  kind: email
+  value: lina.chen@northstar.vc
+extra:
+  contacts:
+    - contact_id: c_lina_chen
+      full_name: Lina Chen
+      org: Northstar VC
+      title: Associate
+      city: Toronto
+      emails:
+        - lina.chen@personal.example
+      phones:
+        - "+14165550188"
+      source: manual
+  handles:
+    - handle_id: h_b5_lina_anchor
+      kind: email
+      value: lina.chen@personal.example
+      display_name: Lina Chen
+      source: contacts
+    - handle_id: h_b5_lina
+      kind: email
+      value: lina.chen@northstar.vc
+      display_name: Lina Chen
+      source: gmail
+    - handle_id: h_b5_lina_phone
+      kind: phone
+      value: "+14165550188"
+      display_name: Lina Chen
+      source: contacts
+  interactions:
+    - interaction_id: i_b5_lina
+      source: gmail
+      thread_id: th_b5_lina
+      handle_value: lina.chen@northstar.vc
+      direction: in
+      ts_utc: "2026-10-12T16:00:00Z"
+      subject: "Intro from Karim"
+      text: |
+        Hi Alex — Karim told me to reach out about the seed narrative.
+        Would love 20 minutes next week.
+
+        —
+        Lina Chen
+        Associate, Northstar VC
+      source_ref: gmail:b5lina
+  events: []
+expected:
+  decision: auto_linked
+  entity: Lina Chen
+  not_linked_entity: Karim Haddad

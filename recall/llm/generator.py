@@ -14,11 +14,14 @@ import logging
 import math
 import re
 import time
+import types
+from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, Union, get_args, get_origin
 
 from openai import APIStatusError, APITimeoutError, AsyncOpenAI, BadRequestError, RateLimitError
 from pydantic import BaseModel, ValidationError
+from pydantic.fields import FieldInfo
 
 from recall.config import ModelTier, Settings, get_settings
 from recall.tracing import Tracer
@@ -33,6 +36,32 @@ _EMBED_DIM = 384
 _PROMPT_PREVIEW_CHARS = 200
 _REASONING_MIN_TOKENS = 4000
 _THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
+_SCHEMA_ECHO_REPAIR = (
+    "You returned the schema, not an answer. Return the filled-in JSON object only."
+)
+
+# Compact filled-in examples keyed by Pydantic model class name.
+_SCHEMA_EXAMPLES: dict[str, dict[str, Any]] = {
+    "CriticVerdict": {
+        "overall": "revise",
+        "verdicts": [
+            {
+                "index": 0,
+                "decision": "keep",
+                "reason": "Supported by e2.",
+                "fix_hint": None,
+            },
+            {
+                "index": 1,
+                "decision": "drop",
+                "reason": "Apartment search is not in e4.",
+                "fix_hint": None,
+            },
+        ],
+        "missing": ["Montreal vs Toronto conflict (e3, e4) not mentioned"],
+        "refetch": [],
+    },
+}
 
 _client: AsyncOpenAI | None = None
 _client_key: str | None = None
@@ -48,6 +77,10 @@ class LLMOutputError(Exception):
     def __init__(self, message: str, *, reasoning_chars: int = 0) -> None:
         super().__init__(message)
         self.reasoning_chars = reasoning_chars
+
+
+class LLMSchemaEchoError(LLMOutputError):
+    """Raised when the model returns a JSON Schema document instead of an instance."""
 
 
 def reset_client() -> None:
@@ -159,27 +192,29 @@ async def generate_json(
     *,
     role: str = "default",
     max_tokens: int = 1500,
+    example: dict[str, Any] | None = None,
 ) -> BaseModel:
     """Generate JSON, extract robustly, and validate against schema.
 
-    Appends the schema to the system prompt. Tries response_format json_object,
-    then retries without it if the API rejects that parameter. On validation
-    failure, retries once with the error appended; then raises LLMOutputError.
+    Instructs the model with a compact field list and one filled-in EXAMPLE
+    (never the raw JSON Schema). If the model echoes a schema document, retries
+    once with a repair message. On other validation failures, retries once with
+    the error appended; then raises LLMOutputError.
     """
-    schema_block = (
-        "Return only valid JSON matching this schema:\n"
-        f"{json.dumps(schema.model_json_schema(), indent=2)}"
-    )
+    schema_block = build_json_instructions(schema, example=example)
     instructions = f"{system}\n\n{schema_block}".strip() if system else schema_block
     try:
         return await _generate_json_once(
             prompt, instructions, schema, role=role, max_tokens=max_tokens
         )
     except (ValidationError, LLMOutputError) as first_error:
-        repair_prompt = (
-            f"{prompt}\n\nYour previous JSON was invalid:\n{first_error}\n"
-            "Return corrected JSON only."
-        )
+        if isinstance(first_error, LLMSchemaEchoError):
+            repair_prompt = f"{prompt}\n\n{_SCHEMA_ECHO_REPAIR}"
+        else:
+            repair_prompt = (
+                f"{prompt}\n\nYour previous JSON was invalid:\n{first_error}\n"
+                "Return corrected JSON only."
+            )
         try:
             return await _generate_json_once(
                 repair_prompt, instructions, schema, role=role, max_tokens=max_tokens
@@ -246,7 +281,11 @@ def strip_think(text: str) -> str:
 
 
 def extract_json_value(text: str) -> Any:
-    """Strip think/fences and return the first top-level JSON object or array."""
+    """Strip think/fences and return the first top-level JSON object or array.
+
+    Raises LLMSchemaEchoError when the value looks like an echoed JSON Schema
+    (contains $defs, or both properties and type=object).
+    """
     cleaned = strip_think(text).strip()
     if cleaned.startswith("```"):
         lines = cleaned.splitlines()
@@ -264,10 +303,153 @@ def extract_json_value(text: str) -> Any:
             continue
         try:
             value, _ = decoder.raw_decode(cleaned[index:])
+            if is_echoed_schema(value):
+                raise LLMSchemaEchoError(_SCHEMA_ECHO_REPAIR)
             return value
         except json.JSONDecodeError:
             continue
     raise LLMOutputError(f"No JSON object or array found in model output: {cleaned[:200]!r}")
+
+
+def is_echoed_schema(value: Any) -> bool:
+    """True when value looks like a JSON Schema document, not a data instance."""
+    if not isinstance(value, dict):
+        return False
+    if "$defs" in value or "$schema" in value:
+        return True
+    return value.get("type") == "object" and "properties" in value
+
+
+def build_json_instructions(
+    schema: type[BaseModel],
+    *,
+    example: dict[str, Any] | None = None,
+) -> str:
+    """Compact field guide + one filled-in EXAMPLE. Never the raw JSON Schema."""
+    lines = [f"Fill in a JSON object for {schema.__name__} with these fields:"]
+    for name, field in schema.model_fields.items():
+        lines.append(f"- {name}: {_describe_annotation(field.annotation)}")
+    filled = example if example is not None else schema_example(schema)
+    lines.append("EXAMPLE:")
+    lines.append(json.dumps(filled, indent=2))
+    lines.append(
+        "Return ONLY a JSON object with these fields filled in for this task. "
+        "Do not return the schema."
+    )
+    return "\n".join(lines)
+
+
+def schema_example(schema: type[BaseModel]) -> dict[str, Any]:
+    """Return a registered or generated minimal valid example for schema."""
+    registered = _SCHEMA_EXAMPLES.get(schema.__name__)
+    if registered is not None:
+        return registered
+    return _minimal_example(schema)
+
+
+def register_schema_example(schema: type[BaseModel], example: dict[str, Any]) -> None:
+    """Register an explicit filled-in example used by generate_json instructions."""
+    _SCHEMA_EXAMPLES[schema.__name__] = example
+
+
+def _describe_annotation(annotation: Any) -> str:
+    origin = get_origin(annotation)
+    args = get_args(annotation)
+
+    if annotation is type(None):
+        return "null"
+
+    if origin is Literal:
+        return " | ".join(json.dumps(arg) for arg in args)
+
+    if origin is Union or origin is types.UnionType:
+        return " | ".join(_describe_annotation(arg) for arg in args)
+
+    if origin is list:
+        inner = args[0] if args else Any
+        if isinstance(inner, type) and issubclass(inner, BaseModel):
+            return f"list[{inner.__name__} {{{_inline_fields(inner)}}}]"
+        return f"list[{_describe_annotation(inner)}]"
+
+    if origin is dict:
+        return "object"
+
+    if isinstance(annotation, type):
+        if issubclass(annotation, BaseModel):
+            return f"{annotation.__name__} {{{_inline_fields(annotation)}}}"
+        if annotation is str:
+            return "str"
+        if annotation is int:
+            return "int"
+        if annotation is float:
+            return "float"
+        if annotation is bool:
+            return "bool"
+        if annotation is datetime:
+            return "datetime (ISO-8601)"
+        return annotation.__name__
+
+    return str(annotation).replace("typing.", "")
+
+
+def _inline_fields(schema: type[BaseModel]) -> str:
+    parts = [
+        f"{name}: {_describe_annotation(field.annotation)}"
+        for name, field in schema.model_fields.items()
+    ]
+    return ", ".join(parts)
+
+
+def _minimal_example(schema: type[BaseModel]) -> dict[str, Any]:
+    return {
+        name: _example_for_field(field)
+        for name, field in schema.model_fields.items()
+    }
+
+
+def _example_for_field(field: FieldInfo) -> Any:
+    return _example_for_annotation(field.annotation)
+
+
+def _example_for_annotation(annotation: Any) -> Any:
+    origin = get_origin(annotation)
+    args = get_args(annotation)
+
+    if annotation is type(None):
+        return None
+
+    if origin is Literal:
+        return args[0] if args else None
+
+    if origin is Union or origin is types.UnionType:
+        non_none = [arg for arg in args if arg is not type(None)]
+        if type(None) in args and non_none:
+            # Prefer a concrete value so examples look filled in.
+            return _example_for_annotation(non_none[0])
+        return _example_for_annotation(args[0]) if args else None
+
+    if origin is list:
+        inner = args[0] if args else str
+        return [_example_for_annotation(inner)]
+
+    if origin is dict:
+        return {}
+
+    if isinstance(annotation, type):
+        if issubclass(annotation, BaseModel):
+            return _minimal_example(annotation)
+        if annotation is str:
+            return ""
+        if annotation is int:
+            return 0
+        if annotation is float:
+            return 0.0
+        if annotation is bool:
+            return False
+        if annotation is datetime:
+            return "2026-01-01T00:00:00Z"
+
+    return None
 
 
 async def _generate_json_once(
@@ -302,11 +484,14 @@ async def _generate_json_once(
             )
             if settings.record_llm_cache:
                 try:
-                    _record_llm_cache(role, prompt, extract_json_value(raw), settings)
+                    parsed = extract_json_value(raw)
+                    _record_llm_cache(role, prompt, parsed, settings)
                 except LLMOutputError:
                     _record_llm_cache(role, prompt, raw, settings)
 
         value = extract_json_value(raw)
+        if is_echoed_schema(value):
+            raise LLMSchemaEchoError(_SCHEMA_ECHO_REPAIR)
         model_obj = schema.model_validate(value)
         _log_call(
             role=role,
