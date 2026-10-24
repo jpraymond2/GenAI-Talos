@@ -1,4 +1,8 @@
-"""Offline fixture packs used while the data layer is unfinished."""
+"""Offline fixture helpers for tests (not used by the orchestrator).
+
+Evidence packs live under tests/; this module only exposes a generic loader
+so production code under recall/ stays free of person-specific paths.
+"""
 
 from __future__ import annotations
 
@@ -7,21 +11,12 @@ from pathlib import Path
 
 from recall.schemas import Evidence
 
-_KARIM_FIXTURE = (
-    Path(__file__).resolve().parent.parent / "tests" / "fixtures" / "evidence_karim.json"
-)
-_KARIM_NAMES = frozenset({"karim haddad"})
 
-
-def load_fixture_evidence(person_name: str) -> dict[str, Evidence]:
-    """Load fictional evidence for a person.
-
-    Returns the Karim Haddad pack when the name matches; otherwise an empty dict.
-    """
-    if person_name.strip().lower() not in _KARIM_NAMES:
-        return {}
-    raw = json.loads(_KARIM_FIXTURE.read_text(encoding="utf-8"))
+def load_evidence_json(path: Path | str) -> dict[str, Evidence]:
+    """Load a JSON list of Evidence objects from ``path``."""
+    target = Path(path)
+    raw = json.loads(target.read_text(encoding="utf-8"))
     if not isinstance(raw, list):
-        raise ValueError(f"Fixture must be a JSON list: {_KARIM_FIXTURE}")
+        raise ValueError(f"Fixture must be a JSON list: {target}")
     evidence = [Evidence.model_validate(item) for item in raw]
     return {item.id: item for item in evidence}

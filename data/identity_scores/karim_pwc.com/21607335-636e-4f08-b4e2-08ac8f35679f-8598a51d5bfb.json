@@ -1,0 +1,303 @@
+{
+  "handle": {
+    "kind": "email",
+    "value": "karim@pwc.com"
+  },
+  "parsed": {
+    "local_tokens": [
+      "karim"
+    ],
+    "display_name": "Karim",
+    "domain": "pwc.com",
+    "domain_class": "corporate",
+    "company": "PwC",
+    "aliases": [
+      "PwC",
+      "PricewaterhouseCoopers",
+      "Price Waterhouse"
+    ],
+    "industry": [
+      "consulting",
+      "audit",
+      "advisory",
+      "tax"
+    ],
+    "signature_phones": [],
+    "signature_name": "Karim",
+    "signature_title": "",
+    "signature_company": ""
+  },
+  "candidates": [
+    {
+      "entity_id": "ent_97d72126743f",
+      "name": "Karim Saleh",
+      "raw_score": 0.3261428571428572,
+      "probability": 0.7489930282524382,
+      "probability_pct": 74.9,
+      "rank": 1,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.25,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.08,
+          "contribution": 0.016,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 0.8,
+          "weight": 0.12,
+          "contribution": 0.096,
+          "source_refs": [
+            "imessage:d4f28e7ef7",
+            "imessage:137df7c018",
+            "whatsapp:73900facd8",
+            "whatsapp:7b3cd0b456"
+          ],
+          "detail": "weighted_mentions=4.0",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.7142857142857143,
+          "weight": 0.08,
+          "contribution": 0.05714285714285715,
+          "source_refs": [
+            "imessage:d4f28e7ef7",
+            "imessage:137df7c018",
+            "gmail:99cc21f99c",
+            "imessage:f0e32f34c9",
+            "whatsapp:7b3cd0b456"
+          ],
+          "detail": "keyword industry fallback",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 1.0,
+          "weight": 0.08,
+          "contribution": 0.08,
+          "source_refs": [
+            "attr:org:PwC Advisory"
+          ],
+          "detail": "org matches",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no thread overlap",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.55,
+          "weight": 0.14,
+          "contribution": 0.07700000000000001,
+          "source_refs": [
+            "gmail:c9ef448754",
+            "whatsapp:9a88651b91"
+          ],
+          "detail": "email mentions 'Thursday' — matches gmail:c9ef448754 (Karim Saleh); email mentions 'Thursday' — matches whatsapp:9a88651b91 (Karim Saleh)",
+          "matches": [
+            {
+              "reference": "Thursday",
+              "type": "date",
+              "specificity": 0.55,
+              "source_ref": "gmail:c9ef448754",
+              "reason": "keyword overlap",
+              "candidate": "Karim Saleh"
+            },
+            {
+              "reference": "Thursday",
+              "type": "date",
+              "specificity": 0.55,
+              "source_ref": "whatsapp:9a88651b91",
+              "reason": "keyword overlap",
+              "candidate": "Karim Saleh"
+            }
+          ],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=0.016",
+          "matches": [],
+          "similarity": 0.015922414485563884
+        },
+        {
+          "name": "f8",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no announcement",
+          "matches": [],
+          "similarity": null
+        }
+      ],
+      "penalties": []
+    },
+    {
+      "entity_id": null,
+      "name": "none of these",
+      "raw_score": 0.1,
+      "probability": 0.16585445518682304,
+      "probability_pct": 16.59,
+      "rank": 2,
+      "features": [],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_e52558eb0987",
+      "name": "Karim Haddad",
+      "raw_score": 0.0,
+      "probability": 0.08515251656073881,
+      "probability_pct": 8.52,
+      "rank": 3,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.25,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.08,
+          "contribution": 0.016,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.12,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "weighted_mentions=0.0",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "keyword industry fallback",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [
+            "attr:org:Ledgerly"
+          ],
+          "detail": "conflicting employer",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no thread overlap",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.0,
+          "weight": 0.14,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no confirmed matches",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=0.075",
+          "matches": [],
+          "similarity": 0.07486043619198333
+        },
+        {
+          "name": "f8",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no announcement",
+          "matches": [],
+          "similarity": null
+        }
+      ],
+      "penalties": [
+        {
+          "name": "p1_conflicting_employer",
+          "value": -0.25,
+          "detail": "org=Ledgerly vs company=PwC"
+        }
+      ]
+    }
+  ],
+  "hard_rules": [
+    "f7a_content_override"
+  ],
+  "flags": [],
+  "handle_class": "person",
+  "new_person_hint": {},
+  "decision": "tentative",
+  "top_entity_id": "ent_97d72126743f",
+  "top_probability": 0.7489930282524382,
+  "thresholds": {
+    "auto_link_probability": 0.8,
+    "auto_link_margin": 0.2,
+    "tentative_min": 0.55,
+    "new_person_none_probability": 0.6
+  },
+  "scoring_version": 3,
+  "run_id": "21607335-636e-4f08-b4e2-08ac8f35679f-8598a51d5bfb",
+  "score_file": "/Users/jpraymond/Desktop/GenAI-Talos/data/identity_scores/karim_pwc.com/21607335-636e-4f08-b4e2-08ac8f35679f-8598a51d5bfb.json"
+}

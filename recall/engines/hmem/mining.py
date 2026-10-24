@@ -45,24 +45,6 @@ def _infer_attribute(content: str) -> tuple[str, str]:
 def _sample_split_memories(text: str) -> list[MinedAtomicMemory]:
     """SAMPLE_MODE path: split compound notes without calling the LLM."""
     text = text.strip()
-    # Fixture for the required test note.
-    if "toronto" in text.lower() and "intro" in text.lower() and "lina" in text.lower():
-        return [
-            MinedAtomicMemory(
-                content="Karim Haddad moves to Toronto in January",
-                type="factual",
-                entity_names=["Karim Haddad"],
-                attribute_key="city",
-                attribute_value="Toronto",
-            ),
-            MinedAtomicMemory(
-                content="Karim Haddad wants an intro to Lina",
-                type="personal",
-                entity_names=["Karim Haddad", "Lina Chen"],
-                attribute_key="",
-                attribute_value="",
-            ),
-        ]
     if "staying in montreal" in text.lower() or (
         "montreal" in text.lower() and "staying" in text.lower()
     ):
@@ -70,38 +52,51 @@ def _sample_split_memories(text: str) -> list[MinedAtomicMemory]:
             MinedAtomicMemory(
                 content=text,
                 type="factual",
-                entity_names=["Karim Haddad"] if "karim" in text.lower() else [],
+                entity_names=_guess_names(text),
                 attribute_key="city",
                 attribute_value="Montreal",
             )
         ]
+    # Move / city patterns: keep full sentence as one memory with inferred attr.
+    key, value = _infer_attribute(text)
+    shared_names = _guess_names(text)
     # Generic: sentence split on " and ".
     parts = re.split(r"\s+and\s+", text, maxsplit=1, flags=re.IGNORECASE)
     if len(parts) == 2 and parts[0].strip() and parts[1].strip():
         out: list[MinedAtomicMemory] = []
         for part in parts:
-            key, value = _infer_attribute(part)
-            names = _guess_names(part)
+            part_key, part_value = _infer_attribute(part)
+            names = _merge_names(_guess_names(part), shared_names)
             out.append(
                 MinedAtomicMemory(
                     content=part.strip(),
                     type="factual",
                     entity_names=names,
-                    attribute_key=key,
-                    attribute_value=value,
+                    attribute_key=part_key,
+                    attribute_value=part_value,
                 )
             )
         return out
-    key, value = _infer_attribute(text)
     return [
         MinedAtomicMemory(
             content=text,
             type="factual",
-            entity_names=_guess_names(text),
+            entity_names=shared_names,
             attribute_key=key,
             attribute_value=value,
         )
     ]
+
+
+def _merge_names(*groups: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for group in groups:
+        for name in group:
+            if name not in seen:
+                seen.add(name)
+                out.append(name)
+    return out
 
 
 def _guess_names(text: str) -> list[str]:
@@ -110,18 +105,12 @@ def _guess_names(text: str) -> list[str]:
     # Two-token Capitalized names
     for match in re.finditer(r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b", text):
         names.append(match.group(1))
-    if "karim" in text.lower() and not any("Karim" in n for n in names):
-        names.append("Karim Haddad")
-    if "lina" in text.lower() and not any("Lina" in n for n in names):
-        names.append("Lina Chen")
-    # unique preserve order
-    seen: set[str] = set()
-    out: list[str] = []
-    for name in names:
-        if name not in seen:
-            seen.add(name)
-            out.append(name)
-    return out
+    # Leading bare first name ("Ada is staying in …") when no full name found.
+    if not names:
+        lead = re.match(r"^([A-Z][a-z]+)\b", text.strip())
+        if lead:
+            names.append(lead.group(1))
+    return _merge_names(names)
 
 
 class MemoryMiningService:
@@ -272,9 +261,19 @@ class MemoryMiningService:
             exact = [c for c in top if c.name.lower() == needle.lower()]
             if exact:
                 chosen = exact[0]
-            elif " " not in needle and len(top) >= 2 and (top[0].score - top[1].score) < 0.08:
-                # Ambiguous bare first name — do not guess.
-                continue
+            elif " " not in needle:
+                # Prefer a unique multi-token namesake; otherwise skip guessing.
+                multi = [
+                    c
+                    for c in top
+                    if " " in c.name and c.name.lower().split()[0] == needle.lower()
+                ]
+                if len(multi) == 1:
+                    chosen = multi[0]
+                elif len(top) >= 2 and (top[0].score - top[1].score) < 0.08:
+                    continue
+                else:
+                    chosen = top[0]
             else:
                 chosen = top[0]
             if chosen.entity_id not in seen:

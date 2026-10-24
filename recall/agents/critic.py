@@ -20,18 +20,26 @@ async def run(state: RunState, deps: Any) -> RunState:
         raise ValueError("critic requires at least one draft brief on state.drafts")
 
     draft = state.drafts[-1]
-    prompt = with_today(
-        "\n".join(
-            [
-                "Judge staleness relative to TODAY. Prefer newer evidence when sources disagree.",
-                job_change_guidance(state.evidence),
-                "DRAFT_BRIEF:",
-                json.dumps(draft.model_dump(mode="json"), indent=2),
-                "EVIDENCE:",
-                format_evidence_list(state.evidence),
-            ]
+    parts = [
+        "Judge staleness relative to TODAY. Prefer newer evidence when sources disagree.",
+        job_change_guidance(state.evidence),
+        "DRAFT_BRIEF:",
+        json.dumps(draft.model_dump(mode="json"), indent=2),
+        "EVIDENCE:",
+        format_evidence_list(state.evidence),
+    ]
+    rel_label = state.context.get("relationship_label")
+    if rel_label:
+        parts.append(
+            f"RELATIONSHIP: {rel_label} "
+            f"({state.context.get('relationship_confidence', '?')})"
         )
-    )
+        style = state.context.get("relationship_style")
+        if style:
+            parts.append(f"STYLE: {style}")
+    if state.context.get("suggest_result"):
+        parts.append("SUGGEST: treat this draft as place suggestions; enforce citation rules.")
+    prompt = with_today("\n".join(parts))
     generate_json_fn = getattr(deps, "generate_json", None) or generate_json
     verdict = await generate_json_fn(prompt, CRITIC_SYSTEM, CriticVerdict, role="critic")
     assert isinstance(verdict, CriticVerdict)

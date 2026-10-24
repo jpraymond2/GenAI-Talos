@@ -375,7 +375,7 @@ def extract_signature_attributes(text: str) -> dict[str, str]:
             if city and "\n" not in city and len(city) < 40:
                 found["city"] = city
                 break
-    # Title, Org line: "Founder, Ledgerly" (one line; never name or "City, QC").
+    # Title, Org line: "Founder, Acme" (one line; never name or "City, QC").
     for line in text.splitlines():
         line_stripped = line.strip()
         if not line_stripped:
@@ -481,6 +481,9 @@ class IngestPipelineService:
         self._store.set_meta("ingest_stage", "identity")
         identity_counts = self._run_identity_scoring(run_id=run_id, layer=layer)
 
+        self._store.set_meta("ingest_stage", "relationships")
+        relationship_counts = self._run_relationship_scoring(run_id=run_id, layer=layer)
+
         self._store.set_meta("ingest_stage", "done")
         self._store.set_meta("last_run_id", run_id)
 
@@ -491,10 +494,27 @@ class IngestPipelineService:
             "handles_in": len(handles),
             "contacts_in": len(contacts),
             "identity_scored": int(identity_counts.get("scored", 0)),
+            "relationships_scored": int(relationship_counts.get("scored", 0)),
         }
         if self._tracer is not None:
             self._tracer.event("world", "ingest", counts)
         return counts
+
+    def _run_relationship_scoring(
+        self, *, run_id: str, layer: QueryLayer
+    ) -> dict[str, int]:
+        """Classify relationship labels after identity resolution."""
+        from recall.data.duckdb_backend import DuckDBBackend
+        from recall.engines.world.relationship import assess_all_people
+
+        DuckDBBackend.clear_connection_cache()
+        return assess_all_people(
+            store=self._store,
+            settings=self._settings,
+            query_layer=get_query_layer(self._settings, tracer=self._tracer),
+            tracer=self._tracer,
+            run_id=run_id,
+        )
 
     def _run_identity_scoring(self, *, run_id: str, layer: QueryLayer) -> dict[str, int]:
         """Score unlinked handles once after entities are written."""

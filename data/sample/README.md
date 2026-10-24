@@ -15,9 +15,9 @@ deterministic templates instead.
 | File | Rows |
 |------|------|
 | `contacts.csv` | 10 |
-| `handles.csv` | 35 |
-| `interactions.csv` | 400 |
-| `events.csv` | 25 |
+| `handles.csv` | 34 |
+| `interactions.csv` | ~384 (+ food/family extras) |
+| `events.csv` | 26 |
 
 Total on-disk size of the CSVs is kept under 1 MB.
 

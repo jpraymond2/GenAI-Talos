@@ -4,7 +4,7 @@ Orchestrator-facing facade (sync wrappers around async mine/retrieve)::
 
     from recall.engines import hmem
     hmem.mine({"kind": "user_note", "text": "..."})
-    hmem.retrieve("meeting Karim", [entity_id])
+    hmem.retrieve("meeting Ada", [entity_id])
     hmem.feedback(memory_id, "helpful")
 """
 

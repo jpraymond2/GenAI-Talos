@@ -14,7 +14,11 @@ from recall.engines.world.models import (
     ConflictValue,
     Entity,
     Observation,
+    PreferenceItem,
+    PreferenceProfile,
     Relationship,
+    RelationshipAssessment,
+    RelationshipSignal,
 )
 
 _SCHEMA = """
@@ -122,12 +126,40 @@ CREATE TABLE IF NOT EXISTS handle_links (
     UNIQUE(entity_id, handle_kind, handle_value)
 );
 
+CREATE TABLE IF NOT EXISTS relationship_assessments (
+    id TEXT PRIMARY KEY,
+    entity_id TEXT NOT NULL,
+    user_entity_id TEXT NOT NULL DEFAULT '',
+    label TEXT NOT NULL,
+    confidence REAL NOT NULL DEFAULT 0,
+    signals_json TEXT NOT NULL DEFAULT '[]',
+    reasoning TEXT NOT NULL DEFAULT '',
+    scoring_version INTEGER NOT NULL DEFAULT 1,
+    assessed_at TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'auto',
+    interaction_count_at_assess INTEGER NOT NULL DEFAULT 0,
+    score_file TEXT NOT NULL DEFAULT '',
+    run_id TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS preference_profiles (
+    entity_id TEXT NOT NULL,
+    topic TEXT NOT NULL DEFAULT 'food_places',
+    items_json TEXT NOT NULL DEFAULT '[]',
+    built_at TEXT NOT NULL DEFAULT '',
+    scoring_version INTEGER NOT NULL DEFAULT 1,
+    interaction_count_at_build INTEGER NOT NULL DEFAULT 0,
+    opted_out INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (entity_id, topic)
+);
+
 CREATE INDEX IF NOT EXISTS idx_entities_name ON entities(canonical_name);
 CREATE INDEX IF NOT EXISTS idx_conflicts_entity ON conflicts(entity_id);
 CREATE INDEX IF NOT EXISTS idx_observations_entity ON observations(entity_id);
 CREATE INDEX IF NOT EXISTS idx_identity_handle ON identity_assumptions(handle_value, status);
 CREATE INDEX IF NOT EXISTS idx_employment_entity ON employment_assumptions(entity_id, status);
 CREATE INDEX IF NOT EXISTS idx_handle_links_value ON handle_links(handle_value, status);
+CREATE INDEX IF NOT EXISTS idx_rel_assess_entity ON relationship_assessments(entity_id, assessed_at);
 """
 
 
@@ -278,6 +310,190 @@ class WorldStore:
             ),
         )
         self._conn.commit()
+
+    def list_relationships(
+        self,
+        *,
+        from_id: str | None = None,
+        to_id: str | None = None,
+        type: str | None = None,
+    ) -> list[Relationship]:
+        """List relationship edges with optional filters."""
+        sql = "SELECT * FROM relationships WHERE 1=1"
+        params: list[Any] = []
+        if from_id:
+            sql += " AND from_id = ?"
+            params.append(from_id)
+        if to_id:
+            sql += " AND to_id = ?"
+            params.append(to_id)
+        if type:
+            sql += " AND type = ?"
+            params.append(type)
+        rows = self._conn.execute(sql, params).fetchall()
+        return [
+            Relationship(
+                id=str(r["id"]),
+                from_id=str(r["from_id"]),
+                to_id=str(r["to_id"]),
+                type=r["type"],  # type: ignore[arg-type]
+                valid_from=str(r["valid_from"] or ""),
+                source_ref=str(r["source_ref"] or ""),
+                confidence=float(r["confidence"] or 0.5),
+            )
+            for r in rows
+        ]
+
+    def insert_relationship_assessment(self, assessment: RelationshipAssessment) -> None:
+        """Append one relationship assessment (history preserved)."""
+        assess_id = (
+            f"rel_{assessment.entity_id}_{assessment.assessed_at}_{assessment.run_id}"[:80]
+        )
+        self._conn.execute(
+            """
+            INSERT INTO relationship_assessments(
+                id, entity_id, user_entity_id, label, confidence, signals_json,
+                reasoning, scoring_version, assessed_at, status,
+                interaction_count_at_assess, score_file, run_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                assess_id,
+                assessment.entity_id,
+                assessment.user_entity_id,
+                assessment.label,
+                float(assessment.confidence),
+                json.dumps(
+                    [s.model_dump() for s in assessment.signals], ensure_ascii=False
+                ),
+                assessment.reasoning,
+                int(assessment.scoring_version),
+                assessment.assessed_at,
+                assessment.status,
+                int(assessment.interaction_count_at_assess),
+                assessment.score_file,
+                assessment.run_id,
+            ),
+        )
+        self._conn.commit()
+
+    def latest_relationship_assessment(
+        self, entity_id: str
+    ) -> RelationshipAssessment | None:
+        """Latest assessment for a person (any status)."""
+        row = self._conn.execute(
+            """
+            SELECT * FROM relationship_assessments
+            WHERE entity_id = ?
+            ORDER BY assessed_at DESC
+            LIMIT 1
+            """,
+            (entity_id,),
+        ).fetchone()
+        return None if row is None else self._row_to_relationship_assessment(row)
+
+    def list_relationship_assessments(
+        self, *, latest_only: bool = True
+    ) -> list[RelationshipAssessment]:
+        """List assessments; when latest_only, one row per entity_id."""
+        rows = self._conn.execute(
+            """
+            SELECT * FROM relationship_assessments
+            ORDER BY assessed_at DESC
+            """
+        ).fetchall()
+        items = [self._row_to_relationship_assessment(r) for r in rows]
+        if not latest_only:
+            return items
+        seen: set[str] = set()
+        out: list[RelationshipAssessment] = []
+        for item in items:
+            if item.entity_id in seen:
+                continue
+            seen.add(item.entity_id)
+            out.append(item)
+        return out
+
+    def upsert_preference_profile(self, profile: PreferenceProfile) -> None:
+        """Insert or replace a cached preference profile."""
+        self._conn.execute(
+            """
+            INSERT INTO preference_profiles(
+                entity_id, topic, items_json, built_at, scoring_version,
+                interaction_count_at_build, opted_out
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(entity_id, topic) DO UPDATE SET
+                items_json = excluded.items_json,
+                built_at = excluded.built_at,
+                scoring_version = excluded.scoring_version,
+                interaction_count_at_build = excluded.interaction_count_at_build,
+                opted_out = excluded.opted_out
+            """,
+            (
+                profile.entity_id,
+                profile.topic,
+                json.dumps(
+                    [i.model_dump() for i in profile.items], ensure_ascii=False
+                ),
+                profile.built_at,
+                int(profile.scoring_version),
+                int(profile.interaction_count_at_build),
+                1 if profile.opted_out else 0,
+            ),
+        )
+        self._conn.commit()
+
+    def get_preference_profile(
+        self, entity_id: str, topic: str = "food_places"
+    ) -> PreferenceProfile | None:
+        """Load cached preference profile if present."""
+        row = self._conn.execute(
+            """
+            SELECT * FROM preference_profiles
+            WHERE entity_id = ? AND topic = ?
+            """,
+            (entity_id, topic),
+        ).fetchone()
+        if row is None:
+            return None
+        items_raw = json.loads(row["items_json"] or "[]")
+        return PreferenceProfile(
+            entity_id=str(row["entity_id"]),
+            topic=str(row["topic"]),
+            items=[PreferenceItem.model_validate(i) for i in items_raw],
+            built_at=str(row["built_at"] or ""),
+            scoring_version=int(row["scoring_version"] or 1),
+            interaction_count_at_build=int(row["interaction_count_at_build"] or 0),
+            opted_out=bool(row["opted_out"]),
+        )
+
+    def delete_preference_profile(
+        self, entity_id: str, topic: str = "food_places"
+    ) -> None:
+        """Remove a preference profile (opt-out leaves a tombstone via upsert)."""
+        self._conn.execute(
+            "DELETE FROM preference_profiles WHERE entity_id = ? AND topic = ?",
+            (entity_id, topic),
+        )
+        self._conn.commit()
+
+    @staticmethod
+    def _row_to_relationship_assessment(row: sqlite3.Row) -> RelationshipAssessment:
+        signals_raw = json.loads(row["signals_json"] or "[]")
+        return RelationshipAssessment(
+            entity_id=str(row["entity_id"]),
+            user_entity_id=str(row["user_entity_id"] or ""),
+            label=row["label"],  # type: ignore[arg-type]
+            confidence=float(row["confidence"] or 0),
+            signals=[RelationshipSignal.model_validate(s) for s in signals_raw],
+            reasoning=str(row["reasoning"] or ""),
+            scoring_version=int(row["scoring_version"] or 1),
+            assessed_at=str(row["assessed_at"] or ""),
+            status=row["status"],  # type: ignore[arg-type]
+            interaction_count_at_assess=int(row["interaction_count_at_assess"] or 0),
+            score_file=str(row["score_file"] or ""),
+            run_id=str(row["run_id"] or ""),
+        )
 
     def append_observation(self, observation: Observation) -> None:
         """Append one observation (never updated in place)."""

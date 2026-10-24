@@ -1,0 +1,131 @@
+{
+  "entity_id": "ent_d9b529368abf",
+  "label": "social",
+  "confidence": 0.8263,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.6842,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16",
+        "whatsapp:d6583fc111",
+        "gmail:7b788335c6",
+        "imessage:cebf0fcf86"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16",
+        "whatsapp:d6583fc111",
+        "gmail:7b788335c6",
+        "imessage:cebf0fcf86"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 47,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 0,
+      "source_refs": [
+        "gmail:1fbebfaac3"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.614,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 0.386,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.1754,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.6316,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "imessage:db6b4d355c",
+        "gmail:9363e7b6ce",
+        "whatsapp:6fa28ec720",
+        "whatsapp:96a6c0be16"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "Most contact is on personal channels.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-15T12:00:00Z",
+  "status": "auto",
+  "interaction_count_at_assess": 57,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "b81b5c2c-b905-4cf4-97be-3a10785a5b9a"
+}

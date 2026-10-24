@@ -125,6 +125,10 @@ class Settings(BaseSettings):
     live_data_dir: Path = Path("data/live")
     cache_dir: Path = Path("data/cache")
     logs_dir: Path = Path("logs")
+    preference_profiles: bool = Field(
+        default=True,
+        description="When false, never build or serve food/places preference profiles.",
+    )
 
     @model_validator(mode="after")
     def _alias_zetaris_url(self) -> Self:
