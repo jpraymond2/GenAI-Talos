@@ -72,14 +72,12 @@ export default function App() {
 
   async function handlePick(candidate: Candidate) {
     unlockSpeech();
+    const utterance = run?.utterance?.text ?? `I'm meeting ${candidate.name}`;
     setBusy(true);
     setEvents([]);
     pushTranscript("user", candidate.name);
     try {
-      const state = await confirm({
-        entity_id: candidate.entity_id,
-        run_id: run?.run_id,
-      });
+      const state = await ask(utterance, candidate.entity_id);
       setRun(state);
       if (state.final_brief) {
         pushTranscript("assistant", state.final_brief.headline);
@@ -91,27 +89,26 @@ export default function App() {
   }
 
   async function handleConfirmActions() {
+    if (!run?.run_id) return;
     setBusy(true);
     try {
-      const state = await confirm({
-        action: "confirm",
-        run_id: run?.run_id,
-      });
-      setRun(state);
-      pushTranscript("system", "Actions confirmed (dry-run in sample mode).");
+      const result = await confirm({ run_id: run.run_id, confirmed: true });
+      pushTranscript(
+        "system",
+        result.status === "not_implemented"
+          ? "Actions not implemented yet."
+          : "Actions confirmed (dry-run in sample mode).",
+      );
     } finally {
       setBusy(false);
     }
   }
 
   async function handleCancelActions() {
+    if (!run?.run_id) return;
     setBusy(true);
     try {
-      const state = await confirm({
-        action: "cancel",
-        run_id: run?.run_id,
-      });
-      setRun(state);
+      await confirm({ run_id: run.run_id, confirmed: false });
       pushTranscript("system", "Actions cancelled.");
     } finally {
       setBusy(false);

@@ -31,14 +31,30 @@ from recall.data.queries import (  # noqa: E402
 from recall.data.query_layer import DataUnavailable  # noqa: E402
 from recall.data.zetaris_backend import ZetarisBackend  # noqa: E402
 
-_EXPECTED_COUNTS = {
-    "handles": 30,
-    "interactions": 400,
-    "events": 25,
-    "contacts": 10,
+_KARIM_EMAILS = ["karim@ledgerly.io", "alex.martin@mail.mcgill.ca"]
+
+_SAMPLE_TABLE_FILES = {
+    "handles": "handles.csv",
+    "interactions": "interactions.csv",
+    "events": "events.csv",
+    "contacts": "contacts.csv",
 }
 
-_KARIM_EMAILS = ["karim@ledgerly.io", "alex.martin@mail.mcgill.ca"]
+
+def _expected_counts_from_sample(sample_dir: Path) -> dict[str, int]:
+    """Count data rows in data/sample/*.csv (header excluded)."""
+    import csv
+
+    counts: dict[str, int] = {}
+    for table, filename in _SAMPLE_TABLE_FILES.items():
+        path = sample_dir / filename
+        if not path.is_file():
+            raise FileNotFoundError(f"missing sample CSV: {path}")
+        with path.open(encoding="utf-8", newline="") as fh:
+            rows = list(csv.reader(fh))
+        # Subtract header when present.
+        counts[table] = max(0, len(rows) - 1) if rows else 0
+    return counts
 
 
 def main() -> int:
@@ -54,6 +70,19 @@ def main() -> int:
 
     results: list[tuple[str, str, str]] = []
     overall_ok = True
+
+    sample_dir = Path(settings.sample_data_dir)
+    try:
+        expected_counts = _expected_counts_from_sample(sample_dir)
+    except FileNotFoundError as exc:
+        print(f"FAIL: {exc}")
+        return 1
+    print(
+        "Expected counts from "
+        f"{sample_dir}: "
+        + ", ".join(f"{k}={v}" for k, v in expected_counts.items())
+    )
+    print()
 
     auth_label, base_backend = _probe_auth(settings)
     results.append(("auth", auth_label, "PASS" if auth_label != "FAIL" else "FAIL"))
@@ -79,7 +108,7 @@ def main() -> int:
     tables._auth_method = base_backend._auth_method
 
     # Row counts against raw FILESTORE tables (stable expected sizes).
-    for table, expected in _EXPECTED_COUNTS.items():
+    for table, expected in expected_counts.items():
         try:
             got = _count(tables, table)
             status = "PASS" if got == expected else "FAIL"
@@ -96,7 +125,7 @@ def main() -> int:
             results.append((f"count.tables.{table}", str(exc)[:80], "FAIL"))
 
     # USL counts (event is federated via calendar_pg through the USL).
-    for table, expected in _EXPECTED_COUNTS.items():
+    for table, expected in expected_counts.items():
         try:
             got = _count(usl, table)
             status = "PASS" if got == expected else "FAIL"
