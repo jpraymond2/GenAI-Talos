@@ -1,5 +1,12 @@
+import { karimLedger, karimMemories, karimPerson } from "./mock/person";
 import { pickScenario } from "./mock/scenarios";
-import type { RunState, TraceEvent } from "./types";
+import type {
+  LedgerEvent,
+  MemoryItem,
+  PersonView,
+  RunState,
+  TraceEvent,
+} from "./types";
 
 const MOCK_FLAG = String(import.meta.env.VITE_MOCK ?? "true").toLowerCase() === "true";
 const MOCK_VOICE_TRANSCRIPT = "I'm meeting Karim Haddad";
@@ -88,11 +95,62 @@ function connectLiveTrace(): void {
   }
 }
 
-/** POST /api/ask { text } — or mock replay when VITE_MOCK / unreachable. */
-export async function ask(text: string): Promise<RunState> {
+function sourcesFromContext(ctx: Record<string, unknown>): string[] {
+  const last = ctx.last_interaction_per_source;
+  if (last && typeof last === "object") {
+    return Object.keys(last as Record<string, unknown>).sort();
+  }
+  return [];
+}
+
+function mapPersonContext(raw: Record<string, unknown>): PersonView {
+  const entity = (raw.entity as Record<string, unknown> | undefined) ?? {};
+  const attributes = (entity.attributes as Record<string, string> | undefined) ?? {};
+  const conflictsRaw = (raw.conflicts as Array<Record<string, unknown>> | undefined) ?? [];
+  return {
+    entity_id: String(entity.id ?? raw.entity_id ?? ""),
+    canonical_name: String(entity.canonical_name ?? ""),
+    aliases: Array.isArray(raw.aliases)
+      ? (raw.aliases as string[])
+      : Array.isArray(entity.aliases)
+        ? (entity.aliases as string[])
+        : [],
+    sources: sourcesFromContext(raw),
+    attributes,
+    conflicts: conflictsRaw.map((c) => ({
+      field: String(c.field ?? ""),
+      values: Array.isArray(c.values)
+        ? (c.values as Array<Record<string, unknown>>).map((v) => ({
+            value: String(v.value ?? ""),
+            source_ref: String(v.source_ref ?? ""),
+          }))
+        : [],
+    })),
+  };
+}
+
+function mapMemories(raw: Record<string, unknown>): MemoryItem[] {
+  const rows = (raw.memories as Array<Record<string, unknown>> | undefined) ?? [];
+  return rows.map((m) => ({
+    id: String(m.id ?? ""),
+    text: String(m.content ?? m.text ?? ""),
+    score: Number(m.score ?? 0),
+    why: String(m.why ?? ""),
+    ts: String(m.ts ?? m.timestamp ?? ""),
+  }));
+}
+
+/** POST /api/ask { text, entity_id? } — or mock replay when VITE_MOCK / unreachable. */
+export async function ask(text: string, entityId?: string | null): Promise<RunState> {
   const mock = await shouldMock();
   if (mock) {
-    const { state, traces } = pickScenario(text);
+    const key =
+      entityId === "karim-saleh"
+        ? "I'm meeting Karim Saleh"
+        : entityId
+          ? "I'm meeting Karim Haddad"
+          : text;
+    const { state, traces } = pickScenario(key);
     void replayTraces(traces);
     return structuredClone(state);
   }
@@ -100,7 +158,7 @@ export async function ask(text: string): Promise<RunState> {
   const res = await fetch("/api/ask", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ text, entity_id: entityId ?? null }),
   });
   if (!res.ok) {
     forceMock = true;
@@ -111,32 +169,17 @@ export async function ask(text: string): Promise<RunState> {
   return (await res.json()) as RunState;
 }
 
-/** POST /api/confirm — entity pick or action confirmation. */
+/** POST /api/confirm { run_id, confirmed } — actions dry-run when implemented. */
 export async function confirm(payload: {
-  entity_id?: string;
-  action?: "confirm" | "cancel";
-  run_id?: string;
-}): Promise<RunState> {
+  run_id: string;
+  confirmed: boolean;
+}): Promise<{ status: string; run_id?: string }> {
   const mock = await shouldMock();
   if (mock) {
-    if (payload.action === "cancel") {
-      const { state } = pickScenario("I'm meeting Karim Haddad");
-      state.status = "done";
-      state.action_plan = null;
-      return structuredClone(state);
-    }
-    if (payload.action === "confirm") {
-      const { state } = pickScenario("I'm meeting Karim Haddad");
-      state.status = "done";
-      return structuredClone(state);
-    }
-    const name =
-      payload.entity_id === "karim-saleh"
-        ? "I'm meeting Karim Saleh"
-        : "I'm meeting Karim Haddad";
-    const { state, traces } = pickScenario(name);
-    void replayTraces(traces);
-    return structuredClone(state);
+    return {
+      status: payload.confirmed ? "confirmed" : "cancelled",
+      run_id: payload.run_id,
+    };
   }
   connectLiveTrace();
   const res = await fetch("/api/confirm", {
@@ -145,10 +188,42 @@ export async function confirm(payload: {
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
-    forceMock = true;
-    return confirm(payload);
+    return { status: "error", run_id: payload.run_id };
   }
-  return (await res.json()) as RunState;
+  return (await res.json()) as { status: string; run_id?: string };
+}
+
+/** GET /api/person/{entity_id} — mock Karim when offline. */
+export async function fetchPerson(entityId: string): Promise<PersonView | null> {
+  if (await shouldMock()) {
+    if (!entityId || entityId === "karim-haddad") return structuredClone(karimPerson);
+    return null;
+  }
+  const res = await fetch(`/api/person/${encodeURIComponent(entityId)}`);
+  if (res.status === 404) return null;
+  if (!res.ok) return null;
+  return mapPersonContext((await res.json()) as Record<string, unknown>);
+}
+
+/** GET /api/memories/{entity_id} — mock Karim memories when offline. */
+export async function fetchMemories(
+  entityId: string,
+): Promise<{ memories: MemoryItem[]; ledger: LedgerEvent[] }> {
+  if (await shouldMock()) {
+    if (!entityId || entityId === "karim-haddad") {
+      return {
+        memories: structuredClone(karimMemories),
+        ledger: structuredClone(karimLedger),
+      };
+    }
+    return { memories: [], ledger: [] };
+  }
+  const res = await fetch(`/api/memories/${encodeURIComponent(entityId)}`);
+  if (!res.ok) return { memories: [], ledger: [] };
+  return {
+    memories: mapMemories((await res.json()) as Record<string, unknown>),
+    ledger: [],
+  };
 }
 
 export interface VoiceResult {

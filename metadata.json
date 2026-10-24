@@ -1,0 +1,43 @@
+{
+  "project": "Recall",
+  "track": "Solving Fragmented Intelligence",
+  "team": ["Jean Philippe Raymond", "Hassan El Dada"],
+  "sponsor_tech": {
+    "zetaris": {
+      "summary": "Federated read path and Unified Semantic Layer namespace \"recall\" over file sources (handles, interactions, contacts, events) plus a Postgres calendar source.",
+      "dq_rules": 2,
+      "paths": [
+        "recall/data/zetaris_backend.py",
+        "scripts/zetaris_setup_usl.py"
+      ]
+    },
+    "meterless": {
+      "summary": "World Model (identity merge, conflicts, person context) and H-MEM (mine, hybrid retrieve, ledger).",
+      "paths": [
+        "recall/engines/world",
+        "recall/engines/hmem"
+      ]
+    },
+    "cursor": {
+      "summary": "Project rules and a dated Cursor build log.",
+      "paths": [
+        ".cursor/rules",
+        "docs/cursor-log.md"
+      ]
+    },
+    "nvidia": {
+      "summary": "Nemotron chat via the shared generator, NVIDIA embeddings, and Parakeet ASR over Riva NVCF.",
+      "paths": [
+        "recall/llm/generator.py",
+        "recall/voice/stt.py"
+      ]
+    }
+  },
+  "sample_mode": "SAMPLE_MODE=true runs on data/sample + data/cache with zero credentials; LLM and actions dry-run; live connectors and Zetaris are optional.",
+  "pre_existing_components": [],
+  "logs": {
+    "trace_jsonl": "logs/<run_id>/trace.jsonl",
+    "run_json": "logs/<run_id>/run.json",
+    "identity_scores": "data/identity_scores/"
+  }
+}

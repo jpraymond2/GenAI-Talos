@@ -226,6 +226,8 @@ logs/**/*
 !logs/.gitkeep
 *.db
 data/live/
+data/identity_scores/**
+!data/identity_scores/.gitkeep
 
 # Recall web (Vite)
 web/node_modules/
