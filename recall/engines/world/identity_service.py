@@ -681,10 +681,15 @@ class IdentityService:
         return phone_index, handles_by_entity
 
 
-def format_explain_table(score_file: Path | str) -> str:
-    """Pretty table from a score JSON file."""
-    path = Path(score_file)
-    data = json.loads(path.read_text(encoding="utf-8"))
+def format_explain_table(
+    score_file: Path | str,
+    *,
+    handle_value: str | None = None,
+) -> str:
+    """Pretty table from a score JSONL record (or legacy single JSON file)."""
+    from recall.engines.world.identity_scoring import load_identity_score_record
+
+    data = load_identity_score_record(score_file, handle_value=handle_value)
     lines = [
         f"handle: {data.get('handle', {}).get('value')}",
         f"decision: {data.get('decision')}  version={data.get('scoring_version')}",

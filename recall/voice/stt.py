@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import time
 import wave
+from pathlib import Path
 from typing import Any
 
 from pydantic import SecretStr
@@ -12,8 +13,22 @@ from pydantic import SecretStr
 from recall.config import Settings, get_settings
 from recall.tracing import Tracer
 
-SAMPLE_TRANSCRIPT = "I'm meeting Karim Haddad"
+_FALLBACK_SAMPLE_TRANSCRIPT = "Who am I meeting next?"
 _RIVA_URI = "grpc.nvcf.nvidia.com:443"
+
+
+def load_sample_transcript(*, settings: Settings | None = None) -> str:
+    """Read the demo line from ``data/sample/voice_sample.txt`` (sample mode).
+
+    Falls back to a neutral prompt when the file is missing or empty.
+    """
+    active = settings if settings is not None else get_settings()
+    path = Path(active.sample_data_dir) / "voice_sample.txt"
+    try:
+        text = path.read_text(encoding="utf-8").strip()
+    except OSError:
+        return _FALLBACK_SAMPLE_TRANSCRIPT
+    return text or _FALLBACK_SAMPLE_TRANSCRIPT
 
 
 class TranscriptionError(RuntimeError):
@@ -58,7 +73,7 @@ def transcribe_detailed(
     if active.sample_mode and not api_key:
         engine = "sample"
         _trace(active_tracer, engine=engine, latency_ms=_ms(started), ok=True)
-        return SAMPLE_TRANSCRIPT, engine
+        return load_sample_transcript(settings=active), engine
 
     errors: list[str] = []
 
