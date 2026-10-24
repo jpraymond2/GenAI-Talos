@@ -1,4 +1,4 @@
-"""Typer CLI: ask, ingest, serve, voice, llm-test, and agent-test."""
+"""Typer CLI: ask, ingest, who, note, memories, serve, voice, llm-test, agent-test."""
 
 from __future__ import annotations
 
@@ -60,22 +60,70 @@ def _require_world_entities() -> None:
 
 @app.command()
 def ingest(
+    live: Annotated[
+        bool,
+        typer.Option("--live", help="Pull Gmail, Calendar, WhatsApp, and iMessage into data/live/."),
+    ] = False,
     sample: Annotated[
         bool,
-        typer.Option("--sample", help="Build data/world_sample.db from sample CSVs."),
+        typer.Option("--sample", help="Build data/world_sample.db from sample CSVs via the query layer."),
     ] = False,
 ) -> None:
-    """Ingest sample/live data into the World Model and run identity scoring."""
+    """Ingest live connectors and/or build the world model (with identity scoring)."""
+    if live and sample:
+        print("Pass only one of --live or --sample.")
+        raise typer.Exit(code=1)
+    if not live and not sample:
+        print("Ingest needs --live or --sample.")
+        raise typer.Exit(code=1)
+
     if sample:
         _enable_sample_mode()
+        settings = get_settings()
+        tracer = Tracer(logs_dir=settings.logs_dir)
+        with tracer.activate():
+            from recall.engines.world import run_world_ingest, world
+
+            world.reset()
+            counts = run_world_ingest(sample=True, settings=settings, tracer=tracer)
+        print(
+            "Sample world ingest complete: "
+            f"entities={counts.get('entities')} conflicts={counts.get('conflicts')} "
+            f"identity_scored={counts.get('identity_scored')} "
+            f"observations={counts.get('observations')} -> data/world_sample.db"
+        )
+        return
+
+    # Live pulls must not stay in SAMPLE_MODE (DuckDB would ignore parquet).
+    os.environ["SAMPLE_MODE"] = "false"
+    get_settings.cache_clear()
     settings = get_settings()
+
     tracer = Tracer(logs_dir=settings.logs_dir)
     with tracer.activate():
+        from recall.connectors.ingest import run_live_ingest
         from recall.engines.world import run_world_ingest, world
 
+        summary = run_live_ingest(settings=settings, tracer=tracer)
         world.reset()
-        counts = run_world_ingest(sample=sample or settings.sample_mode, settings=None, tracer=tracer)
-    db = "data/world_sample.db" if (sample or get_settings().sample_mode) else "data/world.db"
+        world_counts = run_world_ingest(sample=False, settings=settings, tracer=tracer)
+
+    print("Live ingest complete.")
+    for source, info in summary["per_source"].items():
+        skipped = info.get("skipped")
+        if skipped:
+            print(f"  {source}: {skipped}")
+        else:
+            print(
+                f"  {source}: handles={info['handles']} interactions={info['interactions']} "
+                f"events={info['events']} contacts={info['contacts']}"
+            )
+    totals = summary["totals"]
+    print(
+        "  totals: "
+        f"handles={totals['handles']} interactions={totals['interactions']} "
+        f"events={totals['events']} contacts={totals['contacts']}"
+    )
     print(
         "World ingest complete: "
         f"entities={counts.get('entities')} conflicts={counts.get('conflicts')} "
@@ -580,9 +628,24 @@ def serve(
 
 
 @app.command()
-def voice() -> None:
-    """Listen and answer by voice."""
-    print("voice is not implemented yet")
+def voice(
+    check: Annotated[
+        bool,
+        typer.Option(
+            "--check",
+            help="Validate NVIDIA_API_KEY + Riva ASR (no microphone).",
+        ),
+    ] = False,
+) -> None:
+    """Push-to-talk: hold right Ctrl (Windows) / right Option (macOS), then release."""
+    if check:
+        from recall.voice.check import print_voice_checks
+
+        raise typer.Exit(code=print_voice_checks())
+
+    from recall.voice.loop import run_voice_loop
+
+    run_voice_loop()
 
 
 class _TinySchema(BaseModel):

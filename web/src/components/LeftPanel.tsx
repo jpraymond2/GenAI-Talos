@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { isMockMode, sendVoice } from "../api";
+import { unlockSpeech } from "../speech";
 import type { TranscriptEntry } from "../types";
 
 interface Props {
@@ -7,50 +8,103 @@ interface Props {
   busy: boolean;
   sampleMode: boolean;
   onSubmit: (text: string) => void;
+  /** Called from the hold-to-talk gesture so speechSynthesis is unlocked. */
+  onVoiceResult?: (transcript: string) => void;
 }
 
-export function LeftPanel({ transcript, busy, sampleMode, onSubmit }: Props) {
+export function LeftPanel({
+  transcript,
+  busy,
+  sampleMode,
+  onSubmit,
+  onVoiceResult,
+}: Props) {
   const [text, setText] = useState("");
   const [recording, setRecording] = useState(false);
   const [voiceHint, setVoiceHint] = useState<string | null>(null);
   const mediaRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const holdingRef = useRef(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
 
-  async function toggleRecord() {
+  async function startHold() {
+    if (busy || holdingRef.current) return;
+    holdingRef.current = true;
+    unlockSpeech();
+    setVoiceHint(null);
+
     if (isMockMode()) {
-      setVoiceHint("Push-to-talk is inert in mock — type an utterance below.");
+      setRecording(true);
       return;
     }
-    if (recording && mediaRef.current) {
-      mediaRef.current.stop();
-      setRecording(false);
-      return;
-    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+      streamRef.current = stream;
+      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : "audio/webm";
+      const recorder = new MediaRecorder(stream, { mimeType: mime });
       chunksRef.current = [];
       recorder.ondataavailable = (e) => {
         if (e.data.size) chunksRef.current.push(e.data);
       };
-      recorder.onstop = async () => {
-        stream.getTracks().forEach((t) => t.stop());
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        const result = await sendVoice(blob);
-        if (result?.text) onSubmit(result.text);
-        else setVoiceHint("Voice endpoint returned no transcript.");
-      };
       mediaRef.current = recorder;
-      recorder.start();
+      recorder.start(100);
       setRecording(true);
-      setVoiceHint(null);
     } catch {
+      holdingRef.current = false;
       setVoiceHint("Microphone permission denied.");
+    }
+  }
+
+  async function endHold() {
+    if (!holdingRef.current) return;
+    holdingRef.current = false;
+    setRecording(false);
+
+    if (isMockMode()) {
+      const result = await sendVoice(new Blob());
+      const transcriptText = result?.transcript;
+      if (transcriptText) {
+        if (onVoiceResult) onVoiceResult(transcriptText);
+        else onSubmit(transcriptText);
+      }
+      return;
+    }
+
+    const recorder = mediaRef.current;
+    mediaRef.current = null;
+    if (!recorder) return;
+
+    const blob = await new Promise<Blob>((resolve) => {
+      recorder.onstop = () => {
+        resolve(new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" }));
+      };
+      try {
+        recorder.stop();
+      } catch {
+        resolve(new Blob());
+      }
+    });
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+
+    if (!blob.size) {
+      setVoiceHint("No audio captured.");
+      return;
+    }
+    const result = await sendVoice(blob);
+    if (result?.transcript) {
+      if (onVoiceResult) onVoiceResult(result.transcript);
+      else onSubmit(result.transcript);
+    } else {
+      setVoiceHint("Voice endpoint returned no transcript.");
     }
   }
 
@@ -58,6 +112,7 @@ export function LeftPanel({ transcript, busy, sampleMode, onSubmit }: Props) {
     e.preventDefault();
     const trimmed = text.trim();
     if (!trimmed || busy) return;
+    unlockSpeech();
     onSubmit(trimmed);
     setText("");
   }
@@ -81,9 +136,18 @@ export function LeftPanel({ transcript, busy, sampleMode, onSubmit }: Props) {
       <div className="flex flex-1 flex-col items-center justify-center py-4">
         <button
           type="button"
-          onClick={() => void toggleRecord()}
           disabled={busy}
-          className={`relative flex h-36 w-36 flex-col items-center justify-center rounded-full border-4 border-sea-500/30 bg-gradient-to-b from-sea-500 to-sea-600 text-white shadow-lg transition hover:brightness-110 disabled:opacity-60 ${
+          onPointerDown={(e) => {
+            e.preventDefault();
+            (e.currentTarget as HTMLButtonElement).setPointerCapture(e.pointerId);
+            void startHold();
+          }}
+          onPointerUp={() => void endHold()}
+          onPointerCancel={() => void endHold()}
+          onPointerLeave={() => {
+            if (holdingRef.current) void endHold();
+          }}
+          className={`relative flex h-36 w-36 select-none flex-col items-center justify-center rounded-full border-4 border-sea-500/30 bg-gradient-to-b from-sea-500 to-sea-600 text-white shadow-lg transition hover:brightness-110 disabled:opacity-60 ${
             recording ? "recording-pulse" : ""
           }`}
           aria-pressed={recording}
@@ -97,7 +161,7 @@ export function LeftPanel({ transcript, busy, sampleMode, onSubmit }: Props) {
           <p className="mt-3 max-w-[16rem] text-center text-xs text-ink-400">{voiceHint}</p>
         ) : (
           <p className="mt-3 text-center text-xs text-ink-400">
-            Or type below — try “I'm meeting Karim”
+            Hold the button to talk — or type below
           </p>
         )}
       </div>

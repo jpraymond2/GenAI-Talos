@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "fastapi",
     "uvicorn",
+    "python-multipart",
     "pydantic",
     "pydantic-settings",
     "typer",
@@ -21,10 +22,15 @@ dependencies = [
     "sounddevice",
     "soundfile",
     "nvidia-riva-client",
+    "pynput",
     "tavily-python",
     "pytest",
     "pyyaml>=6.0.3",
+    "tzdata>=2026.5",
 ]
+
+[project.optional-dependencies]
+whisper = ["faster-whisper"]
 
 [build-system]
 requires = ["hatchling"]
