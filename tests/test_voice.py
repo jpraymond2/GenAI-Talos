@@ -13,8 +13,10 @@ from recall.config import Settings, get_settings
 from recall.server.app import app
 from recall.tracing import Tracer
 from recall.voice.audio_convert import make_silence_wav
-from recall.voice.stt import SAMPLE_TRANSCRIPT, TranscriptionError, transcribe
+from recall.voice.stt import TranscriptionError, load_sample_transcript, transcribe
 from recall.voice.tts import tts_command
+
+_VOICE_SAMPLE = Path("data/sample/voice_sample.txt")
 
 
 @pytest.fixture(autouse=True)
@@ -31,13 +33,31 @@ def _reset_settings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator
 
 
 def test_sample_mode_returns_fixed_transcript(tmp_path: Path) -> None:
-    settings = Settings(sample_mode=True, nvidia_api_key="", logs_dir=tmp_path / "logs")
+    expected = _VOICE_SAMPLE.read_text(encoding="utf-8").strip()
+    settings = Settings(
+        sample_mode=True,
+        nvidia_api_key="",
+        logs_dir=tmp_path / "logs",
+        sample_data_dir=Path("data/sample"),
+    )
     tracer = Tracer(logs_dir=settings.logs_dir)
     wav = make_silence_wav()
     with tracer.activate():
         text = transcribe(wav, settings=settings, tracer=tracer)
-    assert text == SAMPLE_TRANSCRIPT
-    assert text == "I'm meeting Karim Haddad"
+    assert text == expected
+    assert text == load_sample_transcript(settings=settings)
+
+
+def test_sample_transcript_fallback_when_file_missing(tmp_path: Path) -> None:
+    settings = Settings(
+        sample_mode=True,
+        nvidia_api_key="",
+        logs_dir=tmp_path / "logs",
+        sample_data_dir=tmp_path / "empty_sample",
+    )
+    assert load_sample_transcript(settings=settings) == "Who am I meeting next?"
+    wav = make_silence_wav()
+    assert transcribe(wav, settings=settings) == "Who am I meeting next?"
 
 
 def test_riva_offline_recognize_wired(tmp_path: Path) -> None:
@@ -118,7 +138,7 @@ def test_api_voice_sample_wav(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
         )
     assert res.status_code == 200
     body = res.json()
-    assert body["transcript"] == SAMPLE_TRANSCRIPT
+    assert body["transcript"] == load_sample_transcript()
     assert body["engine"] == "sample"
     assert body["speech"] == "ok"
 
