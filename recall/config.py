@@ -1,12 +1,24 @@
 """Settings loaded from the environment and .env."""
 
+from __future__ import annotations
+
+import logging
+import re
+import warnings
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Any, Self
+from uuid import UUID
 
 from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
+
+_UUID_RE = re.compile(
+    r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+)
 
 
 class DataBackend(StrEnum):
@@ -115,6 +127,10 @@ class Settings(BaseSettings):
     google_client_secret: SecretStr = Field(default=SecretStr(""))
     riva_server: str = ""
     riva_api_key: SecretStr = Field(default=SecretStr(""))
+    riva_asr_function_id: str = Field(
+        default="",
+        description="NVIDIA Cloud Functions id for Riva Parakeet ASR (NVCF function-id).",
+    )
 
     http_timeout_seconds: float = Field(default=15.0, gt=0, le=15)
     llm_timeout_seconds: float = Field(default=30.0, gt=0, le=30)
@@ -171,6 +187,79 @@ class Settings(BaseSettings):
         if isinstance(value, (list, set, tuple, frozenset)):
             return frozenset(str(item).strip() for item in value if str(item).strip())
         return value
+
+    @model_validator(mode="after")
+    def _warn_nvidia_credential_shapes(self) -> Self:
+        """Warn (do not raise) when NVIDIA/Riva env vars look swapped or malformed."""
+        for message in nvidia_credential_warnings(self):
+            warnings.warn(message, UserWarning, stacklevel=2)
+            logger.warning("%s", message)
+        return self
+
+
+def _secret_text(value: SecretStr | str | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, SecretStr):
+        return value.get_secret_value()
+    return str(value)
+
+
+def is_uuid(value: str) -> bool:
+    """True when ``value`` is a canonical UUID string."""
+    text = (value or "").strip()
+    if not text or not _UUID_RE.fullmatch(text):
+        return False
+    try:
+        UUID(text)
+    except ValueError:
+        return False
+    return True
+
+
+def nvidia_credential_warnings(settings: Settings) -> list[str]:
+    """Return human-readable warnings for mis-pasted NVIDIA / Riva credentials.
+
+    Never includes secret values — only prefixes / shape hints.
+    """
+    messages: list[str] = []
+    api_key = _secret_text(settings.nvidia_api_key).strip()
+    function_id = (settings.riva_asr_function_id or "").strip()
+    riva_key = _secret_text(settings.riva_api_key).strip()
+
+    if api_key and not api_key.startswith("nvapi-"):
+        messages.append(
+            "NVIDIA_API_KEY does not start with 'nvapi-'. "
+            "Paste the key from build.nvidia.com (Get API Key), not a function id."
+        )
+
+    if function_id:
+        if function_id.startswith("nvapi-"):
+            messages.append(
+                "RIVA_ASR_FUNCTION_ID looks like an NVIDIA API key (starts with 'nvapi-'). "
+                "Move that value to NVIDIA_API_KEY; RIVA_ASR_FUNCTION_ID must be a UUID "
+                "from the model's API tab on build.nvidia.com."
+            )
+        elif not is_uuid(function_id):
+            messages.append(
+                "RIVA_ASR_FUNCTION_ID is not a UUID. "
+                "Copy the function-id from the Parakeet ASR API tab on build.nvidia.com "
+                "(e.g. nvidia/parakeet-ctc-1_1b-asr)."
+            )
+
+    if riva_key.startswith("nvapi-") and not api_key:
+        messages.append(
+            "RIVA_API_KEY looks like an NVIDIA API key, but NVIDIA_API_KEY is empty. "
+            "ASR on NVCF uses NVIDIA_API_KEY + RIVA_ASR_FUNCTION_ID."
+        )
+
+    if api_key and is_uuid(api_key):
+        messages.append(
+            "NVIDIA_API_KEY looks like a UUID (function id). "
+            "Swap it with RIVA_ASR_FUNCTION_ID."
+        )
+
+    return messages
 
 
 @lru_cache(maxsize=1)

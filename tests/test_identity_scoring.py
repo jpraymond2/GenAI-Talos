@@ -34,14 +34,17 @@ runner = CliRunner()
 def sample_world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> WorldStore:
     """Fresh SAMPLE_MODE world DB with ingest + identity scoring."""
     monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("DATA_BACKEND", "duckdb")
     monkeypatch.setenv("NVIDIA_API_KEY", "")
     monkeypatch.setenv("LOGS_DIR", str(tmp_path / "logs"))
     get_settings.cache_clear()
     reset_client()
     world.reset()
     from recall.data.duckdb_backend import DuckDBBackend
+    from recall.data.query_layer import clear_default_query_layer
 
     DuckDBBackend.clear_connection_cache()
+    clear_default_query_layer()
     db = tmp_path / "world_sample.db"
     monkeypatch.setenv("CACHE_DIR", str(Path("data/cache").resolve()))
     get_settings.cache_clear()
