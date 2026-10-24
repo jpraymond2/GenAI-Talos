@@ -67,10 +67,6 @@ _FORMAL_RE = re.compile(
 )
 _FIRST_NAME_HI = re.compile(r"(?i)^(hey|hi|hello)\s+[A-Z][a-z]+\b")
 
-_ROOT = Path(__file__).resolve().parents[3]
-_SCORE_ROOT = _ROOT / "data" / "relationship_scores"
-
-
 class _LabelChoice(BaseModel):
     """LLM output for relationship classification."""
 
@@ -643,14 +639,19 @@ def _upsert_edge(store: WorldStore, assessment: RelationshipAssessment) -> None:
 
 
 def _write_score_file(assessment: RelationshipAssessment) -> Path:
-    folder = _SCORE_ROOT / assessment.entity_id
-    folder.mkdir(parents=True, exist_ok=True)
-    run = assessment.run_id or "offline"
-    path = folder / f"{run}.json"
-    path.write_text(
-        json.dumps(assessment.model_dump(), indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
+    """Append one JSON assessment line to ``relationship_scores.jsonl``."""
+    from recall.engines.world.identity_scoring import resolve_score_jsonl_path
+
+    rid, path = resolve_score_jsonl_path(
+        "relationship_scores.jsonl", run_id=assessment.run_id or None
     )
+    if not assessment.run_id:
+        assessment.run_id = rid
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = assessment.model_dump()
+    payload["score_file"] = str(path)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, ensure_ascii=False, default=str) + "\n")
     return path
 
 

@@ -321,7 +321,7 @@ def identity_explain(
     if not score_file:
         print(f"No score file for {handle}")
         raise typer.Exit(code=1)
-    print(format_explain_table(score_file))
+    print(format_explain_table(score_file, handle_value=handle))
 
 
 @identity_app.command("confirm")

@@ -26,7 +26,6 @@ EmbedFn = Callable[..., Awaitable[list[list[float]]]]
 _ROOT = Path(__file__).resolve().parents[3]
 _SCORING_PATH = _ROOT / "config" / "identity_scoring.yaml"
 _ALIASES_PATH = _ROOT / "config" / "company_aliases.yaml"
-_SCORE_ROOT = _ROOT / "data" / "identity_scores"
 
 _TOKEN_SPLIT = re.compile(r"[.\-_0-9]+")
 _PHONE_RE = re.compile(
@@ -1210,23 +1209,67 @@ def decide(
     return decision, top.entity_id, top.probability
 
 
-def write_score_file(decision: ScoringDecision, path: Path) -> Path:
-    """Write one append-only score file (never overwrite; bump suffix if needed)."""
+def resolve_score_jsonl_path(
+    filename: str,
+    *,
+    run_id: str | None = None,
+) -> tuple[str, Path]:
+    """Return ``(run_id, logs/<run_id>/<filename>)`` from the active Tracer when set."""
+    from recall.tracing import Tracer
+
+    tracer = Tracer.current()
+    if tracer is not None:
+        rid = tracer.run_id
+        run_dir = tracer.path.parent
+    else:
+        rid = run_id or str(uuid4())
+        run_dir = Path(get_settings().logs_dir) / rid
+    run_dir.mkdir(parents=True, exist_ok=True)
+    return rid, run_dir / filename
+
+
+def write_score_file(decision: ScoringDecision, path: Path | None = None) -> Path:
+    """Append one JSON decision line to ``identity_scores.jsonl``; return that path."""
+    if path is None:
+        _, path = resolve_score_jsonl_path(
+            "identity_scores.jsonl", run_id=decision.run_id
+        )
     path.parent.mkdir(parents=True, exist_ok=True)
-    target = path
-    if target.exists():
-        stem = path.stem
-        for index in range(2, 1000):
-            candidate = path.with_name(f"{stem}_{index}{path.suffix}")
-            if not candidate.exists():
-                target = candidate
-                break
-        else:
-            raise FileExistsError(f"score file already exists: {path}")
     payload = decision_to_dict(decision)
-    payload["score_file"] = str(target)
-    target.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    return target
+    payload["score_file"] = str(path)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, ensure_ascii=False, default=str) + "\n")
+    return path
+
+
+def load_identity_score_record(
+    score_file: Path | str,
+    *,
+    handle_value: str | None = None,
+) -> dict[str, Any]:
+    """Load one identity decision from a JSONL path (or legacy single JSON file)."""
+    path = Path(score_file)
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    if path.suffix == ".jsonl":
+        needle = (handle_value or "").strip().lower()
+        last: dict[str, Any] | None = None
+        with path.open(encoding="utf-8") as handle:
+            for line in handle:
+                text = line.strip()
+                if not text:
+                    continue
+                rec = json.loads(text)
+                if not needle:
+                    last = rec
+                    continue
+                hv = str((rec.get("handle") or {}).get("value") or "").strip().lower()
+                if hv == needle:
+                    last = rec
+        if last is None:
+            raise ValueError(f"no score record for handle={handle_value!r} in {path}")
+        return last
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def decision_to_dict(decision: ScoringDecision) -> dict[str, Any]:
@@ -1320,7 +1363,9 @@ async def score_handle(
     none_baseline = float(cfg.get("none_baseline", 0.25))
     version = int(cfg.get("version", 1))
     clock = now or datetime.now(timezone.utc)
-    rid = run_id or str(uuid4())
+    rid, score_path = resolve_score_jsonl_path(
+        "identity_scores.jsonl", run_id=run_id
+    )
     profile_cache = profile_embedding_cache if profile_embedding_cache is not None else {}
     flags: list[str] = []
     hard_rules: list[str] = []
@@ -1377,9 +1422,6 @@ async def score_handle(
             parsed.industry = list(
                 entry.get("industry") or entry.get("industry_keywords") or []
             )
-
-    slug = handle_slug(norm_value)
-    score_path = _SCORE_ROOT / slug / f"{rid}.json"
 
     if handle_class in {"organization", "shared"}:
         none = CandidateScore(

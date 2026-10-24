@@ -228,6 +228,8 @@ logs/**/*
 data/live/
 data/identity_scores/**
 !data/identity_scores/.gitkeep
+data/relationship_scores/**
+!data/relationship_scores/.gitkeep
 
 # Recall web (Vite)
 web/node_modules/

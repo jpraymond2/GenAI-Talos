@@ -97,8 +97,10 @@ def _rank1(store: WorldStore, handle: str) -> dict:
     return min(rows, key=lambda r: int(r["rank"]))
 
 
-def _feature_map(score_file: str) -> dict[str, dict[str, dict]]:
-    data = json.loads(Path(score_file).read_text(encoding="utf-8"))
+def _feature_map(score_file: str, *, handle_value: str) -> dict[str, dict[str, dict]]:
+    from recall.engines.world.identity_scoring import load_identity_score_record
+
+    data = load_identity_score_record(score_file, handle_value=handle_value)
     out: dict[str, dict[str, dict]] = {}
     for cand in data["candidates"]:
         name = cand.get("name") or "none"
@@ -113,7 +115,7 @@ def test_three_expected_decisions(sample_world: WorldStore) -> None:
     pwc = _rank1(sample_world, "karim@pwc.com")
     assert pwc["candidate_entity_id"] == saleh.id
     assert pwc["decision"] in {"tentative", "auto_linked"}
-    feats = _feature_map(pwc["score_file"])
+    feats = _feature_map(pwc["score_file"], handle_value="karim@pwc.com")
     assert feats["Karim Saleh"]["f7a"]["value"] > 0.5
     assert feats["Karim Haddad"]["f7a"]["value"] == 0.0
 
@@ -124,14 +126,14 @@ def test_three_expected_decisions(sample_world: WorldStore) -> None:
     gmail = _rank1(sample_world, "karim.k92@gmail.com")
     assert gmail["candidate_entity_id"] == haddad.id
     assert gmail["decision"] == "tentative"
-    gfeats = _feature_map(gmail["score_file"])
+    gfeats = _feature_map(gmail["score_file"], handle_value="karim.k92@gmail.com")
     assert gfeats["Karim Haddad"]["f7a"]["value"] > 0.4
 
 
 def test_generic_email_f7a_zero_needs_user(sample_world: WorldStore) -> None:
     row = _rank1(sample_world, "karim.catchup@gmail.com")
     assert row["decision"] == "needs_user"
-    feats = _feature_map(row["score_file"])
+    feats = _feature_map(row["score_file"], handle_value="karim.catchup@gmail.com")
     for name, fmap in feats.items():
         if name == "none of these":
             continue
@@ -139,6 +141,8 @@ def test_generic_email_f7a_zero_needs_user(sample_world: WorldStore) -> None:
 
 
 def test_score_file_contributions_sum_to_raw(sample_world: WorldStore) -> None:
+    from recall.engines.world.identity_scoring import load_identity_score_record
+
     rows = [
         r
         for r in sample_world.list_identity_assumptions(handle_value="karim@pwc.com")
@@ -147,7 +151,8 @@ def test_score_file_contributions_sum_to_raw(sample_world: WorldStore) -> None:
     assert rows
     path = Path(rows[0]["score_file"])
     assert path.is_file()
-    data = json.loads(path.read_text(encoding="utf-8"))
+    assert str(path).replace("\\", "/").endswith("identity_scores.jsonl")
+    data = load_identity_score_record(path, handle_value="karim@pwc.com")
     for cand in data["candidates"]:
         if not cand.get("features"):
             continue

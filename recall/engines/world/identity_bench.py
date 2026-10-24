@@ -193,7 +193,9 @@ def _check_expected(
         rows = sorted(rows, key=lambda r: str(r.get("decided_at") or ""), reverse=True)
         score_file = rows[0]["score_file"] if rows else ""
         if score_file and Path(score_file).exists():
-            data = json.loads(Path(score_file).read_text(encoding="utf-8"))
+            from recall.engines.world.identity_scoring import load_identity_score_record
+
+            data = load_identity_score_record(score_file, handle_value=handle)
             for cand in data.get("candidates") or []:
                 if cand.get("entity_id") != top_entity_id:
                     continue
