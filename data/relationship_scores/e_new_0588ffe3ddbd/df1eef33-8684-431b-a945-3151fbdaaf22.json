@@ -1,0 +1,134 @@
+{
+  "entity_id": "e_new_0588ffe3ddbd",
+  "label": "acquaintance",
+  "confidence": 0.6,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d",
+        "gmail:8c73c536f1",
+        "gmail:d2518032a7",
+        "gmail:254844fd58"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d",
+        "gmail:8c73c536f1",
+        "gmail:d2518032a7",
+        "gmail:254844fd58"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 11,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 26,
+      "source_refs": [
+        "gmail:558c72f3a6"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.2667,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 0.7333,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.1333,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.6,
+      "source_refs": [
+        "gmail:558c72f3a6",
+        "gmail:eb0b7fc263",
+        "gmail:6ed05466d6",
+        "gmail:c5dcd1a897",
+        "gmail:d494171f8d"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 2,
+      "source_refs": [
+        "calendar:80299d30bb",
+        "calendar:2eb82a9603"
+      ]
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 1,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "Sparse or ambiguous contact pattern.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-24T23:20:21Z",
+  "status": "auto",
+  "interaction_count_at_assess": 15,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "df1eef33-8684-431b-a945-3151fbdaaf22"
+}

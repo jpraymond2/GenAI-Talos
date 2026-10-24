@@ -1,0 +1,75 @@
+{
+  "entity_id": "e_new_c740497d7c3a",
+  "label": "acquaintance",
+  "confidence": 0.95,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": []
+    },
+    {
+      "name": "channel_work_share",
+      "value": 0.0,
+      "source_refs": []
+    },
+    {
+      "name": "interactions_90d",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 999,
+      "source_refs": []
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.0,
+      "source_refs": []
+    },
+    {
+      "name": "inbound_share",
+      "value": 0.0,
+      "source_refs": []
+    },
+    {
+      "name": "informality_share",
+      "value": 0.0,
+      "source_refs": []
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": []
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_events",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "All behavioral signals show zero activity: no personal or work sharing, no interactions in 90 days, 999 days since last contact, zero informality/formality, no shared events, and no family terms or shared surnames. The subject appears entirely unengaged, consistent with an acquaintance-level relationship.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-24T23:20:07Z",
+  "status": "auto",
+  "interaction_count_at_assess": 0,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "df1eef33-8684-431b-a945-3151fbdaaf22"
+}

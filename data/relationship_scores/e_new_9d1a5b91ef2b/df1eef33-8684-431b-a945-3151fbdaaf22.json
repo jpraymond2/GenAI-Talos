@@ -1,0 +1,133 @@
+{
+  "entity_id": "e_new_9d1a5b91ef2b",
+  "label": "professional",
+  "confidence": 0.85,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d",
+        "gmail:73ac38fa30",
+        "gmail:2e8a8bf24d",
+        "gmail:b01d0ba0b1"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d",
+        "gmail:73ac38fa30",
+        "gmail:2e8a8bf24d",
+        "gmail:b01d0ba0b1"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 7,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 11,
+      "source_refs": [
+        "gmail:01a9d59329"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.25,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 0.75,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.25,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.5833,
+      "source_refs": [
+        "gmail:01a9d59329",
+        "gmail:32b6b6224e",
+        "gmail:644c7c5984",
+        "gmail:baedfae75c",
+        "gmail:8d3a2caf9d"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 1,
+      "source_refs": [
+        "calendar:f48c9c2c5a"
+      ]
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "The signals show a mix of work-related sharing (work_share=1.0) and professional communication patterns (formality_share=0.0, outbound_share=0.25, inbound_share=0.75), with one personal reference about coffee but no family terms or shared surname.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-24T23:19:56Z",
+  "status": "auto",
+  "interaction_count_at_assess": 12,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "df1eef33-8684-431b-a945-3151fbdaaf22"
+}

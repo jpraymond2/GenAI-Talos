@@ -1,0 +1,131 @@
+{
+  "entity_id": "e_new_0e236850d082",
+  "label": "mixed",
+  "confidence": 0.65,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e",
+        "gmail:8ca5b032af",
+        "gmail:c6b7d6f4ce",
+        "gmail:444375a6b8"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e",
+        "gmail:8ca5b032af",
+        "gmail:c6b7d6f4ce",
+        "gmail:444375a6b8"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 15,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 9,
+      "source_refs": [
+        "gmail:1fbebfaac3"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.6111,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 0.3889,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.2222,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.7222,
+      "source_refs": [
+        "gmail:1fbebfaac3",
+        "gmail:9363e7b6ce",
+        "gmail:7b788335c6",
+        "gmail:7cc19bfdbf",
+        "gmail:27745dd95e"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "The interaction history shows a blend of work-related messages (group meeting reminders, MyCourses announcements) and personal social invitations (coffee before midterm), with a notable evening/weekend communication pattern (72.22% share) suggesting informal socializing outside work hours.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-24T23:19:31Z",
+  "status": "auto",
+  "interaction_count_at_assess": 18,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "df1eef33-8684-431b-a945-3151fbdaaf22"
+}

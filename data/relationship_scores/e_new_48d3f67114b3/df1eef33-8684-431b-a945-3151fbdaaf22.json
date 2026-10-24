@@ -1,0 +1,113 @@
+{
+  "entity_id": "e_new_48d3f67114b3",
+  "label": "professional",
+  "confidence": 0.95,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 3,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 17,
+      "source_refs": [
+        "gmail:c9ef448754"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:c9ef448754",
+        "gmail:99cc21f99c",
+        "gmail:02a84eb2af"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 3,
+      "source_refs": [
+        "calendar:958ddde557",
+        "calendar:5ce6f164fa",
+        "calendar:bfdaa3de90"
+      ]
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "All signals indicate a strictly work context: 100% work_share, 100% inbound_share, 0% personal_share, 0% informality_share, 0% evening_weekend_share, and meeting-related snippets about office hours, WACC, and guest speakers. No family terms or shared surnames are present.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-24T23:20:00Z",
+  "status": "auto",
+  "interaction_count_at_assess": 3,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "df1eef33-8684-431b-a945-3151fbdaaf22"
+}

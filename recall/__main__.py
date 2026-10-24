@@ -37,7 +37,13 @@ def _enable_sample_mode() -> None:
     get_settings.cache_clear()
 
 
-_WORLD_EMPTY_MSG = "World model is empty. Run: recall ingest --sample (or --live)"
+_WORLD_EMPTY_MSG = (
+    "World model is empty. Run: recall ingest --world "
+    "(Zetaris/query layer), --sample, or --live."
+)
+
+# Opt-in only: default follows SAMPLE_MODE / DATA_BACKEND in .env.
+_SAMPLE_HELP = "Force SAMPLE_MODE / world_sample.db (default: follow .env)."
 
 
 def _require_world_entities() -> None:
@@ -62,19 +68,33 @@ def _require_world_entities() -> None:
 def ingest(
     live: Annotated[
         bool,
-        typer.Option("--live", help="Pull Gmail, Calendar, WhatsApp, and iMessage into data/live/."),
+        typer.Option(
+            "--live",
+            help="Pull Gmail, Calendar, WhatsApp, and iMessage into data/live/, then build the world.",
+        ),
     ] = False,
     sample: Annotated[
         bool,
         typer.Option("--sample", help="Build data/world_sample.db from sample CSVs via the query layer."),
     ] = False,
+    world_only: Annotated[
+        bool,
+        typer.Option(
+            "--world",
+            help=(
+                "Build data/world.db from the configured query layer only "
+                "(Zetaris when DATA_BACKEND=zetaris). No Google/WhatsApp OAuth."
+            ),
+        ),
+    ] = False,
 ) -> None:
     """Ingest live connectors and/or build the world model (with identity scoring)."""
-    if live and sample:
-        print("Pass only one of --live or --sample.")
+    modes = sum(1 for flag in (live, sample, world_only) if flag)
+    if modes > 1:
+        print("Pass only one of --live, --sample, or --world.")
         raise typer.Exit(code=1)
-    if not live and not sample:
-        print("Ingest needs --live or --sample.")
+    if modes == 0:
+        print("Ingest needs --live, --sample, or --world.")
         raise typer.Exit(code=1)
 
     if sample:
@@ -94,15 +114,34 @@ def ingest(
         )
         return
 
-    # Live pulls must not stay in SAMPLE_MODE (DuckDB would ignore parquet).
+    # Live / world pulls must not stay in SAMPLE_MODE.
     os.environ["SAMPLE_MODE"] = "false"
     get_settings.cache_clear()
     settings = get_settings()
-
     tracer = Tracer(logs_dir=settings.logs_dir)
+
+    if world_only:
+        with tracer.activate():
+            from recall.engines.world import run_world_ingest, world
+            from recall.engines.world.store import world_db_path
+
+            world.reset()
+            counts = run_world_ingest(sample=False, settings=settings, tracer=tracer)
+        db = str(world_db_path(settings))
+        print(
+            "World ingest complete (query layer only): "
+            f"backend={settings.data_backend} "
+            f"entities={counts.get('entities')} conflicts={counts.get('conflicts')} "
+            f"identity_scored={counts.get('identity_scored')} "
+            f"relationships_scored={counts.get('relationships_scored')} "
+            f"observations={counts.get('observations')} -> {db}"
+        )
+        return
+
     with tracer.activate():
         from recall.connectors.ingest import run_live_ingest
         from recall.engines.world import run_world_ingest, world
+        from recall.engines.world.store import world_db_path
 
         summary = run_live_ingest(settings=settings, tracer=tracer)
         world.reset()
@@ -124,17 +163,18 @@ def ingest(
         f"handles={totals['handles']} interactions={totals['interactions']} "
         f"events={totals['events']} contacts={totals['contacts']}"
     )
+    db = str(world_db_path(settings))
     print(
         "World ingest complete: "
-        f"entities={counts.get('entities')} conflicts={counts.get('conflicts')} "
-        f"identity_scored={counts.get('identity_scored')} "
-        f"relationships_scored={counts.get('relationships_scored')} -> {db}"
+        f"entities={world_counts.get('entities')} conflicts={world_counts.get('conflicts')} "
+        f"identity_scored={world_counts.get('identity_scored')} "
+        f"relationships_scored={world_counts.get('relationships_scored')} -> {db}"
     )
 
 
 @relationship_app.command("list")
 def relationship_list(
-    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """List latest relationship labels for each person."""
     if sample:
@@ -145,14 +185,16 @@ def relationship_list(
     store = WorldStore(path=world_db_path())
     rows = store.list_relationship_assessments(latest_only=True)
     if not rows:
-        print("No relationship assessments yet. Run: recall ingest --sample")
+        print("No relationship assessments yet. Run: recall ingest --world")
         return
     for row in sorted(rows, key=lambda r: r.label):
         ent = store.get_entity(row.entity_id)
         name = ent.canonical_name if ent else row.entity_id
+        why = (row.reasoning or "").replace("\n", " ").strip()
         print(
             f"{name}\t{row.label}\tp={row.confidence:.2f}\t"
             f"status={row.status}\t{row.entity_id}"
+            + (f"\t{why}" if why else "")
         )
     store.close()
 
@@ -164,7 +206,7 @@ def relationship_set(
         str,
         typer.Argument(help="social|professional|mixed|family|acquaintance"),
     ],
-    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Set a user override relationship label (never replaced by auto)."""
     if sample:
@@ -203,7 +245,7 @@ def relationship_set(
 @preferences_app.command("off")
 def preferences_off(
     name: Annotated[str, typer.Argument(help="Person name to opt out.")],
-    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Delete preference profile and block rebuilding for this person."""
     if sample:
@@ -228,7 +270,7 @@ def preferences_off(
 @preferences_app.command("show")
 def preferences_show(
     name: Annotated[str, typer.Argument(help="Person name.")],
-    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Build (if needed) and print a food/places preference profile."""
     if sample:
@@ -276,7 +318,7 @@ def identity_list(
         str | None,
         typer.Option("--status", help="Filter by decision: needs_user|tentative|auto_linked."),
     ] = None,
-    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """List identity assumptions (latest active rows)."""
     if sample:
@@ -304,7 +346,7 @@ def identity_list(
 @identity_app.command("explain")
 def identity_explain(
     handle: Annotated[str, typer.Argument(help="Handle to explain, e.g. name@company.com")],
-    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Print the latest score file as a readable table."""
     if sample:
@@ -328,7 +370,7 @@ def identity_explain(
 def identity_confirm(
     handle: Annotated[str, typer.Argument()],
     entity_id: Annotated[str, typer.Argument()],
-    sample: Annotated[bool, typer.Option("--sample")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Confirm a handle → entity link (permanent)."""
     if sample:
@@ -343,7 +385,7 @@ def identity_confirm(
 def identity_reject(
     handle: Annotated[str, typer.Argument()],
     entity_id: Annotated[str, typer.Argument()],
-    sample: Annotated[bool, typer.Option("--sample")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Reject a handle → entity candidate."""
     if sample:
@@ -356,7 +398,7 @@ def identity_reject(
 
 @identity_app.command("questions")
 def identity_questions(
-    sample: Annotated[bool, typer.Option("--sample")] = True,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """List batched needs_user questions grouped by candidate pair."""
     if sample:
@@ -393,10 +435,7 @@ def identity_bench() -> None:
 @app.command()
 def ask(
     utterance: Annotated[str, typer.Argument(help="What you said, in your own words.")],
-    sample: Annotated[
-        bool,
-        typer.Option("--sample", help="Use sample data and do not require credentials."),
-    ] = False,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
     entity_id: Annotated[
         str | None,
         typer.Option("--entity-id", help="Resolved entity id when disambiguating."),
@@ -415,10 +454,7 @@ def ask(
 @app.command()
 def note(
     text: Annotated[str, typer.Argument(help="What to remember.")],
-    sample: Annotated[
-        bool,
-        typer.Option("--sample", help="Use sample data and do not require credentials."),
-    ] = False,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Store a note in H-MEM (resolves the person first)."""
     if sample:
@@ -571,10 +607,7 @@ def _sources_for_point(state: RunState, evidence_ids: list[str]) -> str:
 @app.command()
 def memories(
     name: Annotated[str, typer.Argument(help="Person name to resolve, then list memories.")],
-    sample: Annotated[
-        bool,
-        typer.Option("--sample", help="Use SAMPLE_MODE world + hmem sample DBs."),
-    ] = False,
+    sample: Annotated[bool, typer.Option("--sample", help=_SAMPLE_HELP)] = False,
 ) -> None:
     """Resolve a name via the world model and print ranked memories with why."""
     if sample:

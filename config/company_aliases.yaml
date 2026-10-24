@@ -39,3 +39,45 @@ learned:
     aliases:
     - Mailbox
     industry: []
+  northstar-recruiting.com:
+    company: Northstar Recruiting
+    aliases:
+    - Northstar Recruiting Group
+    - Northstar Talent
+    industry:
+    - Recruitment
+    - Staffing
+    - Human Resources
+    - Talent Acquisition
+    - Executive Search
+  mcgill.ca:
+    company: McGill University
+    aliases:
+    - McGill
+    - McGill University
+    industry:
+    - Higher Education
+    - Research
+    - Healthcare
+    - Science
+    - Arts
+  northbridge.vc:
+    company: Northbridge
+    aliases:
+    - Northbridge VC
+    - Northbridge Venture Partners
+    industry:
+    - Venture Capital
+    - Private Equity
+    - Technology
+    - Investment
+  example.com:
+    company: Example.com
+    aliases:
+    - example.net
+    - example.org
+    industry:
+    - Technology
+    - Internet
+    - Documentation
+    - Testing
