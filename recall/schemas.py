@@ -40,12 +40,31 @@ class Utterance(BaseModel):
 class Intent(BaseModel):
     """Parsed user intent for a meeting-prep turn."""
 
-    kind: Literal["brief", "note", "action", "question", "unknown"]
+    kind: Literal["brief", "note", "suggest", "action", "question", "unknown"]
     person_name: str | None = None
     when: str | None = None
     action_request: str | None = None
+    meal_type: str | None = None
     sources_plan: list[str] = Field(default_factory=lambda: list(DEFAULT_SOURCES_PLAN))
     confidence: float
+
+
+class PlaceSuggestion(BaseModel):
+    """One food/place suggestion for a suggest intent."""
+
+    place_or_cuisine: str
+    reason: str
+    evidence_ids: list[str] = Field(default_factory=list)
+    is_specific_place: bool = False
+
+
+class SuggestResult(BaseModel):
+    """Suggester output: ranked places/cuisines with spoken summary."""
+
+    person: str
+    suggestions: list[PlaceSuggestion] = Field(default_factory=list)
+    spoken_summary: str = ""
+    caveats: list[str] = Field(default_factory=list)
 
 
 class Entity(BaseModel):

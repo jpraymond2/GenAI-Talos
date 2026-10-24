@@ -7,7 +7,18 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 EntityType = Literal["person", "org", "place"]
-RelationshipType = Literal["works_at", "attended", "knows", "lives_in"]
+RelationshipType = Literal[
+    "works_at",
+    "attended",
+    "knows",
+    "lives_in",
+    "social",
+    "professional",
+    "mixed",
+    "family",
+    "acquaintance",
+]
+RelationshipLabel = Literal["social", "professional", "mixed", "family", "acquaintance"]
 
 
 class AttributeObservation(BaseModel):
@@ -46,6 +57,64 @@ class Relationship(BaseModel):
     valid_from: str = ""
     source_ref: str = ""
     confidence: float = 0.5
+
+
+class RelationshipSignal(BaseModel):
+    """One computed relationship signal with provenance refs."""
+
+    name: str
+    value: float | str | int
+    source_refs: list[str] = Field(default_factory=list)
+
+
+class RelationshipAssessment(BaseModel):
+    """Classified relationship from the user to another person."""
+
+    entity_id: str
+    label: RelationshipLabel = "acquaintance"
+    confidence: float = 0.0
+    signals: list[RelationshipSignal] = Field(default_factory=list)
+    reasoning: str = ""
+    scoring_version: int = 1
+    assessed_at: str = ""
+    status: Literal["auto", "user_override"] = "auto"
+    interaction_count_at_assess: int = 0
+    score_file: str = ""
+    user_entity_id: str = ""
+    run_id: str = ""
+
+
+class PreferenceItem(BaseModel):
+    """One food/place preference attributed to a person."""
+
+    kind: Literal[
+        "cuisine",
+        "restaurant",
+        "cafe",
+        "bar",
+        "hangout",
+        "neighbourhood",
+        "dislike",
+        "dietary_stated",
+    ]
+    value: str
+    sentiment: Literal["likes", "dislikes", "neutral"] = "likes"
+    mention_count: int = 1
+    last_mentioned: str = ""
+    source_refs: list[str] = Field(default_factory=list)
+    confidence: float = 0.5
+
+
+class PreferenceProfile(BaseModel):
+    """On-demand food/places preference profile for one person."""
+
+    entity_id: str
+    topic: str = "food_places"
+    items: list[PreferenceItem] = Field(default_factory=list)
+    built_at: str = ""
+    scoring_version: int = 1
+    interaction_count_at_build: int = 0
+    opted_out: bool = False
 
 
 class Observation(BaseModel):

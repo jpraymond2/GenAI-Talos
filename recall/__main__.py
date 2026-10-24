@@ -16,14 +16,17 @@ from pydantic import BaseModel, Field
 
 from recall.agents import critic, router, writer
 from recall.config import get_settings
-from recall.fixtures import load_fixture_evidence
 from recall.llm.generator import embed, generate, generate_json, resolve_model
-from recall.schemas import Candidate, RunState, Utterance
+from recall.schemas import Brief, Candidate, Evidence, RunState, TalkingPoint, Utterance
 from recall.tracing import Tracer
 
 app = typer.Typer(no_args_is_help=True, help="Recall, a voice-first meeting-prep agent.")
 identity_app = typer.Typer(no_args_is_help=True, help="Identity assumptions and scoring.")
+relationship_app = typer.Typer(no_args_is_help=True, help="Relationship labels.")
+preferences_app = typer.Typer(no_args_is_help=True, help="Food/places preference profiles.")
 app.add_typer(identity_app, name="identity")
+app.add_typer(relationship_app, name="relationship")
+app.add_typer(preferences_app, name="preferences")
 
 AgentName = Literal["router", "writer", "critic"]
 
@@ -122,144 +125,149 @@ def ingest(
         f"events={totals['events']} contacts={totals['contacts']}"
     )
     print(
-        "  world: "
-        f"entities={world_counts.get('entities')} conflicts={world_counts.get('conflicts')} "
-        f"identity_scored={world_counts.get('identity_scored')} -> data/world.db"
+        "World ingest complete: "
+        f"entities={counts.get('entities')} conflicts={counts.get('conflicts')} "
+        f"identity_scored={counts.get('identity_scored')} "
+        f"relationships_scored={counts.get('relationships_scored')} -> {db}"
     )
 
 
-@app.command()
-def who(
-    name: Annotated[str, typer.Argument(help="Person name to resolve.")],
-    sample: Annotated[
-        bool,
-        typer.Option("--sample", help="Read data/world_sample.db (SAMPLE_MODE)."),
-    ] = False,
+@relationship_app.command("list")
+def relationship_list(
+    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
 ) -> None:
-    """Print ranked world-model candidates with attributes and conflicts."""
-    if sample:
-        _enable_sample_mode()
-    settings = get_settings()
-    tracer = Tracer(logs_dir=settings.logs_dir)
-    with tracer.activate():
-        from recall.engines.world import world
-        from recall.engines.world.store import WorldStore, world_db_path
-
-        world.reset()
-        db = world_db_path(settings)
-        if not db.is_file():
-            print(f"No world DB at {db}. Run: recall ingest --sample")
-            raise typer.Exit(code=1)
-        candidates = world.resolve(name)
-        store = WorldStore(path=db, settings=settings)
-        try:
-            if not candidates:
-                print(f"No candidates for {name!r}.")
-                return
-            print(f"Candidates for {name!r}:")
-            for cand in candidates:
-                entity = store.get_entity(cand.entity_id)
-                print(f"  [{cand.score:.2f}] {cand.name} ({cand.entity_id}) — {cand.reason}")
-                if entity is None:
-                    continue
-                channel_hints: set[str] = set()
-                for alias in entity.aliases:
-                    if "@s.whatsapp.net" in alias:
-                        channel_hints.add("whatsapp")
-                    elif "@" in alias:
-                        channel_hints.add("gmail")
-                    elif alias.startswith("+"):
-                        channel_hints.add("imessage/phone")
-                for hist in entity.attribute_history:
-                    prefix = hist.source_ref.split(":", 1)[0]
-                    if prefix in {"gmail", "whatsapp", "imessage", "calendar", "contact"}:
-                        channel_hints.add(prefix)
-                if channel_hints:
-                    print(f"      sources: {', '.join(sorted(channel_hints))}")
-                if entity.attributes:
-                    attrs = ", ".join(f"{k}={v}" for k, v in entity.attributes.items())
-                    print(f"      attributes: {attrs}")
-                conflicts = store.list_conflicts(entity.id)
-                for conflict in conflicts:
-                    vals = "; ".join(
-                        f"{item.value} ({item.source_ref})" for item in conflict.values
-                    )
-                    print(f"      conflict[{conflict.field}]: {vals}")
-        finally:
-            store.close()
-
-
-@app.command()
-def note(
-    text: Annotated[str, typer.Argument(help="Note text to mine into H-MEM.")],
-    sample: Annotated[
-        bool,
-        typer.Option("--sample", help="Use SAMPLE_MODE (hmem_sample.db + offline LLM)."),
-    ] = False,
-) -> None:
-    """Mine a user note into hierarchical memory and print created memories."""
+    """List latest relationship labels for each person."""
     if sample:
         _enable_sample_mode()
     _require_world_entities()
-    settings = get_settings()
-    tracer = Tracer(logs_dir=settings.logs_dir)
-    with tracer.activate():
-        from recall.engines import hmem as hmem_mod
+    from recall.engines.world.store import WorldStore, world_db_path
 
-        hmem_mod.hmem.reset()
-        created = hmem_mod.hmem.mine({"kind": "user_note", "text": text})
-    if not created:
-        print("No memories created.")
+    store = WorldStore(path=world_db_path())
+    rows = store.list_relationship_assessments(latest_only=True)
+    if not rows:
+        print("No relationship assessments yet. Run: recall ingest --sample")
         return
-    print(f"Created {len(created)} memor{'y' if len(created) == 1 else 'ies'}:")
-    for mem in created:
-        print(f"  [{mem.layer}/{mem.type}] {mem.id}: {mem.content}")
-        if mem.entity_ids:
-            print(f"      entities: {', '.join(mem.entity_ids)}")
+    for row in sorted(rows, key=lambda r: r.label):
+        ent = store.get_entity(row.entity_id)
+        name = ent.canonical_name if ent else row.entity_id
+        print(
+            f"{name}\t{row.label}\tp={row.confidence:.2f}\t"
+            f"status={row.status}\t{row.entity_id}"
+        )
+    store.close()
 
 
-@app.command()
-def memories(
-    name: Annotated[str, typer.Argument(help="Person name to resolve, then list memories.")],
-    sample: Annotated[
-        bool,
-        typer.Option("--sample", help="Use SAMPLE_MODE world + hmem sample DBs."),
-    ] = False,
+@relationship_app.command("set")
+def relationship_set(
+    name: Annotated[str, typer.Argument(help="Person name to resolve.")],
+    label: Annotated[
+        str,
+        typer.Argument(help="social|professional|mixed|family|acquaintance"),
+    ],
+    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
 ) -> None:
-    """Resolve a name via the world model and print ranked memories with why."""
+    """Set a user override relationship label (never replaced by auto)."""
     if sample:
         _enable_sample_mode()
     _require_world_entities()
+    from recall.engines.world import world
+    from recall.engines.world.relationship import set_relationship_override
+    from recall.engines.world.store import WorldStore, world_db_path
+
+    allowed = {"social", "professional", "mixed", "family", "acquaintance"}
+    if label not in allowed:
+        print(f"label must be one of {sorted(allowed)}")
+        raise typer.Exit(code=1)
+    world.reset()
+    cands = world.resolve(name)
+    if not cands:
+        print(f"No candidates for {name!r}")
+        raise typer.Exit(code=1)
+    if len(cands) >= 2 and abs(cands[0].score - cands[1].score) < 0.08:
+        print(f"Ambiguous name {name!r}:")
+        for c in cands[:5]:
+            print(f"  {c.name} ({c.entity_id})")
+        raise typer.Exit(code=1)
+    chosen = cands[0]
+    store = WorldStore(path=world_db_path())
+    assessment = set_relationship_override(
+        chosen.entity_id, label, store=store  # type: ignore[arg-type]
+    )
+    print(
+        f"override {chosen.name} ({chosen.entity_id}) -> {assessment.label} "
+        f"status={assessment.status}"
+    )
+    store.close()
+
+
+@preferences_app.command("off")
+def preferences_off(
+    name: Annotated[str, typer.Argument(help="Person name to opt out.")],
+    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+) -> None:
+    """Delete preference profile and block rebuilding for this person."""
+    if sample:
+        _enable_sample_mode()
+    _require_world_entities()
+    from recall.engines.world import world
+    from recall.engines.world.preferences import opt_out_preferences
+    from recall.engines.world.store import WorldStore, world_db_path
+
+    world.reset()
+    cands = world.resolve(name)
+    if not cands:
+        print(f"No candidates for {name!r}")
+        raise typer.Exit(code=1)
+    chosen = cands[0]
+    store = WorldStore(path=world_db_path())
+    opt_out_preferences(chosen.entity_id, store=store)
+    print(f"preferences opted out for {chosen.name} ({chosen.entity_id})")
+    store.close()
+
+
+@preferences_app.command("show")
+def preferences_show(
+    name: Annotated[str, typer.Argument(help="Person name.")],
+    sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
+) -> None:
+    """Build (if needed) and print a food/places preference profile."""
+    if sample:
+        _enable_sample_mode()
+    _require_world_entities()
+    from recall.engines.world import world
+    from recall.engines.world.preferences import get_preferences
+    from recall.engines.world.store import WorldStore, world_db_path
+    from recall.data.query_layer import get_query_layer
+
+    world.reset()
+    cands = world.resolve(name)
+    if not cands:
+        print(f"No candidates for {name!r}")
+        raise typer.Exit(code=1)
+    chosen = cands[0]
     settings = get_settings()
     tracer = Tracer(logs_dir=settings.logs_dir)
+    store = WorldStore(path=world_db_path(settings), settings=settings)
     with tracer.activate():
-        from recall.engines import hmem as hmem_mod
-        from recall.engines.world import world
-
-        world.reset()
-        hmem_mod.hmem.reset()
-        candidates = world.resolve(name)
-        if not candidates:
-            print(f"No candidates for {name!r}.")
-            return
-        # Ambiguous if top two scores are close and query is not an exact full-name hit.
-        top = candidates[:2]
-        exact = [c for c in candidates if c.name.lower() == name.strip().lower()]
-        if not exact and len(top) >= 2 and abs(top[0].score - top[1].score) < 0.08:
-            print(f"Ambiguous name {name!r}. Candidates:")
-            for cand in candidates:
-                print(f"  [{cand.score:.2f}] {cand.name} ({cand.entity_id}) — {cand.reason}")
-            return
-        chosen = exact[0] if exact else candidates[0]
-        result = hmem_mod.hmem.retrieve(f"meeting {chosen.name}", [chosen.entity_id])
-        print(f"Memories for {chosen.name} ({chosen.entity_id}):")
-        hits = result.get("memories") or []
-        if not hits:
-            print("  (none)")
-            return
-        for hit in hits:
-            print(f"  [{hit['score']:.2f}] {hit['content']}")
-            print(f"      why: {hit['why']}")
+        profile = get_preferences(
+            chosen.entity_id,
+            store=store,
+            settings=settings,
+            query_layer=get_query_layer(settings, tracer=tracer),
+            tracer=tracer,
+            reason="cli_show",
+        )
+    if profile.opted_out:
+        print(f"opted out: {chosen.name}")
+        store.close()
+        return
+    print(f"{chosen.name} ({chosen.entity_id}) items={len(profile.items)} built_at={profile.built_at}")
+    for item in profile.items:
+        print(
+            f"  [{item.sentiment}/{item.kind}] {item.value} "
+            f"n={item.mention_count} refs={','.join(item.source_refs[:2])}"
+        )
+    store.close()
 
 
 @identity_app.command("list")
@@ -295,7 +303,7 @@ def identity_list(
 
 @identity_app.command("explain")
 def identity_explain(
-    handle: Annotated[str, typer.Argument(help="Handle to explain, e.g. karim@pwc.com")],
+    handle: Annotated[str, typer.Argument(help="Handle to explain, e.g. name@company.com")],
     sample: Annotated[bool, typer.Option("--sample", help="Use world_sample.db.")] = True,
 ) -> None:
     """Print the latest score file as a readable table."""
@@ -393,24 +401,75 @@ def ask(
         str | None,
         typer.Option("--entity-id", help="Resolved entity id when disambiguating."),
     ] = None,
+    run_id: Annotated[
+        str | None,
+        typer.Option("--run-id", help="Resume a prior needs_clarification run."),
+    ] = None,
 ) -> None:
     """Run the meeting-prep orchestrator and print the brief."""
     if sample:
         _enable_sample_mode()
-    asyncio.run(_run_ask(utterance, entity_id=entity_id))
+    asyncio.run(_run_ask(utterance, entity_id=entity_id, run_id=run_id))
 
 
-async def _run_ask(utterance: str, *, entity_id: str | None) -> None:
-    from recall.orchestrator import run as orchestrate
+@app.command()
+def note(
+    text: Annotated[str, typer.Argument(help="What to remember.")],
+    sample: Annotated[
+        bool,
+        typer.Option("--sample", help="Use sample data and do not require credentials."),
+    ] = False,
+) -> None:
+    """Store a note in H-MEM (resolves the person first)."""
+    if sample:
+        _enable_sample_mode()
+    _require_world_entities()
+    asyncio.run(_run_note(text))
 
-    state = await orchestrate(utterance, entity_id=entity_id)
+
+async def _run_note(text: str) -> None:
+    from recall.orchestrator import build_deps, run as orchestrate
+    from recall.schemas import Intent
+
+    deps = build_deps(sample_mode=True if get_settings().sample_mode else None)
+    state = await orchestrate(text, deps=deps, force_kind="note")
     if state.status == "needs_clarification" and state.candidates:
         chosen = _prompt_for_candidate(state)
         if chosen is None:
             _print_ask_result(state)
             return
         print(f"resolved: {chosen[1]} ({chosen[0]})")
-        state = await orchestrate(utterance, entity_id=chosen[0])
+        state = await orchestrate(
+            text,
+            run_id=state.run_id,
+            clarification_reply=chosen[1],
+            deps=deps,
+        )
+    _print_ask_result(state)
+    _ = Intent  # kept for type clarity in tests importing this module
+
+
+async def _run_ask(
+    utterance: str,
+    *,
+    entity_id: str | None,
+    run_id: str | None = None,
+) -> None:
+    from recall.orchestrator import run as orchestrate
+
+    state = await orchestrate(utterance, entity_id=entity_id, run_id=run_id)
+    if state.status == "needs_clarification" and state.candidates:
+        chosen = _prompt_for_candidate(state)
+        if chosen is None:
+            _print_ask_result(state)
+            return
+        print(f"resolved: {chosen[1]} ({chosen[0]})")
+        # Continue the same run with the clarification reply.
+        state = await orchestrate(
+            utterance,
+            run_id=state.run_id,
+            clarification_reply=chosen[1],
+        )
     _print_ask_result(state)
 
 
@@ -510,6 +569,54 @@ def _sources_for_point(state: RunState, evidence_ids: list[str]) -> str:
 
 
 @app.command()
+def memories(
+    name: Annotated[str, typer.Argument(help="Person name to resolve, then list memories.")],
+    sample: Annotated[
+        bool,
+        typer.Option("--sample", help="Use SAMPLE_MODE world + hmem sample DBs."),
+    ] = False,
+) -> None:
+    """Resolve a name via the world model and print ranked memories with why."""
+    if sample:
+        _enable_sample_mode()
+    _require_world_entities()
+    settings = get_settings()
+    tracer = Tracer(logs_dir=settings.logs_dir)
+    with tracer.activate():
+        from recall.engines import hmem as hmem_mod
+        from recall.engines.world import world
+
+        world.reset()
+        hmem_mod.hmem.reset()
+        candidates = world.resolve(name)
+        if not candidates:
+            print(f"No candidates for {name!r}.")
+            return
+        top = candidates[:2]
+        exact = [c for c in candidates if c.name.lower() == name.strip().lower()]
+        if not exact and len(top) >= 2 and abs(top[0].score - top[1].score) < 0.08:
+            print(f"Ambiguous name {name!r}. Candidates:")
+            for cand in candidates[:5]:
+                print(f"  {cand.name} ({cand.entity_id}) score={cand.score:.2f}")
+            return
+        chosen = exact[0] if exact else candidates[0]
+        result = hmem_mod.hmem.retrieve(
+            f"meeting {chosen.name}",
+            [chosen.entity_id],
+            top_n=10,
+        )
+    print(f"Memories for {chosen.name} ({chosen.entity_id}):")
+    hits = result.get("memories") or []
+    if not hits:
+        print("  (none)")
+        return
+    for hit in hits:
+        print(f"  [{hit.get('score', 0):.2f}] {hit.get('content')}")
+        if hit.get("why"):
+            print(f"      why: {hit.get('why')}")
+
+
+@app.command()
 def serve(
     host: Annotated[str, typer.Option(help="Interface to bind.")] = "127.0.0.1",
     port: Annotated[int, typer.Option(help="Port to bind.")] = 8000,
@@ -597,7 +704,7 @@ async def _print_embed() -> None:
     )
     started = time.perf_counter()
     vectors = await embed(
-        ["Karim works on memory systems.", "The meeting is about launch prep."],
+        ["Ada works on memory systems.", "The meeting is about launch prep."],
         input_type="passage",
     )
     latency_ms = int((time.perf_counter() - started) * 1000)
@@ -640,10 +747,30 @@ def _new_state(text: str) -> RunState:
     )
 
 
-def _karim_state(text: str) -> RunState:
+def _demo_state(text: str) -> RunState:
+    """Minimal state for agent-test without fixture packs."""
+    from datetime import datetime as dt
+
     state = _new_state(text)
-    state.entity_name = "Karim Haddad"
-    state.evidence = load_fixture_evidence("Karim Haddad")
+    state.entity_name = "Ada Lovelace"
+    state.evidence = {
+        "e1": Evidence(
+            id="e1",
+            source="gmail",
+            source_ref="demo:e1",
+            ts=dt.now(timezone.utc),
+            text="Can you intro me to a design partner next week?",
+            tags=["open_loop"],
+        ),
+        "e2": Evidence(
+            id="e2",
+            source="whatsapp",
+            source_ref="demo:e2",
+            ts=dt.now(timezone.utc),
+            text="Moving offices in January — exciting times.",
+            tags=[],
+        ),
+    }
     return state
 
 
@@ -660,7 +787,7 @@ async def _agent_test_router(text: str, deps: SimpleNamespace) -> None:
 
 async def _agent_test_writer(text: str, deps: SimpleNamespace) -> None:
     model = resolve_model("writer")
-    state = _karim_state(text)
+    state = _demo_state(text)
     started = time.perf_counter()
     state = await writer.run(state, deps)
     latency_ms = int((time.perf_counter() - started) * 1000)
@@ -679,7 +806,7 @@ async def _agent_test_writer(text: str, deps: SimpleNamespace) -> None:
 async def _agent_test_critic(text: str, deps: SimpleNamespace) -> None:
     writer_model = resolve_model("writer")
     critic_model = resolve_model("critic")
-    state = _karim_state(text)
+    state = _demo_state(text)
 
     started = time.perf_counter()
     state = await writer.run(state, deps)
@@ -697,8 +824,8 @@ async def _agent_test_critic(text: str, deps: SimpleNamespace) -> None:
             print(f"  fix_hint: {item.fix_hint}")
     if verdict.missing:
         print("missing:")
-        for note in verdict.missing:
-            print(f"- {note}")
+        for note_line in verdict.missing:
+            print(f"- {note_line}")
     if verdict.refetch:
         print("refetch:")
         for source in verdict.refetch:
@@ -707,6 +834,7 @@ async def _agent_test_critic(text: str, deps: SimpleNamespace) -> None:
         f"writer_model={writer_model} writer_latency_ms={writer_ms} "
         f"critic_model={critic_model} critic_latency_ms={critic_ms}"
     )
+    _ = Brief, TalkingPoint
 
 
 if __name__ == "__main__":

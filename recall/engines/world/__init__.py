@@ -3,7 +3,7 @@
 Orchestrator-facing facade::
 
     from recall.engines import world
-    world.resolve("Karim")
+    world.resolve("Ada Lovelace")
     world.person_context(entity_id)
 """
 

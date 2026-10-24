@@ -1,0 +1,93 @@
+{
+  "entity_id": "ent_9789c455a068",
+  "label": "acquaintance",
+  "confidence": 0.6,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 1,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 3,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:a9169739f7"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "Sparse or ambiguous contact pattern.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-15T12:00:00Z",
+  "status": "auto",
+  "interaction_count_at_assess": 1,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "5ea1e1f9-a9ee-46e1-ab35-24165466bd17"
+}

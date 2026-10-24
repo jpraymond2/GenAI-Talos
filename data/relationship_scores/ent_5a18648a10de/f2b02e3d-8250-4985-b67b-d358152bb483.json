@@ -1,0 +1,93 @@
+{
+  "entity_id": "ent_5a18648a10de",
+  "label": "professional",
+  "confidence": 0.68,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 1,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 4,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:83d87e3dc1"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "Contact is mostly on work channels with formal tone.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-15T12:00:00Z",
+  "status": "auto",
+  "interaction_count_at_assess": 1,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "f2b02e3d-8250-4985-b67b-d358152bb483"
+}

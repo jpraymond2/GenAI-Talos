@@ -1,0 +1,360 @@
+{
+  "handle": {
+    "kind": "email",
+    "value": "karim.catchup@gmail.com"
+  },
+  "parsed": {
+    "local_tokens": [
+      "karim",
+      "catchup"
+    ],
+    "display_name": "Karim",
+    "domain": "gmail.com",
+    "domain_class": "free-mail",
+    "company": "",
+    "aliases": [],
+    "industry": [],
+    "signature_phones": [],
+    "signature_name": "",
+    "signature_title": "Hope you're well",
+    "signature_company": "let's catch up."
+  },
+  "candidates": [
+    {
+      "entity_id": null,
+      "name": "none of these",
+      "raw_score": 0.1,
+      "probability": 0.3370905768147772,
+      "probability_pct": 33.71,
+      "rank": 1,
+      "features": [],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_e52558eb0987",
+      "name": "Karim Haddad",
+      "raw_score": 0.046,
+      "probability": 0.23518011518529844,
+      "probability_pct": 23.52,
+      "rank": 2,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.25,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.08,
+          "contribution": 0.016,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.12,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no company",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "fallback no terms",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no known employer match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.6,
+          "weight": 0.05,
+          "contribution": 0.03,
+          "source_refs": [
+            "gmail:a1perso"
+          ],
+          "detail": "email reference in candidate messages",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.0,
+          "weight": 0.14,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no references",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=0.033",
+          "matches": [],
+          "similarity": 0.033328688431743095
+        },
+        {
+          "name": "f8",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no announcement",
+          "matches": [],
+          "similarity": null
+        }
+      ],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_216009763095",
+      "name": "Karim Haddad",
+      "raw_score": 0.046,
+      "probability": 0.23518011518529844,
+      "probability_pct": 23.52,
+      "rank": 3,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.25,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.08,
+          "contribution": 0.016,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.12,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no company",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "fallback no terms",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no known employer match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.6,
+          "weight": 0.05,
+          "contribution": 0.03,
+          "source_refs": [
+            "gmail:a1perso"
+          ],
+          "detail": "email reference in candidate messages",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.0,
+          "weight": 0.14,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no references",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=0.021",
+          "matches": [],
+          "similarity": 0.02083993540310989
+        },
+        {
+          "name": "f8",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no announcement",
+          "matches": [],
+          "similarity": null
+        }
+      ],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_97d72126743f",
+      "name": "Karim Saleh",
+      "raw_score": 0.016,
+      "probability": 0.19254919281462593,
+      "probability_pct": 19.25,
+      "rank": 4,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.25,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.08,
+          "contribution": 0.016,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.12,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no company",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "fallback no terms",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no known employer match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no thread overlap",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.0,
+          "weight": 0.14,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no references",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=-0.072",
+          "matches": [],
+          "similarity": -0.07247155634247195
+        },
+        {
+          "name": "f8",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no announcement",
+          "matches": [],
+          "similarity": null
+        }
+      ],
+      "penalties": []
+    }
+  ],
+  "hard_rules": [
+    "cap_needs_user",
+    "namesake_margin"
+  ],
+  "flags": [],
+  "handle_class": "person",
+  "new_person_hint": {},
+  "decision": "needs_user",
+  "top_entity_id": "ent_e52558eb0987",
+  "top_probability": 0.23518011518529844,
+  "thresholds": {
+    "auto_link_probability": 0.8,
+    "auto_link_margin": 0.2,
+    "tentative_min": 0.55,
+    "new_person_none_probability": 0.6
+  },
+  "scoring_version": 3,
+  "run_id": "168a4d2d-2dd6-4209-b5b8-9687ddbb65c4-cc620725f86f",
+  "score_file": "/Users/jpraymond/Desktop/GenAI-Talos/data/identity_scores/karim.catchup_gmail.com/168a4d2d-2dd6-4209-b5b8-9687ddbb65c4-cc620725f86f.json"
+}

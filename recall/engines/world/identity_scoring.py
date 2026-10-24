@@ -344,7 +344,7 @@ def select_candidates(
     needles.update(name_tokens(parsed.signature_name))
     disp_norm, _ = normalize_person_name(parsed.display_name or parsed.signature_name or "")
     needles.update(disp_norm.split())
-    # Expand needles with known variants (كريم → karim).
+    # Expand needles with known nickname / transliteration variants.
     expanded: set[str] = set()
     for n in needles:
         expanded |= name_variant_set(n)
@@ -1423,7 +1423,7 @@ async def score_handle(
         candidates_entities.append(person)
 
     # Full display/signature name that matches nobody → treat as new person
-    # (do not backfill via company mentions; that would steal Sophie → Saleh).
+    # (do not backfill via company mentions; that would steal a new name → coworker).
     full_display = (parsed.display_name or parsed.signature_name or "").strip()
     full_is_new = False
     if full_display and len(name_tokens(full_display)) >= 2 and not candidates_entities:
@@ -1447,8 +1447,8 @@ async def score_handle(
             _add_candidate(person)
 
     # Company / body backfill only when name selection found nobody and the
-    # display name is not already a clear new person (avoids Sophie→Saleh and
-    # Lina→Jordan Blake via shared "Northstar" org).
+    # display name is not already a clear new person (avoids new-name→coworker
+    # via a shared company org string).
     if not full_is_new and not candidates_entities:
         if parsed.company:
             for person in eligible:
@@ -1468,8 +1468,6 @@ async def score_handle(
             for person in eligible:
                 org = (person.attributes.get("org") or "").lower()
                 if org and org in body_l:
-                    _add_candidate(person)
-                elif "ledgerly" in body_l and "ledgerly" in org:
                     _add_candidate(person)
 
     content_refs = await extract_email_references(clean_body, generate_json_fn=generate_json_fn)
@@ -1526,8 +1524,6 @@ async def score_handle(
             org = (person.attributes.get("org") or "").lower()
             if org and org in clean_body.lower():
                 f3 = FeatureResult("f3", 0.6, 0.0, 0.0, [], f"body mentions {org}")
-            elif "ledgerly" in clean_body.lower() and "ledgerly" in org:
-                f3 = FeatureResult("f3", 0.8, 0.0, 0.0, [], "body mentions Ledgerly")
         f4 = await feature_industry_context(
             person,
             parsed,

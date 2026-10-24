@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from recall.fixtures import load_fixture_evidence
+from tests.helpers_fixtures import load_fixture_evidence
 from recall.schemas import Evidence
 
 _KARIM_PATH = Path(__file__).resolve().parent / "fixtures" / "evidence_karim.json"

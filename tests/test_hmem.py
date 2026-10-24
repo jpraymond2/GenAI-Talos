@@ -142,7 +142,7 @@ def test_montreal_note_supersedes_toronto_and_logs_conflict(
         "Karim Haddad moves to Toronto in January and wants an intro to Lina",
     )
     toronto = next(m for m in first if "Toronto" in m.content)
-    _mine(store, ledger, tracer, wstore, "Karim is staying in Montreal")
+    _mine(store, ledger, tracer, wstore, "Karim Haddad is staying in Montreal")
 
     row = store._conn.execute(  # noqa: SLF001
         "SELECT superseded_by FROM memories WHERE id = ?", (toronto.id,)

@@ -1,0 +1,135 @@
+{
+  "entity_id": "ent_97d72126743f",
+  "label": "mixed",
+  "confidence": 0.65,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.6364,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018",
+        "whatsapp:73900facd8",
+        "whatsapp:b880feb703",
+        "gmail:99cc21f99c"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 0.3636,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018",
+        "whatsapp:73900facd8",
+        "whatsapp:b880feb703",
+        "gmail:99cc21f99c"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 11,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 4,
+      "source_refs": [
+        "gmail:d3eab9970b"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.7273,
+      "source_refs": [
+        "gmail:d3eab9970b",
+        "whatsapp:9a88651b91",
+        "imessage:d4f28e7ef7",
+        "gmail:c9ef448754",
+        "imessage:137df7c018"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 3,
+      "source_refs": [
+        "calendar:958ddde557",
+        "calendar:5ce6f164fa",
+        "calendar:bfdaa3de90"
+      ]
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "Personal and work channels both appear regularly.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-15T12:00:00Z",
+  "status": "auto",
+  "interaction_count_at_assess": 11,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "088503b5-342e-4217-ba11-44ba00ee92fa"
+}

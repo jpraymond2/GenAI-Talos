@@ -11,7 +11,7 @@ import pytest
 
 from recall.agents import critic, router, writer
 from recall.config import get_settings
-from recall.fixtures import load_fixture_evidence
+from tests.helpers_fixtures import load_fixture_evidence
 from recall.llm.generator import reset_client
 from recall.schemas import RunState, Utterance
 from recall.tracing import Tracer

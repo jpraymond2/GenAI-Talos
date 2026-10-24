@@ -1,0 +1,131 @@
+{
+  "entity_id": "ent_97a545b9174c",
+  "label": "professional",
+  "confidence": 0.68,
+  "signals": [
+    {
+      "name": "channel_personal_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08",
+        "gmail:8cd74aa02a",
+        "gmail:ab5956fd23",
+        "gmail:dbc2d0052d"
+      ]
+    },
+    {
+      "name": "channel_work_share",
+      "value": 1.0,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08",
+        "gmail:8cd74aa02a",
+        "gmail:ab5956fd23",
+        "gmail:dbc2d0052d"
+      ]
+    },
+    {
+      "name": "interactions_90d",
+      "value": 31,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08"
+      ]
+    },
+    {
+      "name": "days_since_last_contact",
+      "value": 1,
+      "source_refs": [
+        "gmail:35acde316a"
+      ]
+    },
+    {
+      "name": "outbound_share",
+      "value": 0.5476,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08"
+      ]
+    },
+    {
+      "name": "inbound_share",
+      "value": 0.4524,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08"
+      ]
+    },
+    {
+      "name": "informality_share",
+      "value": 0.0476,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08"
+      ]
+    },
+    {
+      "name": "formality_share",
+      "value": 0.0,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08"
+      ]
+    },
+    {
+      "name": "evening_weekend_share",
+      "value": 0.4762,
+      "source_refs": [
+        "gmail:35acde316a",
+        "gmail:c4f504fbec",
+        "gmail:36493880d6",
+        "gmail:fcc282ea52",
+        "gmail:d3facd3e08"
+      ]
+    },
+    {
+      "name": "shared_events",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "family_term_hits",
+      "value": 0,
+      "source_refs": []
+    },
+    {
+      "name": "shared_surname",
+      "value": 0,
+      "source_refs": []
+    }
+  ],
+  "reasoning": "Contact is mostly on work channels with formal tone.",
+  "scoring_version": 1,
+  "assessed_at": "2026-10-15T12:00:00Z",
+  "status": "auto",
+  "interaction_count_at_assess": 42,
+  "score_file": "",
+  "user_entity_id": "ent_7b73de08f8c3",
+  "run_id": "c24c6706-3c0a-4ddb-8e68-9b5fdb591c54"
+}

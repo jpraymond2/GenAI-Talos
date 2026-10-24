@@ -1,0 +1,166 @@
+{
+  "handle": {
+    "kind": "email",
+    "value": "karim@pwc.com"
+  },
+  "parsed": {
+    "local_tokens": [
+      "karim"
+    ],
+    "display_name": "",
+    "domain": "pwc.com",
+    "domain_class": "corporate",
+    "company": "PwC",
+    "aliases": [
+      "PwC",
+      "PricewaterhouseCoopers",
+      "Price Waterhouse"
+    ],
+    "industry": [
+      "consulting",
+      "audit",
+      "advisory",
+      "tax"
+    ],
+    "signature_phones": [],
+    "signature_name": "Karim",
+    "signature_title": "",
+    "signature_company": ""
+  },
+  "candidates": [
+    {
+      "entity_id": null,
+      "name": "none of these",
+      "raw_score": 0.1,
+      "probability": 0.6364525402815664,
+      "probability_pct": 63.65,
+      "rank": 1,
+      "features": [],
+      "penalties": []
+    },
+    {
+      "entity_id": "ent_e52558eb0987",
+      "name": "Karim Haddad",
+      "raw_score": 0.016,
+      "probability": 0.36354745971843366,
+      "probability_pct": 36.35,
+      "rank": 2,
+      "features": [
+        {
+          "name": "f1",
+          "value": 0.0,
+          "weight": 0.25,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no signature phone match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f2",
+          "value": 0.2,
+          "weight": 0.08,
+          "contribution": 0.016,
+          "source_refs": [],
+          "detail": "first name only",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f3",
+          "value": 0.0,
+          "weight": 0.12,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "weighted_mentions=0.0",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f4",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "keyword industry fallback",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f5",
+          "value": 0.0,
+          "weight": 0.08,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no known employer match",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f6",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no thread overlap",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7a",
+          "value": 0.0,
+          "weight": 0.14,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no confirmed matches",
+          "matches": [],
+          "similarity": null
+        },
+        {
+          "name": "f7b",
+          "value": 0.0,
+          "weight": 0.05,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "cosine=-0.012",
+          "matches": [],
+          "similarity": -0.012393996089254736
+        },
+        {
+          "name": "f8",
+          "value": 0.0,
+          "weight": 0.15,
+          "contribution": 0.0,
+          "source_refs": [],
+          "detail": "no announcement",
+          "matches": [],
+          "similarity": null
+        }
+      ],
+      "penalties": []
+    }
+  ],
+  "hard_rules": [
+    "block_auto_link"
+  ],
+  "flags": [],
+  "handle_class": "person",
+  "new_person_hint": {
+    "name": "Karim",
+    "org": "PwC",
+    "title": "",
+    "domain": "pwc.com"
+  },
+  "decision": "new_person",
+  "top_entity_id": null,
+  "top_probability": 0.6364525402815664,
+  "thresholds": {
+    "auto_link_probability": 0.8,
+    "auto_link_margin": 0.2,
+    "tentative_min": 0.55,
+    "new_person_none_probability": 0.6
+  },
+  "scoring_version": 3,
+  "run_id": "bench-D3-fb01d5a0",
+  "score_file": "/Users/jpraymond/Desktop/GenAI-Talos/data/identity_scores/karim_pwc.com/bench-D3-fb01d5a0.json"
+}
