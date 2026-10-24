@@ -45,10 +45,15 @@ def ensure_wav_16k_mono(data: bytes, *, content_type: str = "", filename: str = 
 
     if not shutil.which("ffmpeg"):
         raise UnsupportedAudio(
-            "Browser audio (webm/mp4) requires ffmpeg on the server PATH; "
-            "send a WAV upload or install ffmpeg."
+            "audio/mp4 and webm require ffmpeg on the server PATH. "
+            "Install ffmpeg (e.g. winget install ffmpeg), restart the shell, "
+            "or upload WAV instead."
         )
-    return _ffmpeg_to_wav(data, suffix=_suffix(name, ctype))
+    return _ffmpeg_to_wav(
+        data,
+        suffix=_suffix(name, ctype),
+        content_type=content_type or ctype,
+    )
 
 
 def _suffix(name: str, ctype: str) -> str:
@@ -62,34 +67,87 @@ def _suffix(name: str, ctype: str) -> str:
     return ".bin"
 
 
-def _ffmpeg_to_wav(data: bytes, *, suffix: str) -> bytes:
+def _is_mp4_like(suffix: str, content_type: str) -> bool:
+    ctype = (content_type or "").lower()
+    return suffix in (".mp4", ".m4a") or "mp4" in ctype or "m4a" in ctype
+
+
+def _ffmpeg_input_attempts(suffix: str, content_type: str) -> list[list[str]]:
+    """Default demux, then mp4-specific fallbacks for fragmented/browser blobs."""
+    attempts: list[list[str]] = [[]]
+    if _is_mp4_like(suffix, content_type):
+        attempts.append(["-f", "mov"])
+        attempts.append(["-analyzeduration", "0", "-probesize", "32k"])
+    return attempts
+
+
+def _stderr_tail(raw: bytes | str | None) -> str:
+    if raw is None:
+        return ""
+    text = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes) else raw
+    text = text.strip()
+    return text[-2000:] if len(text) > 2000 else text
+
+
+def _ffmpeg_to_wav(
+    data: bytes,
+    *,
+    suffix: str,
+    content_type: str = "",
+) -> bytes:
+    size = len(data)
+    ctype = content_type or ""
+    last_detail = ""
     with tempfile.TemporaryDirectory() as tmp:
         src = Path(tmp) / f"in{suffix}"
         dst = Path(tmp) / "out.wav"
         src.write_bytes(data)
-        cmd = [
-            "ffmpeg",
-            "-y",
-            "-i",
-            str(src),
-            "-ac",
-            "1",
-            "-ar",
-            "16000",
-            "-sample_fmt",
-            "s16",
-            str(dst),
-        ]
-        try:
-            subprocess.run(
-                cmd,
-                check=True,
-                capture_output=True,
-                timeout=30,
-            )
-        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-            raise UnsupportedAudio(f"ffmpeg conversion failed: {exc}") from exc
-        return dst.read_bytes()
+        for extra_in in _ffmpeg_input_attempts(suffix, ctype):
+            if dst.exists():
+                dst.unlink()
+            cmd = [
+                "ffmpeg",
+                "-y",
+                *extra_in,
+                "-i",
+                str(src),
+                "-ac",
+                "1",
+                "-ar",
+                "16000",
+                "-sample_fmt",
+                "s16",
+                str(dst),
+            ]
+            try:
+                subprocess.run(
+                    cmd,
+                    check=True,
+                    capture_output=True,
+                    timeout=30,
+                )
+                return dst.read_bytes()
+            except subprocess.CalledProcessError as exc:
+                last_detail = _stderr_tail(exc.stderr) or str(exc)
+                print(
+                    f"[voice] ffmpeg attempt failed extra_in={extra_in!r}: {last_detail}",
+                    flush=True,
+                )
+            except subprocess.TimeoutExpired as exc:
+                err_tail = _stderr_tail(exc.stderr)
+                last_detail = f"timed out after 30s{(': ' + err_tail) if err_tail else ''}"
+                print(
+                    f"[voice] ffmpeg attempt timed out extra_in={extra_in!r}",
+                    flush=True,
+                )
+                break
+
+    msg = (
+        f"ffmpeg conversion failed (content_type={ctype!r} size={size}): "
+        f"{last_detail or 'unknown error'}"
+    )
+    print(f"[voice] {msg}", flush=True)
+    raise UnsupportedAudio(msg)
 
 
 def _resample_wav_if_needed(data: bytes) -> bytes:
@@ -102,7 +160,7 @@ def _resample_wav_if_needed(data: bytes) -> bytes:
         return data
     # Prefer ffmpeg for resample when available.
     if shutil.which("ffmpeg"):
-        return _ffmpeg_to_wav(data, suffix=".wav")
+        return _ffmpeg_to_wav(data, suffix=".wav", content_type="audio/wav")
     if channels == 1 and width == 2:
         # Naive nearest-neighbor downsample for tests without ffmpeg.
         import array

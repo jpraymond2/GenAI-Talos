@@ -120,6 +120,8 @@ export interface RunState {
   status: RunStatus;
   round: number;
   question: string | null;
+  /** Spoken summary from the API (headline + points, ≤90 words). */
+  speech?: string;
 }
 
 /** Trace event shape from recall/tracing.py Tracer.event(). */

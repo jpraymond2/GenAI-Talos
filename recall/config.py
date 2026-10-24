@@ -131,6 +131,10 @@ class Settings(BaseSettings):
         default="",
         description="NVIDIA Cloud Functions id for Riva Parakeet ASR (NVCF function-id).",
     )
+    recall_api_token: SecretStr = Field(
+        default=SecretStr(""),
+        description="Bearer token required for /api/* and /ws/trace?token=.",
+    )
 
     http_timeout_seconds: float = Field(default=15.0, gt=0, le=15)
     llm_timeout_seconds: float = Field(default=30.0, gt=0, le=30)

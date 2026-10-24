@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import logging
+import threading
 import time
 import uuid
-from typing import Any
+from typing import Any, ClassVar
 
 import httpx
-
 from pydantic import SecretStr
 
 from recall.config import DataBackend, Settings, ZetarisReadMode
@@ -28,14 +29,25 @@ def _secret_text(value: SecretStr | str | None) -> str:
         return value.get_secret_value()
     return str(value)
 
+
 _ZETARIS_RETRIES = 2
 _DEFAULT_LIMIT = 1000
 _SQL_RUN_PATH = "/sql-editor/sqls/run"
 _LOGIN_PATH = "/api/auth/login"
+# When JWT has no exp claim, refresh login on this wall-clock TTL.
+_DEFAULT_TOKEN_TTL_S = 50 * 60
+_TOKEN_SKEW_S = 60
 
 
 class ZetarisBackend:
     """Remote Spark SQL reads against Zetaris ``sql-editor/sqls/run``."""
+
+    _shared_instance: ClassVar[ZetarisBackend | None] = None
+    _shared_lock: ClassVar[threading.Lock] = threading.Lock()
+    _http: ClassVar[httpx.Client | None] = None
+    _token: ClassVar[str | None] = None
+    _token_expires_at: ClassVar[float | None] = None
+    _auth_method_shared: ClassVar[str | None] = None
 
     def __init__(self, settings: Settings, tracer: Tracer | None = None) -> None:
         """Bind settings and an optional tracer for successful query events."""
@@ -43,7 +55,33 @@ class ZetarisBackend:
         self._tracer = tracer
         self._backend_name = "zetaris"
         self._cached_token: str | None = None
-        self._auth_method: str | None = None  # "api_key" | "login" (for smoke/diagnostics)
+        self._auth_method: str | None = None  # "api_key" | "login"
+
+    @classmethod
+    def shared(cls, settings: Settings, tracer: Tracer | None = None) -> ZetarisBackend:
+        """Reuse one backend so login token + keep-alive client span asks."""
+        with cls._shared_lock:
+            if cls._shared_instance is None:
+                cls._shared_instance = cls(settings, tracer=tracer)
+            else:
+                cls._shared_instance._settings = settings
+                cls._shared_instance._tracer = tracer
+            return cls._shared_instance
+
+    @classmethod
+    def clear_shared(cls) -> None:
+        """Drop process-wide client/token (tests / settings changes)."""
+        with cls._shared_lock:
+            if cls._http is not None:
+                try:
+                    cls._http.close()
+                except Exception:  # noqa: BLE001
+                    pass
+            cls._http = None
+            cls._token = None
+            cls._token_expires_at = None
+            cls._auth_method_shared = None
+            cls._shared_instance = None
 
     def query(
         self,
@@ -56,7 +94,6 @@ class ZetarisBackend:
         started = time.perf_counter()
         rest = self._rest_url()
         if self._settings.sample_mode:
-            # Sample data can live in Zetaris too: call when backend+URL are configured.
             if self._settings.data_backend is not DataBackend.ZETARIS or not rest:
                 raise DataUnavailable(
                     "Zetaris skipped in SAMPLE_MODE (need DATA_BACKEND=zetaris and ZETARIS_REST_URL)"
@@ -109,11 +146,7 @@ class ZetarisBackend:
         source_tag: str,
         timeout: float | None = None,
     ) -> dict[str, Any]:
-        """POST one SQL statement as-is (allows COMPILE USL internal semicolons).
-
-        Returns the full JSON payload. Does not apply ``:param`` binding or
-        ``recall.*`` schema rewriting. Never logs tokens.
-        """
+        """POST one SQL statement as-is (allows COMPILE USL internal semicolons)."""
         started = time.perf_counter()
         rest = self._rest_url()
         if not rest:
@@ -127,7 +160,6 @@ class ZetarisBackend:
         payload = self._request_payload_with_retries(
             rest, text, timeout=active_timeout, full_errors=True
         )
-        # DDL / Lightning commands often omit tabular headers — that is OK here.
         row_count = 0
         try:
             row_count = len(self._extract_rows(payload))
@@ -182,11 +214,6 @@ class ZetarisBackend:
                     break
         raise DataUnavailable(str(last_error) if last_error else "Zetaris request failed")
 
-    def _run_sql(self, rest: str, sql: str, *, timeout: float) -> list[dict[str, Any]]:
-        return self._extract_rows(
-            self._run_sql_payload(rest, sql, timeout=timeout, full_errors=False)
-        )
-
     def _run_sql_payload(
         self,
         rest: str,
@@ -205,13 +232,17 @@ class ZetarisBackend:
         }
         response = self._post_json(url, body, token=token, timeout=timeout)
 
-        # Known local bug: API key returns 400 {"msg":"Not Allowed"} — login and retry once.
         if response.status_code == 400 and self._is_not_allowed(response):
             logger.info("Zetaris API key rejected (Not Allowed); falling back to login token")
-            self._cached_token = None
+            self._clear_token()
             token = self._login(timeout=timeout)
-            self._cached_token = token
-            self._auth_method = "login"
+            self._store_token(token, method="login")
+            response = self._post_json(url, body, token=token, timeout=timeout)
+
+        if response.status_code in {401, 403}:
+            self._clear_token()
+            token = self._login(timeout=timeout)
+            self._store_token(token, method="login")
             response = self._post_json(url, body, token=token, timeout=timeout)
 
         if response.status_code >= 400:
@@ -226,16 +257,79 @@ class ZetarisBackend:
             raise DataUnavailable("Zetaris returned non-JSON") from exc
 
     def _resolve_token(self, *, timeout: float) -> str:
-        if self._cached_token:
+        if self._cached_token and self._token_still_valid():
             return self._cached_token
+        with type(self)._shared_lock:
+            shared = type(self)._token
+            if shared and self._shared_token_still_valid():
+                self._cached_token = shared
+                self._auth_method = type(self)._auth_method_shared
+                return shared
         api_key = _secret_text(self._settings.zetaris_api_key).strip()
         if api_key:
-            self._auth_method = "api_key"
+            self._store_token(api_key, method="api_key", expires_at=None)
             return api_key
         token = self._login(timeout=timeout)
-        self._cached_token = token
-        self._auth_method = "login"
+        self._store_token(token, method="login")
         return token
+
+    def _token_still_valid(self) -> bool:
+        exp = type(self)._token_expires_at
+        if exp is None:
+            return bool(self._cached_token)
+        return time.time() < (exp - _TOKEN_SKEW_S)
+
+    def _shared_token_still_valid(self) -> bool:
+        if type(self)._token is None:
+            return False
+        exp = type(self)._token_expires_at
+        if exp is None:
+            return True
+        return time.time() < (exp - _TOKEN_SKEW_S)
+
+    def _store_token(
+        self,
+        token: str,
+        *,
+        method: str,
+        expires_at: float | None | object = ...,
+    ) -> None:
+        resolved: float | None
+        if expires_at is ...:
+            resolved = _infer_token_expiry(token)
+        elif expires_at is None:
+            resolved = None
+        else:
+            resolved = float(expires_at)  # type: ignore[arg-type]
+        with type(self)._shared_lock:
+            type(self)._token = token
+            type(self)._token_expires_at = resolved
+            type(self)._auth_method_shared = method
+        self._cached_token = token
+        self._auth_method = method
+
+    def _clear_token(self) -> None:
+        with type(self)._shared_lock:
+            type(self)._token = None
+            type(self)._token_expires_at = None
+            type(self)._auth_method_shared = None
+        self._cached_token = None
+        self._auth_method = None
+
+    def _http_client(self, timeout: float) -> httpx.Client:
+        with type(self)._shared_lock:
+            client = type(self)._http
+            if client is None or client.is_closed:
+                type(self)._http = httpx.Client(
+                    timeout=timeout,
+                    limits=httpx.Limits(
+                        max_keepalive_connections=8,
+                        max_connections=16,
+                        keepalive_expiry=30.0,
+                    ),
+                )
+            assert type(self)._http is not None
+            return type(self)._http
 
     def _login(self, *, timeout: float) -> str:
         base = self._base_url()
@@ -246,14 +340,13 @@ class ZetarisBackend:
         if not user or not password:
             raise DataUnavailable("Zetaris login requires ZETARIS_USER and ZETARIS_PASSWORD")
         url = f"{base}{_LOGIN_PATH}"
-        # Never log username/password/token.
         try:
-            with httpx.Client(timeout=timeout) as client:
-                response = client.post(
-                    url,
-                    json={"username": user, "password": password},
-                    headers={"Content-Type": "application/json", "Accept": "application/json"},
-                )
+            client = self._http_client(timeout)
+            response = client.post(
+                url,
+                json={"username": user, "password": password},
+                headers={"Content-Type": "application/json", "Accept": "application/json"},
+            )
         except httpx.HTTPError as exc:
             raise DataUnavailable(f"Zetaris login transport error: {type(exc).__name__}") from exc
         if response.status_code >= 400:
@@ -290,8 +383,8 @@ class ZetarisBackend:
             "Accept": "application/json",
         }
         try:
-            with httpx.Client(timeout=timeout) as client:
-                return client.post(url, json=body, headers=headers)
+            client = self._http_client(timeout)
+            return client.post(url, json=body, headers=headers)
         except httpx.HTTPError as exc:
             raise DataUnavailable(f"Zetaris transport error: {type(exc).__name__}") from exc
 
@@ -339,7 +432,6 @@ class ZetarisBackend:
     def _extract_rows(payload: Any) -> list[dict[str, Any]]:
         if not isinstance(payload, dict):
             raise DataUnavailable("Zetaris response must be a JSON object")
-        # Prefer documented "headers"; accept a few alternate shapes seen in the wild.
         headers = (
             payload.get("headers")
             or payload.get("columns")
@@ -381,7 +473,6 @@ class ZetarisBackend:
         rows: list[dict[str, Any]] = []
         for raw in data:
             if isinstance(raw, dict):
-                # Some proxies return objects; coerce to header order as strings.
                 rows.append(
                     {
                         name: None if raw.get(name) is None else str(raw.get(name))
@@ -391,7 +482,6 @@ class ZetarisBackend:
                 continue
             if not isinstance(raw, list):
                 raise DataUnavailable("Zetaris data rows must be arrays")
-            # Pad / trim to header width; keep values as strings (API contract).
             cells: list[Any] = []
             for index in range(len(names)):
                 if index < len(raw):
@@ -401,3 +491,17 @@ class ZetarisBackend:
                     cells.append(None)
             rows.append(dict(zip(names, cells, strict=True)))
         return rows
+
+
+def _infer_token_expiry(token: str) -> float:
+    """Parse JWT ``exp`` when present; otherwise use a conservative TTL."""
+    try:
+        parts = token.split(".")
+        if len(parts) >= 2:
+            pad = "=" * (-len(parts[1]) % 4)
+            payload = json.loads(base64.urlsafe_b64decode(parts[1] + pad))
+            if isinstance(payload, dict) and payload.get("exp") is not None:
+                return float(payload["exp"])
+    except Exception:  # noqa: BLE001
+        pass
+    return time.time() + _DEFAULT_TOKEN_TTL_S

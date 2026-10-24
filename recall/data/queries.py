@@ -194,7 +194,8 @@ def interactions_for_handles(
     layer: QueryLayer | None = None,
 ) -> list[InteractionRow]:
     """Return newest-first interactions for the given handle values."""
-    if not handle_values:
+    cleaned = _unique_handle_values(handle_values)
+    if not cleaned:
         return []
     active = settings if settings is not None else get_settings()
     ql = _resolve_layer(layer)
@@ -203,13 +204,82 @@ def interactions_for_handles(
     rows = ql.query(
         _INTERACTIONS_SQL,
         {
-            "handle_values": list(handle_values),
+            "handle_values": cleaned,
             "since_ts": since_ts,
             "limit_n": int(limit),
         },
         source_tag=source_tag,
     )
     return [InteractionRow.model_validate(_stringify_row(row)) for row in rows]
+
+
+def collect_entity_handle_values(
+    aliases: list[str],
+    *,
+    linked_handle_values: list[str] | None = None,
+) -> list[str]:
+    """Expand entity aliases + linked handles into SQL ``IN`` candidates.
+
+    Includes lowercased copies and phone digit forms so Zetaris can filter
+    instead of returning the full interactions table.
+    """
+    values: list[str] = []
+    for raw in [*aliases, *(linked_handle_values or [])]:
+        text = str(raw or "").strip()
+        if not text:
+            continue
+        values.append(text)
+        values.append(text.lower())
+        local = text.split("@", 1)[0]
+        digits = re.sub(r"\D", "", local)
+        if len(digits) >= 7:
+            values.append(digits)
+            values.append(f"+{digits}")
+            if text.endswith("@s.whatsapp.net") or "whatsapp" in text.lower():
+                values.append(f"{digits}@s.whatsapp.net")
+    return _unique_handle_values(values)
+
+
+def interactions_for_entity_handles(
+    aliases: list[str],
+    *,
+    source_tag: str,
+    linked_handle_values: list[str] | None = None,
+    since_days: int = 400,
+    limit: int = 200,
+    now: datetime | None = None,
+    settings: Settings | None = None,
+    layer: QueryLayer | None = None,
+) -> list[InteractionRow]:
+    """Scoped interactions for one person (handle IN + date window + LIMIT)."""
+    return interactions_for_handles(
+        collect_entity_handle_values(
+            aliases, linked_handle_values=linked_handle_values
+        ),
+        source_tag=source_tag,
+        since_days=since_days,
+        limit=limit,
+        now=now,
+        settings=settings,
+        layer=layer,
+    )
+
+
+def _unique_handle_values(handle_values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for raw in handle_values:
+        text = str(raw or "").strip()
+        if not text:
+            continue
+        key = text.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(text)
+    # Stable order so CachingQueryLayer keys match across callers.
+    out.sort(key=str.lower)
+    return out
 
 
 def upcoming_and_past_events(

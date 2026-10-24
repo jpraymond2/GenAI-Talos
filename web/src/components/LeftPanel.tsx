@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { isMockMode, sendVoice } from "../api";
+import {
+  MIN_HOLD_MS,
+  MIN_RECORDING_BYTES,
+  pickRecorderMime,
+} from "../recorderMime";
 import { unlockSpeech } from "../speech";
 import type { TranscriptEntry } from "../types";
 
@@ -27,14 +32,35 @@ export function LeftPanel({
   const streamRef = useRef<MediaStream | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const holdingRef = useRef(false);
+  const holdStartedAtRef = useRef(0);
+  const talkBtnRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
 
+  // iOS registers React onTouchStart as passive; preventDefault needs { passive: false }.
+  useEffect(() => {
+    const el = talkBtnRef.current;
+    if (!el) return;
+    const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+    const onContextMenu = (e: Event) => {
+      e.preventDefault();
+    };
+    el.addEventListener("touchstart", onTouchStart, { passive: false });
+    el.addEventListener("contextmenu", onContextMenu);
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("contextmenu", onContextMenu);
+    };
+  }, []);
+
   async function startHold() {
     if (busy || holdingRef.current) return;
     holdingRef.current = true;
+    holdStartedAtRef.current = performance.now();
     unlockSpeech();
     setVoiceHint(null);
 
@@ -46,19 +72,19 @@ export function LeftPanel({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm";
+      const mime = pickRecorderMime();
       const recorder = new MediaRecorder(stream, { mimeType: mime });
       chunksRef.current = [];
       recorder.ondataavailable = (e) => {
-        if (e.data.size) chunksRef.current.push(e.data);
+        chunksRef.current.push(e.data);
       };
       mediaRef.current = recorder;
-      recorder.start(100);
+      // No timeslice: one complete container on stop (required for iOS mp4).
+      recorder.start();
       setRecording(true);
     } catch {
       holdingRef.current = false;
+      holdStartedAtRef.current = 0;
       setVoiceHint("Microphone permission denied.");
     }
   }
@@ -67,10 +93,16 @@ export function LeftPanel({
     if (!holdingRef.current) return;
     holdingRef.current = false;
     setRecording(false);
+    const heldMs = performance.now() - holdStartedAtRef.current;
+    holdStartedAtRef.current = 0;
 
     if (isMockMode()) {
-      const result = await sendVoice(new Blob());
-      const transcriptText = result?.transcript;
+      const outcome = await sendVoice(new Blob());
+      if (!outcome.ok) {
+        setVoiceHint(outcome.error);
+        return;
+      }
+      const transcriptText = outcome.data.transcript;
       if (transcriptText) {
         if (onVoiceResult) onVoiceResult(transcriptText);
         else onSubmit(transcriptText);
@@ -84,7 +116,11 @@ export function LeftPanel({
 
     const blob = await new Promise<Blob>((resolve) => {
       recorder.onstop = () => {
-        resolve(new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" }));
+        resolve(
+          new Blob(chunksRef.current, {
+            type: recorder.mimeType || pickRecorderMime(),
+          }),
+        );
       };
       try {
         recorder.stop();
@@ -94,15 +130,21 @@ export function LeftPanel({
     });
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
+    chunksRef.current = [];
 
-    if (!blob.size) {
-      setVoiceHint("No audio captured.");
+    if (heldMs < MIN_HOLD_MS || blob.size < MIN_RECORDING_BYTES) {
+      setVoiceHint("Hold a bit longer");
       return;
     }
-    const result = await sendVoice(blob);
-    if (result?.transcript) {
-      if (onVoiceResult) onVoiceResult(result.transcript);
-      else onSubmit(result.transcript);
+    const outcome = await sendVoice(blob);
+    if (!outcome.ok) {
+      setVoiceHint(outcome.error);
+      return;
+    }
+    const transcriptText = outcome.data.transcript;
+    if (transcriptText) {
+      if (onVoiceResult) onVoiceResult(transcriptText);
+      else onSubmit(transcriptText);
     } else {
       setVoiceHint("Voice endpoint returned no transcript.");
     }
@@ -135,25 +177,39 @@ export function LeftPanel({
 
       <div className="flex flex-1 flex-col items-center justify-center py-4">
         <button
+          ref={talkBtnRef}
           type="button"
           disabled={busy}
           onPointerDown={(e) => {
             e.preventDefault();
-            (e.currentTarget as HTMLButtonElement).setPointerCapture(e.pointerId);
+            e.currentTarget.setPointerCapture(e.pointerId);
             void startHold();
           }}
           onPointerUp={() => void endHold()}
           onPointerCancel={() => void endHold()}
-          onPointerLeave={() => {
-            if (holdingRef.current) void endHold();
+          onContextMenu={(e) => e.preventDefault()}
+          style={{
+            userSelect: "none",
+            WebkitUserSelect: "none",
+            WebkitTouchCallout: "none",
+            WebkitTapHighlightColor: "transparent",
+            touchAction: "none",
           }}
-          className={`relative flex h-36 w-36 select-none flex-col items-center justify-center rounded-full border-4 border-sea-500/30 bg-gradient-to-b from-sea-500 to-sea-600 text-white shadow-lg transition hover:brightness-110 disabled:opacity-60 ${
+          className={`relative flex h-36 w-36 select-none touch-none flex-col items-center justify-center rounded-full border-4 border-sea-500/30 bg-gradient-to-b from-sea-500 to-sea-600 text-white shadow-lg transition hover:brightness-110 disabled:opacity-60 ${
             recording ? "recording-pulse" : ""
           }`}
           aria-pressed={recording}
         >
           <MicIcon />
-          <span className="mt-2 text-xs font-semibold uppercase tracking-wider">
+          <span
+            className="mt-2 select-none text-xs font-semibold uppercase tracking-wider"
+            style={{
+              userSelect: "none",
+              WebkitUserSelect: "none",
+              WebkitTouchCallout: "none",
+              WebkitTapHighlightColor: "transparent",
+            }}
+          >
             {recording ? "Listening" : "Hold to talk"}
           </span>
         </button>

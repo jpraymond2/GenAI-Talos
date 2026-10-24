@@ -56,13 +56,21 @@ def client() -> TestClient:
     return TestClient(app)
 
 
-def test_api_ask_returns_run_state(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_ask_returns_run_state(
+    client: TestClient,
+    api_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     expected = _done_state()
     monkeypatch.setattr(
         "recall.orchestrator.run",
         AsyncMock(return_value=expected),
     )
-    response = client.post("/api/ask", json={"text": "I'm meeting Karim Haddad"})
+    response = client.post(
+        "/api/ask",
+        headers=api_headers,
+        json={"text": "I'm meeting Karim Haddad"},
+    )
     assert response.status_code == 200
     body = response.json()
     assert body["run_id"] == "run-test-1"
@@ -70,17 +78,23 @@ def test_api_ask_returns_run_state(client: TestClient, monkeypatch: pytest.Monke
     assert body["entity_id"] == "karim-haddad"
     assert body["final_brief"]["headline"] == "Catch up with Karim"
     assert body["question"] is None
+    assert "speech" in body
     assert isinstance(body["candidates"], list)
     assert isinstance(body["evidence"], dict)
     assert isinstance(body["verdicts"], list)
     assert body["action_plan"] is None
 
 
-def test_api_ask_passes_entity_id(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_ask_passes_entity_id(
+    client: TestClient,
+    api_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     mock_run = AsyncMock(return_value=_done_state(entity_id="karim-saleh"))
     monkeypatch.setattr("recall.orchestrator.run", mock_run)
     response = client.post(
         "/api/ask",
+        headers=api_headers,
         json={"text": "I'm meeting Karim", "entity_id": "karim-saleh"},
     )
     assert response.status_code == 200
@@ -88,16 +102,23 @@ def test_api_ask_passes_entity_id(client: TestClient, monkeypatch: pytest.Monkey
     assert mock_run.await_args.kwargs.get("entity_id") == "karim-saleh"
 
 
-def test_api_confirm_not_implemented(client: TestClient) -> None:
+def test_api_confirm_not_implemented(
+    client: TestClient, api_headers: dict[str, str]
+) -> None:
     response = client.post(
         "/api/confirm",
+        headers=api_headers,
         json={"run_id": "run-test-1", "confirmed": True},
     )
     assert response.status_code == 200
     assert response.json()["status"] == "not_implemented"
 
 
-def test_api_person(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_person(
+    client: TestClient,
+    api_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr(
         "recall.engines.world.world.person_context",
         lambda entity_id, budget_tokens=1500: {
@@ -107,19 +128,27 @@ def test_api_person(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None
         },
     )
     monkeypatch.setattr("recall.engines.world.world.reset", lambda: None)
-    response = client.get("/api/person/karim-haddad")
+    response = client.get("/api/person/karim-haddad", headers=api_headers)
     assert response.status_code == 200
     assert response.json()["entity"]["canonical_name"] == "Karim Haddad"
 
 
-def test_api_person_404(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_person_404(
+    client: TestClient,
+    api_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr("recall.engines.world.world.person_context", lambda *_a, **_k: {})
     monkeypatch.setattr("recall.engines.world.world.reset", lambda: None)
-    response = client.get("/api/person/missing")
+    response = client.get("/api/person/missing", headers=api_headers)
     assert response.status_code == 404
 
 
-def test_api_memories(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_memories(
+    client: TestClient,
+    api_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr("recall.engines.hmem.hmem.reset", lambda: None)
     monkeypatch.setattr(
         "recall.engines.hmem.retrieve",
@@ -130,13 +159,17 @@ def test_api_memories(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> No
             "strategy": "hybrid",
         },
     )
-    response = client.get("/api/memories/karim-haddad")
+    response = client.get("/api/memories/karim-haddad", headers=api_headers)
     assert response.status_code == 200
     body = response.json()
     assert body["memories"][0]["content"] == "Seed round"
 
 
-def test_api_ask_clarification_shape(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_ask_clarification_shape(
+    client: TestClient,
+    api_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     state = _done_state(
         status="needs_clarification",
         entity_id=None,
@@ -149,9 +182,14 @@ def test_api_ask_clarification_shape(client: TestClient, monkeypatch: pytest.Mon
         ],
     )
     monkeypatch.setattr("recall.orchestrator.run", AsyncMock(return_value=state))
-    response = client.post("/api/ask", json={"text": "I'm meeting Karim"})
+    response = client.post(
+        "/api/ask",
+        headers=api_headers,
+        json={"text": "I'm meeting Karim"},
+    )
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "needs_clarification"
     assert len(body["candidates"]) == 2
     assert body["question"]
+    assert body["speech"]

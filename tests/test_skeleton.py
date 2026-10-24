@@ -76,7 +76,7 @@ def test_health() -> None:
 
 def test_trace_socket_accepts() -> None:
     client = TestClient(api)
-    with client.websocket_connect("/ws/trace") as websocket:
+    with client.websocket_connect("/ws/trace?token=test-token-recall") as websocket:
         websocket.close()
 
 
