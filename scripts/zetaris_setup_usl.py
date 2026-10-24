@@ -38,12 +38,28 @@ assert _USL_PATH == f"{_NS}.{_USL}"
 assert USL_COLUMN_RENAMES["contact"]["org"] == "organisation"
 _ADMIN_TIMEOUT = 120.0
 
-_EXPECTED = {
-    "contact": 10,
-    "handle": 30,
-    "interaction": 400,
-    "event": 25,
+# USL logical table -> data/sample CSV (row counts come from the files).
+_SAMPLE_CSV_BY_LOGICAL = {
+    "contact": "contacts.csv",
+    "handle": "handles.csv",
+    "interaction": "interactions.csv",
+    "event": "events.csv",
 }
+
+
+def _expected_from_sample(sample_dir: Path) -> dict[str, int]:
+    """Count data rows in sample CSVs (header excluded)."""
+    import csv
+
+    out: dict[str, int] = {}
+    for logical, filename in _SAMPLE_CSV_BY_LOGICAL.items():
+        path = sample_dir / filename
+        if not path.is_file():
+            raise FileNotFoundError(f"missing sample CSV: {path}")
+        with path.open(encoding="utf-8", newline="") as fh:
+            rows = list(csv.reader(fh))
+        out[logical] = max(0, len(rows) - 1) if rows else 0
+    return out
 
 
 @dataclass(frozen=True)
@@ -138,10 +154,11 @@ def main() -> int:
         for rule_name, fq_table, _predicate in variant.dq:
             _run_dq(backend, rule_name, fq_table)
 
+        expected_counts = _expected_from_sample(Path(settings.sample_data_dir))
         print("USL row counts:")
         all_ok = True
         for logical, (fq_table, _) in variant.tables.items():
-            expected = _EXPECTED[logical]
+            expected = expected_counts[logical]
             count = _count(backend, fq_table)
             status = "PASS" if count == expected else "FAIL"
             if status == "FAIL":
@@ -154,6 +171,9 @@ def main() -> int:
         print("USL setup complete.")
         return 0
     except DataUnavailable as exc:
+        print(f"STOP:\n{exc}")
+        return 1
+    except FileNotFoundError as exc:
         print(f"STOP:\n{exc}")
         return 1
 
