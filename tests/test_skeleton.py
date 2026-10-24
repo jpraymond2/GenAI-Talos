@@ -91,9 +91,13 @@ def test_sample_backends_return_same_rows(
     logs = tmp_path / "logs"
     monkeypatch.setenv("LOGS_DIR", str(logs))
     monkeypatch.setenv("SAMPLE_MODE", "true")
-    monkeypatch.delenv("ZETARIS_URL", raising=False)
-    monkeypatch.delenv("ZETARIS_REST_URL", raising=False)
+    # Empty string beats .env (delenv alone still loads ZETARIS_* from the file).
+    monkeypatch.setenv("ZETARIS_URL", "")
+    monkeypatch.setenv("ZETARIS_REST_URL", "")
     get_settings.cache_clear()
+    from recall.data.query_layer import clear_default_query_layer
+
+    clear_default_query_layer()
 
     sql = "SELECT handle_id, kind, value FROM recall.handles ORDER BY handle_id"
     tracer = Tracer(logs_dir=logs)

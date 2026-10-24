@@ -16,12 +16,16 @@ from recall.llm.generator import reset_client
 def test_identity_bench_all_pass(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Run the full identity scenario bench and require 10/10."""
     monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("DATA_BACKEND", "duckdb")
     monkeypatch.setenv("NVIDIA_API_KEY", "")
     monkeypatch.setenv("LOGS_DIR", str(tmp_path / "logs"))
     get_settings.cache_clear()
     reset_client()
     world.reset()
     DuckDBBackend.clear_connection_cache()
+    from recall.data.query_layer import clear_default_query_layer
+
+    clear_default_query_layer()
 
     work = tmp_path / "bench_work"
     payload = run_bench(work_root=work)
