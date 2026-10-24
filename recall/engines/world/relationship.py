@@ -17,6 +17,7 @@ from recall.data.queries import (
     InteractionRow,
     all_events_in_window,
     all_interactions,
+    interactions_for_entity_handles,
     resolve_now,
 )
 from recall.data.query_layer import QueryLayer, get_query_layer
@@ -110,7 +111,17 @@ def classify_relationship(
             run_id=rid,
         )
 
-    rows = _interactions_for_entity(entity, layer=layer, settings=active)
+    linked_values = [
+        str(row.get("handle_value") or "")
+        for row in world.list_handle_links(entity_id=entity_id)
+        if row.get("handle_value")
+    ]
+    rows = _interactions_for_entity(
+        entity,
+        layer=layer,
+        settings=active,
+        linked_handle_values=linked_values,
+    )
     if prior is not None and not force:
         delta = len(rows) - int(prior.interaction_count_at_assess)
         if delta < REASSESS_NEW_INTERACTIONS and prior.status == "auto":
@@ -586,15 +597,21 @@ def _interactions_for_entity(
     *,
     layer: QueryLayer,
     settings: Settings,
+    linked_handle_values: list[str] | None = None,
 ) -> list[InteractionRow]:
-    handles = _entity_handle_set(entity)
-    rows = all_interactions(
+    """Load interactions for one entity via SQL handle filter (not full table)."""
+    aliases = list(getattr(entity, "aliases", []) or [])
+    # Same handle expansion + LIMIT as person_context so CachingQueryLayer dedupes.
+    rows = interactions_for_entity_handles(
+        aliases,
         source_tag="world.relationship.interactions",
+        linked_handle_values=linked_handle_values,
         since_days=400,
-        limit=5000,
+        limit=200,
         settings=settings,
         layer=layer,
     )
+    handles = _entity_handle_set(entity)
     return [r for r in rows if _row_matches_handles(r, handles)]
 
 

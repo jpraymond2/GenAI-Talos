@@ -12,8 +12,16 @@ from recall.data.query_layer import clear_default_query_layer
 def _force_duckdb_backend(monkeypatch: pytest.MonkeyPatch) -> None:
     """Default every test to DuckDB; individual tests may still monkeypatch zetaris."""
     monkeypatch.setenv("DATA_BACKEND", "duckdb")
+    monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("RECALL_API_TOKEN", "test-token-recall")
     get_settings.cache_clear()
     clear_default_query_layer()
     yield
     clear_default_query_layer()
     get_settings.cache_clear()
+
+
+@pytest.fixture()
+def api_headers() -> dict[str, str]:
+    """Authorization header matching the autouse test token."""
+    return {"Authorization": "Bearer test-token-recall"}

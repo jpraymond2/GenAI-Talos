@@ -1,5 +1,7 @@
+import { authHeaders, ensureApiToken, getApiToken } from "./auth";
 import { karimLedger, karimMemories, karimPerson } from "./mock/person";
 import { pickScenario } from "./mock/scenarios";
+import { recordingFilename } from "./recorderMime";
 import type {
   LedgerEvent,
   MemoryItem,
@@ -76,8 +78,10 @@ function replayTraces(traces: TraceEvent[], gapMs = 280): Promise<void> {
 
 function connectLiveTrace(): void {
   if (liveSocket || typeof window === "undefined") return;
+  const token = ensureApiToken();
   const proto = window.location.protocol === "https:" ? "wss" : "ws";
-  const url = `${proto}://${window.location.host}/ws/trace`;
+  const q = token ? `?token=${encodeURIComponent(token)}` : "";
+  const url = `${proto}://${window.location.host}/ws/trace${q}`;
   try {
     liveSocket = new WebSocket(url);
     liveSocket.onmessage = (msg) => {
@@ -140,8 +144,13 @@ function mapMemories(raw: Record<string, unknown>): MemoryItem[] {
   }));
 }
 
-/** POST /api/ask { text, entity_id? } — or mock replay when VITE_MOCK / unreachable. */
-export async function ask(text: string, entityId?: string | null): Promise<RunState> {
+/** POST /api/ask { text, run_id?, entity_id? }. */
+export async function ask(
+  text: string,
+  opts?: { entityId?: string | null; runId?: string | null },
+): Promise<RunState> {
+  const entityId = opts?.entityId;
+  const runId = opts?.runId;
   const mock = await shouldMock();
   if (mock) {
     const key =
@@ -157,10 +166,17 @@ export async function ask(text: string, entityId?: string | null): Promise<RunSt
   connectLiveTrace();
   const res = await fetch("/api/ask", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, entity_id: entityId ?? null }),
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({
+      text,
+      entity_id: entityId ?? null,
+      run_id: runId ?? null,
+    }),
   });
   if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error("Unauthorized — check RECALL_API_TOKEN");
+    }
     forceMock = true;
     const { state, traces } = pickScenario(text);
     void replayTraces(traces);
@@ -169,7 +185,7 @@ export async function ask(text: string, entityId?: string | null): Promise<RunSt
   return (await res.json()) as RunState;
 }
 
-/** POST /api/confirm { run_id, confirmed } — actions dry-run when implemented. */
+/** POST /api/confirm { run_id, confirmed }. */
 export async function confirm(payload: {
   run_id: string;
   confirmed: boolean;
@@ -184,7 +200,7 @@ export async function confirm(payload: {
   connectLiveTrace();
   const res = await fetch("/api/confirm", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -193,19 +209,21 @@ export async function confirm(payload: {
   return (await res.json()) as { status: string; run_id?: string };
 }
 
-/** GET /api/person/{entity_id} — mock Karim when offline. */
+/** GET /api/person/{entity_id}. */
 export async function fetchPerson(entityId: string): Promise<PersonView | null> {
   if (await shouldMock()) {
     if (!entityId || entityId === "karim-haddad") return structuredClone(karimPerson);
     return null;
   }
-  const res = await fetch(`/api/person/${encodeURIComponent(entityId)}`);
+  const res = await fetch(`/api/person/${encodeURIComponent(entityId)}`, {
+    headers: authHeaders(),
+  });
   if (res.status === 404) return null;
   if (!res.ok) return null;
   return mapPersonContext((await res.json()) as Record<string, unknown>);
 }
 
-/** GET /api/memories/{entity_id} — mock Karim memories when offline. */
+/** GET /api/memories/{entity_id}. */
 export async function fetchMemories(
   entityId: string,
 ): Promise<{ memories: MemoryItem[]; ledger: LedgerEvent[] }> {
@@ -218,7 +236,9 @@ export async function fetchMemories(
     }
     return { memories: [], ledger: [] };
   }
-  const res = await fetch(`/api/memories/${encodeURIComponent(entityId)}`);
+  const res = await fetch(`/api/memories/${encodeURIComponent(entityId)}`, {
+    headers: authHeaders(),
+  });
   if (!res.ok) return { memories: [], ledger: [] };
   return {
     memories: mapMemories((await res.json()) as Record<string, unknown>),
@@ -226,31 +246,82 @@ export async function fetchMemories(
   };
 }
 
-export interface VoiceResult {
+export interface VoiceResult extends Partial<RunState> {
   transcript: string;
   engine?: string;
   speech?: string;
-  status?: string;
-  headline?: string;
-  points?: string[];
-  question?: string;
+  voice_timing?: Record<string, number | string>;
 }
 
-/** MediaRecorder blob → POST /api/voice (mock returns fixed transcript). */
-export async function sendVoice(blob: Blob): Promise<VoiceResult | null> {
+export type SendVoiceOutcome =
+  | { ok: true; data: VoiceResult }
+  | { ok: false; error: string };
+
+function formatHttpDetail(status: number, body: unknown): string {
+  if (body && typeof body === "object" && "detail" in body) {
+    const detail = (body as { detail: unknown }).detail;
+    if (typeof detail === "string" && detail.trim()) {
+      return `${status}: ${detail}`;
+    }
+    if (Array.isArray(detail)) {
+      const parts = detail
+        .map((item) =>
+          item && typeof item === "object" && "msg" in item
+            ? String((item as { msg: unknown }).msg)
+            : JSON.stringify(item),
+        )
+        .filter(Boolean);
+      if (parts.length) return `${status}: ${parts.join("; ")}`;
+    }
+  }
+  return `${status}: Voice upload failed`;
+}
+
+/** MediaRecorder blob → POST /api/voice (same ask JSON + transcript). */
+export async function sendVoice(
+  blob: Blob,
+  opts?: { runId?: string | null },
+): Promise<SendVoiceOutcome> {
   if (await shouldMock()) {
-    return { transcript: MOCK_VOICE_TRANSCRIPT, engine: "sample" };
+    return {
+      ok: true,
+      data: { transcript: MOCK_VOICE_TRANSCRIPT, engine: "sample" },
+    };
   }
   const body = new FormData();
-  const ext = blob.type.includes("mp4") ? "mp4" : "webm";
-  body.append("audio", blob, `utterance.${ext}`);
-  const res = await fetch("/api/voice", { method: "POST", body });
-  if (!res.ok) return null;
-  const data = (await res.json()) as VoiceResult;
-  if (!data.transcript) return null;
-  return data;
+  body.append("audio", blob, recordingFilename(blob.type || "audio/webm"));
+  if (opts?.runId) body.append("run_id", opts.runId);
+  let res: Response;
+  try {
+    res = await fetch("/api/voice", {
+      method: "POST",
+      headers: authHeaders(),
+      body,
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "network error";
+    return { ok: false, error: `Voice upload failed: ${msg}` };
+  }
+  let parsed: unknown = null;
+  try {
+    parsed = await res.json();
+  } catch {
+    parsed = null;
+  }
+  if (!res.ok) {
+    return { ok: false, error: formatHttpDetail(res.status, parsed) };
+  }
+  const data = parsed as VoiceResult;
+  if (!data?.transcript) {
+    return { ok: false, error: "Voice endpoint returned no transcript." };
+  }
+  return { ok: true, data };
 }
 
 export function isMockMode(): boolean {
   return useMock();
+}
+
+export function hasApiTokenConfigured(): boolean {
+  return Boolean(getApiToken());
 }

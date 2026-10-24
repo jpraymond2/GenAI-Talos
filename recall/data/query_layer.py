@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import time
 from typing import Any, Protocol
 
@@ -25,6 +26,37 @@ class QueryLayer(Protocol):
     ) -> list[dict[str, Any]]:
         """Run one read and return rows as dictionaries."""
         ...
+
+
+class CachingQueryLayer:
+    """Deduplicate identical SQL+params within one request / layer lifetime."""
+
+    def __init__(self, inner: QueryLayer) -> None:
+        self._inner = inner
+        self._cache: dict[str, list[dict[str, Any]]] = {}
+
+    def query(
+        self,
+        sql: str,
+        params: dict[str, Any] | None = None,
+        *,
+        source_tag: str,
+    ) -> list[dict[str, Any]]:
+        key = _query_cache_key(sql, params)
+        hit = self._cache.get(key)
+        if hit is not None:
+            return [dict(row) for row in hit]
+        rows = self._inner.query(sql, params, source_tag=source_tag)
+        self._cache[key] = [dict(row) for row in rows]
+        return [dict(row) for row in rows]
+
+
+def _query_cache_key(sql: str, params: dict[str, Any] | None) -> str:
+    return json.dumps(
+        {"sql": sql.strip(), "params": params or {}},
+        sort_keys=True,
+        default=str,
+    )
 
 
 class FallbackQueryLayer:
@@ -87,9 +119,11 @@ def get_query_layer(
 
     duck = DuckDBBackend(active, tracer=active_tracer)
     if active.data_backend is DataBackend.ZETARIS:
-        primary = ZetarisBackend(active, tracer=active_tracer)
-        return FallbackQueryLayer(primary, duck, active_tracer)
-    return duck
+        # Process-wide Zetaris backend so login token + HTTP keep-alive persist
+        # across asks; wrap with a fresh per-call cache for SQL dedupe.
+        primary = ZetarisBackend.shared(active, tracer=active_tracer)
+        return CachingQueryLayer(FallbackQueryLayer(primary, duck, active_tracer))
+    return CachingQueryLayer(duck)
 
 
 def get_default_query_layer() -> QueryLayer:
@@ -104,6 +138,9 @@ def clear_default_query_layer() -> None:
     """Drop the cached default layer (tests that change settings/env)."""
     global _default_layer
     _default_layer = None
+    from recall.data.zetaris_backend import ZetarisBackend
+
+    ZetarisBackend.clear_shared()
 
 
 def timed_query_event(

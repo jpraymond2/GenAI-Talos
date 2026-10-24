@@ -12,7 +12,7 @@ from recall.config import Settings, get_settings
 from recall.data.queries import (
     InteractionRow,
     all_events_in_window,
-    all_interactions,
+    interactions_for_entity_handles,
     resolve_now,
 )
 from recall.data.query_layer import QueryLayer, get_query_layer
@@ -113,29 +113,22 @@ class ContextBuilderService:
             return {}
 
         layer = self._ql()
-        handle_values = [
-            a
-            for a in entity.aliases
-            if "@" in a or a.startswith("+") or "whatsapp.net" in a
+        handle_links = self._store.list_handle_links(entity_id=entity_id)
+        linked_values = [
+            str(row.get("handle_value") or "")
+            for row in handle_links
+            if row.get("handle_value")
         ]
-        # Include display-name aliases only as interaction handle_values when they appear as such.
-        interactions = all_interactions(
+        # Push entity handles + date window + LIMIT into SQL (no full-table fetch).
+        related = interactions_for_entity_handles(
+            list(entity.aliases),
             source_tag="world.context.interactions",
+            linked_handle_values=linked_values,
             since_days=400,
-            limit=5000,
+            limit=200,
             settings=self._settings,
             layer=layer,
         )
-        phone_norms = {re.sub(r"\D", "", a) for a in handle_values if a.startswith("+") or a.isdigit()}
-
-        def matches_entity(row: InteractionRow) -> bool:
-            hv = row.handle_value
-            if hv in handle_values or hv in entity.aliases:
-                return True
-            digits = re.sub(r"\D", "", hv.split("@", 1)[0])
-            return bool(digits and digits in phone_norms)
-
-        related = [row for row in interactions if matches_entity(row)]
         related.sort(key=lambda r: r.ts_utc, reverse=True)
 
         last_per_source: dict[str, dict[str, Any]] = {}
@@ -193,7 +186,6 @@ class ContextBuilderService:
         past.sort(key=lambda e: e["start_utc"], reverse=True)
 
         conflicts = self._store.list_conflicts(entity_id)
-        handle_links = self._store.list_handle_links(entity_id=entity_id)
         linked_handles = [
             {
                 "handle_kind": row.get("handle_kind"),

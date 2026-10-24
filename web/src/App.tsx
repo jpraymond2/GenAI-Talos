@@ -2,9 +2,23 @@ import { useCallback, useEffect, useState } from "react";
 import { ask, confirm, isMockMode, onTrace } from "./api";
 import { CenterPanel } from "./components/CenterPanel";
 import { LeftPanel } from "./components/LeftPanel";
+import { PhoneView } from "./components/PhoneView";
 import { RightPanel } from "./components/RightPanel";
 import { speakBrief, speakText, unlockSpeech } from "./speech";
 import type { Candidate, RunState, TraceEvent, TranscriptEntry } from "./types";
+
+function useIsPhone(): boolean {
+  const [phone, setPhone] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const onChange = () => setPhone(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return phone;
+}
 
 export default function App() {
   const [run, setRun] = useState<RunState | null>(null);
@@ -12,6 +26,7 @@ export default function App() {
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
   const [busy, setBusy] = useState(false);
   const sampleMode = isMockMode();
+  const isPhone = useIsPhone();
 
   useEffect(() => {
     return onTrace((event) => {
@@ -32,6 +47,10 @@ export default function App() {
   }, []);
 
   function speakFromState(state: RunState) {
+    if (state.speech) {
+      speakText(state.speech);
+      return;
+    }
     if (state.status === "needs_clarification" && state.question) {
       speakText(state.question);
       return;
@@ -45,19 +64,19 @@ export default function App() {
     }
   }
 
-  async function handleAsk(text: string, fromVoice = false) {
+  async function handleAsk(text: string, opts?: { fromVoice?: boolean; runId?: string }) {
     setBusy(true);
     setEvents([]);
     pushTranscript("user", text);
     try {
-      const state = await ask(text);
+      const state = await ask(text, { runId: opts?.runId });
       setRun(state);
       if (state.status === "needs_clarification" && state.question) {
         pushTranscript("assistant", state.question);
       } else if (state.final_brief) {
         pushTranscript("assistant", state.final_brief.headline);
       }
-      if (fromVoice) speakFromState(state);
+      if (opts?.fromVoice) speakFromState(state);
     } catch (err) {
       pushTranscript("system", err instanceof Error ? err.message : "Ask failed");
     } finally {
@@ -66,18 +85,27 @@ export default function App() {
   }
 
   async function handleVoice(transcriptText: string) {
-    // speechSynthesis already unlocked in the pointer handler.
-    await handleAsk(transcriptText, true);
+    await handleAsk(transcriptText, {
+      fromVoice: true,
+      runId:
+        run?.status === "needs_clarification" || run?.status === "awaiting_confirmation"
+          ? run.run_id
+          : undefined,
+    });
   }
 
   async function handlePick(candidate: Candidate) {
     unlockSpeech();
-    const utterance = run?.utterance?.text ?? `I'm meeting ${candidate.name}`;
     setBusy(true);
     setEvents([]);
     pushTranscript("user", candidate.name);
     try {
-      const state = await ask(utterance, candidate.entity_id);
+      const state =
+        run?.status === "needs_clarification" && run.run_id
+          ? await ask(candidate.name, { runId: run.run_id })
+          : await ask(run?.utterance?.text ?? `I'm meeting ${candidate.name}`, {
+              entityId: candidate.entity_id,
+            });
       setRun(state);
       if (state.final_brief) {
         pushTranscript("assistant", state.final_brief.headline);
@@ -92,6 +120,12 @@ export default function App() {
     if (!run?.run_id) return;
     setBusy(true);
     try {
+      const viaAsk = await ask("confirm", { runId: run.run_id });
+      if (viaAsk.status === "done") {
+        setRun(viaAsk);
+        pushTranscript("system", "Actions confirmed.");
+        return;
+      }
       const result = await confirm({ run_id: run.run_id, confirmed: true });
       pushTranscript(
         "system",
@@ -108,11 +142,36 @@ export default function App() {
     if (!run?.run_id) return;
     setBusy(true);
     try {
-      await confirm({ run_id: run.run_id, confirmed: false });
+      const viaAsk = await ask("cancel", { runId: run.run_id });
+      setRun(viaAsk);
       pushTranscript("system", "Actions cancelled.");
     } finally {
       setBusy(false);
     }
+  }
+
+  if (isPhone) {
+    return (
+      <div className="min-h-[100dvh] bg-white">
+        <PhoneView
+          run={run}
+          events={events}
+          busy={busy}
+          onAsk={(t, o) => handleAsk(t, { runId: o?.runId, fromVoice: true })}
+          onVoiceState={(state) => {
+            setRun(state);
+            if (state.status === "needs_clarification" && state.question) {
+              pushTranscript("assistant", state.question);
+            } else if (state.final_brief) {
+              pushTranscript("assistant", state.final_brief.headline);
+            }
+          }}
+          onPickCandidate={(c) => void handlePick(c)}
+          onConfirmActions={() => void handleConfirmActions()}
+          onCancelActions={() => void handleCancelActions()}
+        />
+      </div>
+    );
   }
 
   return (

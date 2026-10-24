@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import io
+import shutil
+import subprocess
+import wave
 from collections.abc import Iterator
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -12,7 +16,7 @@ from fastapi.testclient import TestClient
 from recall.config import Settings, get_settings
 from recall.server.app import app
 from recall.tracing import Tracer
-from recall.voice.audio_convert import make_silence_wav
+from recall.voice.audio_convert import ensure_wav_16k_mono, make_silence_wav
 from recall.voice.stt import TranscriptionError, load_sample_transcript, transcribe
 from recall.voice.tts import tts_command
 
@@ -122,29 +126,104 @@ def test_tts_command_linux_without_espeak(monkeypatch: pytest.MonkeyPatch) -> No
     assert tts_command("Hi", system="Linux") is None
 
 
-def test_api_voice_sample_wav(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_voice_sample_wav(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    api_headers: dict[str, str],
+) -> None:
+    from datetime import datetime, timezone
+    from unittest.mock import AsyncMock
+
+    from recall.schemas import Brief, RunState, TalkingPoint, Utterance
+
     monkeypatch.setenv("SAMPLE_MODE", "true")
     monkeypatch.setenv("NVIDIA_API_KEY", "")
     monkeypatch.setenv("LOGS_DIR", str(tmp_path / "logs"))
     get_settings.cache_clear()
     (tmp_path / "logs").mkdir(exist_ok=True)
 
+    done = RunState(
+        run_id="voice-1",
+        utterance=Utterance(
+            text=load_sample_transcript(),
+            ts=datetime.now(timezone.utc),
+            mode="voice",
+        ),
+        status="done",
+        final_brief=Brief(
+            person="demo",
+            headline="ok",
+            points=[
+                TalkingPoint(text="point", evidence_ids=[], kind="catch_up", priority=1)
+            ],
+        ),
+    )
+    monkeypatch.setattr("recall.orchestrator.run", AsyncMock(return_value=done))
+
     wav = make_silence_wav(seconds=0.05)
     client = TestClient(app)
-    with patch("recall.voice.loop.respond", return_value={"speech": "ok", "status": "placeholder"}):
-        res = client.post(
-            "/api/voice",
-            files={"audio": ("utterance.wav", wav, "audio/wav")},
-        )
+    res = client.post(
+        "/api/voice",
+        headers=api_headers,
+        files={"audio": ("utterance.wav", wav, "audio/wav")},
+    )
     assert res.status_code == 200
     body = res.json()
     assert body["transcript"] == load_sample_transcript()
     assert body["engine"] == "sample"
-    assert body["speech"] == "ok"
+    assert body["status"] == "done"
+    assert "speech" in body
+    timing = body.get("voice_timing") or {}
+    assert "upload_ms" in timing
+    assert "ffmpeg_ms" in timing
+    assert "stt_ms" in timing
+    assert "ask_ms" in timing
+    assert "total_ms" in timing
+
+
+@pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg not on PATH")
+def test_ensure_wav_from_tiny_aac_mp4(tmp_path: Path) -> None:
+    """Real AAC mp4 from ffmpeg must convert to 16 kHz mono WAV."""
+    wav = tmp_path / "silence.wav"
+    mp4 = tmp_path / "silence.mp4"
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-f",
+            "lavfi",
+            "-i",
+            "anullsrc=r=16000:cl=mono",
+            "-t",
+            "0.25",
+            str(wav),
+        ],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["ffmpeg", "-y", "-i", str(wav), "-c:a", "aac", str(mp4)],
+        check=True,
+        capture_output=True,
+    )
+    raw = mp4.read_bytes()
+    assert len(raw) > 100
+    out = ensure_wav_16k_mono(
+        raw,
+        content_type="audio/mp4",
+        filename="recording.mp4",
+    )
+    with wave.open(io.BytesIO(out), "rb") as handle:
+        assert handle.getnchannels() == 1
+        assert handle.getsampwidth() == 2
+        assert handle.getframerate() == 16000
+        assert handle.getnframes() > 0
 
 
 def test_api_voice_rejects_webm_without_ffmpeg(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    api_headers: dict[str, str],
 ) -> None:
     monkeypatch.setenv("SAMPLE_MODE", "true")
     monkeypatch.setenv("LOGS_DIR", str(tmp_path / "logs"))
@@ -155,9 +234,11 @@ def test_api_voice_rejects_webm_without_ffmpeg(
     client = TestClient(app)
     res = client.post(
         "/api/voice",
+        headers=api_headers,
         files={"audio": ("utterance.webm", b"not-really-webm", "audio/webm")},
     )
     assert res.status_code == 415
+    assert "ffmpeg" in res.json()["detail"].lower()
 
 
 def test_transcribe_fails_clearly_without_engines(
