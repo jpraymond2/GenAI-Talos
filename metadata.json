@@ -38,6 +38,7 @@
   "logs": {
     "trace_jsonl": "logs/<run_id>/trace.jsonl",
     "run_json": "logs/<run_id>/run.json",
-    "identity_scores": "data/identity_scores/"
+    "identity_scores_jsonl": "logs/<run_id>/identity_scores.jsonl",
+    "relationship_scores_jsonl": "logs/<run_id>/relationship_scores.jsonl"
   }
 }

@@ -109,15 +109,59 @@ Matches [metadata.json](metadata.json):
 - **Sample mode:** synthetic CSVs only (`data/sample/`). Safe to commit.
 - **Live connectors:** Gmail / Calendar / WhatsApp / iMessage write under `data/live/` (gitignored). Never commit live exports or secrets.
 
+## Phone (iPhone + AirPods)
+
+Serve on the Windows PC (bound to `127.0.0.1:8000`), then expose via Tailscale and use Siri or the home-screen web app.
+
+### 1. Token
+
+Set `RECALL_API_TOKEN` in `.env` (a random value is fine). The dashboard prompts once and stores it in `localStorage`, or set `VITE_RECALL_API_TOKEN` for local Vite. Every `/api/*` call and `/ws/trace?token=` needs this bearer token.
+
+### 2. Build + serve
+
+```bash
+cd web && npm install && npm run build && cd ..
+uv run python -m recall serve
+# listens on 127.0.0.1:8000
+```
+
+Install **ffmpeg** on the PC PATH so iOS AAC (`audio/mp4`) uploads convert to 16 kHz WAV for Parakeet.
+
+### 3. Tailscale on Windows
+
+```powershell
+# after Tailscale is installed and you're logged in
+tailscale serve --bg 8000
+```
+
+Open the MagicDNS / Tailscale HTTPS URL from the iPhone (same Tailscale account / ACL). The phone UI appears under 640 px width: one hold-to-talk button, brief cards, collapsible trace.
+
+### 4. Home-screen web app
+
+1. In Safari, open the Tailscale URL.
+2. Enter the API token when prompted.
+3. Share → **Add to Home Screen** (uses the Recall manifest / apple-mobile-web-app tags).
+4. Hold the big button to talk (AirPods work); release to send. Clarification shows large name buttons; you can also answer by holding to talk again (`run_id` continues the session).
+
+### 5. Siri Shortcut (optional)
+
+1. Shortcuts → New → **Get Contents of URL**.
+2. Method `POST`, URL `https://<your-tailscale-host>/api/ask` (or `/api/voice` with a Dictate → File for audio).
+3. Headers: `Authorization: Bearer <RECALL_API_TOKEN>`, `Content-Type: application/json`.
+4. Body JSON: `{"text": "<Dictated text>", "run_id": null}`.
+5. Speak the `speech` field from the JSON response (Speak Text action).
+6. Add to Siri with a phrase like “Meeting prep”.
+
 ## Windows notes
 
 - Zetaris platform images are amd64 Docker — use Docker Desktop or WSL2.
 - `tzdata` is a declared dependency so zoneinfo works on Windows.
-- Voice push-to-talk uses **right Ctrl**; dashboard mic needs a secure context / permissions.
+- Voice push-to-talk CLI uses **right Ctrl**; phone/dashboard mic needs a secure context / permissions.
+- `tailscale serve` proxies localhost:8000; keep `serve` bound to `127.0.0.1`.
 
 ## Limitations + future work
 
 - Resolver, web scout, and actions confirm/execute are still stubs or partial; orchestrator uses fixture/sample paths where needed.
 - `/api/confirm` returns `not_implemented` until actions grow a confirm/execute entrypoint.
 - Live WhatsApp/iMessage paths are platform-sensitive (local DB / export layouts).
-- Identity scoring writes under `data/identity_scores/` (gitignored runtime output).
+- Identity / relationship score payloads append under `logs/<run_id>/` as JSONL.
