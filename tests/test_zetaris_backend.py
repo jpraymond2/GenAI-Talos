@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import json
 import threading
+import time
 from collections.abc import Iterator
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any
+from unittest.mock import MagicMock
 from urllib.parse import urlparse
 
+import httpx
 import pytest
 
 from recall.config import DataBackend, Settings, ZetarisReadMode, get_settings
@@ -20,7 +23,12 @@ from recall.data.query_layer import (
     clear_default_query_layer,
     get_query_layer,
 )
-from recall.data.zetaris_backend import ZetarisBackend
+from recall.data.zetaris_backend import (
+    ZetarisBackend,
+    clear_zetaris_circuit,
+    trip_zetaris_circuit,
+    zetaris_circuit_is_open,
+)
 from recall.data.zetaris_sql import prepare_zetaris_sql, sql_literal
 from recall.tracing import Tracer
 
@@ -354,3 +362,88 @@ def test_no_api_key_logs_in(mock_zetaris: tuple[str, str, _ZetarisMockState]) ->
     rows = backend.query("SELECT 1", source_tag="test.nokey")
     assert rows == [{"handle_id": "h1", "kind": "email"}]
     assert any(r["path"].endswith("/api/auth/login") for r in state.requests)
+
+
+def test_connect_error_trips_circuit_next_query_fast(
+    mock_zetaris: tuple[str, str, _ZetarisMockState],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """After ConnectError, the next query must hit DuckDB in under 0.5s."""
+    rest, base, _state = mock_zetaris
+    clear_zetaris_circuit()
+    ZetarisBackend.clear_shared()
+
+    tracer = Tracer(logs_dir=tmp_path / "logs")
+    settings = _settings(rest, base, sample_mode=True, data_backend=DataBackend.ZETARIS)
+    primary = ZetarisBackend(settings, tracer=tracer)
+    duck = DuckDBBackend(
+        Settings(sample_mode=True, data_backend=DataBackend.DUCKDB),
+        tracer=tracer,
+    )
+    layer = FallbackQueryLayer(primary, duck, tracer)
+
+    def _boom(*_a: Any, **_k: Any) -> None:
+        raise httpx.ConnectError("simulated down")
+
+    monkeypatch.setattr(primary, "_http_client", lambda _timeout: MagicMock(post=_boom))
+
+    sql = "SELECT handle_id FROM recall.handles ORDER BY handle_id LIMIT 2"
+    first = layer.query(sql, source_tag="test.circuit.first")
+    assert len(first) == 2
+    assert zetaris_circuit_is_open()
+
+    primary_calls = 0
+    orig_query = primary.query
+
+    def _counting_query(*a: Any, **k: Any) -> list[dict[str, Any]]:
+        nonlocal primary_calls
+        primary_calls += 1
+        return orig_query(*a, **k)
+
+    monkeypatch.setattr(primary, "query", _counting_query)
+
+    t0 = time.perf_counter()
+    second = layer.query(sql, source_tag="test.circuit.second")
+    elapsed = time.perf_counter() - t0
+    assert len(second) == 2
+    assert elapsed < 0.5
+    assert primary_calls == 0
+
+    events = [
+        e
+        for e in _read_trace_events(tmp_path / "logs")
+        if e.get("kind") == "fallback" and e.get("payload", {}).get("reason") == "circuit_open"
+    ]
+    assert events, "expected fallback event with reason=circuit_open"
+
+
+def test_circuit_closes_after_cooldown(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Breaker re-opens Zetaris after the 60s cooldown (time monkeypatched)."""
+    clear_zetaris_circuit()
+    clock = {"now": 1_000_000.0}
+    monkeypatch.setattr(
+        "recall.data.zetaris_backend.time.time",
+        lambda: clock["now"],
+    )
+    trip_zetaris_circuit()
+    assert zetaris_circuit_is_open()
+    clock["now"] += 59.0
+    assert zetaris_circuit_is_open()
+    clock["now"] += 2.0
+    assert not zetaris_circuit_is_open()
+
+
+def _read_trace_events(logs_dir: Path) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    if not logs_dir.exists():
+        return events
+    for path in logs_dir.rglob("trace.jsonl"):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            events.append(json.loads(line))
+    return events

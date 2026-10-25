@@ -69,6 +69,7 @@ def _copy_sample(dest: Path) -> None:
 def _append_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         return
+    # Sample CSVs are LF-normalized; keep appends on ``\\n`` so DuckDB can sniff.
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
         fieldnames = list(reader.fieldnames or [])
@@ -86,7 +87,12 @@ def _append_csv(path: Path, rows: list[dict[str, Any]]) -> None:
                 out[key] = str(val)
         normalized.append(out)
     with path.open("a", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames, quoting=csv.QUOTE_MINIMAL)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=fieldnames,
+            quoting=csv.QUOTE_MINIMAL,
+            lineterminator="\n",
+        )
         for row in normalized:
             writer.writerow(row)
 
@@ -397,6 +403,7 @@ def run_scenario(
             store.close()
         world.reset()
         DuckDBBackend.clear_connection_cache()
+        os.environ.pop("SAMPLE_DATA_DIR", None)
         get_settings.cache_clear()
         reset_client()
 
