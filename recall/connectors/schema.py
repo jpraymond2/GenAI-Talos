@@ -32,6 +32,7 @@ CONTACT_COLUMNS = [
     "org",
     "title",
     "city",
+    "nickname",
     "emails",
     "phones",
     "source",

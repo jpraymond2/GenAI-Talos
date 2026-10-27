@@ -37,14 +37,14 @@ ORDER BY handle_id
 """
 
 _CONTACTS_BY_NAME_SQL = """
-SELECT contact_id, full_name, org, title, city, emails, phones, source
+SELECT contact_id, full_name, org, title, city, nickname, emails, phones, source
 FROM recall.contacts
 WHERE lower(full_name) LIKE :pattern
 ORDER BY contact_id
 """
 
 _CONTACTS_CANDIDATES_SQL = """
-SELECT contact_id, full_name, org, title, city, emails, phones, source
+SELECT contact_id, full_name, org, title, city, nickname, emails, phones, source
 FROM recall.contacts
 WHERE lower(full_name) LIKE :pattern
    OR lower(emails) LIKE :email_pattern
@@ -124,6 +124,7 @@ class ContactRow(BaseModel):
     org: str = ""
     title: str = ""
     city: str = ""
+    nickname: str = ""
     emails: list[str] = Field(default_factory=list)
     phones: list[str] = Field(default_factory=list)
     source: str = ""
@@ -386,7 +387,7 @@ def contact_cards(
 
 
 _CONTACTS_ALL_SQL = """
-SELECT contact_id, full_name, org, title, city, emails, phones, source
+SELECT contact_id, full_name, org, title, city, nickname, emails, phones, source
 FROM recall.contacts
 ORDER BY contact_id
 """

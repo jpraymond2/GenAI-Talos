@@ -1,8 +1,8 @@
 {
-  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "run_id": "1a0d1240-5ffb-4694-93dd-cdc2aeb8e893",
   "utterance": {
     "text": "Where does Lucas live?",
-    "ts": "2026-10-27T02:42:38.011864Z",
+    "ts": "2026-10-27T03:07:57.091132Z",
     "mode": "text"
   },
   "intent": {
@@ -40,26 +40,27 @@
     "relationship_status": "auto",
     "evidence_source_refs": {
       "e1": "imessage:1484",
-      "e2": "imessage:1484",
-      "e3": "imessage:1251",
-      "e4": "imessage:1250",
-      "e5": "imessage:1249",
-      "e6": "imessage:1220",
-      "e7": "imessage:1219",
-      "e8": "imessage:1218",
-      "e9": "imessage:1149",
-      "e10": "imessage:1148",
-      "e11": "imessage:1022",
-      "e12": "imessage:1021",
-      "e13": "imessage:1020",
-      "e14": "imessage:875",
-      "e15": "imessage:874",
-      "e16": "imessage:873",
-      "e17": "imessage:868",
-      "e18": "imessage:867",
-      "e19": "imessage:570",
-      "e20": "imessage:569",
-      "e21": "imessage:469"
+      "e2": "contact:c_30ef5a99b226|imessage:1148",
+      "e3": "imessage:1484",
+      "e4": "imessage:1251",
+      "e5": "imessage:1250",
+      "e6": "imessage:1249",
+      "e7": "imessage:1220",
+      "e8": "imessage:1219",
+      "e9": "imessage:1218",
+      "e10": "imessage:1149",
+      "e11": "imessage:1148",
+      "e12": "imessage:1022",
+      "e13": "imessage:1021",
+      "e14": "imessage:1020",
+      "e15": "imessage:875",
+      "e16": "imessage:874",
+      "e17": "imessage:873",
+      "e18": "imessage:868",
+      "e19": "imessage:867",
+      "e20": "imessage:570",
+      "e21": "imessage:569",
+      "e22": "imessage:469"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -73,7 +74,9 @@
           "lucas.moreau.qc@gmail.com"
         ],
         "attributes": {
-          "city": "Paris"
+          "city": "Paris",
+          "phone": "+15145550156",
+          "org": "Atelier Nord"
         },
         "attribute_history": [
           {
@@ -83,8 +86,20 @@
             "source_ref": "contact:c_30ef5a99b226"
           },
           {
+            "field": "phone",
+            "value": "+15145550156",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_30ef5a99b226"
+          },
+          {
             "field": "city",
             "value": "Paris",
+            "observed_at": "2026-07-28T23:20:00Z",
+            "source_ref": "imessage:1148"
+          },
+          {
+            "field": "org",
+            "value": "Atelier Nord",
             "observed_at": "2026-07-28T23:20:00Z",
             "source_ref": "imessage:1148"
           },
@@ -100,7 +115,7 @@
         "mention_count": 59,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+        "run_id": "c715f5b9-ea82-45c0-8883-c345ada177b3"
       },
       "aliases": [
         "Lucas Moreau",
@@ -370,7 +385,25 @@
       ],
       "upcoming_events": [],
       "past_events": [],
-      "conflicts": [],
+      "conflicts": [
+        {
+          "id": "cnf_6bc3e01cf63d",
+          "entity_id": "ent_63987ef66f3a",
+          "field": "city",
+          "values": [
+            {
+              "value": "Montreal",
+              "source_ref": "contact:c_30ef5a99b226",
+              "observed_at": "2025-10-26T22:00:00Z"
+            },
+            {
+              "value": "Paris",
+              "source_ref": "imessage:1148",
+              "observed_at": "2026-07-28T23:20:00Z"
+            }
+          ]
+        }
+      ],
       "selection_reason": "entity_id=ent_63987ef66f3a",
       "linked_handles": [],
       "last_contact": {
@@ -402,6 +435,17 @@
     },
     "e2": {
       "id": "e2",
+      "source": "gmail",
+      "source_ref": "contact:c_30ef5a99b226|imessage:1148",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Conflict on city: Montreal (from contact:c_30ef5a99b226, observed 2025-10-26T22:00:00Z) vs Paris (from imessage:1148, observed 2026-07-28T23:20:00Z)",
+      "url": null,
+      "tags": [
+        "conflict"
+      ]
+    },
+    "e3": {
+      "id": "e3",
       "source": "imessage",
       "source_ref": "imessage:1484",
       "ts": "2026-10-16T19:44:00Z",
@@ -409,8 +453,8 @@
       "url": null,
       "tags": []
     },
-    "e3": {
-      "id": "e3",
+    "e4": {
+      "id": "e4",
       "source": "imessage",
       "source_ref": "imessage:1251",
       "ts": "2026-08-26T16:02:12Z",
@@ -418,8 +462,8 @@
       "url": null,
       "tags": []
     },
-    "e4": {
-      "id": "e4",
+    "e5": {
+      "id": "e5",
       "source": "imessage",
       "source_ref": "imessage:1250",
       "ts": "2026-08-26T16:00:37Z",
@@ -427,8 +471,8 @@
       "url": null,
       "tags": []
     },
-    "e5": {
-      "id": "e5",
+    "e6": {
+      "id": "e6",
       "source": "imessage",
       "source_ref": "imessage:1249",
       "ts": "2026-08-26T15:56:44Z",
@@ -436,8 +480,8 @@
       "url": null,
       "tags": []
     },
-    "e6": {
-      "id": "e6",
+    "e7": {
+      "id": "e7",
       "source": "imessage",
       "source_ref": "imessage:1220",
       "ts": "2026-08-16T05:23:22Z",
@@ -445,8 +489,8 @@
       "url": null,
       "tags": []
     },
-    "e7": {
-      "id": "e7",
+    "e8": {
+      "id": "e8",
       "source": "imessage",
       "source_ref": "imessage:1219",
       "ts": "2026-08-16T05:20:56Z",
@@ -454,8 +498,8 @@
       "url": null,
       "tags": []
     },
-    "e8": {
-      "id": "e8",
+    "e9": {
+      "id": "e9",
       "source": "imessage",
       "source_ref": "imessage:1218",
       "ts": "2026-08-16T05:17:09Z",
@@ -463,8 +507,8 @@
       "url": null,
       "tags": []
     },
-    "e9": {
-      "id": "e9",
+    "e10": {
+      "id": "e10",
       "source": "imessage",
       "source_ref": "imessage:1149",
       "ts": "2026-07-28T23:31:00Z",
@@ -472,8 +516,8 @@
       "url": null,
       "tags": []
     },
-    "e10": {
-      "id": "e10",
+    "e11": {
+      "id": "e11",
       "source": "imessage",
       "source_ref": "imessage:1148",
       "ts": "2026-07-28T23:20:00Z",
@@ -481,8 +525,8 @@
       "url": null,
       "tags": []
     },
-    "e11": {
-      "id": "e11",
+    "e12": {
+      "id": "e12",
       "source": "imessage",
       "source_ref": "imessage:1022",
       "ts": "2026-06-16T04:04:59Z",
@@ -490,8 +534,8 @@
       "url": null,
       "tags": []
     },
-    "e12": {
-      "id": "e12",
+    "e13": {
+      "id": "e13",
       "source": "imessage",
       "source_ref": "imessage:1021",
       "ts": "2026-06-16T03:56:07Z",
@@ -499,8 +543,8 @@
       "url": null,
       "tags": []
     },
-    "e13": {
-      "id": "e13",
+    "e14": {
+      "id": "e14",
       "source": "imessage",
       "source_ref": "imessage:1020",
       "ts": "2026-06-16T03:47:58Z",
@@ -508,8 +552,8 @@
       "url": null,
       "tags": []
     },
-    "e14": {
-      "id": "e14",
+    "e15": {
+      "id": "e15",
       "source": "imessage",
       "source_ref": "imessage:875",
       "ts": "2026-05-16T16:59:41Z",
@@ -517,8 +561,8 @@
       "url": null,
       "tags": []
     },
-    "e15": {
-      "id": "e15",
+    "e16": {
+      "id": "e16",
       "source": "imessage",
       "source_ref": "imessage:874",
       "ts": "2026-05-16T16:44:19Z",
@@ -526,8 +570,8 @@
       "url": null,
       "tags": []
     },
-    "e16": {
-      "id": "e16",
+    "e17": {
+      "id": "e17",
       "source": "imessage",
       "source_ref": "imessage:873",
       "ts": "2026-05-16T16:35:45Z",
@@ -535,8 +579,8 @@
       "url": null,
       "tags": []
     },
-    "e17": {
-      "id": "e17",
+    "e18": {
+      "id": "e18",
       "source": "imessage",
       "source_ref": "imessage:868",
       "ts": "2026-05-13T23:47:01Z",
@@ -544,8 +588,8 @@
       "url": null,
       "tags": []
     },
-    "e18": {
-      "id": "e18",
+    "e19": {
+      "id": "e19",
       "source": "imessage",
       "source_ref": "imessage:867",
       "ts": "2026-05-13T23:45:29Z",
@@ -553,8 +597,8 @@
       "url": null,
       "tags": []
     },
-    "e19": {
-      "id": "e19",
+    "e20": {
+      "id": "e20",
       "source": "imessage",
       "source_ref": "imessage:570",
       "ts": "2026-02-26T01:37:14Z",
@@ -562,8 +606,8 @@
       "url": null,
       "tags": []
     },
-    "e20": {
-      "id": "e20",
+    "e21": {
+      "id": "e21",
       "source": "imessage",
       "source_ref": "imessage:569",
       "ts": "2026-02-26T01:34:09Z",
@@ -571,8 +615,8 @@
       "url": null,
       "tags": []
     },
-    "e21": {
-      "id": "e21",
+    "e22": {
+      "id": "e22",
       "source": "imessage",
       "source_ref": "imessage:469",
       "ts": "2026-01-27T20:21:11Z",
@@ -587,6 +631,14 @@
       "headline": "Lucas Moreau lives in Paris (since Aug 2026, from messages); contact card still says Montreal; back in Montréal Déc 18 – Jan 4.",
       "points": [
         {
+          "text": "World Model conflict: Montreal (contact card) vs Paris (messages) for Lucas Moreau",
+          "evidence_ids": [
+            "cnf_6bc3e01cf63d"
+          ],
+          "kind": "catch_up",
+          "priority": 1
+        },
+        {
           "text": "Lucas asked on Fri Oct 16 (imessage): \"billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?\" No reply yet.",
           "evidence_ids": [
             "e1"
@@ -597,18 +649,10 @@
         {
           "text": "Life/job update on Tue Jul 28: c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science (imessage)",
           "evidence_ids": [
-            "e10"
+            "e11"
           ],
           "kind": "news",
           "priority": 2
-        },
-        {
-          "text": "Latest thread on Wed Aug 26: juste la troisième période, quelle remontée (imessage)",
-          "evidence_ids": [
-            "e4"
-          ],
-          "kind": "catch_up",
-          "priority": 3
         }
       ],
       "caveats": []
@@ -616,13 +660,13 @@
   ],
   "verdicts": [
     {
-      "overall": "pass",
+      "overall": "revise",
       "verdicts": [
         {
           "index": 0,
-          "decision": "keep",
-          "reason": "Cited evidence in pack.",
-          "fix_hint": null
+          "decision": "drop",
+          "reason": "Bad point (missing evidence, too short, or ISO timestamp).",
+          "fix_hint": "Rewrite with a template citing pack evidence."
         },
         {
           "index": 1,
@@ -638,7 +682,9 @@
         }
       ],
       "missing": [],
-      "refetch": []
+      "refetch": [
+        "gmail"
+      ]
     }
   ],
   "final_brief": {
@@ -656,18 +702,10 @@
       {
         "text": "Life/job update on Tue Jul 28: c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science (imessage)",
         "evidence_ids": [
-          "e10"
+          "e11"
         ],
         "kind": "news",
         "priority": 2
-      },
-      {
-        "text": "Latest thread on Wed Aug 26: juste la troisième période, quelle remontée (imessage)",
-        "evidence_ids": [
-          "e4"
-        ],
-        "kind": "catch_up",
-        "priority": 3
       }
     ],
     "caveats": []

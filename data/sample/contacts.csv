@@ -1,11 +1,11 @@
-contact_id,full_name,org,title,city,emails,phones,source
-c_karim_haddad,Karim Haddad,Ledgerly,Founder,Montreal,"[""karim@ledgerly.io""]","[""+15145550142""]",manual
-c_karim_saleh,Karim Saleh,PwC Advisory,Incoming Associate,Montreal,"[""karim.saleh@mcgill.ca""]","[""+15145550143""]",gmail
-c_lina_chen,Lina Chen,Northbridge Ventures,Associate,Toronto,"[""lina.chen@northbridge.vc"", ""lchen@northbridge.vc""]",[],gmail
-c_sophie_tremblay,Sophie Tremblay,McGill University,BCom Student,Montreal,"[""sophie.tremblay@mail.mcgill.ca""]","[""+15145550111""]",imessage
-c_marcus_wei,Marcus Wei,McGill University,BCom Student,Montreal,"[""marcus.wei@mail.mcgill.ca""]","[""+15145550112""]",whatsapp
-c_jordan_blake,Jordan Blake,Northstar Recruiting,Campus Recruiter,Toronto,"[""jordan.blake@northstar-recruiting.com""]","[""+14165550133""]",gmail
-c_nadine_okonkwo,Nadine Okonkwo,McGill University,Professor of Finance,Montreal,"[""nadine.okonkwo@mcgill.ca""]",[],gmail
-c_maya_martin,Maya Martin,,,Ottawa,"[""maya.martin@example.com""]","[""+16135550177""]",imessage
-c_diego_alvarez,Diego Alvarez,McGill University,BCom Student,Montreal,"[""diego.alvarez@mail.mcgill.ca""]","[""+15145550119""]",whatsapp
-c_emma_rossi,Emma Rossi,McGill University,BCom Student,Montreal,"[""emma.rossi@mail.mcgill.ca""]","[""+15145550121""]",imessage
+contact_id,full_name,org,title,city,nickname,emails,phones,source
+c_karim_haddad,Karim Haddad,Ledgerly,Founder,Montreal,,"[""karim@ledgerly.io""]","[""+15145550142""]",manual
+c_karim_saleh,Karim Saleh,PwC Advisory,Incoming Associate,Montreal,,"[""karim.saleh@mcgill.ca""]","[""+15145550143""]",gmail
+c_lina_chen,Lina Chen,Northbridge Ventures,Associate,Toronto,,"[""lina.chen@northbridge.vc"", ""lchen@northbridge.vc""]",[],gmail
+c_sophie_tremblay,Sophie Tremblay,McGill University,BCom Student,Montreal,,"[""sophie.tremblay@mail.mcgill.ca""]","[""+15145550111""]",imessage
+c_marcus_wei,Marcus Wei,McGill University,BCom Student,Montreal,,"[""marcus.wei@mail.mcgill.ca""]","[""+15145550112""]",whatsapp
+c_jordan_blake,Jordan Blake,Northstar Recruiting,Campus Recruiter,Toronto,,"[""jordan.blake@northstar-recruiting.com""]","[""+14165550133""]",gmail
+c_nadine_okonkwo,Nadine Okonkwo,McGill University,Professor of Finance,Montreal,,"[""nadine.okonkwo@mcgill.ca""]",[],gmail
+c_maya_martin,Maya Martin,,,Ottawa,,"[""maya.martin@example.com""]","[""+16135550177""]",imessage
+c_diego_alvarez,Diego Alvarez,McGill University,BCom Student,Montreal,,"[""diego.alvarez@mail.mcgill.ca""]","[""+15145550119""]",whatsapp
+c_emma_rossi,Emma Rossi,McGill University,BCom Student,Montreal,,"[""emma.rossi@mail.mcgill.ca""]","[""+15145550121""]",imessage

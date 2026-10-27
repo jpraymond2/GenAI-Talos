@@ -408,8 +408,22 @@ async def _pipeline(state: RunState, deps: Deps) -> RunState:
         return await _handle_note(state, deps)
 
     # Sample-mode router may miss "suggest"; detect meal/place asks from text.
-    if intent.kind != "suggest" and _looks_like_suggest(state.utterance.text):
+    # Never override calendar lunch-checks or date resolves into the suggester.
+    if (
+        intent.kind not in {"suggest", "calendar", "owe_all", "upcoming_dates"}
+        and _looks_like_suggest(state.utterance.text)
+    ):
         state.intent = intent.model_copy(update={"kind": "suggest"})
+        intent = state.intent
+
+    # "Who am I meeting on <date>?" resolves a person — continue as a brief.
+    if (
+        intent.kind == "calendar"
+        and intent.question_field is None
+        and state.entity_id
+        and re.search(r"(?i)\bwho am i meeting\b", state.utterance.text or "")
+    ):
+        state.intent = intent.model_copy(update={"kind": "brief"})
         intent = state.intent
 
     if intent.kind == "suggest":
@@ -422,7 +436,10 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
     """Retrieve → evidence pack → writer/critic → feedback."""
     state = _attach_relationship(state, deps)
     state = await _retrieve(state, deps)
-    if not state.evidence:
+    kind = state.intent.kind if state.intent else ""
+    # Calendar / owe-all / upcoming-dates writers query sources themselves.
+    allow_empty = kind in {"calendar", "owe_all", "upcoming_dates"}
+    if not state.evidence and not allow_empty:
         name = state.entity_name or "them"
         state.final_brief = Brief(
             person=name,
@@ -442,6 +459,13 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
 
     state.round = 1
     state = await writer.run(state, deps)
+    # Cross-entity calendar / owe / birthday answers cite synthetic ids outside
+    # the person evidence pack — skip the critic rather than dropping all points.
+    if kind in {"calendar", "owe_all", "upcoming_dates"}:
+        state.final_brief = state.drafts[-1] if state.drafts else None
+        state.status = "done"
+        _apply_memory_feedback(state, deps)
+        return state
     state = await critic.run(state, deps)
     deps.tracer.event(
         "orchestrator",
@@ -535,18 +559,26 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
             )
             return state
 
+    intent = state.intent
+    kind = intent.kind if intent else ""
+    # Intents that answer without a resolved person.
+    if kind in {"owe_all", "upcoming_dates"} or (
+        kind == "calendar" and intent is not None and intent.question_field == "calendar_day"
+    ):
+        state.entity_id = ""
+        state.entity_name = ""
+        return state
+
     utterance = state.utterance.text
-    name = (state.intent.person_name if state.intent else None) or ""
+    name = (intent.person_name if intent else None) or ""
     name = name.strip()
-    # Prefer a proper name from the utterance when the router kept only a first
-    # name, or named a different person than the one spoken in the utterance.
+    # Enrich a bare first name with a multi-token span from the utterance —
+    # never replace a relational/qualifier-resolved name with an unrelated span.
     uttered = _extract_person_name_from_text(utterance)
     if uttered:
         if not name:
             name = uttered
         elif name.lower() in uttered.lower() and len(uttered.split()) > len(name.split()):
-            name = uttered
-        elif name.lower() not in uttered.lower() and uttered.lower() not in name.lower():
             name = uttered
 
     handle = _extract_handle(utterance) or _extract_handle(name)
@@ -586,9 +618,59 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
             pass
 
     if not name:
+        org_hit = _resolve_from_org_or_event(utterance, deps=deps)
+        if org_hit is not None:
+            state.entity_id = org_hit.entity_id
+            state.entity_name = org_hit.name
+            state.candidates = [org_hit]
+            deps.tracer.event(
+                "orchestrator",
+                "resolve",
+                {
+                    "summary": f"org/event -> {org_hit.name}",
+                    "candidates": [org_hit.model_dump()],
+                },
+            )
+            return state
+        date_hit = _resolve_from_meeting_date(utterance, deps=deps)
+        if date_hit is not None:
+            state.entity_id = date_hit.entity_id
+            state.entity_name = date_hit.name
+            state.candidates = [date_hit]
+            deps.tracer.event(
+                "orchestrator",
+                "resolve",
+                {
+                    "summary": f"meeting-date -> {date_hit.name}",
+                    "candidates": [date_hit.model_dump()],
+                },
+            )
+            return state
         state.status = "needs_clarification"
         state.question = "Who are you meeting?"
         return state
+
+    # Relational cues ("my mom") — resolve via synonym map / aliases.
+    if name.lower().startswith("my "):
+        from recall.agents.offline import _match_relation
+
+        role = name.lower().split(" ", 1)[-1]
+        hit_name = _match_relation(role, deps=deps)
+        if hit_name:
+            ranked_rel = deps.world.resolve(hit_name)
+            if ranked_rel:
+                top_rel = ranked_rel[0]
+                state.entity_id = top_rel.entity_id
+                state.entity_name = top_rel.name
+                state.candidates = [
+                    Candidate(
+                        entity_id=top_rel.entity_id,
+                        name=top_rel.name,
+                        score=top_rel.score,
+                        reason="relational alias",
+                    )
+                ]
+                return state
 
     ranked = deps.world.resolve(name)
     candidates = [
@@ -600,10 +682,22 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
         )
         for c in ranked
     ]
-    when = state.intent.when if state.intent else None
-    candidates, calendar_hit = _calendar_tiebreak(
-        candidates, name=name, when=when, deps=deps
-    )
+    from recall.agents.offline import extract_qualifier_token
+
+    qualifier = extract_qualifier_token(utterance)
+    if qualifier:
+        candidates = _apply_qualifier_boost(
+            candidates, name=name, qualifier=qualifier, deps=deps
+        )
+    when = intent.when if intent else None
+    # Qualifier disambiguation beats calendar tiebreak (e.g. "Alex from my
+    # cohort" must not flip to a different Alex who is merely on the calendar).
+    if not qualifier:
+        candidates, calendar_hit = _calendar_tiebreak(
+            candidates, name=name, when=when, deps=deps
+        )
+    else:
+        calendar_hit = False
     deps.tracer.event(
         "orchestrator",
         "resolve",
@@ -611,6 +705,7 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
             "summary": f"name={name!r} candidates={len(candidates)}",
             "candidates": [c.model_dump() for c in candidates],
             "calendar_tiebreak": calendar_hit,
+            "qualifier": qualifier,
         },
     )
 
@@ -628,6 +723,12 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
         and len(name.split()) >= 2
         and top.name.lower() == name.lower()
     )
+    qualifier_clear = bool(
+        qualifier
+        and top.reason.startswith("qualifier:")
+        and (second is None or not second.reason.startswith("qualifier:")
+             or top.score - second.score >= 0.05)
+    )
     margin_clear = second is None or (top.score - second.score) >= RESOLVE_MARGIN
     # Calendar uniquely names one person near a parseable `when` → resolve.
     from recall.agents.offline import parse_when_datetime
@@ -635,6 +736,11 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
 
     when_dt = parse_when_datetime(when, frozen_now(settings=deps.settings)) if when else None
     if calendar_hit and when_dt is not None:
+        state.entity_id = top.entity_id
+        state.entity_name = top.name
+        state.candidates = candidates
+        return state
+    if qualifier_clear:
         state.entity_id = top.entity_id
         state.entity_name = top.name
         state.candidates = candidates
@@ -655,6 +761,362 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
     state.entity_name = top.name
     state.candidates = candidates
     return state
+
+
+def _entity_qualifier_pool(entity: Any, deps: Deps) -> str:
+    """org / label / title / aliases / upcoming event titles for qualifier match."""
+    attrs = getattr(entity, "attributes", None) or {}
+    parts = [
+        entity.canonical_name,
+        *list(entity.aliases or []),
+        str(attrs.get("org") or ""),
+        str(attrs.get("title") or ""),
+        str(attrs.get("label") or ""),
+        str(attrs.get("nickname") or ""),
+    ]
+    # Group-chat / event titles involving this person.
+    try:
+        from recall.data.queries import all_events_in_window
+        from recall.agents.time_context import now as frozen_now
+
+        emails = {a.lower() for a in (entity.aliases or []) if "@" in a}
+        if emails:
+            events = all_events_in_window(
+                source_tag="orchestrator.qualifier",
+                days_back=120,
+                days_forward=60,
+                settings=deps.settings,
+                layer=deps.query_layer,
+                now=frozen_now(settings=deps.settings),
+            )
+            for ev in events:
+                if any(att.lower() in emails for att in (ev.attendees or [])):
+                    parts.append(ev.title or "")
+    except Exception:  # noqa: BLE001
+        pass
+    return " ".join(parts).lower()
+
+
+def _apply_qualifier_boost(
+    candidates: list[Candidate],
+    *,
+    name: str,
+    qualifier: str,
+    deps: Deps,
+) -> list[Candidate]:
+    """Among same-first-name candidates, prefer ones whose pool contains qualifier."""
+    if not candidates or not qualifier:
+        return candidates
+    needle_first = name.strip().split()[0].lower() if name.strip() else ""
+    token = qualifier.strip().lower()
+    boosted: list[Candidate] = []
+    rest: list[Candidate] = []
+    for cand in candidates:
+        ent = deps.world_store.get_entity(cand.entity_id)
+        if ent is None:
+            rest.append(cand)
+            continue
+        first = ent.canonical_name.split()[0].lower() if ent.canonical_name else ""
+        # Never pick a different first name because of the qualifier alone.
+        if needle_first and first != needle_first and needle_first not in ent.canonical_name.lower():
+            # Still allow if an alias starts with the needle first name.
+            alias_firsts = {
+                a.split()[0].lower()
+                for a in [ent.canonical_name, *list(ent.aliases or [])]
+                if a.split()
+            }
+            if needle_first not in alias_firsts:
+                rest.append(cand)
+                continue
+        pool = _entity_qualifier_pool(ent, deps)
+        if token in pool:
+            boosted.append(
+                Candidate(
+                    entity_id=cand.entity_id,
+                    name=cand.name,
+                    score=max(cand.score, 0.97),
+                    reason=f"qualifier: {qualifier}",
+                )
+            )
+        else:
+            rest.append(cand)
+    if not boosted:
+        return candidates
+    boosted.sort(key=lambda c: (-c.score, c.name))
+    return boosted + rest
+
+
+def _resolve_from_org_or_event(utterance: str, *, deps: Deps) -> Candidate | None:
+    """Match 'Prep me for the <Org> call' against calendar titles / contact orgs."""
+    from recall.agents.offline import extract_org_event_token
+    from recall.agents.time_context import now as frozen_now
+    from recall.data.queries import all_events_in_window
+
+    token = extract_org_event_token(utterance)
+    if not token:
+        return None
+    token_l = token.lower()
+    owner_id = deps.world_store.get_meta("user_entity_id")
+    owner_name = (deps.settings.dataset_owner or "").strip().lower()
+
+    # Prefer an upcoming calendar event whose title contains the org token.
+    try:
+        events = all_events_in_window(
+            source_tag="orchestrator.org_event",
+            days_back=7,
+            days_forward=60,
+            settings=deps.settings,
+            layer=deps.query_layer,
+            now=frozen_now(settings=deps.settings),
+        )
+    except Exception:  # noqa: BLE001
+        events = []
+    # Prefer a contact whose org/aliases contain the token (the org of the call).
+    org_hits: list[Candidate] = []
+    for ent in deps.world_store.list_entities(type="person"):
+        if owner_id and ent.id == owner_id:
+            continue
+        if owner_name and ent.canonical_name.strip().lower() == owner_name:
+            continue
+        attrs = getattr(ent, "attributes", None) or {}
+        org = str(attrs.get("org") or "").lower()
+        pool = " ".join(
+            [
+                org,
+                ent.canonical_name,
+                *list(ent.aliases or []),
+            ]
+        ).lower()
+        if token_l in org or (
+            token_l in pool and all(p in pool for p in token_l.split() if len(p) > 2)
+        ):
+            score = 0.97 if token_l in org else 0.93
+            org_hits.append(
+                Candidate(
+                    entity_id=ent.id,
+                    name=ent.canonical_name,
+                    score=score,
+                    reason=f"org: {token}",
+                )
+            )
+    if org_hits:
+        org_hits.sort(key=lambda c: (-c.score, c.name))
+        return org_hits[0]
+
+    for ev in events:
+        title = (ev.title or "").lower()
+        title_fold = _fold_accents(title)
+        token_fold = _fold_accents(token_l)
+        if token_l not in title and token_fold not in title_fold and not all(
+            part in title_fold for part in token_fold.split() if len(part) > 2
+        ):
+            continue
+        principal = _principal_attendee_from_event(
+            ev, deps=deps, owner_id=owner_id, prefer_token=token
+        )
+        if principal is not None:
+            return principal
+    return None
+
+
+def _fold_accents(text: str) -> str:
+    import unicodedata
+
+    plain = unicodedata.normalize("NFKD", text or "")
+    return "".join(ch for ch in plain if not unicodedata.combining(ch)).lower()
+
+
+def _resolve_from_meeting_date(utterance: str, *, deps: Deps) -> Candidate | None:
+    """'Who am I meeting on November 6?' → attendee (principal, not EA)."""
+    from recall.agents.offline import parse_when_datetime, parse_when_phrase
+    from recall.agents.time_context import now as frozen_now
+    from recall.data.queries import all_events_in_window
+
+    if not re.search(r"(?i)\bwho am i meeting\b", utterance or ""):
+        return None
+    clock = frozen_now(settings=deps.settings)
+    when = parse_when_phrase(utterance, clock)
+    anchor = parse_when_datetime(when, clock) if when else None
+    if anchor is None:
+        return None
+    day = anchor.astimezone(timezone.utc).date()
+    owner_id = deps.world_store.get_meta("user_entity_id")
+    try:
+        events = all_events_in_window(
+            source_tag="orchestrator.meeting_date",
+            days_back=14,
+            days_forward=40,
+            settings=deps.settings,
+            layer=deps.query_layer,
+            now=clock,
+        )
+    except Exception:  # noqa: BLE001
+        return None
+    for ev in events:
+        try:
+            start = datetime.fromisoformat(ev.start_utc.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if start.tzinfo is None:
+            start = start.replace(tzinfo=timezone.utc)
+        if start.astimezone(timezone.utc).date() != day:
+            continue
+        hit = _principal_attendee_from_event(ev, deps=deps, owner_id=owner_id)
+        if hit is not None:
+            return hit
+    return None
+
+
+def _principal_attendee_from_event(
+    ev: Any,
+    *,
+    deps: Deps,
+    owner_id: str | None,
+    prefer_token: str | None = None,
+) -> Candidate | None:
+    """Resolve the meeting principal — skip owner and assistant/'on behalf of' senders."""
+    owner_name = (deps.settings.dataset_owner or "").strip().lower()
+    owner_org = ""
+    if owner_id:
+        owner_ent = deps.world_store.get_entity(owner_id)
+        if owner_ent is not None:
+            owner_org = str((owner_ent.attributes or {}).get("org") or "").lower()
+    attendees = [a.lower() for a in (ev.attendees or []) if a]
+    title = (ev.title or "").lower()
+    title_fold = _fold_accents(title)
+    token_fold = _fold_accents(prefer_token or "")
+    people: list[tuple[Candidate, bool]] = []
+    for ent in deps.world_store.list_entities(type="person"):
+        if owner_id and ent.id == owner_id:
+            continue
+        if owner_name and ent.canonical_name.strip().lower() == owner_name:
+            continue
+        emails = {a.lower() for a in (ent.aliases or []) if "@" in a}
+        if not emails.intersection(attendees):
+            continue
+        in_title = any(
+            tok and tok.lower() in title
+            for tok in ent.canonical_name.split()
+            if len(tok) > 2
+        )
+        attrs = getattr(ent, "attributes", None) or {}
+        org = str(attrs.get("org") or "")
+        org_l = org.lower()
+        org_in_title = bool(org) and org_l.split()[0] in title if org else False
+        pool = " ".join(
+            [
+                ent.canonical_name,
+                *list(ent.aliases or []),
+                str(attrs.get("title") or ""),
+                str(attrs.get("label") or ""),
+                org,
+            ]
+        ).lower()
+        is_assistant = bool(
+            re.search(
+                r"(?i)\b(ea\b|assistant|exec(?:utive)? assistan|on behalf of)\b",
+                pool,
+            )
+        )
+        if not is_assistant:
+            is_assistant = _assistant_signal_from_mail(emails, deps=deps)
+        score = 0.9
+        if in_title and not is_assistant:
+            score = 0.98
+        elif org_in_title and not is_assistant:
+            score = 0.96
+        # Prefer the external party named by the org token over coworkers.
+        if token_fold:
+            email_blob = " ".join(_fold_accents(e) for e in emails)
+            if token_fold.replace(" ", "") in email_blob.replace(" ", "").replace(".", ""):
+                score = max(score, 0.99)
+            elif any(
+                part and part in email_blob
+                for part in token_fold.split()
+                if len(part) > 4
+            ):
+                score = max(score, 0.985)
+        if owner_org and org_l and org_l == owner_org:
+            score -= 0.05  # demote same-org coworkers on multi-attendee calls
+        # Demote frequent calendar coworkers when an org token singles out a guest.
+        if token_fold and len(attendees) >= 3:
+            try:
+                from recall.data.queries import all_events_in_window
+                from recall.agents.time_context import now as frozen_now
+
+                recent = all_events_in_window(
+                    source_tag="orchestrator.attendee_freq",
+                    days_back=120,
+                    days_forward=60,
+                    settings=deps.settings,
+                    layer=deps.query_layer,
+                    now=frozen_now(settings=deps.settings),
+                )
+                hits = sum(
+                    1
+                    for other in recent
+                    if emails.intersection({a.lower() for a in (other.attendees or [])})
+                )
+                if hits >= 8:
+                    score -= 0.04
+                elif hits <= 3:
+                    score += 0.03
+            except Exception:  # noqa: BLE001
+                pass
+        people.append(
+            (
+                Candidate(
+                    entity_id=ent.id,
+                    name=ent.canonical_name,
+                    score=score,
+                    reason=f"calendar: {ev.title}",
+                ),
+                is_assistant,
+            )
+        )
+    if not people:
+        return None
+    # Prefer non-assistants, then higher score (fold accents for stable tie-break).
+    people.sort(
+        key=lambda item: (
+            item[1],
+            -item[0].score,
+            _fold_accents(item[0].name),
+        )
+    )
+    principals = [c for c, is_asst in people if not is_asst]
+    if principals:
+        principals.sort(key=lambda c: (-c.score, _fold_accents(c.name)))
+        return principals[0]
+    return people[0][0]
+
+
+def _assistant_signal_from_mail(emails: set[str], *, deps: Deps) -> bool:
+    """True when recent mail from these handles looks like an EA / 'on behalf of'."""
+    if not emails:
+        return False
+    try:
+        from recall.data.queries import interactions_for_entity_handles
+
+        rows = interactions_for_entity_handles(
+            list(emails),
+            source_tag="orchestrator.ea_check",
+            linked_handle_values=list(emails),
+            since_days=120,
+            limit=30,
+            settings=deps.settings,
+            layer=deps.query_layer,
+        )
+    except Exception:  # noqa: BLE001
+        return False
+    for row in rows:
+        blob = f"{row.subject or ''} {row.text or ''}"
+        if re.search(
+            r"(?i)\b(executive assistant|ea to|on behalf of|assistan(?:t|te) (?:to|de))\b",
+            blob,
+        ):
+            return True
+    return False
 
 
 _MEAL_RE = re.compile(

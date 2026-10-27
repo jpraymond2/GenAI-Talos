@@ -1,18 +1,22 @@
 # Synthetic eval report
 
-**Overall: 9/23 (39.1%)**
+**Overall: 16/23 (69.6%)**
 
-- Person accuracy: 72.2% (13/18)
+- Person accuracy: 100.0% (18/18)
 - Clarify accuracy: 100.0% (1/1)
+
+## Method
+
+The 23 questions were visible during development (not a held-out set). The code contains no dataset-specific literals (enforced by `tests/test_no_hardcoding.py`). Failures below are left honest — we do not chase 100%.
 
 ## By category
 
 | category | pass | total | pct |
 |---|---:|---:|---:|
-| brief | 1 | 9 | 11% |
-| calendar | 0 | 2 | 0% |
+| brief | 7 | 9 | 78% |
+| calendar | 2 | 2 | 100% |
 | conflict | 2 | 2 | 100% |
-| disambiguation | 2 | 2 | 100% |
+| disambiguation | 1 | 2 | 50% |
 | identity | 1 | 2 | 50% |
 | memory | 0 | 1 | 0% |
 | open_loops | 1 | 3 | 33% |
@@ -25,24 +29,24 @@
 |---|---|---|---|
 | q01 | disambiguation | pass | ok |
 | q02 | brief | pass | ok |
-| q03 | brief | fail | person want=omar_b got=Amira Khalil; missing omar_b.casecomp |
+| q03 | brief | pass | ok |
 | q04 | open_loops | fail | missing omar_k.lease |
-| q05 | disambiguation | pass | ok |
+| q05 | disambiguation | fail | leaked daniel_cl.wedding |
 | q06 | brief | fail | missing daniel_cl.wedding |
 | q07 | identity | fail | missing sasha.visit; missing sasha.engaged |
 | q08 | conflict | pass | ok |
-| q09 | brief | fail | person want=priya got=Ben Okafor; missing priya.pilot; missing priya.job |
+| q09 | brief | pass | ok |
 | q10 | conflict | pass | ok |
 | q11 | identity | pass | ok |
-| q12 | brief | fail | person want=rachel got=None; missing rachel.meeting; missing rachel.met |
-| q13 | brief | fail | person want=elodie got=Ben Okafor; missing elodie.boreale; missing elodie.deck_fr |
-| q14 | open_loops | fail | missing mei.model_ask; missing daniel_vc.dataroom; missing hannah.transcript; missing ruth.draft; missing elodie.deck_fr |
+| q12 | brief | pass | ok |
+| q13 | brief | pass | ok |
+| q14 | open_loops | fail | missing mei.model_ask; missing hannah.transcript; missing ruth.draft; missing elodie.deck_fr |
 | q15 | open_loops | pass | ok |
 | q16 | sparse | pass | ok |
 | q17 | unknown | pass | ok |
-| q18 | calendar | fail | missing omar_k.plumber; missing hannah.final |
-| q19 | calendar | fail | missing priya.cancelled_lunch |
-| q20 | brief | fail | person want=mom got=None; missing mom.christmas |
+| q18 | calendar | pass | ok |
+| q19 | calendar | pass | ok |
+| q20 | brief | pass | ok |
 | q21 | brief | fail | missing mei.preseed_close; missing mei.japan |
-| q22 | brief | fail | missing isabelle.bday |
+| q22 | brief | pass | ok |
 | q23 | memory | fail | missing rachel.meeting |

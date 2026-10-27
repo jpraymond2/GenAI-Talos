@@ -1,8 +1,8 @@
 {
-  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "run_id": "1a0d1240-5ffb-4694-93dd-cdc2aeb8e893",
   "utterance": {
     "text": "I'm meeting Omar Haddad on Wednesday",
-    "ts": "2026-10-27T02:42:37.995136Z",
+    "ts": "2026-10-27T03:07:57.074250Z",
     "mode": "text"
   },
   "intent": {
@@ -63,8 +63,16 @@
       "e22": "imessage:1012",
       "e23": "calendar:26dbp9qa7efe8qeqpno792e8sc",
       "e24": "calendar:j3deg1dncf54epf5dhod3docis",
-      "m1": "mem_404de197df17",
-      "memory:m1": "mem_404de197df17"
+      "m1": "mem_dfbff9a9f56f",
+      "memory:m1": "mem_dfbff9a9f56f",
+      "m2": "mem_e43dd9332da7",
+      "memory:m2": "mem_e43dd9332da7",
+      "m3": "mem_2e9fdab98cb4",
+      "memory:m3": "mem_2e9fdab98cb4",
+      "m4": "mem_e5f00ad203ad",
+      "memory:m4": "mem_e5f00ad203ad",
+      "m5": "mem_025603a82630",
+      "memory:m5": "mem_025603a82630"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -80,7 +88,8 @@
         "attributes": {
           "org": "Payloop",
           "title": "CEO",
-          "city": "Montreal"
+          "city": "Montreal",
+          "phone": "+15145550142"
         },
         "attribute_history": [
           {
@@ -100,6 +109,12 @@
             "value": "Montreal",
             "observed_at": "2025-10-26T22:00:00Z",
             "source_ref": "contact:c_cff58ca4cee1"
+          },
+          {
+            "field": "phone",
+            "value": "+15145550142",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_cff58ca4cee1"
           }
         ],
         "first_seen_at": "2025-10-17T00:29:22Z",
@@ -107,7 +122,7 @@
         "mention_count": 71,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+        "run_id": "c715f5b9-ea82-45c0-8883-c345ada177b3"
       },
       "aliases": [
         "Omar Haddad",
@@ -442,13 +457,37 @@
       }
     },
     "meal_hook": true,
-    "latency_ms": 6,
+    "latency_ms": 7,
     "llm_calls": 0,
     "critic_rounds": 1
   },
   "memories": [
     {
-      "id": "mem_404de197df17",
+      "id": "mem_dfbff9a9f56f",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
+      "id": "mem_e43dd9332da7",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
+      "id": "mem_2e9fdab98cb4",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
+      "id": "mem_e5f00ad203ad",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
+      "score": 0.47,
+      "why": "entity=0.15, keyword=0.12, layer=0.10"
+    },
+    {
+      "id": "mem_025603a82630",
       "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
       "score": 0.47,
       "why": "entity=0.15, keyword=0.12, layer=0.10"
@@ -682,7 +721,51 @@
     "m1": {
       "id": "m1",
       "source": "memory",
-      "source_ref": "mem_404de197df17",
+      "source_ref": "mem_dfbff9a9f56f",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "url": null,
+      "tags": [
+        "memory"
+      ]
+    },
+    "m2": {
+      "id": "m2",
+      "source": "memory",
+      "source_ref": "mem_e43dd9332da7",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "url": null,
+      "tags": [
+        "memory"
+      ]
+    },
+    "m3": {
+      "id": "m3",
+      "source": "memory",
+      "source_ref": "mem_2e9fdab98cb4",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "url": null,
+      "tags": [
+        "memory"
+      ]
+    },
+    "m4": {
+      "id": "m4",
+      "source": "memory",
+      "source_ref": "mem_e5f00ad203ad",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
+      "url": null,
+      "tags": [
+        "memory"
+      ]
+    },
+    "m5": {
+      "id": "m5",
+      "source": "memory",
+      "source_ref": "mem_025603a82630",
       "ts": "2026-10-26T18:00:00-04:00",
       "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
       "url": null,
@@ -729,11 +812,11 @@
           "priority": 4
         },
         {
-          "text": "Latest thread on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)",
+          "text": "Life/job update on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)",
           "evidence_ids": [
             "e10"
           ],
-          "kind": "catch_up",
+          "kind": "news",
           "priority": 5
         }
       ],
@@ -776,9 +859,7 @@
         }
       ],
       "missing": [],
-      "refetch": [
-        "memory"
-      ]
+      "refetch": []
     }
   ],
   "final_brief": {
@@ -818,11 +899,11 @@
         "priority": 4
       },
       {
-        "text": "Latest thread on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)",
+        "text": "Life/job update on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)",
         "evidence_ids": [
           "e10"
         ],
-        "kind": "catch_up",
+        "kind": "news",
         "priority": 5
       }
     ],

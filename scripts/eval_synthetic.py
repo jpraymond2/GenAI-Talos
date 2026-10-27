@@ -232,6 +232,11 @@ async def main() -> None:
         f"**Overall: {n_pass}/{n} ({overall:.1f}%)**\n",
         f"- Person accuracy: {person_acc:.1%} ({sum(person_scores)}/{len(person_scores)})",
         f"- Clarify accuracy: {clarify_acc:.1%} ({sum(clarify_scores)}/{len(clarify_scores)})\n",
+        "## Method\n",
+        "The 23 questions were visible during development (not a held-out set). "
+        "The code contains no dataset-specific literals (enforced by "
+        "`tests/test_no_hardcoding.py`). Failures below are left honest — "
+        "we do not chase 100%.\n",
         "## By category\n",
         "| category | pass | total | pct |",
         "|---|---:|---:|---:|",

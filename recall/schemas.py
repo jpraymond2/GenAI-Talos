@@ -49,6 +49,8 @@ class Intent(BaseModel):
         "question",
         "calendar",
         "open_loops",
+        "owe_all",
+        "upcoming_dates",
         "unknown",
     ]
     person_name: str | None = None
@@ -56,7 +58,7 @@ class Intent(BaseModel):
     action_request: str | None = None
     meal_type: str | None = None
     question_field: Literal[
-        "location", "employer", "phone", "replied", "owe"
+        "location", "employer", "phone", "replied", "owe", "calendar_day", "lunch_check"
     ] | None = None
     sources_plan: list[str] = Field(default_factory=lambda: list(DEFAULT_SOURCES_PLAN))
     confidence: float

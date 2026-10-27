@@ -1,8 +1,8 @@
 {
-  "overall_pct": 39.130434782608695,
-  "passed": 9,
+  "overall_pct": 69.56521739130434,
+  "passed": 16,
   "total": 23,
-  "person_accuracy": 0.7222222222222222,
+  "person_accuracy": 1.0,
   "clarify_accuracy": 1.0,
   "results": [
     {
@@ -38,19 +38,16 @@
       "id": "q03",
       "category": "brief",
       "ask": "Brief me on Omar from my MBA",
-      "passed": false,
+      "passed": true,
       "checks": {
-        "person": false,
-        "cover:omar_b.casecomp": false,
+        "person": true,
+        "cover:omar_b.casecomp": true,
         "must_not:omar_h.series_a": true,
         "must_not:omar_k.lease": true
       },
-      "reasons": [
-        "person want=omar_b got=Amira Khalil",
-        "missing omar_b.casecomp"
-      ],
+      "reasons": [],
       "status": "done",
-      "entity_name": "Amira Khalil"
+      "entity_name": "Omar B (MBA)"
     },
     {
       "id": "q04",
@@ -72,14 +69,16 @@
       "id": "q05",
       "category": "disambiguation",
       "ask": "I'm meeting Daniel Kim on Thursday",
-      "passed": true,
+      "passed": false,
       "checks": {
         "person": true,
         "cover:daniel_vc.pitch": true,
         "cover:daniel_vc.dataroom": true,
-        "must_not:daniel_cl.wedding": true
+        "must_not:daniel_cl.wedding": false
       },
-      "reasons": [],
+      "reasons": [
+        "leaked daniel_cl.wedding"
+      ],
       "status": "done",
       "entity_name": "Daniel Kim"
     },
@@ -134,19 +133,15 @@
       "id": "q09",
       "category": "brief",
       "ask": "Prep me for the Stellarfin pilot call",
-      "passed": false,
+      "passed": true,
       "checks": {
-        "person": false,
-        "cover:priya.pilot": false,
-        "cover:priya.job": false
+        "person": true,
+        "cover:priya.pilot": true,
+        "cover:priya.job": true
       },
-      "reasons": [
-        "person want=priya got=Ben Okafor",
-        "missing priya.pilot",
-        "missing priya.job"
-      ],
+      "reasons": [],
       "status": "done",
-      "entity_name": "Ben Okafor"
+      "entity_name": "Priya Nair"
     },
     {
       "id": "q10",
@@ -179,37 +174,29 @@
       "id": "q12",
       "category": "brief",
       "ask": "Who am I meeting on November 6 and what should I know?",
-      "passed": false,
+      "passed": true,
       "checks": {
-        "person": false,
-        "cover:rachel.meeting": false,
-        "cover:rachel.met": false
+        "person": true,
+        "cover:rachel.meeting": true,
+        "cover:rachel.met": true
       },
-      "reasons": [
-        "person want=rachel got=None",
-        "missing rachel.meeting",
-        "missing rachel.met"
-      ],
-      "status": "needs_clarification",
-      "entity_name": null
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Rachel Goldberg"
     },
     {
       "id": "q13",
       "category": "brief",
       "ask": "Prep me for the \u00c9nergie Bor\u00e9ale call",
-      "passed": false,
+      "passed": true,
       "checks": {
-        "person": false,
-        "cover:elodie.boreale": false,
-        "cover:elodie.deck_fr": false
+        "person": true,
+        "cover:elodie.boreale": true,
+        "cover:elodie.deck_fr": true
       },
-      "reasons": [
-        "person want=elodie got=Ben Okafor",
-        "missing elodie.boreale",
-        "missing elodie.deck_fr"
-      ],
+      "reasons": [],
       "status": "done",
-      "entity_name": "Ben Okafor"
+      "entity_name": "\u00c9lodie Gagnon"
     },
     {
       "id": "q14",
@@ -218,20 +205,19 @@
       "passed": false,
       "checks": {
         "cover:mei.model_ask": false,
-        "cover:daniel_vc.dataroom": false,
+        "cover:daniel_vc.dataroom": true,
         "cover:hannah.transcript": false,
         "cover:ruth.draft": false,
         "cover:elodie.deck_fr": false
       },
       "reasons": [
         "missing mei.model_ask",
-        "missing daniel_vc.dataroom",
         "missing hannah.transcript",
         "missing ruth.draft",
         "missing elodie.deck_fr"
       ],
-      "status": "needs_clarification",
-      "entity_name": null
+      "status": "done",
+      "entity_name": ""
     },
     {
       "id": "q15",
@@ -275,30 +261,25 @@
       "id": "q18",
       "category": "calendar",
       "ask": "What's on my calendar Friday?",
-      "passed": false,
+      "passed": true,
       "checks": {
-        "cover:omar_k.plumber": false,
-        "cover:hannah.final": false
+        "cover:omar_k.plumber": true,
+        "cover:hannah.final": true
       },
-      "reasons": [
-        "missing omar_k.plumber",
-        "missing hannah.final"
-      ],
-      "status": "needs_clarification",
-      "entity_name": null
+      "reasons": [],
+      "status": "done",
+      "entity_name": ""
     },
     {
       "id": "q19",
       "category": "calendar",
       "ask": "Am I having lunch with Priya on the 21st?",
-      "passed": false,
+      "passed": true,
       "checks": {
         "person": true,
-        "cover:priya.cancelled_lunch": false
+        "cover:priya.cancelled_lunch": true
       },
-      "reasons": [
-        "missing priya.cancelled_lunch"
-      ],
+      "reasons": [],
       "status": "done",
       "entity_name": "Priya Nair"
     },
@@ -306,17 +287,14 @@
       "id": "q20",
       "category": "brief",
       "ask": "Anything I need to answer my mom about?",
-      "passed": false,
+      "passed": true,
       "checks": {
-        "person": false,
-        "cover:mom.christmas": false
+        "person": true,
+        "cover:mom.christmas": true
       },
-      "reasons": [
-        "person want=mom got=None",
-        "missing mom.christmas"
-      ],
-      "status": "needs_clarification",
-      "entity_name": null
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Nadia Lefebvre"
     },
     {
       "id": "q21",
@@ -340,15 +318,13 @@
       "id": "q22",
       "category": "brief",
       "ask": "Whose birthday is coming up?",
-      "passed": false,
+      "passed": true,
       "checks": {
-        "cover:isabelle.bday": false
+        "cover:isabelle.bday": true
       },
-      "reasons": [
-        "missing isabelle.bday"
-      ],
-      "status": "needs_clarification",
-      "entity_name": null
+      "reasons": [],
+      "status": "done",
+      "entity_name": ""
     },
     {
       "id": "q23",

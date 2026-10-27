@@ -136,7 +136,44 @@ def test_lucas_location_facts(synthetic_env, tmp_path: Path) -> None:
     text = _brief_text(state.final_brief)
     assert _covers("lucas.paris", text)
     assert "paris" in state.final_brief.headline.lower()
+    # Must cite World Model conflict provenance (card vs messages), not re-parse.
+    assert "montreal" in text or "montréal" in text
+    assert "contact" in text or "message" in text or "imessage" in text or "conflict" in text
     _assert_point_quality(state.final_brief)
+
+
+def test_synthetic_meaningful_conflicts(synthetic_env, tmp_path: Path) -> None:
+    """Ingest records ≥3 structured conflicts (city/org/phone) with provenance."""
+    deps = _deps(tmp_path)
+    store = deps.world_store
+    conflicts = []
+    for ent in store.list_entities(type="person"):
+        for c in store.list_conflicts(ent.id):
+            if c.field in {"city", "org", "phone"}:
+                conflicts.append((ent.canonical_name, c))
+    assert len(conflicts) >= 3, [(n, c.field) for n, c in conflicts]
+    by_field = {c.field: (name, c) for name, c in conflicts}
+    # Expected among them: Lucas city, Priya employer, Yusuf phone.
+    assert "city" in by_field
+    assert "org" in by_field
+    assert "phone" in by_field
+    for _name, conflict in conflicts:
+        assert len(conflict.values) >= 2
+        assert all(v.source_ref for v in conflict.values)
+    lucas = next(
+        (
+            c
+            for name, c in conflicts
+            if c.field == "city" and "Lucas" in name
+        ),
+        None,
+    )
+    assert lucas is not None
+    sources = " ".join(v.source_ref for v in lucas.values).lower()
+    assert "contact:" in sources
+    assert any(
+        s in sources for s in ("imessage", "whatsapp", "messenger", "gmail")
+    )
 
 
 def test_mei_model_promise(synthetic_env, tmp_path: Path) -> None:

@@ -751,7 +751,7 @@ class WorldStore:
         else:
             self._conn.execute(
                 """
-                INSERT INTO employment_assumptions(
+                INSERT OR REPLACE INTO employment_assumptions(
                     id, entity_id, company, probability, supporting_refs,
                     contradicting_refs, scoring_version, run_id, updated_at, status,
                     valid_from, valid_to

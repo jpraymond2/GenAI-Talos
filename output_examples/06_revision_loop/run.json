@@ -1,8 +1,8 @@
 {
-  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "run_id": "1a0d1240-5ffb-4694-93dd-cdc2aeb8e893",
   "utterance": {
     "text": "Sync with Mei tomorrow, what's open between us?",
-    "ts": "2026-10-27T02:42:38.038267Z",
+    "ts": "2026-10-27T03:07:57.118559Z",
     "mode": "text"
   },
   "intent": {
@@ -84,7 +84,8 @@
         "attributes": {
           "org": "Tidepool",
           "title": "CTO",
-          "city": "Montreal"
+          "city": "Montreal",
+          "phone": "+14385550117"
         },
         "attribute_history": [
           {
@@ -104,6 +105,12 @@
             "value": "Montreal",
             "observed_at": "2025-10-26T22:00:00Z",
             "source_ref": "contact:c_ed4f859b700e"
+          },
+          {
+            "field": "phone",
+            "value": "+14385550117",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_ed4f859b700e"
           }
         ],
         "first_seen_at": "2025-09-23T17:24:17Z",
@@ -111,7 +118,7 @@
         "mention_count": 331,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+        "run_id": "c715f5b9-ea82-45c0-8883-c345ada177b3"
       },
       "aliases": [
         "Mei Tanaka",
@@ -785,7 +792,7 @@
         "source_ref": "calendar:tlgm1gedn95u771tplpft9v6se"
       }
     },
-    "latency_ms": 11,
+    "latency_ms": 21,
     "llm_calls": 0,
     "critic_rounds": 1
   },
@@ -1107,12 +1114,20 @@
           "priority": 2
         },
         {
+          "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)",
+          "evidence_ids": [
+            "e10"
+          ],
+          "kind": "catch_up",
+          "priority": 3
+        },
+        {
           "text": "Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)",
           "evidence_ids": [
             "e4"
           ],
           "kind": "catch_up",
-          "priority": 3
+          "priority": 4
         },
         {
           "text": "Latest thread on Sat Oct 24: early stage climate, I'll send details (imessage)",
@@ -1120,7 +1135,7 @@
             "e5"
           ],
           "kind": "catch_up",
-          "priority": 4
+          "priority": 5
         }
       ],
       "caveats": []
@@ -1153,6 +1168,12 @@
           "decision": "keep",
           "reason": "Cited evidence in pack.",
           "fix_hint": null
+        },
+        {
+          "index": 4,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
         }
       ],
       "missing": [],
@@ -1180,12 +1201,20 @@
         "priority": 2
       },
       {
+        "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)",
+        "evidence_ids": [
+          "e10"
+        ],
+        "kind": "catch_up",
+        "priority": 3
+      },
+      {
         "text": "Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)",
         "evidence_ids": [
           "e4"
         ],
         "kind": "catch_up",
-        "priority": 3
+        "priority": 4
       },
       {
         "text": "Latest thread on Sat Oct 24: early stage climate, I'll send details (imessage)",
@@ -1193,7 +1222,7 @@
           "e5"
         ],
         "kind": "catch_up",
-        "priority": 4
+        "priority": 5
       }
     ],
     "caveats": []

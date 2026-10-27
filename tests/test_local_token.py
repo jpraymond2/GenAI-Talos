@@ -63,3 +63,25 @@ def test_live_mode_requires_configured_token(
     assert res.status_code == 404
     ask = client.post("/api/ask", json={"text": "hi"})
     assert ask.status_code == 503
+
+
+@pytest.mark.parametrize(
+    "header,value",
+    [
+        ("X-Forwarded-For", "1.2.3.4"),
+        ("X-Forwarded-Host", "example.ts.net"),
+        ("Tailscale-User-Login", "user@example.com"),
+    ],
+)
+def test_local_token_404_with_proxy_headers(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+    header: str,
+    value: str,
+) -> None:
+    monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("RECALL_API_TOKEN", "")
+    get_settings.cache_clear()
+    auth_mod.reset_ephemeral_token_for_tests()
+    res = client.get("/api/local-token", headers={header: value})
+    assert res.status_code == 404

@@ -1,8 +1,8 @@
 {
-  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "run_id": "1a0d1240-5ffb-4694-93dd-cdc2aeb8e893",
   "utterance": {
     "text": "I'm seeing Sasha soon, catch me up",
-    "ts": "2026-10-27T02:42:38.002972Z",
+    "ts": "2026-10-27T03:07:57.082354Z",
     "mode": "text"
   },
   "intent": {
@@ -76,12 +76,15 @@
           "Alexandra Petrova",
           "+14165550129",
           "alexandra.petrova@fieldnote.design",
+          "Sasha",
           "Sasha Petrova"
         ],
         "attributes": {
           "org": "Fieldnote",
           "title": "UX Designer",
-          "city": "Toronto"
+          "city": "Toronto",
+          "nickname": "Sasha",
+          "phone": "+14165550129"
         },
         "attribute_history": [
           {
@@ -101,6 +104,18 @@
             "value": "Toronto",
             "observed_at": "2025-10-26T22:00:00Z",
             "source_ref": "contact:c_1ac807506e35"
+          },
+          {
+            "field": "nickname",
+            "value": "Sasha",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_1ac807506e35"
+          },
+          {
+            "field": "phone",
+            "value": "+14165550129",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_1ac807506e35"
           }
         ],
         "first_seen_at": "2025-10-04T01:22:16Z",
@@ -108,12 +123,13 @@
         "mention_count": 94,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+        "run_id": "c715f5b9-ea82-45c0-8883-c345ada177b3"
       },
       "aliases": [
         "Alexandra Petrova",
         "+14165550129",
         "alexandra.petrova@fieldnote.design",
+        "Sasha",
         "Sasha Petrova"
       ],
       "last_interaction_per_source": {

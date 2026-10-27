@@ -10,7 +10,7 @@
   sources: `e24`
 - Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (imessage)  
   sources: `e8`
-- Latest thread on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)  
+- Life/job update on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)  
   sources: `e10`
 
 ### Caveats

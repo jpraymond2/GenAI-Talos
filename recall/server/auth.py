@@ -85,8 +85,30 @@ async def require_ws_token(websocket: WebSocket) -> bool:
     return True
 
 
+_PROXY_HEADERS = (
+    "x-forwarded-for",
+    "x-forwarded-host",
+    "x-forwarded-proto",
+    "x-real-ip",
+    "forwarded",
+    "tailscale-user-login",
+    "tailscale-user-name",
+    "tailscale-headers-info",
+)
+
+
+def request_has_proxy_headers(request: Request) -> bool:
+    """True when the request was clearly forwarded (Tailscale serve, reverse proxy)."""
+    for name in _PROXY_HEADERS:
+        if request.headers.get(name):
+            return True
+    return False
+
+
 def client_is_loopback(request: Request) -> bool:
-    """True when the request originates from 127.0.0.1 / ::1."""
+    """True when the request originates from 127.0.0.1 / ::1 (no proxy hop)."""
+    if request_has_proxy_headers(request):
+        return False
     client = request.client
     host = ""
     if client is not None:
@@ -94,6 +116,6 @@ def client_is_loopback(request: Request) -> bool:
     # Starlette TestClient reports host "testclient"; treat as loopback in tests.
     if host in {"127.0.0.1", "::1", "localhost", "testclient"}:
         return True
-    # Fall back to Host header (some proxies / TestClient base_url setups).
+    # Fall back to Host header (some TestClient base_url setups).
     hdr = (request.headers.get("host") or "").split(":", 1)[0].strip().lower()
     return hdr in {"127.0.0.1", "localhost"}

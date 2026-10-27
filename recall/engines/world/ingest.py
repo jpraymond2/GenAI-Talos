@@ -39,7 +39,21 @@ _CONFLICT_WINDOW_DAYS = 120
 _NAME_FUZZ_THRESHOLD = 90
 
 # Bump when attribute extraction rules change so sample DBs reingest.
-INGEST_VERSION = "phase1c-conflicts-v1"
+INGEST_VERSION = "phase2b-meaningful-conflicts-v3"
+
+# Fields where a contact-card value vs a newer message/signature is always a conflict.
+_STRUCTURED_CONFLICT_FIELDS = frozenset({"city", "org", "phone"})
+
+_PHONE_ANNOUNCE_RE = re.compile(
+    r"(?i)\b("
+    r"new number|nouveau num[eé]ro|save this (?:one|number)|"
+    r"number is|mon nouveau"
+    r")\b"
+)
+_EMPLOYER_CHAT_RE = re.compile(
+    r"(?i)\b(?:started at|starting at|joined|works? at|working at|nouveau job chez)\s+"
+    r"(?-i:([A-ZÀ-Ö][A-Za-zÀ-öø-ÿ0-9&.'\-]*(?:\s+[A-ZÀ-Ö][A-Za-zÀ-öø-ÿ0-9&.'\-]*){0,3}))"
+)
 
 _CITY_PATTERNS = [
     re.compile(
@@ -560,6 +574,9 @@ class IngestPipelineService:
             tracer=self._tracer,
             run_id=run_id,
         )
+        # Merges combine attribute histories; refresh structured conflicts so
+        # card-vs-new-phone (etc.) still surface after a name_merge join.
+        conflict_count = self._refresh_conflicts_from_history()
 
         self._store.set_meta("ingest_stage", "relationships")
         relationship_counts = self._run_relationship_scoring(run_id=run_id, layer=layer)
@@ -697,6 +714,17 @@ class IngestPipelineService:
                 observe("title", contact.title, contact_ts, source_ref)
             if contact.city:
                 observe("city", contact.city, contact_ts, source_ref)
+            nick = (getattr(contact, "nickname", None) or "").strip()
+            if nick:
+                observe("nickname", nick, contact_ts, source_ref)
+                if nick not in aliases and nick.lower() not in {
+                    a.lower() for a in aliases
+                }:
+                    aliases.append(nick)
+            for phone in contact.phones:
+                norm = normalize_phone(phone)
+                if norm:
+                    observe("phone", norm, contact_ts, source_ref)
 
         # Handle values as identifiers
         handle_values = {h.value for h in person.handles} | set(emails) | set(phones)
@@ -715,7 +743,18 @@ class IngestPipelineService:
             extracted = extract_signature_attributes(row.text, source=row.source)
             for field_name, value in extracted.items():
                 observe(field_name, value, row.ts_utc, row.source_ref)
-
+            # Chat job-change announcements (employer only — never title crumbs).
+            if row.source in {"imessage", "whatsapp", "messenger", "gmail"}:
+                emp = _EMPLOYER_CHAT_RE.search(row.text or "")
+                if emp:
+                    org = _normalize_attr_value(emp.group(1).strip(" .,!"))
+                    if _is_plausible_structured_attr(org, field="org"):
+                        observe("org", org, row.ts_utc, row.source_ref)
+            # Self-announced new phone number (handle on the message is the new one).
+            if _PHONE_ANNOUNCE_RE.search(row.text or ""):
+                announced = normalize_phone(row.handle_value)
+                if announced:
+                    observe("phone", announced, row.ts_utc, row.source_ref)
         # Canonical attributes = latest per field
         attributes: dict[str, str] = {}
         by_field: dict[str, list[AttributeObservation]] = {}
@@ -785,6 +824,29 @@ class IngestPipelineService:
 
         return entity, observations, conflicts, relationships
 
+    def _refresh_conflicts_from_history(self) -> int:
+        """Recompute conflicts from each person's attribute_history (post-merge)."""
+        total = 0
+        for entity in self._store.list_entities(type="person"):
+            by_field: dict[str, list[AttributeObservation]] = {}
+            for item in entity.attribute_history or []:
+                by_field.setdefault(item.field, []).append(item)
+            conflicts = self._detect_conflicts(entity.id, by_field)
+            self._store.clear_conflicts_for_entity(entity.id)
+            for conflict in conflicts:
+                self._store.upsert_conflict(conflict)
+                total += 1
+            # Keep attributes consistent with newest observation per field.
+            if by_field:
+                attrs = dict(entity.attributes or {})
+                for field_name, items in by_field.items():
+                    items_sorted = sorted(items, key=lambda x: x.observed_at)
+                    attrs[field_name] = items_sorted[-1].value
+                if attrs != entity.attributes:
+                    entity.attributes = attrs
+                    self._store.upsert_entity(entity)
+        return total
+
     def _detect_conflicts(
         self,
         entity_id: str,
@@ -800,20 +862,13 @@ class IngestPipelineService:
                 by_key.setdefault(key, []).append(item)
             if len(by_key) < 2:
                 continue
-            # Conflict if ANY observation of value A is within the window of ANY
-            # observation of value B (contact cards may be dated far in the past).
             keys = list(by_key.keys())
             conflicted = False
             for i, key_a in enumerate(keys):
                 for key_b in keys[i + 1 :]:
                     for left in by_key[key_a]:
                         for right in by_key[key_b]:
-                            delta = abs(
-                                (
-                                    _parse_ts(left.observed_at) - _parse_ts(right.observed_at)
-                                ).days
-                            )
-                            if delta <= _CONFLICT_WINDOW_DAYS:
+                            if self._observations_conflict(field_name, left, right):
                                 conflicted = True
                                 break
                         if conflicted:
@@ -845,6 +900,26 @@ class IngestPipelineService:
                 )
             )
         return conflicts
+
+    @staticmethod
+    def _observations_conflict(
+        field_name: str,
+        left: AttributeObservation,
+        right: AttributeObservation,
+    ) -> bool:
+        """True when two observations of the same field meaningfully disagree."""
+        delta = abs(
+            (_parse_ts(left.observed_at) - _parse_ts(right.observed_at)).days
+        )
+        if delta <= _CONFLICT_WINDOW_DAYS:
+            return True
+        # Contact card vs a newer message/signature/domain observation: always
+        # record for city / org / phone (stale cards are the point).
+        if field_name not in _STRUCTURED_CONFLICT_FIELDS:
+            return False
+        left_card = str(left.source_ref or "").startswith("contact:")
+        right_card = str(right.source_ref or "").startswith("contact:")
+        return left_card != right_card
 
     @staticmethod
     def _write_provenance(path: Path, observation: Observation) -> None:

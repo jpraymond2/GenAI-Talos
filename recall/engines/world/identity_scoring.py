@@ -27,6 +27,15 @@ _ROOT = Path(__file__).resolve().parents[3]
 _SCORING_PATH = _ROOT / "config" / "identity_scoring.yaml"
 _ALIASES_PATH = _ROOT / "config" / "company_aliases.yaml"
 
+
+def _learned_aliases_path(settings: Any | None = None) -> Path:
+    """Per-dataset learned aliases live under data/learned/ (gitignored)."""
+    from recall.config import get_settings
+
+    active = settings if settings is not None else get_settings()
+    name = (getattr(active, "dataset_name", None) or "default").strip() or "default"
+    return _ROOT / "data" / "learned" / name / "company_aliases.yaml"
+
 _TOKEN_SPLIT = re.compile(r"[.\-_0-9]+")
 _PHONE_RE = re.compile(
     r"(?:\+?\d[\d\s().-]{7,}\d)"
@@ -164,23 +173,30 @@ def load_scoring_config(path: Path | None = None) -> dict[str, Any]:
 
 
 def load_company_aliases(path: Path | None = None) -> dict[str, Any]:
-    """Load company_aliases.yaml (seed + learned)."""
-    target = path or _ALIASES_PATH
-    if not target.exists():
-        return {"seed": {}, "learned": {}}
-    with target.open(encoding="utf-8") as handle:
-        data = yaml.safe_load(handle) or {}
-    data.setdefault("seed", {})
-    data.setdefault("learned", {})
+    """Load hand-curated seed from config/ plus learned from data/learned/."""
+    seed_path = path or _ALIASES_PATH
+    data: dict[str, Any] = {"seed": {}, "learned": {}}
+    if seed_path.exists():
+        with seed_path.open(encoding="utf-8") as handle:
+            raw = yaml.safe_load(handle) or {}
+        data["seed"] = dict(raw.get("seed") or {})
+        # Ignore any legacy learned: block still sitting in config/.
+    learned_path = _learned_aliases_path()
+    if learned_path.exists():
+        with learned_path.open(encoding="utf-8") as handle:
+            raw = yaml.safe_load(handle) or {}
+        data["learned"] = dict(raw.get("learned") or raw or {})
     return data
 
 
 def save_company_aliases(data: dict[str, Any], path: Path | None = None) -> None:
-    """Persist company aliases YAML (append-only learned entries via rewrite)."""
-    target = path or _ALIASES_PATH
+    """Persist only learned entries under data/learned/<dataset>/ (never config/)."""
+    _ = path  # seed file is hand-curated; never overwrite it from ingest
+    target = _learned_aliases_path()
     target.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"learned": dict((data or {}).get("learned") or {})}
     with target.open("w", encoding="utf-8") as handle:
-        yaml.safe_dump(data, handle, sort_keys=False, allow_unicode=True)
+        yaml.safe_dump(payload, handle, sort_keys=False, allow_unicode=True)
 
 
 def handle_slug(value: str) -> str:
@@ -300,9 +316,7 @@ def extract_signature(body: str) -> dict[str, Any]:
 
 def _domain_to_company(domain: str) -> str:
     base = domain.split(".")[0]
-    if base.lower() == "pwc":
-        return "PwC"
-    return base[:1].upper() + base[1:]
+    return base[:1].upper() + base[1:] if base else domain
 
 
 async def ensure_company_for_domain(
