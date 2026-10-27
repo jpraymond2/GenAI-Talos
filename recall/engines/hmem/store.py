@@ -37,6 +37,11 @@ CREATE TABLE IF NOT EXISTS memories (
 
 CREATE INDEX IF NOT EXISTS idx_memories_layer ON memories(layer);
 CREATE INDEX IF NOT EXISTS idx_memories_attr ON memories(attribute_key, attribute_value);
+
+CREATE TABLE IF NOT EXISTS meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL DEFAULT ''
+);
 """
 
 
@@ -83,6 +88,22 @@ class MemoryStoreService:
 
     def close(self) -> None:
         self._conn.close()
+
+    def get_meta(self, key: str) -> str | None:
+        """Return a meta value or None when unset."""
+        row = self._conn.execute(
+            "SELECT value FROM meta WHERE key = ?", (key,)
+        ).fetchone()
+        return None if row is None else str(row["value"])
+
+    def set_meta(self, key: str, value: str) -> None:
+        """Upsert a meta key/value."""
+        self._conn.execute(
+            "INSERT INTO meta(key, value) VALUES (?, ?) "
+            "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+            (key, value),
+        )
+        self._conn.commit()
 
     def add(self, memory: Memory) -> Memory:
         """Insert a memory row."""

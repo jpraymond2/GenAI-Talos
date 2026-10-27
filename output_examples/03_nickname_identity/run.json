@@ -1,8 +1,8 @@
 {
-  "run_id": "1a0d1240-5ffb-4694-93dd-cdc2aeb8e893",
+  "run_id": "4df3c434-d48a-4aef-bef1-a71a83c89c96",
   "utterance": {
     "text": "I'm seeing Sasha soon, catch me up",
-    "ts": "2026-10-27T03:07:57.082354Z",
+    "ts": "2026-10-27T15:36:38.664777Z",
     "mode": "text"
   },
   "intent": {
@@ -45,26 +45,29 @@
     "relationship_style": "Friend. Lead with life updates, plans and anything the user promised personally. Warm, casual tone. Skip job titles unless they changed.",
     "relationship_status": "auto",
     "evidence_source_refs": {
-      "e1": "imessage:1497",
-      "e2": "imessage:1496",
-      "e3": "imessage:1417",
-      "e4": "imessage:1416",
-      "e5": "imessage:1384",
-      "e6": "imessage:1140",
-      "e7": "imessage:1139",
-      "e8": "imessage:1113",
-      "e9": "imessage:1112",
-      "e10": "imessage:1111",
-      "e11": "imessage:892",
-      "e12": "imessage:891",
-      "e13": "imessage:890",
-      "e14": "imessage:738",
-      "e15": "imessage:737",
-      "e16": "imessage:736",
-      "e17": "imessage:580",
-      "e18": "imessage:579",
-      "e19": "imessage:578",
-      "e20": "imessage:544"
+      "e1": "messenger:inbox/sashapetrova_4069878899102469:1792606264000",
+      "e2": "messenger:inbox/sashapetrova_4069878899102469:1792605926000",
+      "e3": "messenger:inbox/sashapetrova_4069878899102469:1792605838000",
+      "e4": "imessage:1497",
+      "e5": "imessage:1496",
+      "e6": "messenger:inbox/sashapetrova_4069878899102469:1792244279000",
+      "e7": "messenger:inbox/sashapetrova_4069878899102469:1792243959000",
+      "e8": "messenger:inbox/sashapetrova_4069878899102469:1792243892000",
+      "e9": "messenger:inbox/sashapetrova_4069878899102469:1792030179000",
+      "e10": "messenger:inbox/sashapetrova_4069878899102469:1792027741000",
+      "e11": "messenger:inbox/sashapetrova_4069878899102469:1791717977000",
+      "e12": "messenger:inbox/sashapetrova_4069878899102469:1791717931000",
+      "e13": "messenger:inbox/sashapetrova_4069878899102469:1791159728000",
+      "e14": "messenger:inbox/sashapetrova_4069878899102469:1791159399000",
+      "e15": "messenger:inbox/sashapetrova_4069878899102469:1791159337000",
+      "e16": "imessage:1417",
+      "e17": "imessage:1416",
+      "e18": "messenger:inbox/sashapetrova_4069878899102469:1790299539000",
+      "e19": "messenger:inbox/sashapetrova_4069878899102469:1790298592000",
+      "e20": "imessage:1384",
+      "w1": "https://example.com/payloop-series-a",
+      "w2": "https://example.com/northwind-climate",
+      "w3": "https://example.com/stellarfin-sustainability"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -123,7 +126,7 @@
         "mention_count": 94,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "c715f5b9-ea82-45c0-8883-c345ada177b3"
+        "run_id": "de40048e-5d86-40ba-952e-2b9fb62b3e2e"
       },
       "aliases": [
         "Alexandra Petrova",
@@ -133,6 +136,12 @@
         "Sasha Petrova"
       ],
       "last_interaction_per_source": {
+        "messenger": {
+          "ts_utc": "2026-10-21T18:11:04Z",
+          "direction": "out",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792606264000",
+          "subject": ""
+        },
         "imessage": {
           "ts_utc": "2026-10-19T01:02:00Z",
           "direction": "out",
@@ -141,6 +150,42 @@
         }
       },
       "recent_interactions": [
+        {
+          "interaction_id": "i_a41c59b6b581",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-10-21T18:11:04Z",
+          "subject": "",
+          "text": "can't wait",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792606264000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_16f66a55d93c",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "in",
+          "ts_utc": "2026-10-21T18:05:26Z",
+          "subject": "",
+          "text": "amazing, too short as always. photos soon",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792605926000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_580028aeb436",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-10-21T18:03:58Z",
+          "subject": "",
+          "text": "how was the trip?",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792605838000",
+          "peer": false,
+          "assumption": "anchored"
+        },
         {
           "interaction_id": "i_6ad9c5923b9c",
           "source": "imessage",
@@ -162,6 +207,126 @@
           "subject": "",
           "text": "I'll be in Montreal Nov 13 to 16 for a design conference! dinner on Saturday the 14th?",
           "source_ref": "imessage:1496",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_b1115d81bcfb",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-10-17T13:37:59Z",
+          "subject": "",
+          "text": "same",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792244279000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_d10a4f605726",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "in",
+          "ts_utc": "2026-10-17T13:32:39Z",
+          "subject": "",
+          "text": "I refuse to go outside",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792243959000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_889c61f55099",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-10-17T13:31:32Z",
+          "subject": "",
+          "text": "this weather 😩",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792243892000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_7f4be106878f",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "in",
+          "ts_utc": "2026-10-15T02:09:39Z",
+          "subject": "",
+          "text": "no worries, grabbed a table at the back",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792030179000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_fe6a6ee04bf8",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-10-15T01:29:01Z",
+          "subject": "",
+          "text": "running 10 min late sorry!!",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792027741000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_5939ce11ae13",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "in",
+          "ts_utc": "2026-10-11T11:26:17Z",
+          "subject": "",
+          "text": "finally. what a week",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791717977000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_925d4e20e9dc",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-10-11T11:25:31Z",
+          "subject": "",
+          "text": "happy friday 🍻",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791717931000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_3c9db1609740",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "in",
+          "ts_utc": "2026-10-05T00:22:08Z",
+          "subject": "",
+          "text": "can't wait",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791159728000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_4d61dbb17382",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-10-05T00:16:39Z",
+          "subject": "",
+          "text": "amazing, too short as always. photos soon",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791159399000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_042e043138d0",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "in",
+          "ts_utc": "2026-10-05T00:15:37Z",
+          "subject": "",
+          "text": "how was the trip?",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791159337000",
           "peer": false,
           "assumption": "anchored"
         },
@@ -190,6 +355,30 @@
           "assumption": "anchored"
         },
         {
+          "interaction_id": "i_b27a27d50295",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "in",
+          "ts_utc": "2026-09-25T01:25:39Z",
+          "subject": "",
+          "text": "coming down",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1790299539000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_f19a5f6eda79",
+          "source": "messenger",
+          "thread_id": "th_0b7638452e87",
+          "direction": "out",
+          "ts_utc": "2026-09-25T01:09:52Z",
+          "subject": "",
+          "text": "📍 here",
+          "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1790298592000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
           "interaction_id": "i_6404cbea954f",
           "source": "imessage",
           "thread_id": "th_454747c13807",
@@ -200,186 +389,6 @@
           "source_ref": "imessage:1384",
           "peer": false,
           "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_669611b06abb",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-07-25T13:09:02Z",
-          "subject": "",
-          "text": "anytime ❤️",
-          "source_ref": "imessage:1140",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_38e0809d2443",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "out",
-          "ts_utc": "2026-07-25T13:07:59Z",
-          "subject": "",
-          "text": "thanks again for yesterday, really needed that",
-          "source_ref": "imessage:1139",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_37bc23efac25",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-07-17T13:59:38Z",
-          "subject": "",
-          "text": "phew, I'll grab it next time",
-          "source_ref": "imessage:1113",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_b919b5853d68",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "out",
-          "ts_utc": "2026-07-17T13:58:52Z",
-          "subject": "",
-          "text": "the grey one? yes, it's on the chair",
-          "source_ref": "imessage:1112",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_c5be3ed04ba6",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-07-17T13:43:43Z",
-          "subject": "",
-          "text": "did I leave my scarf at your place?",
-          "source_ref": "imessage:1111",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_68b44c7f5110",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-05-22T19:02:25Z",
-          "subject": "",
-          "text": "lol",
-          "source_ref": "imessage:892",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_d6f63e46726e",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "out",
-          "ts_utc": "2026-05-22T18:54:20Z",
-          "subject": "",
-          "text": "proud of you",
-          "source_ref": "imessage:891",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_5bc7b9e47301",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-05-22T18:13:56Z",
-          "subject": "",
-          "text": "ok I finally booked the dentist",
-          "source_ref": "imessage:890",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_38a7f686d8a4",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-04-14T01:16:03Z",
-          "subject": "",
-          "text": "perfect",
-          "source_ref": "imessage:738",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_89b48f2dbeaf",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "out",
-          "ts_utc": "2026-04-14T01:12:26Z",
-          "subject": "",
-          "text": "in 20 min?",
-          "source_ref": "imessage:737",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_1472c3555bc4",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-04-14T01:11:16Z",
-          "subject": "",
-          "text": "free for a quick call?",
-          "source_ref": "imessage:736",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_f05f8a208136",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-03-02T20:18:34Z",
-          "subject": "",
-          "text": "can't wait",
-          "source_ref": "imessage:580",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_af51185b354d",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "out",
-          "ts_utc": "2026-03-02T19:38:28Z",
-          "subject": "",
-          "text": "amazing, too short as always. photos soon",
-          "source_ref": "imessage:579",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_c9bbdf733118",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-03-02T19:34:46Z",
-          "subject": "",
-          "text": "how was the trip?",
-          "source_ref": "imessage:578",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_5aa64b2ccc15",
-          "source": "imessage",
-          "thread_id": "th_454747c13807",
-          "direction": "in",
-          "ts_utc": "2026-02-20T00:07:13Z",
-          "subject": "",
-          "text": "finally. what a week",
-          "source_ref": "imessage:544",
-          "peer": false,
-          "assumption": "anchored"
         }
       ],
       "open_loops": [],
@@ -387,12 +396,34 @@
       "past_events": [],
       "conflicts": [],
       "selection_reason": "entity_id=ent_12ae312d69de",
-      "linked_handles": [],
+      "linked_handles": [
+        {
+          "handle_kind": "email",
+          "handle_value": "alexandra.petrova@fieldnote.design",
+          "probability": 0.95,
+          "status": "active",
+          "source_ref": "handle:h_c0c19c082df5"
+        },
+        {
+          "handle_kind": "imessage",
+          "handle_value": "+14165550129",
+          "probability": 0.95,
+          "status": "active",
+          "source_ref": "handle:h_5a9f497c6548"
+        },
+        {
+          "handle_kind": "messenger",
+          "handle_value": "Sasha Petrova",
+          "probability": 0.95,
+          "status": "active",
+          "source_ref": "handle:h_720b0cfb8a67"
+        }
+      ],
       "last_contact": {
-        "ts_utc": "2026-10-19T01:02:00Z",
-        "source": "imessage",
+        "ts_utc": "2026-10-21T18:11:04Z",
+        "source": "messenger",
         "direction": "out",
-        "source_ref": "imessage:1497",
+        "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792606264000",
         "subject": ""
       },
       "last_met": null,
@@ -406,6 +437,33 @@
   "evidence": {
     "e1": {
       "id": "e1",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792606264000",
+      "ts": "2026-10-21T18:11:04Z",
+      "text": "can't wait",
+      "url": null,
+      "tags": []
+    },
+    "e2": {
+      "id": "e2",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792605926000",
+      "ts": "2026-10-21T18:05:26Z",
+      "text": "amazing, too short as always. photos soon",
+      "url": null,
+      "tags": []
+    },
+    "e3": {
+      "id": "e3",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792605838000",
+      "ts": "2026-10-21T18:03:58Z",
+      "text": "how was the trip?",
+      "url": null,
+      "tags": []
+    },
+    "e4": {
+      "id": "e4",
       "source": "imessage",
       "source_ref": "imessage:1497",
       "ts": "2026-10-19T01:02:00Z",
@@ -413,8 +471,8 @@
       "url": null,
       "tags": []
     },
-    "e2": {
-      "id": "e2",
+    "e5": {
+      "id": "e5",
       "source": "imessage",
       "source_ref": "imessage:1496",
       "ts": "2026-10-19T00:44:00Z",
@@ -422,8 +480,98 @@
       "url": null,
       "tags": []
     },
-    "e3": {
-      "id": "e3",
+    "e6": {
+      "id": "e6",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792244279000",
+      "ts": "2026-10-17T13:37:59Z",
+      "text": "same",
+      "url": null,
+      "tags": []
+    },
+    "e7": {
+      "id": "e7",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792243959000",
+      "ts": "2026-10-17T13:32:39Z",
+      "text": "I refuse to go outside",
+      "url": null,
+      "tags": []
+    },
+    "e8": {
+      "id": "e8",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792243892000",
+      "ts": "2026-10-17T13:31:32Z",
+      "text": "this weather 😩",
+      "url": null,
+      "tags": []
+    },
+    "e9": {
+      "id": "e9",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792030179000",
+      "ts": "2026-10-15T02:09:39Z",
+      "text": "no worries, grabbed a table at the back",
+      "url": null,
+      "tags": []
+    },
+    "e10": {
+      "id": "e10",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1792027741000",
+      "ts": "2026-10-15T01:29:01Z",
+      "text": "running 10 min late sorry!!",
+      "url": null,
+      "tags": []
+    },
+    "e11": {
+      "id": "e11",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791717977000",
+      "ts": "2026-10-11T11:26:17Z",
+      "text": "finally. what a week",
+      "url": null,
+      "tags": []
+    },
+    "e12": {
+      "id": "e12",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791717931000",
+      "ts": "2026-10-11T11:25:31Z",
+      "text": "happy friday 🍻",
+      "url": null,
+      "tags": []
+    },
+    "e13": {
+      "id": "e13",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791159728000",
+      "ts": "2026-10-05T00:22:08Z",
+      "text": "can't wait",
+      "url": null,
+      "tags": []
+    },
+    "e14": {
+      "id": "e14",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791159399000",
+      "ts": "2026-10-05T00:16:39Z",
+      "text": "amazing, too short as always. photos soon",
+      "url": null,
+      "tags": []
+    },
+    "e15": {
+      "id": "e15",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1791159337000",
+      "ts": "2026-10-05T00:15:37Z",
+      "text": "how was the trip?",
+      "url": null,
+      "tags": []
+    },
+    "e16": {
+      "id": "e16",
       "source": "imessage",
       "source_ref": "imessage:1417",
       "ts": "2026-09-28T20:26:21Z",
@@ -431,8 +579,8 @@
       "url": null,
       "tags": []
     },
-    "e4": {
-      "id": "e4",
+    "e17": {
+      "id": "e17",
       "source": "imessage",
       "source_ref": "imessage:1416",
       "ts": "2026-09-28T20:22:54Z",
@@ -440,8 +588,26 @@
       "url": null,
       "tags": []
     },
-    "e5": {
-      "id": "e5",
+    "e18": {
+      "id": "e18",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1790299539000",
+      "ts": "2026-09-25T01:25:39Z",
+      "text": "coming down",
+      "url": null,
+      "tags": []
+    },
+    "e19": {
+      "id": "e19",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1790298592000",
+      "ts": "2026-09-25T01:09:52Z",
+      "text": "📍 here",
+      "url": null,
+      "tags": []
+    },
+    "e20": {
+      "id": "e20",
       "source": "imessage",
       "source_ref": "imessage:1384",
       "ts": "2026-09-22T23:10:00Z",
@@ -449,159 +615,60 @@
       "url": null,
       "tags": []
     },
-    "e6": {
-      "id": "e6",
-      "source": "imessage",
-      "source_ref": "imessage:1140",
-      "ts": "2026-07-25T13:09:02Z",
-      "text": "anytime ❤️",
-      "url": null,
-      "tags": []
+    "w1": {
+      "id": "w1",
+      "source": "web",
+      "source_ref": "https://example.com/payloop-series-a",
+      "ts": "2026-09-15T00:00:00Z",
+      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by climate-focused funds, with CEO Omar Haddad citing demand from SMBs.",
+      "url": "https://example.com/payloop-series-a",
+      "tags": [
+        "web",
+        "cache"
+      ]
     },
-    "e7": {
-      "id": "e7",
-      "source": "imessage",
-      "source_ref": "imessage:1139",
-      "ts": "2026-07-25T13:07:59Z",
-      "text": "thanks again for yesterday, really needed that",
-      "url": null,
-      "tags": []
+    "w2": {
+      "id": "w2",
+      "source": "web",
+      "source_ref": "https://example.com/northwind-climate",
+      "ts": "2026-08-01T00:00:00Z",
+      "text": "Northwind Capital deepens climate thesis. Partner Rachel Goldberg said Northwind is prioritizing climate data infrastructure after a busy Startupfest season.",
+      "url": "https://example.com/northwind-climate",
+      "tags": [
+        "web",
+        "cache"
+      ]
     },
-    "e8": {
-      "id": "e8",
-      "source": "imessage",
-      "source_ref": "imessage:1113",
-      "ts": "2026-07-17T13:59:38Z",
-      "text": "phew, I'll grab it next time",
-      "url": null,
-      "tags": []
-    },
-    "e9": {
-      "id": "e9",
-      "source": "imessage",
-      "source_ref": "imessage:1112",
-      "ts": "2026-07-17T13:58:52Z",
-      "text": "the grey one? yes, it's on the chair",
-      "url": null,
-      "tags": []
-    },
-    "e10": {
-      "id": "e10",
-      "source": "imessage",
-      "source_ref": "imessage:1111",
-      "ts": "2026-07-17T13:43:43Z",
-      "text": "did I leave my scarf at your place?",
-      "url": null,
-      "tags": []
-    },
-    "e11": {
-      "id": "e11",
-      "source": "imessage",
-      "source_ref": "imessage:892",
-      "ts": "2026-05-22T19:02:25Z",
-      "text": "lol",
-      "url": null,
-      "tags": []
-    },
-    "e12": {
-      "id": "e12",
-      "source": "imessage",
-      "source_ref": "imessage:891",
-      "ts": "2026-05-22T18:54:20Z",
-      "text": "proud of you",
-      "url": null,
-      "tags": []
-    },
-    "e13": {
-      "id": "e13",
-      "source": "imessage",
-      "source_ref": "imessage:890",
-      "ts": "2026-05-22T18:13:56Z",
-      "text": "ok I finally booked the dentist",
-      "url": null,
-      "tags": []
-    },
-    "e14": {
-      "id": "e14",
-      "source": "imessage",
-      "source_ref": "imessage:738",
-      "ts": "2026-04-14T01:16:03Z",
-      "text": "perfect",
-      "url": null,
-      "tags": []
-    },
-    "e15": {
-      "id": "e15",
-      "source": "imessage",
-      "source_ref": "imessage:737",
-      "ts": "2026-04-14T01:12:26Z",
-      "text": "in 20 min?",
-      "url": null,
-      "tags": []
-    },
-    "e16": {
-      "id": "e16",
-      "source": "imessage",
-      "source_ref": "imessage:736",
-      "ts": "2026-04-14T01:11:16Z",
-      "text": "free for a quick call?",
-      "url": null,
-      "tags": []
-    },
-    "e17": {
-      "id": "e17",
-      "source": "imessage",
-      "source_ref": "imessage:580",
-      "ts": "2026-03-02T20:18:34Z",
-      "text": "can't wait",
-      "url": null,
-      "tags": []
-    },
-    "e18": {
-      "id": "e18",
-      "source": "imessage",
-      "source_ref": "imessage:579",
-      "ts": "2026-03-02T19:38:28Z",
-      "text": "amazing, too short as always. photos soon",
-      "url": null,
-      "tags": []
-    },
-    "e19": {
-      "id": "e19",
-      "source": "imessage",
-      "source_ref": "imessage:578",
-      "ts": "2026-03-02T19:34:46Z",
-      "text": "how was the trip?",
-      "url": null,
-      "tags": []
-    },
-    "e20": {
-      "id": "e20",
-      "source": "imessage",
-      "source_ref": "imessage:544",
-      "ts": "2026-02-20T00:07:13Z",
-      "text": "finally. what a week",
-      "url": null,
-      "tags": []
+    "w3": {
+      "id": "w3",
+      "source": "web",
+      "source_ref": "https://example.com/stellarfin-sustainability",
+      "ts": "2026-06-20T00:00:00Z",
+      "text": "Stellarfin expands sustainability product team. Stellarfin hired product leaders to scale its sustainability reporting suite for mid-market customers.",
+      "url": "https://example.com/stellarfin-sustainability",
+      "tags": [
+        "web",
+        "cache"
+      ]
     }
   },
   "drafts": [
     {
       "person": "Alexandra Petrova",
-      "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 7 days ago on imessage",
+      "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 5 days ago on messenger",
       "points": [
         {
-          "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
+          "text": "Latest thread on Wed Oct 21: amazing, too short as always. photos soon (messenger)",
           "evidence_ids": [
-            "e1"
+            "e2"
           ],
           "kind": "catch_up",
           "priority": 1
         },
         {
-          "text": "Latest thread on Tue Sep 22: small news: they made me senior UX designer at Fieldnote 🙈 (imessage)",
+          "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
           "evidence_ids": [
-            "e5"
+            "e4"
           ],
           "kind": "catch_up",
           "priority": 2
@@ -633,20 +700,20 @@
   ],
   "final_brief": {
     "person": "Alexandra Petrova",
-    "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 7 days ago on imessage",
+    "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 5 days ago on messenger",
     "points": [
       {
-        "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
+        "text": "Latest thread on Wed Oct 21: amazing, too short as always. photos soon (messenger)",
         "evidence_ids": [
-          "e1"
+          "e2"
         ],
         "kind": "catch_up",
         "priority": 1
       },
       {
-        "text": "Latest thread on Tue Sep 22: small news: they made me senior UX designer at Fieldnote 🙈 (imessage)",
+        "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
         "evidence_ids": [
-          "e5"
+          "e4"
         ],
         "kind": "catch_up",
         "priority": 2

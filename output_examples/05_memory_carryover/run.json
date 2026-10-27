@@ -1,8 +1,8 @@
 {
-  "run_id": "1a0d1240-5ffb-4694-93dd-cdc2aeb8e893",
+  "run_id": "4df3c434-d48a-4aef-bef1-a71a83c89c96",
   "utterance": {
     "text": "I'm meeting Rachel Goldberg",
-    "ts": "2026-10-27T03:07:57.110483Z",
+    "ts": "2026-10-27T15:36:38.703064Z",
     "mode": "text"
   },
   "intent": {
@@ -41,16 +41,9 @@
     "evidence_source_refs": {
       "e1": "gmail:3fc9825c2d5bdc5b",
       "e2": "calendar:nthj1jqi7og39kok53v4m0uf1b",
-      "m1": "mem_e5f00ad203ad",
-      "memory:m1": "mem_e5f00ad203ad",
-      "m2": "mem_025603a82630",
-      "memory:m2": "mem_025603a82630",
-      "m3": "mem_22ea155206c3",
-      "memory:m3": "mem_22ea155206c3",
-      "m4": "mem_6687c8aac239",
-      "memory:m4": "mem_6687c8aac239",
-      "m5": "mem_ecb002a57898",
-      "memory:m5": "mem_ecb002a57898"
+      "m1": "mem_a13750f2de8c",
+      "memory:m1": "mem_a13750f2de8c",
+      "w1": "https://example.com/northwind-climate"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -92,7 +85,7 @@
         "mention_count": 1,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "c715f5b9-ea82-45c0-8883-c345ada177b3"
+        "run_id": "de40048e-5d86-40ba-952e-2b9fb62b3e2e"
       },
       "aliases": [
         "Rachel Goldberg",
@@ -139,7 +132,15 @@
       "past_events": [],
       "conflicts": [],
       "selection_reason": "entity_id=ent_661c8077a70a",
-      "linked_handles": [],
+      "linked_handles": [
+        {
+          "handle_kind": "email",
+          "handle_value": "rachel@northwindcap.com",
+          "probability": 0.95,
+          "status": "active",
+          "source_ref": "handle:h_019ec6172d9e"
+        }
+      ],
       "last_contact": {
         "ts_utc": "2026-07-17T22:22:00Z",
         "source": "gmail",
@@ -155,40 +156,16 @@
         "source_ref": "calendar:nthj1jqi7og39kok53v4m0uf1b"
       }
     },
-    "latency_ms": 7,
+    "latency_ms": 23,
     "llm_calls": 0,
-    "critic_rounds": 1
+    "critic_rounds": 2
   },
   "memories": [
     {
-      "id": "mem_e5f00ad203ad",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "score": 0.55,
-      "why": "keyword=0.20, entity=0.15, layer=0.10"
-    },
-    {
-      "id": "mem_025603a82630",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "score": 0.55,
-      "why": "keyword=0.20, entity=0.15, layer=0.10"
-    },
-    {
-      "id": "mem_22ea155206c3",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "score": 0.55,
-      "why": "keyword=0.20, entity=0.15, layer=0.10"
-    },
-    {
-      "id": "mem_6687c8aac239",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "score": 0.55,
-      "why": "keyword=0.20, entity=0.15, layer=0.10"
-    },
-    {
-      "id": "mem_ecb002a57898",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "score": 0.55,
-      "why": "keyword=0.20, entity=0.15, layer=0.10"
+      "id": "mem_a13750f2de8c",
+      "content": "Note that Omar Haddad wants an intro to Rachel Goldberg by end of month.",
+      "score": 0.4625,
+      "why": "entity=0.15, keyword=0.13, layer=0.10"
     }
   ],
   "evidence": {
@@ -215,56 +192,24 @@
     "m1": {
       "id": "m1",
       "source": "memory",
-      "source_ref": "mem_e5f00ad203ad",
+      "source_ref": "mem_a13750f2de8c",
       "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
+      "text": "Note that Omar Haddad wants an intro to Rachel Goldberg by end of month.",
       "url": null,
       "tags": [
         "memory"
       ]
     },
-    "m2": {
-      "id": "m2",
-      "source": "memory",
-      "source_ref": "mem_025603a82630",
-      "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "url": null,
+    "w1": {
+      "id": "w1",
+      "source": "web",
+      "source_ref": "https://example.com/northwind-climate",
+      "ts": "2026-08-01T00:00:00Z",
+      "text": "Northwind Capital deepens climate thesis. Partner Rachel Goldberg said Northwind is prioritizing climate data infrastructure after a busy Startupfest season.",
+      "url": "https://example.com/northwind-climate",
       "tags": [
-        "memory"
-      ]
-    },
-    "m3": {
-      "id": "m3",
-      "source": "memory",
-      "source_ref": "mem_22ea155206c3",
-      "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "url": null,
-      "tags": [
-        "memory"
-      ]
-    },
-    "m4": {
-      "id": "m4",
-      "source": "memory",
-      "source_ref": "mem_6687c8aac239",
-      "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "url": null,
-      "tags": [
-        "memory"
-      ]
-    },
-    "m5": {
-      "id": "m5",
-      "source": "memory",
-      "source_ref": "mem_ecb002a57898",
-      "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "url": null,
-      "tags": [
-        "memory"
+        "web",
+        "cache"
       ]
     }
   },
@@ -274,12 +219,20 @@
       "headline": "Rachel Goldberg, Partner at Northwind Capital; last contact 14 weeks ago on gmail; next meeting: Northwind <> Tidepool, Fri Nov 6, 11:00",
       "points": [
         {
+          "text": "You noted: Note that Omar Haddad wants an intro to Rachel Goldberg by end of month. (memory)",
+          "evidence_ids": [
+            "m1"
+          ],
+          "kind": "catch_up",
+          "priority": 1
+        },
+        {
           "text": "Upcoming: Northwind <> Tidepool on Fri Nov 6, 11:00 (calendar)",
           "evidence_ids": [
             "e2"
           ],
           "kind": "logistics",
-          "priority": 1
+          "priority": 2
         },
         {
           "text": "Latest thread on Fri Jul 17: Great to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as… (gmail)",
@@ -287,7 +240,7 @@
             "e1"
           ],
           "kind": "catch_up",
-          "priority": 2
+          "priority": 3
         }
       ],
       "caveats": []
@@ -308,12 +261,20 @@
           "decision": "keep",
           "reason": "Cited evidence in pack.",
           "fix_hint": null
+        },
+        {
+          "index": 2,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
         }
       ],
       "missing": [],
       "refetch": [
         "calendar",
-        "gmail"
+        "gmail",
+        "memory",
+        "web"
       ]
     }
   ],
@@ -322,12 +283,20 @@
     "headline": "Rachel Goldberg, Partner at Northwind Capital; last contact 14 weeks ago on gmail; next meeting: Northwind <> Tidepool, Fri Nov 6, 11:00",
     "points": [
       {
+        "text": "You noted: Note that Omar Haddad wants an intro to Rachel Goldberg by end of month. (memory)",
+        "evidence_ids": [
+          "m1"
+        ],
+        "kind": "catch_up",
+        "priority": 1
+      },
+      {
         "text": "Upcoming: Northwind <> Tidepool on Fri Nov 6, 11:00 (calendar)",
         "evidence_ids": [
           "e2"
         ],
         "kind": "logistics",
-        "priority": 1
+        "priority": 2
       },
       {
         "text": "Latest thread on Fri Jul 17: Great to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as… (gmail)",
@@ -335,13 +304,13 @@
           "e1"
         ],
         "kind": "catch_up",
-        "priority": 2
+        "priority": 3
       }
     ],
     "caveats": []
   },
   "action_plan": null,
   "status": "done",
-  "round": 1,
+  "round": 2,
   "question": null
 }

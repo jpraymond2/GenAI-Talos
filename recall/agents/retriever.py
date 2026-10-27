@@ -1,9 +1,14 @@
-"""Pull evidence for resolved entities. TODO: implement. Reads go through the query layer."""
+"""Pull evidence for resolved entities. Thin wrapper over the orchestrator impl."""
 
-from recall.schemas import Entity, Evidence
+from __future__ import annotations
+
+from typing import Any
+
+from recall.schemas import RunState
 
 
-def retrieve(entities: list[Entity]) -> list[Evidence]:
-    """Collect evidence for these entities."""
-    _ = entities
-    raise NotImplementedError
+async def run(state: RunState, deps: Any) -> RunState:
+    """Collect world / H-MEM / web evidence — delegates to orchestrator."""
+    from recall.orchestrator import _retrieve
+
+    return await _retrieve(state, deps)

@@ -1,8 +1,8 @@
 {
-  "run_id": "1a0d1240-5ffb-4694-93dd-cdc2aeb8e893",
+  "run_id": "4df3c434-d48a-4aef-bef1-a71a83c89c96",
   "utterance": {
     "text": "Where does Lucas live?",
-    "ts": "2026-10-27T03:07:57.091132Z",
+    "ts": "2026-10-27T15:36:38.674557Z",
     "mode": "text"
   },
   "intent": {
@@ -42,25 +42,30 @@
       "e1": "imessage:1484",
       "e2": "contact:c_30ef5a99b226|imessage:1148",
       "e3": "imessage:1484",
-      "e4": "imessage:1251",
-      "e5": "imessage:1250",
-      "e6": "imessage:1249",
-      "e7": "imessage:1220",
-      "e8": "imessage:1219",
-      "e9": "imessage:1218",
-      "e10": "imessage:1149",
-      "e11": "imessage:1148",
-      "e12": "imessage:1022",
-      "e13": "imessage:1021",
-      "e14": "imessage:1020",
-      "e15": "imessage:875",
-      "e16": "imessage:874",
-      "e17": "imessage:873",
-      "e18": "imessage:868",
-      "e19": "imessage:867",
-      "e20": "imessage:570",
-      "e21": "imessage:569",
-      "e22": "imessage:469"
+      "e4": "messenger:inbox/lucasmoreau_5905741612135706:1790113140000",
+      "e5": "messenger:inbox/lucasmoreau_5905741612135706:1790113034000",
+      "e6": "messenger:inbox/lucasmoreau_5905741612135706:1788379476000",
+      "e7": "messenger:inbox/lucasmoreau_5905741612135706:1788377034000",
+      "e8": "messenger:inbox/lucasmoreau_5905741612135706:1788376094000",
+      "e9": "imessage:1251",
+      "e10": "imessage:1250",
+      "e11": "imessage:1249",
+      "e12": "messenger:inbox/lucasmoreau_5905741612135706:1787594700000",
+      "e13": "messenger:inbox/lucasmoreau_5905741612135706:1786894363000",
+      "e14": "messenger:inbox/lucasmoreau_5905741612135706:1786891914000",
+      "e15": "messenger:inbox/lucasmoreau_5905741612135706:1786891738000",
+      "e16": "imessage:1220",
+      "e17": "imessage:1219",
+      "e18": "imessage:1218",
+      "e19": "messenger:inbox/undergradcrew_5739991773465337:1786799628000",
+      "e20": "messenger:inbox/lucasmoreau_5905741612135706:1785929959000",
+      "e21": "messenger:inbox/lucasmoreau_5905741612135706:1785929436000",
+      "e22": "messenger:inbox/lucasmoreau_5905741612135706:1785929119000",
+      "m1": "mem_a277abbbf44d",
+      "memory:m1": "mem_a277abbbf44d",
+      "w1": "https://example.com/payloop-series-a",
+      "w2": "https://example.com/northwind-climate",
+      "w3": "https://example.com/stellarfin-sustainability"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -115,7 +120,7 @@
         "mention_count": 59,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "c715f5b9-ea82-45c0-8883-c345ada177b3"
+        "run_id": "de40048e-5d86-40ba-952e-2b9fb62b3e2e"
       },
       "aliases": [
         "Lucas Moreau",
@@ -127,6 +132,12 @@
           "ts_utc": "2026-10-16T19:44:00Z",
           "direction": "in",
           "source_ref": "imessage:1484",
+          "subject": ""
+        },
+        "messenger": {
+          "ts_utc": "2026-09-22T21:39:00Z",
+          "direction": "out",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1790113140000",
           "subject": ""
         }
       },
@@ -140,6 +151,66 @@
           "subject": "",
           "text": "billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?",
           "source_ref": "imessage:1484",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_271bffce9ee1",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "out",
+          "ts_utc": "2026-09-22T21:39:00Z",
+          "subject": "",
+          "text": "je descends",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1790113140000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_c254c60dba38",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "in",
+          "ts_utc": "2026-09-22T21:37:14Z",
+          "subject": "",
+          "text": "📍 je suis arrivé",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1790113034000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_5efe7ac0eaed",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "in",
+          "ts_utc": "2026-09-02T20:04:36Z",
+          "subject": "",
+          "text": "parfait, le code de porte c'est 2041",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1788379476000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_2e7119c2baa8",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "out",
+          "ts_utc": "2026-09-02T19:23:54Z",
+          "subject": "",
+          "text": "oui! j'apporte du vin",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1788377034000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_33228cededcd",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "in",
+          "ts_utc": "2026-09-02T19:08:14Z",
+          "subject": "",
+          "text": "tu viens toujours ce soir?",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1788376094000",
           "peer": false,
           "assumption": "anchored"
         },
@@ -180,6 +251,54 @@
           "assumption": "anchored"
         },
         {
+          "interaction_id": "i_726a9e723b79",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "in",
+          "ts_utc": "2026-08-24T18:05:00Z",
+          "subject": "",
+          "text": "premier dimanche à Paris, l'appart est minuscule mais la vue est folle",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1787594700000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_bccb1be02900",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "out",
+          "ts_utc": "2026-08-16T15:32:43Z",
+          "subject": "",
+          "text": "chanceux",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1786894363000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_31b43fec680d",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "in",
+          "ts_utc": "2026-08-16T14:51:54Z",
+          "subject": "",
+          "text": "il est en voyage au Portugal je pense",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1786891914000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_30b9e347b6a7",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "out",
+          "ts_utc": "2026-08-16T14:48:58Z",
+          "subject": "",
+          "text": "t'as des nouvelles de Marc?",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1786891738000",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
           "interaction_id": "i_05b7dd1958a1",
           "source": "imessage",
           "thread_id": "th_3bd30ee73062",
@@ -216,158 +335,50 @@
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_e659ce401d1e",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "out",
-          "ts_utc": "2026-07-28T23:31:00Z",
-          "subject": "",
-          "text": "nooon tu vas me manquer!! mais félicitations 🎉",
-          "source_ref": "imessage:1149",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_8a20173dfef1",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
+          "interaction_id": "i_4e1965223926",
+          "source": "messenger",
+          "thread_id": "th_23842f1ec112",
           "direction": "in",
-          "ts_utc": "2026-07-28T23:20:00Z",
+          "ts_utc": "2026-08-15T13:13:48Z",
           "subject": "",
-          "text": "c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science",
-          "source_ref": "imessage:1148",
+          "text": "happy friday 🍻",
+          "source_ref": "messenger:inbox/undergradcrew_5739991773465337:1786799628000",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_81f5ae5a0138",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "out",
-          "ts_utc": "2026-06-16T04:04:59Z",
+          "interaction_id": "i_fa459ab09532",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "in",
+          "ts_utc": "2026-08-05T11:39:19Z",
           "subject": "",
           "text": "parfait, le code de porte c'est 2041",
-          "source_ref": "imessage:1022",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1785929959000",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_b7657bde5b8c",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "in",
-          "ts_utc": "2026-06-16T03:56:07Z",
+          "interaction_id": "i_c74b454ea827",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "out",
+          "ts_utc": "2026-08-05T11:30:36Z",
           "subject": "",
           "text": "oui! j'apporte du vin",
-          "source_ref": "imessage:1021",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1785929436000",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_588ce71dd70e",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "out",
-          "ts_utc": "2026-06-16T03:47:58Z",
+          "interaction_id": "i_57393652836f",
+          "source": "messenger",
+          "thread_id": "th_577446d580fe",
+          "direction": "in",
+          "ts_utc": "2026-08-05T11:25:19Z",
           "subject": "",
           "text": "tu viens toujours ce soir?",
-          "source_ref": "imessage:1020",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_48b72c8b548f",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "in",
-          "ts_utc": "2026-05-16T16:59:41Z",
-          "subject": "",
-          "text": "chanceux",
-          "source_ref": "imessage:875",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_db890043c61f",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "out",
-          "ts_utc": "2026-05-16T16:44:19Z",
-          "subject": "",
-          "text": "il est en voyage au Portugal je pense",
-          "source_ref": "imessage:874",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_60e696a72534",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "in",
-          "ts_utc": "2026-05-16T16:35:45Z",
-          "subject": "",
-          "text": "t'as des nouvelles de Marc?",
-          "source_ref": "imessage:873",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_6c3be3ef21c7",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "out",
-          "ts_utc": "2026-05-13T23:47:01Z",
-          "subject": "",
-          "text": "exactement 😂",
-          "source_ref": "imessage:868",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_3f73756e3cbd",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "in",
-          "ts_utc": "2026-05-13T23:45:29Z",
-          "subject": "",
-          "text": "haha",
-          "source_ref": "imessage:867",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_6465f5c01f22",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "in",
-          "ts_utc": "2026-02-26T01:37:14Z",
-          "subject": "",
-          "text": "exactement 😂",
-          "source_ref": "imessage:570",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_b96f5aa7e494",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "out",
-          "ts_utc": "2026-02-26T01:34:09Z",
-          "subject": "",
-          "text": "haha",
-          "source_ref": "imessage:569",
-          "peer": false,
-          "assumption": "anchored"
-        },
-        {
-          "interaction_id": "i_fac4361ff29c",
-          "source": "imessage",
-          "thread_id": "th_3bd30ee73062",
-          "direction": "out",
-          "ts_utc": "2026-01-27T20:21:11Z",
-          "subject": "",
-          "text": "oui je suis là après 17h",
-          "source_ref": "imessage:469",
+          "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1785929119000",
           "peer": false,
           "assumption": "anchored"
         }
@@ -405,7 +416,29 @@
         }
       ],
       "selection_reason": "entity_id=ent_63987ef66f3a",
-      "linked_handles": [],
+      "linked_handles": [
+        {
+          "handle_kind": "email",
+          "handle_value": "lucas.moreau.qc@gmail.com",
+          "probability": 0.95,
+          "status": "active",
+          "source_ref": "handle:h_9b22bdf61a3b"
+        },
+        {
+          "handle_kind": "imessage",
+          "handle_value": "+15145550156",
+          "probability": 0.95,
+          "status": "active",
+          "source_ref": "handle:h_8700b8b0f0c3"
+        },
+        {
+          "handle_kind": "messenger",
+          "handle_value": "Lucas Moreau",
+          "probability": 0.95,
+          "status": "active",
+          "source_ref": "handle:h_bb6608488ae8"
+        }
+      ],
       "last_contact": {
         "ts_utc": "2026-10-16T19:44:00Z",
         "source": "imessage",
@@ -416,11 +449,18 @@
       "last_met": null,
       "next_meeting": null
     },
-    "latency_ms": 8,
+    "latency_ms": 16,
     "llm_calls": 0,
-    "critic_rounds": 1
+    "critic_rounds": 2
   },
-  "memories": [],
+  "memories": [
+    {
+      "id": "mem_a277abbbf44d",
+      "content": "Note: Lucas Moreau moved to Paris in August 2026; the Montreal card is stale.",
+      "score": 0.3634,
+      "why": "entity=0.15, layer=0.10, recency=0.06"
+    }
+  ],
   "evidence": {
     "e1": {
       "id": "e1",
@@ -455,6 +495,51 @@
     },
     "e4": {
       "id": "e4",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1790113140000",
+      "ts": "2026-09-22T21:39:00Z",
+      "text": "je descends",
+      "url": null,
+      "tags": []
+    },
+    "e5": {
+      "id": "e5",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1790113034000",
+      "ts": "2026-09-22T21:37:14Z",
+      "text": "📍 je suis arrivé",
+      "url": null,
+      "tags": []
+    },
+    "e6": {
+      "id": "e6",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1788379476000",
+      "ts": "2026-09-02T20:04:36Z",
+      "text": "parfait, le code de porte c'est 2041",
+      "url": null,
+      "tags": []
+    },
+    "e7": {
+      "id": "e7",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1788377034000",
+      "ts": "2026-09-02T19:23:54Z",
+      "text": "oui! j'apporte du vin",
+      "url": null,
+      "tags": []
+    },
+    "e8": {
+      "id": "e8",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1788376094000",
+      "ts": "2026-09-02T19:08:14Z",
+      "text": "tu viens toujours ce soir?",
+      "url": null,
+      "tags": []
+    },
+    "e9": {
+      "id": "e9",
       "source": "imessage",
       "source_ref": "imessage:1251",
       "ts": "2026-08-26T16:02:12Z",
@@ -462,8 +547,8 @@
       "url": null,
       "tags": []
     },
-    "e5": {
-      "id": "e5",
+    "e10": {
+      "id": "e10",
       "source": "imessage",
       "source_ref": "imessage:1250",
       "ts": "2026-08-26T16:00:37Z",
@@ -471,8 +556,8 @@
       "url": null,
       "tags": []
     },
-    "e6": {
-      "id": "e6",
+    "e11": {
+      "id": "e11",
       "source": "imessage",
       "source_ref": "imessage:1249",
       "ts": "2026-08-26T15:56:44Z",
@@ -480,8 +565,44 @@
       "url": null,
       "tags": []
     },
-    "e7": {
-      "id": "e7",
+    "e12": {
+      "id": "e12",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1787594700000",
+      "ts": "2026-08-24T18:05:00Z",
+      "text": "premier dimanche à Paris, l'appart est minuscule mais la vue est folle",
+      "url": null,
+      "tags": []
+    },
+    "e13": {
+      "id": "e13",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1786894363000",
+      "ts": "2026-08-16T15:32:43Z",
+      "text": "chanceux",
+      "url": null,
+      "tags": []
+    },
+    "e14": {
+      "id": "e14",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1786891914000",
+      "ts": "2026-08-16T14:51:54Z",
+      "text": "il est en voyage au Portugal je pense",
+      "url": null,
+      "tags": []
+    },
+    "e15": {
+      "id": "e15",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1786891738000",
+      "ts": "2026-08-16T14:48:58Z",
+      "text": "t'as des nouvelles de Marc?",
+      "url": null,
+      "tags": []
+    },
+    "e16": {
+      "id": "e16",
       "source": "imessage",
       "source_ref": "imessage:1220",
       "ts": "2026-08-16T05:23:22Z",
@@ -489,8 +610,8 @@
       "url": null,
       "tags": []
     },
-    "e8": {
-      "id": "e8",
+    "e17": {
+      "id": "e17",
       "source": "imessage",
       "source_ref": "imessage:1219",
       "ts": "2026-08-16T05:20:56Z",
@@ -498,8 +619,8 @@
       "url": null,
       "tags": []
     },
-    "e9": {
-      "id": "e9",
+    "e18": {
+      "id": "e18",
       "source": "imessage",
       "source_ref": "imessage:1218",
       "ts": "2026-08-16T05:17:09Z",
@@ -507,122 +628,88 @@
       "url": null,
       "tags": []
     },
-    "e10": {
-      "id": "e10",
-      "source": "imessage",
-      "source_ref": "imessage:1149",
-      "ts": "2026-07-28T23:31:00Z",
-      "text": "nooon tu vas me manquer!! mais félicitations 🎉",
-      "url": null,
-      "tags": []
-    },
-    "e11": {
-      "id": "e11",
-      "source": "imessage",
-      "source_ref": "imessage:1148",
-      "ts": "2026-07-28T23:20:00Z",
-      "text": "c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science",
-      "url": null,
-      "tags": []
-    },
-    "e12": {
-      "id": "e12",
-      "source": "imessage",
-      "source_ref": "imessage:1022",
-      "ts": "2026-06-16T04:04:59Z",
-      "text": "parfait, le code de porte c'est 2041",
-      "url": null,
-      "tags": []
-    },
-    "e13": {
-      "id": "e13",
-      "source": "imessage",
-      "source_ref": "imessage:1021",
-      "ts": "2026-06-16T03:56:07Z",
-      "text": "oui! j'apporte du vin",
-      "url": null,
-      "tags": []
-    },
-    "e14": {
-      "id": "e14",
-      "source": "imessage",
-      "source_ref": "imessage:1020",
-      "ts": "2026-06-16T03:47:58Z",
-      "text": "tu viens toujours ce soir?",
-      "url": null,
-      "tags": []
-    },
-    "e15": {
-      "id": "e15",
-      "source": "imessage",
-      "source_ref": "imessage:875",
-      "ts": "2026-05-16T16:59:41Z",
-      "text": "chanceux",
-      "url": null,
-      "tags": []
-    },
-    "e16": {
-      "id": "e16",
-      "source": "imessage",
-      "source_ref": "imessage:874",
-      "ts": "2026-05-16T16:44:19Z",
-      "text": "il est en voyage au Portugal je pense",
-      "url": null,
-      "tags": []
-    },
-    "e17": {
-      "id": "e17",
-      "source": "imessage",
-      "source_ref": "imessage:873",
-      "ts": "2026-05-16T16:35:45Z",
-      "text": "t'as des nouvelles de Marc?",
-      "url": null,
-      "tags": []
-    },
-    "e18": {
-      "id": "e18",
-      "source": "imessage",
-      "source_ref": "imessage:868",
-      "ts": "2026-05-13T23:47:01Z",
-      "text": "exactement 😂",
-      "url": null,
-      "tags": []
-    },
     "e19": {
       "id": "e19",
-      "source": "imessage",
-      "source_ref": "imessage:867",
-      "ts": "2026-05-13T23:45:29Z",
-      "text": "haha",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/undergradcrew_5739991773465337:1786799628000",
+      "ts": "2026-08-15T13:13:48Z",
+      "text": "happy friday 🍻",
       "url": null,
       "tags": []
     },
     "e20": {
       "id": "e20",
-      "source": "imessage",
-      "source_ref": "imessage:570",
-      "ts": "2026-02-26T01:37:14Z",
-      "text": "exactement 😂",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1785929959000",
+      "ts": "2026-08-05T11:39:19Z",
+      "text": "parfait, le code de porte c'est 2041",
       "url": null,
       "tags": []
     },
     "e21": {
       "id": "e21",
-      "source": "imessage",
-      "source_ref": "imessage:569",
-      "ts": "2026-02-26T01:34:09Z",
-      "text": "haha",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1785929436000",
+      "ts": "2026-08-05T11:30:36Z",
+      "text": "oui! j'apporte du vin",
       "url": null,
       "tags": []
     },
     "e22": {
       "id": "e22",
-      "source": "imessage",
-      "source_ref": "imessage:469",
-      "ts": "2026-01-27T20:21:11Z",
-      "text": "oui je suis là après 17h",
+      "source": "messenger",
+      "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1785929119000",
+      "ts": "2026-08-05T11:25:19Z",
+      "text": "tu viens toujours ce soir?",
       "url": null,
       "tags": []
+    },
+    "m1": {
+      "id": "m1",
+      "source": "memory",
+      "source_ref": "mem_a277abbbf44d",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note: Lucas Moreau moved to Paris in August 2026; the Montreal card is stale.",
+      "url": null,
+      "tags": [
+        "memory"
+      ]
+    },
+    "w1": {
+      "id": "w1",
+      "source": "web",
+      "source_ref": "https://example.com/payloop-series-a",
+      "ts": "2026-09-15T00:00:00Z",
+      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by climate-focused funds, with CEO Omar Haddad citing demand from SMBs.",
+      "url": "https://example.com/payloop-series-a",
+      "tags": [
+        "web",
+        "cache"
+      ]
+    },
+    "w2": {
+      "id": "w2",
+      "source": "web",
+      "source_ref": "https://example.com/northwind-climate",
+      "ts": "2026-08-01T00:00:00Z",
+      "text": "Northwind Capital deepens climate thesis. Partner Rachel Goldberg said Northwind is prioritizing climate data infrastructure after a busy Startupfest season.",
+      "url": "https://example.com/northwind-climate",
+      "tags": [
+        "web",
+        "cache"
+      ]
+    },
+    "w3": {
+      "id": "w3",
+      "source": "web",
+      "source_ref": "https://example.com/stellarfin-sustainability",
+      "ts": "2026-06-20T00:00:00Z",
+      "text": "Stellarfin expands sustainability product team. Stellarfin hired product leaders to scale its sustainability reporting suite for mid-market customers.",
+      "url": "https://example.com/stellarfin-sustainability",
+      "tags": [
+        "web",
+        "cache"
+      ]
     }
   },
   "drafts": [
@@ -647,11 +734,11 @@
           "priority": 1
         },
         {
-          "text": "Life/job update on Tue Jul 28: c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science (imessage)",
+          "text": "You noted: Note: Lucas Moreau moved to Paris in August 2026; the Montreal card is stale. (memory)",
           "evidence_ids": [
-            "e11"
+            "m1"
           ],
-          "kind": "news",
+          "kind": "catch_up",
           "priority": 2
         }
       ],
@@ -683,7 +770,8 @@
       ],
       "missing": [],
       "refetch": [
-        "gmail"
+        "gmail",
+        "memory"
       ]
     }
   ],
@@ -700,18 +788,33 @@
         "priority": 1
       },
       {
-        "text": "Life/job update on Tue Jul 28: c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science (imessage)",
+        "text": "You noted: Note: Lucas Moreau moved to Paris in August 2026; the Montreal card is stale. (memory)",
         "evidence_ids": [
-          "e11"
+          "m1"
         ],
-        "kind": "news",
+        "kind": "catch_up",
         "priority": 2
       }
     ],
     "caveats": []
   },
-  "action_plan": null,
+  "action_plan": {
+    "steps": [
+      {
+        "tool": "gmail.draft",
+        "args": {
+          "to_entity": "Lucas Moreau",
+          "evidence_id": "e1",
+          "subject": "Re: follow-up",
+          "body_preview": "Hi Lucas,\n\nFollowing up on: billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?\n\nBest,\n"
+        },
+        "summary": "Draft a Gmail reply for the open loop (e1)"
+      }
+    ],
+    "spoken_summary": "I can draft a gmail reply for the open loop (e1).",
+    "requires_confirmation": true
+  },
   "status": "done",
-  "round": 1,
+  "round": 2,
   "question": null
 }

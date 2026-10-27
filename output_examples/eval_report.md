@@ -1,6 +1,6 @@
 # Synthetic eval report
 
-**Overall: 16/23 (69.6%)**
+**Overall: 18/23 (78.3%)**
 
 - Person accuracy: 100.0% (18/18)
 - Clarify accuracy: 100.0% (1/1)
@@ -16,9 +16,9 @@ The 23 questions were visible during development (not a held-out set). The code 
 | brief | 7 | 9 | 78% |
 | calendar | 2 | 2 | 100% |
 | conflict | 2 | 2 | 100% |
-| disambiguation | 1 | 2 | 50% |
+| disambiguation | 2 | 2 | 100% |
 | identity | 1 | 2 | 50% |
-| memory | 0 | 1 | 0% |
+| memory | 1 | 1 | 100% |
 | open_loops | 1 | 3 | 33% |
 | sparse | 1 | 1 | 100% |
 | unknown | 1 | 1 | 100% |
@@ -28,12 +28,12 @@ The 23 questions were visible during development (not a held-out set). The code 
 | id | category | result | notes |
 |---|---|---|---|
 | q01 | disambiguation | pass | ok |
-| q02 | brief | pass | ok |
+| q02 | brief | fail | missing omar_h.series_a |
 | q03 | brief | pass | ok |
 | q04 | open_loops | fail | missing omar_k.lease |
-| q05 | disambiguation | fail | leaked daniel_cl.wedding |
-| q06 | brief | fail | missing daniel_cl.wedding |
-| q07 | identity | fail | missing sasha.visit; missing sasha.engaged |
+| q05 | disambiguation | pass | ok |
+| q06 | brief | pass | ok |
+| q07 | identity | fail | missing sasha.visit; missing sasha.engaged; missing sasha.promo |
 | q08 | conflict | pass | ok |
 | q09 | brief | pass | ok |
 | q10 | conflict | pass | ok |
@@ -49,4 +49,4 @@ The 23 questions were visible during development (not a held-out set). The code 
 | q20 | brief | pass | ok |
 | q21 | brief | fail | missing mei.preseed_close; missing mei.japan |
 | q22 | brief | pass | ok |
-| q23 | memory | fail | missing rachel.meeting |
+| q23 | memory | pass | ok |

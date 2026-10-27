@@ -65,6 +65,7 @@ class ConfirmBody(BaseModel):
 
     run_id: str = Field(min_length=1)
     confirmed: bool
+    action_ids: list[str] | None = None
 
 
 @asynccontextmanager
@@ -119,18 +120,20 @@ async def api_ask(body: AskBody) -> dict[str, Any]:
 
 @app.post("/api/confirm", dependencies=[Depends(require_bearer)])
 async def api_confirm(body: ConfirmBody) -> dict[str, Any]:
-    """Confirm or cancel a proposed action plan when actions supports it."""
+    """Confirm or cancel a proposed action plan (sample dry-run / live not_enabled)."""
     from recall.agents import actions
+    from recall.orchestrator import build_deps
+    from recall.server.session import get_run
 
-    confirm_fn = getattr(actions, "confirm", None)
-    execute_fn = getattr(actions, "execute", None)
-    fn = confirm_fn if callable(confirm_fn) else execute_fn if callable(execute_fn) else None
-    if fn is None:
-        return {"status": "not_implemented", "run_id": body.run_id}
-
-    result = fn(run_id=body.run_id, confirmed=body.confirmed)
-    if asyncio.iscoroutine(result):
-        result = await result
+    deps = build_deps(run_id=body.run_id)
+    state = get_run(body.run_id)
+    result = await actions.execute(
+        run_id=body.run_id,
+        confirmed=body.confirmed,
+        action_ids=body.action_ids,
+        deps=deps,
+        state=state,
+    )
     if isinstance(result, dict):
         return result
     if hasattr(result, "model_dump"):

@@ -1,0 +1,42 @@
+{
+  "Payloop": [
+    {
+      "url": "https://example.com/payloop-series-a",
+      "title": "Payloop raises Series A to expand payroll rails",
+      "snippet": "Montreal fintech Payloop announced a Series A led by climate-focused funds, with CEO Omar Haddad citing demand from SMBs.",
+      "published": "2026-09-15"
+    }
+  ],
+  "Northwind Capital": [
+    {
+      "url": "https://example.com/northwind-climate",
+      "title": "Northwind Capital deepens climate thesis",
+      "snippet": "Partner Rachel Goldberg said Northwind is prioritizing climate data infrastructure after a busy Startupfest season.",
+      "published": "2026-08-01"
+    }
+  ],
+  "Stellarfin": [
+    {
+      "url": "https://example.com/stellarfin-sustainability",
+      "title": "Stellarfin expands sustainability product team",
+      "snippet": "Stellarfin hired product leaders to scale its sustainability reporting suite for mid-market customers.",
+      "published": "2026-06-20"
+    }
+  ],
+  "Maple Ridge Ventures": [
+    {
+      "url": "https://example.com/maple-ridge-climate",
+      "title": "Maple Ridge Ventures looks at climate infra",
+      "snippet": "Principal Daniel Kim of Maple Ridge Ventures is meeting early-stage climate data companies this fall.",
+      "published": "2026-10-01"
+    }
+  ],
+  "Hydrolab": [
+    {
+      "url": "https://example.com/hydrolab-boreale",
+      "title": "Hydrolab pilots with Quebec utilities",
+      "snippet": "Hydrolab's innovation lead Élodie Gagnon is pitching measurement tools to regional energy partners.",
+      "published": "2026-09-28"
+    }
+  ]
+}

@@ -21,8 +21,9 @@ from typing import Any, Literal
 from pydantic import BaseModel
 from rapidfuzz import fuzz
 
-from recall.agents import critic, router, writer
+from recall.agents import actions, critic, resolver, retriever, router, writer
 from recall.agents import suggester
+from recall.agents import web_scout
 from recall.agents.job_change import sanitize_brief_job_changes
 from recall.agents.prompts import BRIEF_STYLES
 from recall.config import Settings, get_settings
@@ -231,6 +232,53 @@ def build_deps(
     )
 
 
+def _notes_jsonl_path(settings: Settings) -> Path | None:
+    """``<dataset>/../notes.jsonl`` when present (e.g. data/synthetic/notes.jsonl)."""
+    root = Path(settings.sample_data_dir).resolve().parent
+    path = root / "notes.jsonl"
+    return path if path.is_file() else None
+
+
+async def mine_sample_notes(deps: Deps) -> int:
+    """Mine dataset notes.jsonl into H-MEM once; returns memories created."""
+    if not deps.settings.sample_mode:
+        return 0
+    if deps.hmem_store.get_meta("notes_mined") == "1":
+        return 0
+    path = _notes_jsonl_path(deps.settings)
+    if path is None:
+        deps.hmem_store.set_meta("notes_mined", "1")
+        return 0
+    created = 0
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        text = str(row.get("text") or "").strip()
+        if not text:
+            continue
+        ts = str(row.get("ts") or "")
+        memories = await deps.hmem_mining.mine(
+            MineEvent(
+                kind="user_note",
+                text=text,
+                metadata={"source": "notes.jsonl", "ts": ts, "promote": True},
+            )
+        )
+        created += len(memories)
+    deps.hmem_store.set_meta("notes_mined", "1")
+    deps.tracer.event(
+        "hmem",
+        "notes_ingest",
+        {"summary": f"mined {created} memories from notes.jsonl", "count": created},
+    )
+    return created
+
+
 def default_deps(*, run_id: str | None = None, logs_dir: Path | str | None = None) -> Deps:
     """Alias for build_deps (backward compatible)."""
     return build_deps(run_id=run_id, logs_dir=logs_dir)
@@ -279,6 +327,7 @@ async def run(
     active = deps or build_deps(run_id=run_id)
     run_id = active.tracer.run_id
     started = time.perf_counter()
+    await mine_sample_notes(active)
 
     if clarification_reply and resume_run_id:
         prior = _load_state(resume_run_id, active.settings.logs_dir)
@@ -392,7 +441,7 @@ async def _pipeline(state: RunState, deps: Deps) -> RunState:
         deps.tracer.event("orchestrator", "clarify", {"summary": state.question})
         return state
 
-    state = _resolve(state, deps)
+    state = resolver.run(state, deps)
     if state.status == "needs_clarification":
         deps.tracer.event(
             "orchestrator",
@@ -435,7 +484,7 @@ async def _pipeline(state: RunState, deps: Deps) -> RunState:
 async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
     """Retrieve → evidence pack → writer/critic → feedback."""
     state = _attach_relationship(state, deps)
-    state = await _retrieve(state, deps)
+    state = await retriever.run(state, deps)
     kind = state.intent.kind if state.intent else ""
     # Calendar / owe-all / upcoming-dates writers query sources themselves.
     allow_empty = kind in {"calendar", "owe_all", "upcoming_dates"}
@@ -473,8 +522,27 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
         {"summary": f"round {state.round}: initial draft + critic", "round": state.round},
     )
 
-    while _last_verdict(state).overall == "revise" and state.round < MAX_CRITIC_ROUNDS:
+    while state.round < MAX_CRITIC_ROUNDS:
         prev_verdict = _last_verdict(state)
+        sources = list(prev_verdict.refetch)
+        for mid in prev_verdict.missing:
+            ev = state.evidence.get(mid)
+            if ev is not None and ev.source not in sources:
+                sources.append(ev.source)
+            elif mid in {"gmail", "calendar", "memory", "web", "hmem", "world"}:
+                if mid not in sources:
+                    sources.append(mid)
+        needs_revise = prev_verdict.overall == "revise"
+        if not needs_revise and not sources:
+            break
+
+        refetched = False
+        if sources:
+            state = await _refetch(state, deps, sources)
+            refetched = True
+        if not needs_revise and not refetched:
+            break
+
         prior_brief = state.drafts[-1] if state.drafts else None
         state.round += 1
         state = await writer.run(state, deps)
@@ -484,16 +552,28 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
             and new_brief is not None
             and prior_brief.model_dump() == new_brief.model_dump()
         ):
-            # Drop the duplicate draft; stop rather than a fake revision round.
+            # Drop the duplicate draft; keep the round bump when a refetch ran
+            # so the Writer↔Critic loop is visible in traces/examples.
             state.drafts.pop()
-            state.round -= 1
+            if not refetched:
+                state.round -= 1
+                deps.tracer.event(
+                    "orchestrator",
+                    "no_change",
+                    {
+                        "summary": "writer round produced no change; stopping revision",
+                        "round": state.round,
+                        "missing": list(prev_verdict.missing),
+                    },
+                )
+                break
             deps.tracer.event(
                 "orchestrator",
                 "no_change",
                 {
-                    "summary": "writer round produced no change; stopping revision",
+                    "summary": "writer unchanged after refetch; keeping round",
                     "round": state.round,
-                    "missing": list(prev_verdict.missing),
+                    "refetch": sources,
                 },
             )
             break
@@ -527,12 +607,13 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
     state.status = "done"
     _apply_memory_feedback(state, deps)
 
-    if state.intent and state.intent.kind == "action":
-        # TODO(step6): plan and optionally execute ActionPlan via tools;
-        # then hmem.mine({type: "action_outcome", ...}).
-        brief = state.final_brief
-        caveats = list(brief.caveats) + ["Actions not implemented yet."]
-        state.final_brief = brief.model_copy(update={"caveats": caveats})
+    try:
+        action_plan = await actions.plan(state, deps)
+        if action_plan.steps:
+            state.action_plan = action_plan
+            _save_state(state, deps.tracer)
+    except Exception:  # noqa: BLE001 — actions must not break the brief
+        logger.exception("actions.plan failed")
 
     return state
 
@@ -1394,6 +1475,148 @@ def _match_clarification_reply(reply: str, candidates: list[Candidate]) -> Candi
     return None
 
 
+def _entity_org(deps: Deps, entity_id: str) -> str:
+    """Best-effort employer/org string for web scout queries."""
+    try:
+        rows = deps.world_store.list_employment_assumptions(entity_id=entity_id)
+    except Exception:  # noqa: BLE001
+        rows = []
+    for row in rows:
+        for key in ("company", "org", "employer", "value"):
+            val = str(row.get(key) or "").strip()
+            if val:
+                return val
+    return ""
+
+
+async def _refetch(state: RunState, deps: Deps, sources: list[str]) -> RunState:
+    """Re-query named sources with a widened window; merge non-colliding evidence."""
+    entity_id = state.entity_id or ""
+    normalized = []
+    for src in sources:
+        key = (src or "").strip().lower()
+        if key == "hmem":
+            key = "memory"
+        if key and key not in normalized:
+            normalized.append(key)
+    deps.tracer.event(
+        "orchestrator",
+        "refetch",
+        {
+            "summary": f"refetch sources={normalized}",
+            "sources": normalized,
+            "round": state.round,
+        },
+    )
+    if not entity_id or not normalized:
+        return state
+
+    new_evidence: dict[str, Evidence] = {}
+    source_map: dict[str, str] = dict(state.context.get("evidence_source_refs") or {})
+
+    async def _pull() -> None:
+        nonlocal new_evidence, source_map
+        person_ctx: dict[str, Any] = {}
+        memories_payload: dict[str, Any] = {"memories": []}
+        web_facts: list[dict[str, Any]] = []
+
+        need_world = any(
+            s in normalized
+            for s in (
+                "world",
+                "gmail",
+                "calendar",
+                "imessage",
+                "whatsapp",
+                "messenger",
+            )
+        )
+        if need_world:
+            person_ctx = await asyncio.to_thread(
+                deps.world.person_context, entity_id, 2000
+            )
+        if "memory" in normalized:
+            memories_payload = await deps.hmem_retrieval.retrieve(
+                state.utterance.text,
+                entity_ids=[entity_id],
+                top_n=8,
+            )
+        if "web" in normalized:
+            entity = deps.world_store.get_entity(entity_id)
+            name = entity.canonical_name if entity is not None else (state.entity_name or "")
+            org = _entity_org(deps, entity_id)
+            web_facts = await web_scout.scout(
+                full_name=name,
+                org=org or None,
+                settings=deps.settings,
+                tracer=deps.tracer,
+            )
+
+        pack, smap, _ = _build_evidence_pack(
+            person_ctx,
+            memories_payload,
+            web_facts,
+            tentative_identity=bool(state.context.get("tentative_identity")),
+        )
+        # Keep only requested channel evidence when world was refreshed.
+        channel_filter = {
+            s for s in normalized if s in {"gmail", "calendar", "imessage", "whatsapp", "messenger", "memory", "web"}
+        }
+        for eid, ev in pack.items():
+            if channel_filter and ev.source not in channel_filter and not (
+                ev.source == "memory" and "memory" in channel_filter
+            ):
+                if need_world and ev.source not in channel_filter:
+                    continue
+            if eid in state.evidence:
+                # Prefer a non-colliding id for genuinely new refs.
+                ref = smap.get(eid) or ev.source_ref
+                existing_refs = {
+                    (state.context.get("evidence_source_refs") or {}).get(k) or state.evidence[k].source_ref
+                    for k in state.evidence
+                }
+                if ref in existing_refs:
+                    continue
+                # Allocate a fresh id.
+                prefix = eid[0] if eid else "e"
+                n = 1
+                while f"{prefix}{n}" in state.evidence or f"{prefix}{n}" in new_evidence:
+                    n += 1
+                fresh = ev.model_copy(update={"id": f"{prefix}{n}"})
+                new_evidence[fresh.id] = fresh
+                source_map[fresh.id] = ref
+            else:
+                new_evidence[eid] = ev
+                if eid in smap:
+                    source_map[eid] = smap[eid]
+
+    try:
+        await asyncio.wait_for(_pull(), timeout=RETRIEVE_TIMEOUT_S)
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("refetch failed")
+        deps.tracer.event(
+            "orchestrator",
+            "refetch_error",
+            {"summary": f"refetch failed: {exc}", "error": str(exc)},
+        )
+        return state
+
+    if new_evidence:
+        merged = dict(state.evidence)
+        merged.update(new_evidence)
+        state.evidence = merged
+        state.context["evidence_source_refs"] = source_map
+        deps.tracer.event(
+            "orchestrator",
+            "refetch_merged",
+            {
+                "summary": f"added={len(new_evidence)} total={len(state.evidence)}",
+                "added": sorted(new_evidence),
+            },
+        )
+    return state
+
+
 async def _retrieve(state: RunState, deps: Deps) -> RunState:
     """Parallel world / hmem / web_scout with timeouts; build evidence pack."""
     entity_id = state.entity_id or ""
@@ -1415,13 +1638,17 @@ async def _retrieve(state: RunState, deps: Deps) -> RunState:
         )
 
     async def _web() -> list[dict[str, Any]]:
-        # web_scout not implemented yet
-        deps.tracer.event(
-            "orchestrator",
-            "web_scout_unavailable",
-            {"summary": "web_scout_unavailable"},
+        if not entity_id:
+            return []
+        entity = deps.world_store.get_entity(entity_id)
+        name = entity.canonical_name if entity is not None else (state.entity_name or "")
+        org = _entity_org(deps, entity_id)
+        return await web_scout.scout(
+            full_name=name,
+            org=org or None,
+            settings=deps.settings,
+            tracer=deps.tracer,
         )
-        return []
 
     tasks = {
         "world": asyncio.create_task(_world()),
@@ -1533,9 +1760,12 @@ def _build_evidence_pack(
         if not value:
             return now
         try:
-            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
             return now
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed
 
     def _add_e(
         *,

@@ -256,6 +256,19 @@ def interactions_for_threads(
     return [InteractionRow.model_validate(_stringify_row(row)) for row in rows]
 
 
+def _looks_like_address_handle(text: str) -> bool:
+    """True for email / E.164 / WhatsApp JID — not bare display names."""
+    value = (text or "").strip()
+    if not value:
+        return False
+    if "@" in value:
+        return True
+    if value.startswith("+") and len(re.sub(r"\D", "", value)) >= 7:
+        return True
+    digits = re.sub(r"\D", "", value)
+    return len(digits) >= 10 and digits == re.sub(r"\D", "", value)
+
+
 def collect_entity_handle_values(
     aliases: list[str],
     *,
@@ -263,11 +276,25 @@ def collect_entity_handle_values(
 ) -> list[str]:
     """Expand entity aliases + linked handles into SQL ``IN`` candidates.
 
-    Includes lowercased copies and phone digit forms so Zetaris can filter
-    instead of returning the full interactions table.
+    Bare display-name aliases are skipped (they collide across people). Linked
+    handle values from ``handle_links`` are always included — those are
+    entity_id-scoped. Address-like aliases (email/phone/JID) are included.
     """
     values: list[str] = []
-    for raw in [*aliases, *(linked_handle_values or [])]:
+    for raw in aliases or []:
+        text = str(raw or "").strip()
+        if not text or not _looks_like_address_handle(text):
+            continue
+        values.append(text)
+        values.append(text.lower())
+        local = text.split("@", 1)[0]
+        digits = re.sub(r"\D", "", local)
+        if len(digits) >= 7:
+            values.append(digits)
+            values.append(f"+{digits}")
+            if text.endswith("@s.whatsapp.net") or "whatsapp" in text.lower():
+                values.append(f"{digits}@s.whatsapp.net")
+    for raw in linked_handle_values or []:
         text = str(raw or "").strip()
         if not text:
             continue

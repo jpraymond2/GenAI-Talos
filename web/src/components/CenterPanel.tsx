@@ -108,7 +108,7 @@ export function CenterPanel({
         </ul>
       ) : null}
 
-      {run.action_plan && run.status === "awaiting_confirmation" ? (
+      {run.action_plan ? (
         <ActionBlock
           run={run}
           busy={busy}

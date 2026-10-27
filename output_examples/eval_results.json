@@ -1,6 +1,6 @@
 {
-  "overall_pct": 69.56521739130434,
-  "passed": 16,
+  "overall_pct": 78.26086956521739,
+  "passed": 18,
   "total": 23,
   "person_accuracy": 1.0,
   "clarify_accuracy": 1.0,
@@ -21,16 +21,18 @@
       "id": "q02",
       "category": "brief",
       "ask": "I'm meeting Omar Haddad on Wednesday",
-      "passed": true,
+      "passed": false,
       "checks": {
         "person": true,
         "cover:omar_h.coffee": true,
-        "cover:omar_h.series_a": true,
+        "cover:omar_h.series_a": false,
         "cover:omar_h.intro_ask": true,
         "must_not:omar_b.casecomp": true,
         "must_not:omar_k.lease": true
       },
-      "reasons": [],
+      "reasons": [
+        "missing omar_h.series_a"
+      ],
       "status": "done",
       "entity_name": "Omar Haddad"
     },
@@ -69,16 +71,14 @@
       "id": "q05",
       "category": "disambiguation",
       "ask": "I'm meeting Daniel Kim on Thursday",
-      "passed": false,
+      "passed": true,
       "checks": {
         "person": true,
         "cover:daniel_vc.pitch": true,
         "cover:daniel_vc.dataroom": true,
-        "must_not:daniel_cl.wedding": false
+        "must_not:daniel_cl.wedding": true
       },
-      "reasons": [
-        "leaked daniel_cl.wedding"
-      ],
+      "reasons": [],
       "status": "done",
       "entity_name": "Daniel Kim"
     },
@@ -86,15 +86,13 @@
       "id": "q06",
       "category": "brief",
       "ask": "What's new with Dan from UofT?",
-      "passed": false,
+      "passed": true,
       "checks": {
         "person": true,
-        "cover:daniel_cl.wedding": false,
+        "cover:daniel_cl.wedding": true,
         "must_not:daniel_vc.pitch": true
       },
-      "reasons": [
-        "missing daniel_cl.wedding"
-      ],
+      "reasons": [],
       "status": "done",
       "entity_name": "Dan Kim (UofT)"
     },
@@ -107,11 +105,12 @@
         "person": true,
         "cover:sasha.visit": false,
         "cover:sasha.engaged": false,
-        "cover:sasha.promo": true
+        "cover:sasha.promo": false
       },
       "reasons": [
         "missing sasha.visit",
-        "missing sasha.engaged"
+        "missing sasha.engaged",
+        "missing sasha.promo"
       ],
       "status": "done",
       "entity_name": "Alexandra Petrova"
@@ -330,14 +329,12 @@
       "id": "q23",
       "category": "memory",
       "ask": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
-      "passed": false,
+      "passed": true,
       "checks": {
         "person": true,
-        "cover:rachel.meeting": false
+        "cover:rachel.meeting": true
       },
-      "reasons": [
-        "missing rachel.meeting"
-      ],
+      "reasons": [],
       "status": "done",
       "entity_name": "Rachel Goldberg"
     }

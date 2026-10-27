@@ -344,10 +344,33 @@ def critique_brief(state: RunState, deps: Any = None) -> CriticVerdict:
         missing.append(f"Headline person {draft.person!r} ≠ resolved {state.entity_name!r}")
 
     cited = {eid for p in kept_points for eid in p.evidence_ids}
-    open_loop_ids = [eid for eid, item in pack.items() if "open_loop" in (item.tags or [])]
+    open_loop_ids = [
+        eid
+        for eid, item in pack.items()
+        if "open_loop" in (item.tags or []) or "promise" in (item.tags or [])
+    ]
     if open_loop_ids and not any(eid in cited for eid in open_loop_ids):
         missing.append(open_loop_ids[0])
         overall = "revise"
+        refetch.append(pack[open_loop_ids[0]].source)
+    else:
+        # Generic: a substantive open loop left uncited → revise + refetch its source.
+        for eid in open_loop_ids:
+            if eid in cited:
+                continue
+            item = pack[eid]
+            tags = set(item.tags or [])
+            words = len(re.findall(r"[A-Za-zÀ-öø-ÿ0-9']+", item.text or ""))
+            if "promise" in tags or words >= 10:
+                missing.append(eid)
+                overall = "revise"
+                refetch.append(item.source)
+                break
+    memory_ids = [eid for eid, item in pack.items() if item.source == "memory"]
+    if memory_ids and not any(eid in cited for eid in memory_ids):
+        missing.append(memory_ids[0])
+        overall = "revise"
+        refetch.append("memory")
     upcoming = [
         eid
         for eid, item in pack.items()
@@ -1183,6 +1206,12 @@ def _select_points(
                 kind = "logistics"
             else:
                 return None
+        elif item.source == "memory":
+            quote = _clean_quote(item.text or "", person=person, limit=100, settings=active)
+            if not quote:
+                return None
+            text = f"You noted: {quote} (memory)"
+            kind = "catch_up"
         elif "conflict" in tags:
             text = (
                 f"World Model conflict: "
@@ -1244,6 +1273,8 @@ def _select_points(
         if "open_loop" in tags or "promise" in tags:
             if "promise" in tags and not _promise_is_substantive(item):
                 continue
+            buckets[1].append(item)
+        elif item.source == "memory":
             buckets[1].append(item)
         elif item.source == "calendar" and (
             "upcoming" in tags
@@ -1372,6 +1403,8 @@ def _keep_evidence(item: Evidence) -> bool:
     # Short tapbacks / one-liners are not talking points even if tagged open_loop.
     if "open_loop" in tags and "promise" not in tags and words < 6:
         return False
+    if item.source == "memory":
+        return True
     if item.source == "calendar":
         return True
     if item.source in _MESSAGE_SOURCES and not _is_substantive(text):

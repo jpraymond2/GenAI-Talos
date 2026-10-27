@@ -21,7 +21,8 @@ from recall.llm.generator import LLMUnavailable, LLMOutputError, embed, generate
 from recall.tracing import Tracer
 
 _CITY_RE = re.compile(
-    r"(?i)\b(?:moves? to|moving to|staying in|based in|lives? in)\s+([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?)"
+    r"(?i)\b(?:moves? to|moved to|moving to|staying in|based in|lives? in)\s+"
+    r"([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?)"
 )
 _EMPLOYER_RE = re.compile(
     r"(?i)\b(?:works? at|working at|joined|employer(?:\s+is)?)\s+([A-Z][A-Za-z0-9&.'\- ]{1,40})"
@@ -155,8 +156,11 @@ class MemoryMiningService:
 
             vectors = await embed([atomic.content], input_type="passage")
             embedding = vectors[0] if vectors else []
-            ts = _now()
+            ts = str(event.metadata.get("ts") or "").strip() or _now()
             mem_id = new_memory_id(atomic.content, *entity_ids, ts)
+            if self._store.get(mem_id) is not None:
+                # Idempotent re-ingest of the same notes.jsonl line.
+                continue
             layer = "long_term" if explicit_remember else "short_term"
             memory = Memory(
                 id=mem_id,

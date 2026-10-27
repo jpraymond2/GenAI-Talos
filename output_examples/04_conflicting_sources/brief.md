@@ -4,7 +4,7 @@
 
 - Lucas asked on Fri Oct 16 (imessage): "billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?" No reply yet.  
   sources: `e1`
-- Life/job update on Tue Jul 28: c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science (imessage)  
-  sources: `e11`
+- You noted: Note: Lucas Moreau moved to Paris in August 2026; the Montreal card is stale. (memory)  
+  sources: `m1`
 
-_status: done · critic rounds: 1_
+_status: done · critic rounds: 2_

@@ -39,7 +39,7 @@ _CONFLICT_WINDOW_DAYS = 120
 _NAME_FUZZ_THRESHOLD = 90
 
 # Bump when attribute extraction rules change so sample DBs reingest.
-INGEST_VERSION = "phase2b-meaningful-conflicts-v3"
+INGEST_VERSION = "phase3-handle-links-v1"
 
 # Fields where a contact-card value vs a newer message/signature is always a conflict.
 _STRUCTURED_CONFLICT_FIELDS = frozenset({"city", "org", "phone"})
@@ -160,6 +160,11 @@ def _stable_rel_id(*parts: str) -> str:
 def _stable_conflict_id(entity_id: str, field: str) -> str:
     digest = hashlib.sha1(f"{entity_id}|{field}".encode("utf-8")).hexdigest()[:12]
     return f"cnf_{digest}"
+
+
+def _stable_handle_link_id(entity_id: str, handle_value: str) -> str:
+    digest = hashlib.sha1(f"{entity_id}|{handle_value}".encode("utf-8")).hexdigest()[:12]
+    return f"hl_{digest}"
 
 
 @dataclass
@@ -550,6 +555,24 @@ class IngestPipelineService:
             )
             self._store.upsert_entity(entity)
             entity_count += 1
+            # Entity-scoped handle links (incl. messenger display names) so
+            # evidence retrieval never needs bare-name alias matching.
+            for handle in person.handles:
+                value = (handle.value or "").strip()
+                if not value:
+                    continue
+                self._store.upsert_handle_link(
+                    {
+                        "id": _stable_handle_link_id(entity.id, value),
+                        "entity_id": entity.id,
+                        "handle_kind": handle.kind or "unknown",
+                        "handle_value": value,
+                        "confidence": 0.95,
+                        "status": "active",
+                        "source_ref": f"handle:{handle.handle_id}",
+                        "created_at": entity.first_seen_at or "",
+                    }
+                )
             self._store.clear_conflicts_for_entity(entity.id)
             for conflict in conflicts:
                 self._store.upsert_conflict(conflict)
@@ -967,4 +990,17 @@ def run_world_ingest(
     store = WorldStore(path=db_path, settings=active)
     layer = get_query_layer(active, tracer=active_tracer)
     service = IngestPipelineService(store=store, settings=active, tracer=active_tracer)
-    return service.run(layer)
+    counts = service.run(layer)
+    if sample:
+        # Mine sibling notes.jsonl into H-MEM (idempotent via notes_mined meta).
+        try:
+            import asyncio
+
+            from recall.orchestrator import build_deps, mine_sample_notes
+
+            deps = build_deps(sample_mode=True, logs_dir=active.logs_dir)
+            n = asyncio.run(mine_sample_notes(deps))
+            counts["notes_memories"] = n
+        except Exception:  # noqa: BLE001 — notes are best-effort on ingest
+            counts["notes_memories"] = 0
+    return counts

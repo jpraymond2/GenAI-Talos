@@ -170,7 +170,11 @@ def _build_views(store: WorldStore, interactions: list[Any]) -> dict[str, _View]
         if "@" in val and not val.endswith("@s.whatsapp.net"):
             v.emails.add(val.lower())
         else:
-            v.phones.add("+" + _digits(val.split("@", 1)[0]))
+            # Display-name messenger links have no digits — do not invent a
+            # shared "+" phone that would merge every chat contact together.
+            digits = _digits(val.split("@", 1)[0])
+            if len(digits) >= 7:
+                v.phones.add("+" + digits)
     for row in conn.execute("SELECT entity_id, value FROM observations WHERE field = 'org' AND source_ref LIKE 'contact:%'"):
         if row["entity_id"] in views:
             views[row["entity_id"]].card_org = str(row["value"])

@@ -7,6 +7,7 @@ import argparse
 import asyncio
 import json
 import os
+import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -107,7 +108,13 @@ async def _eval_one(
     qid = question["id"]
     ask = question["ask"]
     expect = question.get("expect") or {}
-    state = await run(ask, deps=deps)
+    # Multi-turn asks: "Note …. Then: I'm meeting …" (answer-key q23 / H-MEM).
+    if re.search(r"\bThen:\s*", ask):
+        first, second = re.split(r"\bThen:\s*", ask, maxsplit=1)
+        await run(first.strip().rstrip("."), deps=deps)
+        state = await run(second.strip(), deps=deps)
+    else:
+        state = await run(ask, deps=deps)
     blob = _brief_blob(state)
     checks: dict[str, Any] = {}
     passed = True
