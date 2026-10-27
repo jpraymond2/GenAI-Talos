@@ -198,6 +198,34 @@ async def _ask(text: str, timeout: float) -> dict[str, Any]:
     return data
 
 
+async def _ask_all(
+    questions: list[dict[str, Any]],
+    people: dict[str, Any],
+    keywords: dict[str, Any],
+    timeout: float,
+) -> list[dict[str, Any]]:
+    """Run every question on one event loop (httpx / LLM clients stay valid)."""
+    results: list[dict[str, Any]] = []
+    for q in questions:
+        steps = [s.strip() for s in re.split(r"\bThen:\s*", q["ask"]) if s.strip()]
+        t0 = time.perf_counter()
+        try:
+            state: dict[str, Any] = {}
+            for step in steps:
+                state = await _ask(step, timeout)
+            g = grade(q, state, people, keywords)
+        except Exception as exc:  # noqa: BLE001
+            state, g = {}, {"score": 0.0, "parts": {}, "notes": [f"crashed: {type(exc).__name__}: {exc}"[:200]]}
+        secs = time.perf_counter() - t0
+        live_judge = (state.get("judge") or {}).get("score")
+        results.append({"id": q["id"], "category": q["category"], "ask": q["ask"], "grade": g, "seconds": round(secs, 1),
+                        "answer": said_text(state)[:600], "status": state.get("status"), "person": state.get("entity_name"),
+                        "live_judge": live_judge})
+        mark = "✓" if g["score"] >= 0.8 else "~" if g["score"] >= 0.4 else "✗"
+        print(f"{mark} {q['id']} {round(100 * g['score']):>3}%  {q['ask'][:52]:<52}  {'; '.join(g['notes'])[:90]}")
+    return results
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--root", default=str(ROOT / "data" / "synthetic"))
@@ -223,24 +251,9 @@ def main() -> None:
         print("Note: the offline sample model only knows the canned demo questions, so most answers will fail.\n"
               "      Run with --live for a real score.\n")
 
-    results = []
-    for q in questions:
-        steps = [s.strip() for s in re.split(r"\bThen:\s*", q["ask"]) if s.strip()]
-        t0 = time.perf_counter()
-        try:
-            state: dict[str, Any] = {}
-            for step in steps:
-                state = asyncio.run(_ask(step, args.timeout))
-            g = grade(q, state, people, keywords)
-        except Exception as exc:  # noqa: BLE001
-            state, g = {}, {"score": 0.0, "parts": {}, "notes": [f"crashed: {type(exc).__name__}: {exc}"[:200]]}
-        secs = time.perf_counter() - t0
-        live_judge = (state.get("judge") or {}).get("score")
-        results.append({"id": q["id"], "category": q["category"], "ask": q["ask"], "grade": g, "seconds": round(secs, 1),
-                        "answer": said_text(state)[:600], "status": state.get("status"), "person": state.get("entity_name"),
-                        "live_judge": live_judge})
-        mark = "✓" if g["score"] >= 0.8 else "~" if g["score"] >= 0.4 else "✗"
-        print(f"{mark} {q['id']} {round(100 * g['score']):>3}%  {q['ask'][:52]:<52}  {'; '.join(g['notes'])[:90]}")
+    # One asyncio.run for the whole suite — per-question run() closes the loop and
+    # breaks reused httpx/OpenAI clients on later questions ("Event loop is closed").
+    results = asyncio.run(_ask_all(questions, people, keywords, args.timeout))
 
     os.chdir(cwd)
     total = round(100 * sum(r["grade"]["score"] for r in results) / max(1, len(results)))
