@@ -176,17 +176,19 @@ Meterless **World Model** and **H-MEM** agent engines, implemented in Python aga
 
 ## Zetaris
 
-Sample mode uses the **DuckDB fallback through the same `query_layer`**. Traces may show `fallback zetaris→duckdb reason=circuit_open` — that is **expected** when there is no Zetaris instance (default `SAMPLE_MODE`).
+Live smoke is **17/17** against our self-hosted Zetaris (Docker bundle 2.4.3.1 on a Google Cloud VM): 4 FILESTORE CSV tables, 4 USL tables, and **events federated from Postgres** via the `calendar_pg` datasource, with every named query matching DuckDB row-for-row. See [output_examples/zetaris_smoke.txt](output_examples/zetaris_smoke.txt) and [docs/zetaris_notes.md](docs/zetaris_notes.md).
 
-To run against a real cluster:
+For judges without a cluster, sample mode uses the **DuckDB fallback through the same `query_layer`**. Traces may show `fallback zetaris→duckdb reason=circuit_open` — that is **expected** when there is no Zetaris instance (default `SAMPLE_MODE`).
+
+To re-run against a live instance:
 
 ```bash
 # after loading CSVs + USL (docs/zetaris_notes.md)
 DATA_BACKEND=zetaris SAMPLE_MODE=true uv run python scripts/zetaris_smoke.py
-# writes redacted output_examples/zetaris_smoke.txt
+# overwrites redacted output_examples/zetaris_smoke.txt
 ```
 
-Path details: USL namespace `lightning.metastore.recallai.recall`, 2 DQ rules, smoke script. See [docs/zetaris_notes.md](docs/zetaris_notes.md) and [output_examples/zetaris_smoke.txt](output_examples/zetaris_smoke.txt).
+Path details: USL namespace `lightning.metastore.recallai.recall`, 2 DQ rules.
 
 1. Load tables: `scripts/zetaris_load_sample.sql` (from `settings.sample_data_dir`)
 2. Compile USL + DQ: `uv run python scripts/zetaris_setup_usl.py`

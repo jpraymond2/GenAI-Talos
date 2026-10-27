@@ -6,13 +6,13 @@ Paste-ready notes for HackOS. Every LLM call still goes through `recall/llm/gene
 
 ## Zetaris
 
-**What it does in Recall.** Federated read path for handles, interactions, contacts, and events. Unified Semantic Layer namespace `lightning.metastore.recallai.recall` over file sources plus a Postgres calendar source. Two DQ rules compile with the USL. The query layer prefers Zetaris when `DATA_BACKEND=zetaris`, then falls back to DuckDB (circuit breaker).
+**What it does in Recall.** Federated read path for handles, interactions, contacts, and events. Unified Semantic Layer namespace `lightning.metastore.recallai.recall` over four FILESTORE CSV tables plus Postgres calendar events via the `calendar_pg` datasource. Two DQ rules compile with the USL. The query layer prefers Zetaris when `DATA_BACKEND=zetaris`, then falls back to DuckDB (circuit breaker). Live smoke is **17/17** on our self-hosted Docker instance (GCP VM): table + USL counts and every named query match DuckDB row-for-row ([output_examples/zetaris_smoke.txt](../output_examples/zetaris_smoke.txt), [docs/zetaris_notes.md](zetaris_notes.md)).
 
 **Exact files.** `recall/data/zetaris_backend.py`, `recall/data/query_layer.py`, `scripts/zetaris_setup_usl.py`, `scripts/zetaris_load_sample.sql`, `scripts/zetaris_smoke.py`, `docs/zetaris_notes.md`.
 
-**How a judge verifies.** With a cluster: `DATA_BACKEND=zetaris uv run python scripts/zetaris_smoke.py` → redacted `output_examples/zetaris_smoke.txt`. Without a cluster (default sample): traces show `fallback zetaris→duckdb reason=circuit_open` — expected; DuckDB serves the same named queries.
+**How a judge verifies.** Open the checked-in 17/17 transcript, or with a cluster: `DATA_BACKEND=zetaris uv run python scripts/zetaris_smoke.py`. Without a cluster (default sample): traces show `fallback zetaris→duckdb reason=circuit_open` — expected; DuckDB serves the same named queries through the same query layer.
 
-**What was unique.** One query API for sample CSVs and live federation; smoke asserts USL / tables / DuckDB named-query parity so the agent never cares which backend answered.
+**What was unique.** One semantic layer federating CSV file sources and a Postgres database, with DQ rules, read by agents through a single query layer — smoke asserts USL / tables / DuckDB named-query parity so the agent never cares which backend answered.
 
 ---
 

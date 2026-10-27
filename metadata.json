@@ -49,6 +49,9 @@
     "zetaris": {
       "summary": "Federated read path and Unified Semantic Layer namespace \"recall\" over file sources (handles, interactions, contacts, events) plus a Postgres calendar source.",
       "dq_rules": 2,
+      "live_smoke": "17/17",
+      "deployment": "self-hosted Docker on GCP VM",
+      "sources": ["filestore CSV x4", "postgres calendar_pg"],
       "paths": [
         "recall/data/zetaris_backend.py",
         "scripts/zetaris_setup_usl.py"

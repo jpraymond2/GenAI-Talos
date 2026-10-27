@@ -1,24 +1,35 @@
 Zetaris smoke (secrets redacted)
-REST=(set DATA_BACKEND=zetaris + ZETARIS_REST_URL to run live)
-ORG=(from .env) SCHEMA=(from .env)
-SAMPLE_MODE=true DATA_BACKEND=duckdb
+REST=http://localhost:8888/api/v1.0
+ORG=1 SCHEMA=recall
+SAMPLE_MODE=True DATA_BACKEND=zetaris
 ZETARIS_READ_MODE=usl
 SAMPLE_DATA_DIR=data/synthetic/tables
 
-This checked-in placeholder is for judges without a cluster.
-Re-run against a live instance to overwrite this file:
-
-  DATA_BACKEND=zetaris SAMPLE_MODE=true uv run python scripts/zetaris_smoke.py
-
-Without Zetaris, sample-mode traces may show:
-  fallback zetaris→duckdb reason=circuit_open
-That is expected — DuckDB serves the same named queries via query_layer.
+Expected counts from data/synthetic/tables: handles=121, interactions=2652, events=176, contacts=42
+Auth: login
+Probe: Mei Tanaka
 
 check                                detail                                               result
 ----------------------------------------------------------------------------------------------------
-auth                                 (run smoke against cluster)                          SKIP
+auth                                 login                                                PASS
+count.tables.handles                 121 (want 121)                                       PASS
+count.tables.interactions            2652 (want 2652)                                     PASS
+count.tables.events                  176 (want 176)                                       PASS
+count.tables.contacts                42 (want 42)                                         PASS
+count.usl.handles                    121 (want 121)                                       PASS
+count.usl.interactions               2652 (want 2652)                                     PASS
+count.usl.events                     176 (want 176)                                       PASS
+count.usl.contacts                   42 (want 42)                                         PASS
+query.find_handles_by_name           usl=3 tables=3 duckdb=3                              PASS
+query.interactions_for_handles       usl=60 tables=60 duckdb=60                           PASS
+query.upcoming_and_past_events       usl=32 tables=32 duckdb=32                           PASS
+query.contact_cards                  usl=1 tables=1 duckdb=1                              PASS
+query.all_handles                    usl=121 tables=121 duckdb=121                        PASS
+query.all_contacts                   usl=42 tables=42 duckdb=42                           PASS
+query.all_interactions               usl=2386 tables=2386 duckdb=2386                     PASS
+query.all_events_in_window           usl=170 tables=170 duckdb=170                        PASS
 
-SUMMARY: placeholder — see docs/zetaris_notes.md
+SUMMARY: 17/17 PASS
 
 Note: without a live cluster, SAMPLE_MODE traces may show
 fallback zetaris→duckdb reason=circuit_open — expected.
