@@ -563,8 +563,8 @@ def _org_title(entity: Any, evidence: dict[str, Evidence]) -> tuple[str, str, st
         if not org:
             org = uniq[0]
         elif org.lower() not in {u.lower() for u in uniq}:
+            # Keep the contact-card org; surface the disagreement in the note.
             note = f"contact card says {org}; recent mail says {uniq[0]}"
-            org = uniq[0]
     return org, title, note
 
 
