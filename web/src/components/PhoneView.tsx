@@ -8,6 +8,7 @@ import {
 } from "../recorderMime";
 import { speakText, unlockSpeech } from "../speech";
 import type { Candidate, Evidence, EvidenceSource, RunState, TraceEvent } from "../types";
+import { RecallScore } from "./RecallScore";
 import { SourceChip } from "./SourceChip";
 import { TraceTimeline } from "./TraceTimeline";
 
@@ -17,7 +18,7 @@ interface Props {
   run: RunState | null;
   events: TraceEvent[];
   busy: boolean;
-  onAsk: (text: string, opts?: { runId?: string }) => Promise<void>;
+  onAsk: (text: string, opts?: { runId?: string; typed?: boolean }) => Promise<void>;
   onVoiceState: (state: RunState) => void;
   onPickCandidate: (c: Candidate) => void;
   onConfirmActions: () => void;
@@ -26,6 +27,8 @@ interface Props {
   showHeader?: boolean;
   /** Rendered under the brief, e.g. the identified contact's card. */
   contactSlot?: React.ReactNode;
+  /** Shown on the empty screen, e.g. the next meetings with a Prep button. */
+  upcomingSlot?: React.ReactNode;
 }
 
 function isEvidenceSource(value: string): value is EvidenceSource {
@@ -81,7 +84,9 @@ export function PhoneView({
   onCancelActions,
   showHeader = true,
   contactSlot,
+  upcomingSlot,
 }: Props) {
+  const [typed, setTyped] = useState("");
   const [recording, setRecording] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [traceOpen, setTraceOpen] = useState(false);
@@ -260,6 +265,28 @@ export function PhoneView({
     }
   }
 
+  async function submitTyped(e: React.FormEvent) {
+    e.preventDefault();
+    const text = typed.trim();
+    if (!text || busy || thinking || recording) return;
+    unlockSpeech();
+    setTyped("");
+    setHint(null);
+    setLiveTranscript(null);
+    setExpandedChip(null);
+    pulledNameRef.current = null;
+    setThinking(true);
+    setStatusLine("Thinking…");
+    const continueId =
+      run?.status === "needs_clarification" || run?.status === "awaiting_confirmation" ? run.run_id : undefined;
+    try {
+      await onAsk(text, { runId: continueId, typed: true });
+    } finally {
+      setThinking(false);
+      setStatusLine(null);
+    }
+  }
+
   const brief = run?.final_brief ?? run?.drafts?.at(-1) ?? null;
   const step = deriveStep(recording, thinking, liveTranscript, run, events);
   const contextConflicts = (run?.context as { conflicts?: unknown[] } | undefined)
@@ -305,14 +332,15 @@ export function PhoneView({
 
       <div
         className="flex-1 space-y-4 overflow-y-auto px-4 pb-4"
-        style={{ paddingBottom: "calc(11rem + env(safe-area-inset-bottom, 0px))" }}
+        style={{ paddingBottom: "calc(15rem + env(safe-area-inset-bottom, 0px))" }}
       >
         {!run && !thinking && !recording && !liveTranscript ? (
           <section className="mt-6 rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-5 text-center">
             <p className="font-display text-xl font-semibold text-ink-900">Who are you meeting?</p>
-            <p className="mt-1 text-sm text-ink-500">Tap Recall and say something like “I’m meeting Karim at 3”.</p>
+            <p className="mt-1 text-sm text-ink-500">Tap Recall and say something like “I’m meeting Karim at 3” — or type it below.</p>
           </section>
         ) : null}
+        {!run && !thinking && !recording ? upcomingSlot : null}
         {statusLine ? (
           <p className="text-sm font-medium text-sea-700">{statusLine}</p>
         ) : null}
@@ -439,6 +467,8 @@ export function PhoneView({
           </section>
         ) : null}
 
+        {run && (run.status === "done" || run.status === "needs_clarification") && !thinking ? <RecallScore run={run} compact /> : null}
+
         {contactSlot}
 
         {hint ? (
@@ -463,6 +493,24 @@ export function PhoneView({
         className="fixed inset-x-0 bottom-0 z-30 flex flex-col items-center bg-white/95 px-4 pt-3"
         style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))" }}
       >
+        <form onSubmit={(e) => void submitTyped(e)} className="mb-3 flex w-full max-w-lg gap-2">
+          <input
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            placeholder="Or type: I'm meeting Karim at 3"
+            enterKeyHint="send"
+            disabled={busy || thinking || recording}
+            aria-label="Type a question for Recall"
+            className="min-w-0 flex-1 rounded-full border border-ink-200 bg-white px-4 py-2.5 text-[16px] text-ink-900 outline-none ring-sea-500/40 placeholder:text-ink-400 focus:border-sea-500 focus:ring-2 disabled:opacity-60"
+          />
+          <button
+            type="submit"
+            disabled={!typed.trim() || busy || thinking || recording}
+            className="shrink-0 rounded-full bg-ink-900 px-4 text-sm font-semibold text-white transition hover:bg-ink-800 disabled:opacity-30"
+          >
+            Ask
+          </button>
+        </form>
         <button
           ref={talkBtnRef}
           type="button"
@@ -477,7 +525,7 @@ export function PhoneView({
             WebkitTapHighlightColor: "transparent",
             touchAction: "manipulation",
           }}
-          className={`relative flex h-28 w-28 select-none flex-col items-center justify-center rounded-full text-base font-semibold text-white shadow-lg transition active:scale-95 disabled:opacity-50 ${
+          className={`relative flex h-24 w-24 select-none flex-col items-center justify-center rounded-full text-base font-semibold text-white shadow-lg transition active:scale-95 disabled:opacity-50 ${
             recording ? "recording-pulse bg-ember-600" : thinking ? "bg-ink-700" : "bg-sea-600"
           }`}
         >

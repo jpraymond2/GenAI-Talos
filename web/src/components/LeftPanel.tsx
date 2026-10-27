@@ -247,7 +247,7 @@ export function LeftPanel({
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Type an utterance…"
+          placeholder="Or type: I'm meeting Karim at 3"
           disabled={busy}
           className="min-w-0 flex-1 rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm outline-none ring-sea-500/40 focus:ring-2"
         />

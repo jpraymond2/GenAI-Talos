@@ -82,6 +82,12 @@ def enrich_ask_payload(state: RunState) -> dict[str, Any]:
     data["speech"] = build_speech(state)
     data["run_id"] = state.run_id
     data["status"] = state.status
+    try:
+        from recall.judge import judge_run
+
+        data["judge"] = judge_run(data)
+    except Exception:  # noqa: BLE001 — the score is a nice-to-have, never break an answer
+        data["judge"] = None
     return data
 
 
@@ -130,8 +136,14 @@ async def run_ask(
     *,
     run_id: str | None = None,
     entity_id: str | None = None,
+    soft_timeout: float = _ASK_SOFT_TIMEOUT_S,
 ) -> RunState:
-    """Call the public orchestrator with soft 18s timeout and run continuation."""
+    """Call the public orchestrator with soft 18s timeout and run continuation.
+
+    New questions first go through ``preroute.plan``: calendar / birthday / open-loop
+    questions are answered straight from the data, and role / company / date / hint
+    questions get the right person handed to the orchestrator.
+    """
     from recall.orchestrator import run as orchestrate
 
     cleaned = text.strip()
@@ -139,6 +151,14 @@ async def run_ask(
 
     if prior is not None and prior.status == "awaiting_confirmation":
         return await _handle_confirmation(prior, cleaned)
+
+    plan = None
+    if not run_id and not entity_id:
+        plan = await _preroute(cleaned)
+        if plan is not None and plan.answer is not None:
+            return plan.answer
+        if plan is not None and plan.entity_id:
+            entity_id = plan.entity_id
 
     kwargs: dict[str, Any] = {}
     if entity_id:
@@ -155,7 +175,12 @@ async def run_ask(
 
     task = asyncio.create_task(coro)
     try:
-        return await asyncio.wait_for(asyncio.shield(task), timeout=_ASK_SOFT_TIMEOUT_S)
+        state = await asyncio.wait_for(asyncio.shield(task), timeout=soft_timeout)
+        if plan is not None and plan.extra:
+            from recall.server.preroute import add_points
+
+            state = add_points(state, plan.extra)
+        return state
     except asyncio.TimeoutError:
         # Let the task finish in the background; return a timed-out brief now.
         partial = get_run(run_id) if run_id else None
@@ -163,6 +188,23 @@ async def run_ask(
     except asyncio.CancelledError:
         task.cancel()
         raise
+
+
+async def _preroute(text: str) -> Any:
+    """Best effort: any failure here just means the agent handles the question as before."""
+    try:
+        from recall.server.preroute import plan as make_plan
+        from recall.tracing import Tracer
+
+        plan = await asyncio.to_thread(make_plan, text)
+        tracer = Tracer.current()
+        if tracer is not None and (plan.answer is not None or plan.entity_id):
+            tracer.event("preroute", "complete", {
+                "summary": f"{'answered from calendar/messages' if plan.answer is not None else 'picked person'} ({plan.why})",
+                "entity_id": plan.entity_id})
+        return plan
+    except Exception:  # noqa: BLE001
+        return None
 
 
 async def _handle_confirmation(prior: RunState, text: str) -> RunState:

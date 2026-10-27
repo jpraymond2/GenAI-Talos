@@ -1,7 +1,8 @@
-import type { DeviceMode, SessionUser } from "../types";
+import type { ConnectionsState, DeviceMode, SessionUser } from "../types";
+import { ConnectionPill } from "./Connections";
 import { Avatar } from "./ui";
 
-export type Tab = "assistant" | "contacts" | "sync";
+export type Tab = "assistant" | "calendar" | "contacts" | "sync";
 
 interface Props {
   device: DeviceMode;
@@ -11,15 +12,17 @@ interface Props {
   user: SessionUser | null;
   onLogout: () => void;
   sampleMode: boolean;
+  connections: ConnectionsState | null;
 }
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "assistant", label: "Assistant" },
+  { id: "calendar", label: "Calendar" },
   { id: "contacts", label: "Contacts" },
-  { id: "sync", label: "Sync" },
+  { id: "sync", label: "Connections" },
 ];
 
-export function TopBar({ device, onDevice, tab, onTab, user, onLogout, sampleMode }: Props) {
+export function TopBar({ device, onDevice, tab, onTab, user, onLogout, sampleMode, connections }: Props) {
   return (
     <header className="sticky top-0 z-30 border-b border-ink-200/70 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-3 px-3 py-2.5 md:px-6">
@@ -34,7 +37,7 @@ export function TopBar({ device, onDevice, tab, onTab, user, onLogout, sampleMod
               key={t.id}
               type="button"
               onClick={() => onTab(t.id)}
-              className={`flex-1 rounded-lg px-3 py-1.5 text-sm font-semibold transition md:flex-none ${
+              className={`flex-1 whitespace-nowrap rounded-lg px-2 py-1.5 text-[13px] sm:px-2.5 sm:text-sm font-semibold transition md:flex-none ${
                 tab === t.id ? "bg-ink-900 text-white" : "text-ink-500 hover:bg-ink-100 hover:text-ink-900"
               }`}
             >
@@ -44,6 +47,7 @@ export function TopBar({ device, onDevice, tab, onTab, user, onLogout, sampleMod
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
+          <ConnectionPill state={connections} onClick={() => onTab("sync")} />
           <div className="flex rounded-xl bg-ink-100 p-1" role="radiogroup" aria-label="Device">
             {(["mac", "phone"] as DeviceMode[]).map((d) => (
               <button

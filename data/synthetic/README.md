@@ -55,6 +55,16 @@ ingest_report.md                every place the connectors disagreed with the an
 uv run python scripts/synthetic/make_synthetic.py      # raw/ + ground_truth/  (deterministic)
 uv run python scripts/synthetic/raw_to_tables.py       # tables/ + ingest_report.md
 SAMPLE_DATA_DIR=data/synthetic/tables uv run python -m recall ask "I'm meeting Omar" --sample
+uv run python scripts/synthetic/check_identity.py      # are people sorted right?  → identity_report.md
+uv run python scripts/synthetic/judge_recall.py --live # does Recall recall the right facts? → recall_report.md
 ```
+
+`judge_recall.py` asks the real agent all 23 questions inside a throwaway copy of
+this world and grades each answer against the key: right person, must-know facts
+said (keywords from `fact_keywords.json`), no facts leaked from a same-name person,
+asks when ambiguous, says "I don't know" for strangers. `--live` needs
+`NVIDIA_API_KEY`; `--only q02,q05` runs a subset. Every answer in the app also gets
+a live score from `recall/judge.py` (grounded, right person, fresh, critic, breadth,
+actionable), shown as the **Recall judge** card under the brief.
 
 `--scale` on the generator changes filler volume (default 1.6). Never commit real data here.

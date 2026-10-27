@@ -140,6 +140,10 @@ class Settings(BaseSettings):
         default=SecretStr(""),
         description="Demo login password; the API token is also accepted as a password.",
     )
+    recall_public_url: str = Field(
+        default="",
+        description="Public https URL of this server, used as the Google sign-in redirect (e.g. https://recall.example.com).",
+    )
 
     http_timeout_seconds: float = Field(default=15.0, gt=0, le=15)
     llm_timeout_seconds: float = Field(default=30.0, gt=0, le=30)

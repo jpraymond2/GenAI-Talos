@@ -1,4 +1,4 @@
-import type { DeviceStatus, MacContact, PersonCard } from "../types";
+import type { CalendarEvent, ConnectionsState, DeviceStatus, MacContact, PersonCard, SourceConnection } from "../types";
 
 /** Demo contact cards (the fictional Alex Martin world) for VITE_MOCK / no backend. */
 function card(p: Partial<PersonCard> & Pick<PersonCard, "entity_id" | "name">): PersonCard {
@@ -35,3 +35,40 @@ export const mockMacContacts: MacContact[] = mockPeople.map((p, i) => ({
 export const mockDevice: DeviceStatus = {
   connected: true, online: true, last_seen: new Date().toISOString(), device_id: "demo-mac", agent_version: "0.1.0", hostname: "Hassan's MacBook",
 };
+
+/** Demo meetings, always in the near future so the calendar never looks empty. */
+export function mockUpcoming(): CalendarEvent[] {
+  const at = (days: number, hour: number, min = 0) => {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    d.setHours(hour, min, 0, 0);
+    return d;
+  };
+  const ev = (id: string, title: string, start: Date, mins: number, location: string, people: [string, string][], extra: string[] = []): CalendarEvent => ({
+    id, title, start: start.toISOString(), end: new Date(start.getTime() + mins * 60000).toISOString(), location, source_ref: `calendar:${id}`,
+    attendees: [...people.map(([entity_id, name]) => ({ email: "", entity_id, name })), ...extra.map((email) => ({ email, entity_id: null, name: "" }))],
+  });
+  return [
+    ev("d1", "Coffee w/ Karim", new Date(Math.ceil((Date.now() + 40 * 60000) / 900000) * 900000), 45, "Café Olimpico, Mile End", [["karim-haddad", "Karim Haddad"]]),
+    ev("d2", "Northbridge intro call", at(1, 10), 30, "Google Meet", [["lina-chen", "Lina Chen"]]),
+    ev("d3", "Study group — COMP 551", at(1, 15), 90, "Trottier 2100", [["sophie-tremblay", "Sophie Tremblay"], ["emma-rossi", "Emma Rossi"]]),
+    ev("d4", "Recruiter screen — Northstar", at(2, 11, 30), 30, "Phone", [["marcus-wei", "Marcus Wei"]]),
+    ev("d5", "Dinner with Maya", at(3, 19), 120, "Ottawa", [["maya-martin", "Maya Martin"]]),
+    ev("d6", "PwC case prep", at(5, 9), 60, "Bronfman 151", [["karim-saleh", "Karim Saleh"]], ["coach@pwc.com"]),
+  ];
+}
+
+export function mockConnections(device: DeviceStatus, googleConnected: boolean): ConnectionsState {
+  const sources: SourceConnection[] = [
+    { id: "imessage", name: "iMessage", via: "mac", status: "connected", detail: "1,284 messages", items: 1284, last_sync: new Date(Date.now() - 3600e3).toISOString(), action: "pull" },
+    { id: "whatsapp", name: "WhatsApp", via: "mac", status: "ready", detail: "Mac connected — pull to add", items: null, last_sync: null, action: "pull" },
+    { id: "contacts", name: "Address book", via: "mac", status: "connected", detail: "212 cards", items: 212, last_sync: new Date(Date.now() - 3600e3).toISOString(), action: "pull" },
+    googleConnected
+      ? { id: "gmail", name: "Gmail", via: "google", status: "connected", detail: "signed in — first sync running", items: null, last_sync: new Date().toISOString(), action: "reconnect" }
+      : { id: "gmail", name: "Gmail", via: "google", status: "off", detail: "Sign in with Google", items: null, last_sync: null, action: "connect" },
+    googleConnected
+      ? { id: "calendar", name: "Google Calendar", via: "google", status: "connected", detail: "6 upcoming meetings", items: 6, last_sync: new Date().toISOString(), action: "reconnect" }
+      : { id: "calendar", name: "Google Calendar", via: "google", status: "off", detail: "Sign in with Google", items: null, last_sync: null, action: "connect" },
+  ];
+  return { sources, mac: device, google: { configured: true, connected: googleConnected }, connected: sources.filter((s) => s.status === "connected").length, total: sources.length };
+}

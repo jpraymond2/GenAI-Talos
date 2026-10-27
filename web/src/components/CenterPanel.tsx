@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Candidate, Evidence, RunState, TalkingPoint } from "../types";
+import { RecallScore } from "./RecallScore";
 import { SourceChip } from "./SourceChip";
 
 interface Props {
@@ -62,6 +63,9 @@ export function CenterPanel({
             onCancel={onCancelActions}
           />
         ) : null}
+        <div className="mt-auto pt-6">
+          <RecallScore run={run} />
+        </div>
       </section>
     );
   }
@@ -116,6 +120,10 @@ export function CenterPanel({
           onCancel={onCancelActions}
         />
       ) : null}
+
+      <div className="mt-5">
+        <RecallScore run={run} />
+      </div>
     </section>
   );
 }
