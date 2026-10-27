@@ -144,6 +144,19 @@ Login-token workaround (from repo `scripts/zetaris_api.py`): `POST {BASE}/api/au
 
 JDBC from Python (repo `zetaris_sql.py` `JdbcChannel`): `jaydebeapi.connect("com.zetaris.lightning.jdbc.LightningDriver", "jdbc:zetaris:lightning@localhost:10000", [user, password], "/path/to/driver.jar")`.
 
+## Recall CSVs to upload (`dffs://recall/`)
+
+Upload these four files from **`SAMPLE_DATA_DIR`** (default **`data/synthetic/tables/`**; unit-test fixture is `data/sample/`):
+
+| Local file | Zetaris path |
+|---|---|
+| `contacts.csv` | `dffs://recall/contacts.csv` |
+| `handles.csv` | `dffs://recall/handles.csv` |
+| `interactions.csv` | `dffs://recall/interactions.csv` |
+| `events.csv` | `dffs://recall/events.csv` |
+
+Then run `scripts/zetaris_load_sample.sql` (one statement at a time), `scripts/zetaris_setup_usl.py`, and `scripts/zetaris_smoke.py`. Smoke/setup take expected row counts from `settings.sample_data_dir`.
+
 ## Sources
 
 - HackOS Resources → Zetaris folder (24 items): "Zetaris: Getting Started Prompt" (read in full); repo/website, install, connect, SQL reference/companion, troubleshooting links all point to github.com/zetaris/getting-started / zetaris.github.io/getting-started.

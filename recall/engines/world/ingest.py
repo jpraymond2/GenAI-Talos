@@ -38,6 +38,23 @@ _AGENT_ID = "world_ingest"
 _CONFLICT_WINDOW_DAYS = 120
 _NAME_FUZZ_THRESHOLD = 90
 
+# Bump when attribute extraction rules change so sample DBs reingest.
+INGEST_VERSION = "phase3-handle-links-v1"
+
+# Fields where a contact-card value vs a newer message/signature is always a conflict.
+_STRUCTURED_CONFLICT_FIELDS = frozenset({"city", "org", "phone"})
+
+_PHONE_ANNOUNCE_RE = re.compile(
+    r"(?i)\b("
+    r"new number|nouveau num[eé]ro|save this (?:one|number)|"
+    r"number is|mon nouveau"
+    r")\b"
+)
+_EMPLOYER_CHAT_RE = re.compile(
+    r"(?i)\b(?:started at|starting at|joined|works? at|working at|nouveau job chez)\s+"
+    r"(?-i:([A-ZÀ-Ö][A-Za-zÀ-öø-ÿ0-9&.'\-]*(?:\s+[A-ZÀ-Ö][A-Za-zÀ-öø-ÿ0-9&.'\-]*){0,3}))"
+)
+
 _CITY_PATTERNS = [
     re.compile(
         r"(?im)(?:^|\n)\s*([A-Z][A-Za-z][A-Za-z\s\-']+),\s*(?:QC|ON|AB|BC|MB|SK|NS|NB|NL|PE|YT|NT|NU|NY|CA|TX|WA)\b"
@@ -45,9 +62,21 @@ _CITY_PATTERNS = [
     re.compile(r"(?i)\bmoving to ([A-Z][A-Za-z][A-Za-z\s\-']+?)(?:\s+in\b|[.,!]|$)"),
     re.compile(r"(?i)\bbased in ([A-Z][A-Za-z][A-Za-z\s\-']+?)(?:[.,!\n]|$)"),
     re.compile(r"(?i)\bin ([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?),\s*(?:QC|ON)\b"),
+    # FR/EN move announcements (city only — never org/title from chat bodies).
+    re.compile(
+        r"(?i)\b(?:d[ée]m[ée]nage(?:r)?|moved|moving)\s+(?:à|a|to)\s+"
+        r"([A-ZÀ-Ö][A-Za-zÀ-öø-ÿ\-']+)"
+    ),
+    re.compile(
+        r"(?i)\b(?:premier|first)\s+\w+\s+[àa]\s+"
+        r"([A-ZÀ-Ö][A-Za-zÀ-öø-ÿ\-']+)"
+    ),
 ]
 
-# Single-line "Title, Org" only — never let \s eat a prior name line.
+# French/English function words that are never city names when captured alone.
+_CITY_PARTICLES = frozenset({"le", "du", "la", "des", "de", "the", "a", "an"})
+
+# Single-line email-signature "Title, Org" only (never chat / reply crumbs).
 _TITLE_PATTERNS = [
     re.compile(
         r"(?im)^([A-Z][A-Za-z][A-Za-z /&-]{0,40}),[ \t]+"
@@ -55,7 +84,14 @@ _TITLE_PATTERNS = [
     ),
 ]
 
-# "Montreal, QC" must not be parsed as Title, Org.
+_JUNK_ATTR_RE = re.compile(
+    r"(?i)^(thanks?\b|perfect|parfait|yes|no|ok|on it|same|amazing|see you|"
+    r"sending |will send|no worries|happy to|really needed|comments in|"
+    r"door code|sunday is|grabbed a|mountain loop|what a |only the |"
+    r"expired cert|in the security|v3 is|renewing )"
+)
+
+# "City, QC" style location lines must not be parsed as Title, Org.
 _REGION_CODES = frozenset(
     {
         "QC",
@@ -124,6 +160,11 @@ def _stable_rel_id(*parts: str) -> str:
 def _stable_conflict_id(entity_id: str, field: str) -> str:
     digest = hashlib.sha1(f"{entity_id}|{field}".encode("utf-8")).hexdigest()[:12]
     return f"cnf_{digest}"
+
+
+def _stable_handle_link_id(entity_id: str, handle_value: str) -> str:
+    digest = hashlib.sha1(f"{entity_id}|{handle_value}".encode("utf-8")).hexdigest()[:12]
+    return f"hl_{digest}"
 
 
 @dataclass
@@ -354,7 +395,7 @@ def cluster_people(
 
 
 def _normalize_attr_value(value: str) -> str:
-    """Trim and collapse internal whitespace for storage / comparison."""
+    """Trim and collapse internal whitespace for storage / matching."""
     return re.sub(r"[ \t]+", " ", (value or "").strip())
 
 
@@ -363,8 +404,33 @@ def _attr_conflict_key(value: str) -> str:
     return _normalize_attr_value(value).casefold()
 
 
-def extract_signature_attributes(text: str) -> dict[str, str]:
-    """Cheap regex pass over message text for city / title / org hints."""
+def _is_plausible_structured_attr(value: str, *, field: str) -> bool:
+    """Reject conversational crumbs mistakenly parsed as title/org/city."""
+    text = (value or "").strip()
+    if len(text) < 2 or len(text) > 48:
+        return False
+    if _JUNK_ATTR_RE.search(text):
+        return False
+    if text.endswith("?") or text.count(",") > 1:
+        return False
+    if field in {"org", "title"} and text[0].islower():
+        return False
+    if field == "title" and len(text.split()) > 6:
+        return False
+    if field == "org" and ("(" in text or text.lower().startswith("thanks")):
+        return False
+    return True
+
+
+def extract_signature_attributes(
+    text: str,
+    *,
+    source: str = "gmail",
+) -> dict[str, str]:
+    """Extract city freely; title/org only from gmail signature-like lines.
+
+    Never pull title/org from imessage / whatsapp / messenger bodies.
+    """
     found: dict[str, str] = {}
     if not text:
         return found
@@ -372,14 +438,29 @@ def extract_signature_attributes(text: str) -> dict[str, str]:
         match = pattern.search(text)
         if match:
             city = _normalize_attr_value(match.group(1).strip(" .,!"))
-            if city and "\n" not in city and len(city) < 40:
-                found["city"] = city
-                break
-    # Title, Org line: "Founder, Acme" (one line; never name or "City, QC").
-    for line in text.splitlines():
-        line_stripped = line.strip()
-        if not line_stripped:
-            continue
+            if not city or "\n" in city or len(city) >= 40:
+                continue
+            # First Capitalized token; drop trailing particles ("X le" → "X").
+            tokens = re.findall(r"[A-Za-zÀ-öø-ÿ']+", city)
+            picked = ""
+            for tok in tokens:
+                if tok.casefold() in _CITY_PARTICLES:
+                    continue
+                if tok[:1].isupper() or (tok[:1].isalpha() and tok.casefold() not in _CITY_PARTICLES):
+                    picked = tok[0].upper() + tok[1:] if tok else tok
+                    break
+            if picked and picked.casefold() not in _CITY_PARTICLES:
+                if _is_plausible_structured_attr(picked, field="city"):
+                    found["city"] = picked
+                    break
+
+    if source not in {"gmail"}:
+        return found
+
+    # Signature block: last non-empty lines only (never the reply body).
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    signature_lines = lines[-8:] if len(lines) > 8 else lines
+    for line_stripped in reversed(signature_lines):
         if any(pattern.search(line_stripped) for pattern in _CITY_PATTERNS):
             continue
         for pattern in _TITLE_PATTERNS:
@@ -390,12 +471,19 @@ def extract_signature_attributes(text: str) -> dict[str, str]:
             org = _normalize_attr_value(match.group(2))
             if org.upper() in _REGION_CODES:
                 continue
+            # "Founder & CEO" → core title "Founder" (avoid title conflicts).
+            if "&" in title:
+                title = title.split("&", 1)[0].strip()
+            if not _is_plausible_structured_attr(title, field="title"):
+                continue
+            if not _is_plausible_structured_attr(org, field="org"):
+                continue
             if title and "\n" not in title and not found.get("title"):
                 found["title"] = title
             if org and "\n" not in org and not found.get("org"):
                 found["org"] = org
             break
-        if found.get("title"):
+        if found.get("title") and found.get("org"):
             break
     return found
 
@@ -467,6 +555,24 @@ class IngestPipelineService:
             )
             self._store.upsert_entity(entity)
             entity_count += 1
+            # Entity-scoped handle links (incl. messenger display names) so
+            # evidence retrieval never needs bare-name alias matching.
+            for handle in person.handles:
+                value = (handle.value or "").strip()
+                if not value:
+                    continue
+                self._store.upsert_handle_link(
+                    {
+                        "id": _stable_handle_link_id(entity.id, value),
+                        "entity_id": entity.id,
+                        "handle_kind": handle.kind or "unknown",
+                        "handle_value": value,
+                        "confidence": 0.95,
+                        "status": "active",
+                        "source_ref": f"handle:{handle.handle_id}",
+                        "created_at": entity.first_seen_at or "",
+                    }
+                )
             self._store.clear_conflicts_for_entity(entity.id)
             for conflict in conflicts:
                 self._store.upsert_conflict(conflict)
@@ -491,12 +597,22 @@ class IngestPipelineService:
             tracer=self._tracer,
             run_id=run_id,
         )
+        # Merges combine attribute histories; refresh structured conflicts so
+        # card-vs-new-phone (etc.) still surface after a name_merge join.
+        conflict_count = self._refresh_conflicts_from_history()
 
         self._store.set_meta("ingest_stage", "relationships")
         relationship_counts = self._run_relationship_scoring(run_id=run_id, layer=layer)
 
         self._store.set_meta("ingest_stage", "done")
         self._store.set_meta("last_run_id", run_id)
+        if self._settings.sample_mode:
+            from recall.engines.world.store import source_tables_fingerprint
+
+            self._store.set_meta(
+                "source_fingerprint",
+                source_tables_fingerprint(self._settings.sample_data_dir),
+            )
 
         counts = {
             "entities": entity_count,
@@ -610,18 +726,28 @@ class IngestPipelineService:
                 )
             )
 
-        # Contact card attributes
+        # Contact card attributes — dated well before recent messages so a
+        # newer gmail signature / move announcement wins (stale-card note).
         for contact in person.contacts:
             source_ref = f"contact:{contact.contact_id}"
-            # Contact rows have no timestamp — use sample/live "now" minus a small epsilon for stability,
-            # but prefer interaction-derived times when available. Use first_seen from interactions later.
-            contact_ts = _fmt(now - timedelta(days=60))
+            contact_ts = _fmt(now - timedelta(days=365))
             if contact.org:
                 observe("org", contact.org, contact_ts, source_ref)
             if contact.title:
                 observe("title", contact.title, contact_ts, source_ref)
             if contact.city:
                 observe("city", contact.city, contact_ts, source_ref)
+            nick = (getattr(contact, "nickname", None) or "").strip()
+            if nick:
+                observe("nickname", nick, contact_ts, source_ref)
+                if nick not in aliases and nick.lower() not in {
+                    a.lower() for a in aliases
+                }:
+                    aliases.append(nick)
+            for phone in contact.phones:
+                norm = normalize_phone(phone)
+                if norm:
+                    observe("phone", norm, contact_ts, source_ref)
 
         # Handle values as identifiers
         handle_values = {h.value for h in person.handles} | set(emails) | set(phones)
@@ -637,10 +763,21 @@ class IngestPipelineService:
         related_interactions.sort(key=lambda r: r.ts_utc)
 
         for row in related_interactions:
-            extracted = extract_signature_attributes(row.text)
+            extracted = extract_signature_attributes(row.text, source=row.source)
             for field_name, value in extracted.items():
                 observe(field_name, value, row.ts_utc, row.source_ref)
-
+            # Chat job-change announcements (employer only — never title crumbs).
+            if row.source in {"imessage", "whatsapp", "messenger", "gmail"}:
+                emp = _EMPLOYER_CHAT_RE.search(row.text or "")
+                if emp:
+                    org = _normalize_attr_value(emp.group(1).strip(" .,!"))
+                    if _is_plausible_structured_attr(org, field="org"):
+                        observe("org", org, row.ts_utc, row.source_ref)
+            # Self-announced new phone number (handle on the message is the new one).
+            if _PHONE_ANNOUNCE_RE.search(row.text or ""):
+                announced = normalize_phone(row.handle_value)
+                if announced:
+                    observe("phone", announced, row.ts_utc, row.source_ref)
         # Canonical attributes = latest per field
         attributes: dict[str, str] = {}
         by_field: dict[str, list[AttributeObservation]] = {}
@@ -710,6 +847,29 @@ class IngestPipelineService:
 
         return entity, observations, conflicts, relationships
 
+    def _refresh_conflicts_from_history(self) -> int:
+        """Recompute conflicts from each person's attribute_history (post-merge)."""
+        total = 0
+        for entity in self._store.list_entities(type="person"):
+            by_field: dict[str, list[AttributeObservation]] = {}
+            for item in entity.attribute_history or []:
+                by_field.setdefault(item.field, []).append(item)
+            conflicts = self._detect_conflicts(entity.id, by_field)
+            self._store.clear_conflicts_for_entity(entity.id)
+            for conflict in conflicts:
+                self._store.upsert_conflict(conflict)
+                total += 1
+            # Keep attributes consistent with newest observation per field.
+            if by_field:
+                attrs = dict(entity.attributes or {})
+                for field_name, items in by_field.items():
+                    items_sorted = sorted(items, key=lambda x: x.observed_at)
+                    attrs[field_name] = items_sorted[-1].value
+                if attrs != entity.attributes:
+                    entity.attributes = attrs
+                    self._store.upsert_entity(entity)
+        return total
+
     def _detect_conflicts(
         self,
         entity_id: str,
@@ -717,29 +877,36 @@ class IngestPipelineService:
     ) -> list[Conflict]:
         conflicts: list[Conflict] = []
         for field_name, items in by_field.items():
-            # Distinct values (trimmed, case-insensitive) with earliest observation each.
-            earliest: dict[str, AttributeObservation] = {}
-            for item in sorted(items, key=lambda x: x.observed_at):
+            by_key: dict[str, list[AttributeObservation]] = {}
+            for item in items:
                 key = _attr_conflict_key(item.value)
                 if not key:
                     continue
-                if key not in earliest:
-                    earliest[key] = item
-            if len(earliest) < 2:
+                by_key.setdefault(key, []).append(item)
+            if len(by_key) < 2:
                 continue
-            values = list(earliest.values())
-            # If any two different values observed within 120 days, record conflict.
+            keys = list(by_key.keys())
             conflicted = False
-            for i, left in enumerate(values):
-                for right in values[i + 1 :]:
-                    delta = abs((_parse_ts(left.observed_at) - _parse_ts(right.observed_at)).days)
-                    if delta <= _CONFLICT_WINDOW_DAYS:
-                        conflicted = True
+            for i, key_a in enumerate(keys):
+                for key_b in keys[i + 1 :]:
+                    for left in by_key[key_a]:
+                        for right in by_key[key_b]:
+                            if self._observations_conflict(field_name, left, right):
+                                conflicted = True
+                                break
+                        if conflicted:
+                            break
+                    if conflicted:
                         break
                 if conflicted:
                     break
             if not conflicted:
                 continue
+            # Represent each distinct value by its earliest observation.
+            values = [
+                sorted(obs_list, key=lambda x: x.observed_at)[0]
+                for obs_list in by_key.values()
+            ]
             conflicts.append(
                 Conflict(
                     id=_stable_conflict_id(entity_id, field_name),
@@ -756,6 +923,26 @@ class IngestPipelineService:
                 )
             )
         return conflicts
+
+    @staticmethod
+    def _observations_conflict(
+        field_name: str,
+        left: AttributeObservation,
+        right: AttributeObservation,
+    ) -> bool:
+        """True when two observations of the same field meaningfully disagree."""
+        delta = abs(
+            (_parse_ts(left.observed_at) - _parse_ts(right.observed_at)).days
+        )
+        if delta <= _CONFLICT_WINDOW_DAYS:
+            return True
+        # Contact card vs a newer message/signature/domain observation: always
+        # record for city / org / phone (stale cards are the point).
+        if field_name not in _STRUCTURED_CONFLICT_FIELDS:
+            return False
+        left_card = str(left.source_ref or "").startswith("contact:")
+        right_card = str(right.source_ref or "").startswith("contact:")
+        return left_card != right_card
 
     @staticmethod
     def _write_provenance(path: Path, observation: Observation) -> None:
@@ -803,4 +990,17 @@ def run_world_ingest(
     store = WorldStore(path=db_path, settings=active)
     layer = get_query_layer(active, tracer=active_tracer)
     service = IngestPipelineService(store=store, settings=active, tracer=active_tracer)
-    return service.run(layer)
+    counts = service.run(layer)
+    if sample:
+        # Mine sibling notes.jsonl into H-MEM (idempotent via notes_mined meta).
+        try:
+            import asyncio
+
+            from recall.orchestrator import build_deps, mine_sample_notes
+
+            deps = build_deps(sample_mode=True, logs_dir=active.logs_dir)
+            n = asyncio.run(mine_sample_notes(deps))
+            counts["notes_memories"] = n
+        except Exception:  # noqa: BLE001 — notes are best-effort on ingest
+            counts["notes_memories"] = 0
+    return counts

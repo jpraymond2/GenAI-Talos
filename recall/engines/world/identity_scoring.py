@@ -27,6 +27,15 @@ _ROOT = Path(__file__).resolve().parents[3]
 _SCORING_PATH = _ROOT / "config" / "identity_scoring.yaml"
 _ALIASES_PATH = _ROOT / "config" / "company_aliases.yaml"
 
+
+def _learned_aliases_path(settings: Any | None = None) -> Path:
+    """Per-dataset learned aliases live under data/learned/ (gitignored)."""
+    from recall.config import get_settings
+
+    active = settings if settings is not None else get_settings()
+    name = (getattr(active, "dataset_name", None) or "default").strip() or "default"
+    return _ROOT / "data" / "learned" / name / "company_aliases.yaml"
+
 _TOKEN_SPLIT = re.compile(r"[.\-_0-9]+")
 _PHONE_RE = re.compile(
     r"(?:\+?\d[\d\s().-]{7,}\d)"
@@ -164,23 +173,30 @@ def load_scoring_config(path: Path | None = None) -> dict[str, Any]:
 
 
 def load_company_aliases(path: Path | None = None) -> dict[str, Any]:
-    """Load company_aliases.yaml (seed + learned)."""
-    target = path or _ALIASES_PATH
-    if not target.exists():
-        return {"seed": {}, "learned": {}}
-    with target.open(encoding="utf-8") as handle:
-        data = yaml.safe_load(handle) or {}
-    data.setdefault("seed", {})
-    data.setdefault("learned", {})
+    """Load hand-curated seed from config/ plus learned from data/learned/."""
+    seed_path = path or _ALIASES_PATH
+    data: dict[str, Any] = {"seed": {}, "learned": {}}
+    if seed_path.exists():
+        with seed_path.open(encoding="utf-8") as handle:
+            raw = yaml.safe_load(handle) or {}
+        data["seed"] = dict(raw.get("seed") or {})
+        # Ignore any legacy learned: block still sitting in config/.
+    learned_path = _learned_aliases_path()
+    if learned_path.exists():
+        with learned_path.open(encoding="utf-8") as handle:
+            raw = yaml.safe_load(handle) or {}
+        data["learned"] = dict(raw.get("learned") or raw or {})
     return data
 
 
 def save_company_aliases(data: dict[str, Any], path: Path | None = None) -> None:
-    """Persist company aliases YAML (append-only learned entries via rewrite)."""
-    target = path or _ALIASES_PATH
+    """Persist only learned entries under data/learned/<dataset>/ (never config/)."""
+    _ = path  # seed file is hand-curated; never overwrite it from ingest
+    target = _learned_aliases_path()
     target.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"learned": dict((data or {}).get("learned") or {})}
     with target.open("w", encoding="utf-8") as handle:
-        yaml.safe_dump(data, handle, sort_keys=False, allow_unicode=True)
+        yaml.safe_dump(payload, handle, sort_keys=False, allow_unicode=True)
 
 
 def handle_slug(value: str) -> str:
@@ -263,26 +279,44 @@ def extract_signature(body: str) -> dict[str, Any]:
         if 1 <= len(words) <= 4 and all(w[:1].isupper() for w in words if w.isalpha()):
             name = line
             break
-    for line in tail:
-        if "," in line and line != name:
+    # Title/company only from short signature-like lines (never reply body crumbs).
+    sig_lines = [ln for ln in tail if len(ln) <= 60 and ln.count(",") <= 1][-6:]
+    junk = re.compile(
+        r"(?i)^(thanks?\b|perfect|hi\b|hey\b|happy to|moving you\b)"
+    )
+    for line in reversed(sig_lines):
+        if line == name or junk.search(line):
+            continue
+        if "," in line:
             left, right = [p.strip() for p in line.split(",", 1)]
-            if left and right:
+            if (
+                left
+                and right
+                and left[0].isupper()
+                and right[0].isupper()
+                and len(left.split()) <= 6
+                and len(right.split()) <= 5
+                and not junk.search(left)
+                and not junk.search(right)
+            ):
                 title = left
                 company = right
                 break
-        if re.search(r"\bat\b", line, re.I) and line != name:
+        if re.search(r"\bat\b", line, re.I):
             parts = re.split(r"\bat\b", line, maxsplit=1, flags=re.I)
             if len(parts) == 2:
-                title = parts[0].strip(" -–|,") or title
-                company = parts[1].strip(" -–|,") or company
+                left = parts[0].strip(" -–|,")
+                right = parts[1].strip(" -–|,")
+                if left and right and left[0].isupper() and right[0].isupper():
+                    title = left or title
+                    company = right or company
+                    break
     return {"name": name, "title": title, "company": company, "phones": phones}
 
 
 def _domain_to_company(domain: str) -> str:
     base = domain.split(".")[0]
-    if base.lower() == "pwc":
-        return "PwC"
-    return base[:1].upper() + base[1:]
+    return base[:1].upper() + base[1:] if base else domain
 
 
 async def ensure_company_for_domain(
@@ -831,27 +865,19 @@ def heuristic_extract_references(body: str) -> list[ContentReference]:
         "hope you're well, let's catch up",
     }:
         return []
-    if len(text.split()) <= 12 and not any(
-        key in lower
-        for key in (
-            "case interview",
-            "habs",
-            "hockey",
-            "review session",
-            "thursday",
-            "saturday",
-            "pwc",
-            "game",
-        )
-    ):
-        return []
-
     refs: list[ContentReference] = []
+    # Capture concrete phrases from the email itself (org/project/event tokens
+    # come from the body — never hardcode a dataset org or team name).
     patterns: list[tuple[str, str, float]] = [
         (r"case interview(?: tips| prep|s)?", "plan", 0.9),
-        (r"review session(?:\s+thursday)?", "event", 0.9),
-        (r"pwc advisory(?: round)?", "project", 0.85),
-        (r"habs(?: game)?(?:\s+saturday)?", "event", 0.95),
+        (r"review session(?:\s+\w+day)?", "event", 0.9),
+        (
+            r"[A-Za-z][A-Za-z0-9.&]{1,20}(?:\s+[A-Za-z][A-Za-z0-9.&]{1,20})?\s+"
+            r"advisory(?:\s+round)?",
+            "project",
+            0.85,
+        ),
+        (r"[A-Za-z]{3,20}\s+game(?:\s+\w+day)?", "event", 0.95),
         (r"hockey game", "event", 0.9),
         (r"\bsaturday\b", "date", 0.5),
         (r"\bthursday\b", "date", 0.55),
@@ -868,6 +894,8 @@ def heuristic_extract_references(body: str) -> list[ContentReference]:
             continue
         seen.add(key)
         refs.append(ContentReference(text=phrase, type=typ, specificity=spec))
+    if len(text.split()) <= 12 and not refs:
+        return []
     return refs
 
 
@@ -1690,7 +1718,7 @@ async def score_handle(
             top_two = sorted(first_name_only, key=lambda c: c.probability, reverse=True)[:2]
             margin = top_two[0].probability - top_two[1].probability
             f7a_lead = next((f for f in top_two[0].features if f.name == "f7a"), None)
-            # Shared-reference evidence can break a namesake tie (gmail92 → Haddad).
+            # Shared-reference evidence can break a namesake tie.
             content_break = bool(f7a_lead and f7a_lead.value >= 0.4)
             same_employer = []
             for cand in first_name_only:

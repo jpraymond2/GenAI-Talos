@@ -1,7 +1,7 @@
 """Named SQL reads shared by DuckDB and Zetaris against the recall schema.
 
 Dialect assumption: statements are plain ANSI SQL only — SELECT / WHERE /
-ORDER BY / LIMIT, LIKE, IN, and simple comparisons. Placeholders use the
+ORDER BY / LIMIT, LIKE, IN, and simple equality checks. Placeholders use the
 portable ``:name`` form. Backends expand list params to ``IN (?, ?, ...)``
 (or their native bind style) and convert markers; see ``sql_bind.py``.
 JSON list columns (emails, phones, attendees) and phone / WhatsApp-JID
@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field
 from recall.config import Settings, get_settings
 from recall.data.query_layer import QueryLayer, get_default_query_layer
 
-# Fixed "now" for SAMPLE_MODE so named-query results stay stable across runs.
+# Legacy fixed anchor; prefer recall.agents.time_context.now() / resolve_now().
 SAMPLE_ANCHOR = datetime(2026, 10, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 _HANDLES_BY_DISPLAY_SQL = """
@@ -37,14 +37,14 @@ ORDER BY handle_id
 """
 
 _CONTACTS_BY_NAME_SQL = """
-SELECT contact_id, full_name, org, title, city, emails, phones, source
+SELECT contact_id, full_name, org, title, city, nickname, emails, phones, source
 FROM recall.contacts
 WHERE lower(full_name) LIKE :pattern
 ORDER BY contact_id
 """
 
 _CONTACTS_CANDIDATES_SQL = """
-SELECT contact_id, full_name, org, title, city, emails, phones, source
+SELECT contact_id, full_name, org, title, city, nickname, emails, phones, source
 FROM recall.contacts
 WHERE lower(full_name) LIKE :pattern
    OR lower(emails) LIKE :email_pattern
@@ -56,6 +56,16 @@ SELECT interaction_id, source, thread_id, handle_value, direction,
        ts_utc, subject, text, source_ref
 FROM recall.interactions
 WHERE handle_value IN (:handle_values)
+  AND ts_utc >= :since_ts
+ORDER BY ts_utc DESC
+LIMIT :limit_n
+"""
+
+_INTERACTIONS_BY_THREAD_SQL = """
+SELECT interaction_id, source, thread_id, handle_value, direction,
+       ts_utc, subject, text, source_ref
+FROM recall.interactions
+WHERE thread_id IN (:thread_ids)
   AND ts_utc >= :since_ts
 ORDER BY ts_utc DESC
 LIMIT :limit_n
@@ -114,6 +124,7 @@ class ContactRow(BaseModel):
     org: str = ""
     title: str = ""
     city: str = ""
+    nickname: str = ""
     emails: list[str] = Field(default_factory=list)
     phones: list[str] = Field(default_factory=list)
     source: str = ""
@@ -123,12 +134,14 @@ def resolve_now(
     settings: Settings | None = None,
     now: datetime | None = None,
 ) -> datetime:
-    """Return an explicit now, the sample anchor, or the current UTC time."""
+    """Return an explicit now, the frozen sample clock, or the current UTC time."""
     if now is not None:
         return _as_utc(now)
     active = settings if settings is not None else get_settings()
     if active.sample_mode:
-        return SAMPLE_ANCHOR
+        from recall.agents.time_context import now as frozen_now
+
+        return _as_utc(frozen_now(settings=active))
     return datetime.now(timezone.utc)
 
 
@@ -213,6 +226,49 @@ def interactions_for_handles(
     return [InteractionRow.model_validate(_stringify_row(row)) for row in rows]
 
 
+def interactions_for_threads(
+    thread_ids: list[str],
+    *,
+    source_tag: str,
+    since_days: int = 400,
+    limit: int = 200,
+    now: datetime | None = None,
+    settings: Settings | None = None,
+    layer: QueryLayer | None = None,
+) -> list[InteractionRow]:
+    """All messages on the given threads (newest first), for open-loop / intro context."""
+    cleaned = _unique_handle_values(thread_ids)
+    if not cleaned:
+        return []
+    active = settings if settings is not None else get_settings()
+    ql = _resolve_layer(layer)
+    anchor = resolve_now(active, now)
+    since_ts = (anchor - timedelta(days=since_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    rows = ql.query(
+        _INTERACTIONS_BY_THREAD_SQL,
+        {
+            "thread_ids": cleaned,
+            "since_ts": since_ts,
+            "limit_n": int(limit),
+        },
+        source_tag=source_tag,
+    )
+    return [InteractionRow.model_validate(_stringify_row(row)) for row in rows]
+
+
+def _looks_like_address_handle(text: str) -> bool:
+    """True for email / E.164 / WhatsApp JID — not bare display names."""
+    value = (text or "").strip()
+    if not value:
+        return False
+    if "@" in value:
+        return True
+    if value.startswith("+") and len(re.sub(r"\D", "", value)) >= 7:
+        return True
+    digits = re.sub(r"\D", "", value)
+    return len(digits) >= 10 and digits == re.sub(r"\D", "", value)
+
+
 def collect_entity_handle_values(
     aliases: list[str],
     *,
@@ -220,11 +276,25 @@ def collect_entity_handle_values(
 ) -> list[str]:
     """Expand entity aliases + linked handles into SQL ``IN`` candidates.
 
-    Includes lowercased copies and phone digit forms so Zetaris can filter
-    instead of returning the full interactions table.
+    Bare display-name aliases are skipped (they collide across people). Linked
+    handle values from ``handle_links`` are always included — those are
+    entity_id-scoped. Address-like aliases (email/phone/JID) are included.
     """
     values: list[str] = []
-    for raw in [*aliases, *(linked_handle_values or [])]:
+    for raw in aliases or []:
+        text = str(raw or "").strip()
+        if not text or not _looks_like_address_handle(text):
+            continue
+        values.append(text)
+        values.append(text.lower())
+        local = text.split("@", 1)[0]
+        digits = re.sub(r"\D", "", local)
+        if len(digits) >= 7:
+            values.append(digits)
+            values.append(f"+{digits}")
+            if text.endswith("@s.whatsapp.net") or "whatsapp" in text.lower():
+                values.append(f"{digits}@s.whatsapp.net")
+    for raw in linked_handle_values or []:
         text = str(raw or "").strip()
         if not text:
             continue
@@ -344,7 +414,7 @@ def contact_cards(
 
 
 _CONTACTS_ALL_SQL = """
-SELECT contact_id, full_name, org, title, city, emails, phones, source
+SELECT contact_id, full_name, org, title, city, nickname, emails, phones, source
 FROM recall.contacts
 ORDER BY contact_id
 """

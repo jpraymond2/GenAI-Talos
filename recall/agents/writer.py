@@ -5,10 +5,11 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from recall.agents import offline
 from recall.agents.job_change import job_change_guidance
 from recall.agents.prompts import BRIEF_STYLES, WRITER_SYSTEM
 from recall.agents.time_context import with_today
-from recall.llm.generator import generate_json
+from recall.llm.generator import LLMOutputError, LLMUnavailable, SampleCacheMiss, generate_json
 from recall.schemas import Brief, CriticVerdict, Evidence, RunState
 from recall.tracing import Tracer
 
@@ -49,22 +50,22 @@ async def run(state: RunState, deps: Any) -> RunState:
     if feedback:
         prompt_parts.extend(["CRITIC_FEEDBACK:", feedback])
 
-    prompt = with_today("\n".join(prompt_parts))
-    generate_json_fn = getattr(deps, "generate_json", None) or generate_json
-    brief = await generate_json_fn(prompt, WRITER_SYSTEM, Brief, role="writer")
-    assert isinstance(brief, Brief)
-    # Sample-mode cache often returns a default brief for another person; retarget.
-    if person and brief.person and brief.person != person:
-        headline = brief.headline.replace(brief.person, person)
-        if person not in headline:
-            headline = f"{person}. {headline}"
-        brief = brief.model_copy(update={"person": person, "headline": headline})
-    state.drafts.append(brief)
-    summary = (
-        f"person={brief.person!r} points={len(brief.points)} "
-        f"headline={brief.headline[:80]!r}"
+    prompt = with_today(
+        "\n".join(prompt_parts),
+        settings=getattr(deps, "settings", None),
     )
-    _log(deps, "writer", summary, {"brief": brief.model_dump(mode="json")})
+    generate_json_fn = getattr(deps, "generate_json", None) or generate_json
+    try:
+        brief = await generate_json_fn(prompt, WRITER_SYSTEM, Brief, role="writer")
+        assert isinstance(brief, Brief)
+        summary = (
+            f"person={brief.person!r} points={len(brief.points)} "
+            f"headline={brief.headline[:80]!r}"
+        )
+        _log(deps, "writer", summary, {"brief": brief.model_dump(mode="json")})
+    except (SampleCacheMiss, LLMUnavailable, LLMOutputError):
+        brief = offline.write_brief(state, deps)
+    state.drafts.append(brief)
     return state
 
 

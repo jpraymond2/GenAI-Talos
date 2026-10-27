@@ -29,7 +29,13 @@ from pydantic import BaseModel, Field
 
 from recall import __version__
 from recall.config import get_settings
-from recall.server.auth import require_bearer, require_ws_token
+from recall.server.auth import (
+    client_is_loopback,
+    ensure_sample_token,
+    expected_token,
+    require_bearer,
+    require_ws_token,
+)
 from recall.server.session import (
     enrich_ask_payload,
     ingest_status,
@@ -59,13 +65,16 @@ class ConfirmBody(BaseModel):
 
     run_id: str = Field(min_length=1)
     confirmed: bool
+    action_ids: list[str] | None = None
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    """Start the live-ingest loop when not in SAMPLE_MODE."""
+    """Start the live-ingest loop when not in SAMPLE_MODE; mint sample token."""
     global _ingest_task
     settings = get_settings()
+    if settings.sample_mode:
+        ensure_sample_token()
     if not settings.sample_mode:
         _ingest_task = asyncio.create_task(_live_ingest_loop(), name="recall-live-ingest")
     try:
@@ -89,6 +98,19 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/api/local-token")
+def api_local_token(request: Request) -> dict[str, str]:
+    """Return the sample-mode token to loopback clients only (404 otherwise)."""
+    if not client_is_loopback(request):
+        raise HTTPException(status_code=404, detail="Not found")
+    settings = get_settings()
+    if not settings.sample_mode:
+        raise HTTPException(status_code=404, detail="Not found")
+    token = expected_token()
+    if not token:
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"token": token}
+
 @app.post("/api/ask", dependencies=[Depends(require_bearer)])
 async def api_ask(body: AskBody) -> dict[str, Any]:
     """Run or continue meeting-prep; traces fan out on ``/ws/trace``."""
@@ -98,18 +120,20 @@ async def api_ask(body: AskBody) -> dict[str, Any]:
 
 @app.post("/api/confirm", dependencies=[Depends(require_bearer)])
 async def api_confirm(body: ConfirmBody) -> dict[str, Any]:
-    """Confirm or cancel a proposed action plan when actions supports it."""
+    """Confirm or cancel a proposed action plan (sample dry-run / live not_enabled)."""
     from recall.agents import actions
+    from recall.orchestrator import build_deps
+    from recall.server.session import get_run
 
-    confirm_fn = getattr(actions, "confirm", None)
-    execute_fn = getattr(actions, "execute", None)
-    fn = confirm_fn if callable(confirm_fn) else execute_fn if callable(execute_fn) else None
-    if fn is None:
-        return {"status": "not_implemented", "run_id": body.run_id}
-
-    result = fn(run_id=body.run_id, confirmed=body.confirmed)
-    if asyncio.iscoroutine(result):
-        result = await result
+    deps = build_deps(run_id=body.run_id)
+    state = get_run(body.run_id)
+    result = await actions.execute(
+        run_id=body.run_id,
+        confirmed=body.confirmed,
+        action_ids=body.action_ids,
+        deps=deps,
+        state=state,
+    )
     if isinstance(result, dict):
         return result
     if hasattr(result, "model_dump"):

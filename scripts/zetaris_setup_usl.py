@@ -38,7 +38,7 @@ assert _USL_PATH == f"{_NS}.{_USL}"
 assert USL_COLUMN_RENAMES["contact"]["org"] == "organisation"
 _ADMIN_TIMEOUT = 120.0
 
-# USL logical table -> data/sample CSV (row counts come from the files).
+# USL logical table -> CSV under settings.sample_data_dir (row counts from files).
 _SAMPLE_CSV_BY_LOGICAL = {
     "contact": "contacts.csv",
     "handle": "handles.csv",
@@ -48,7 +48,7 @@ _SAMPLE_CSV_BY_LOGICAL = {
 
 
 def _expected_from_sample(sample_dir: Path) -> dict[str, int]:
-    """Count data rows in sample CSVs (header excluded)."""
+    """Count data rows in SAMPLE_DATA_DIR CSVs (header excluded)."""
     import csv
 
     out: dict[str, int] = {}

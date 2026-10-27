@@ -20,9 +20,31 @@ export function setApiToken(token: string): void {
   }
 }
 
-/** Prompt once when live mode needs a token and none is configured. */
-export function ensureApiToken(): string {
+let localTokenPromise: Promise<string> | null = null;
+
+/** Fetch the sample-mode token from GET /api/local-token (loopback only). */
+export async function fetchLocalToken(): Promise<string> {
+  if (localTokenPromise) return localTokenPromise;
+  localTokenPromise = (async () => {
+    try {
+      const res = await fetch("/api/local-token");
+      if (!res.ok) return "";
+      const body = (await res.json()) as { token?: string };
+      const token = String(body.token ?? "").trim();
+      if (token) setApiToken(token);
+      return token;
+    } catch {
+      return "";
+    }
+  })();
+  return localTokenPromise;
+}
+
+/** Resolve a token: env / storage, then local-token, then optional prompt. */
+export async function ensureApiTokenAsync(): Promise<string> {
   let token = getApiToken();
+  if (token) return token;
+  token = await fetchLocalToken();
   if (token) return token;
   if (typeof window === "undefined") return "";
   const entered = window.prompt(
@@ -35,8 +57,22 @@ export function ensureApiToken(): string {
   return token;
 }
 
+/** Sync helper used by WebSocket setup; prefer ensureApiTokenAsync for fetches. */
+export function ensureApiToken(): string {
+  return getApiToken();
+}
+
 export function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
-  const token = ensureApiToken();
+  const token = getApiToken();
+  const headers: Record<string, string> = { ...extra };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
+
+export async function authHeadersAsync(
+  extra: Record<string, string> = {},
+): Promise<Record<string, string>> {
+  const token = await ensureApiTokenAsync();
   const headers: Record<string, string> = { ...extra };
   if (token) headers.Authorization = `Bearer ${token}`;
   return headers;

@@ -21,7 +21,8 @@ from recall.llm.generator import LLMUnavailable, LLMOutputError, embed, generate
 from recall.tracing import Tracer
 
 _CITY_RE = re.compile(
-    r"(?i)\b(?:moves? to|moving to|staying in|based in|lives? in)\s+([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?)"
+    r"(?i)\b(?:moves? to|moved to|moving to|staying in|based in|lives? in)\s+"
+    r"([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?)"
 )
 _EMPLOYER_RE = re.compile(
     r"(?i)\b(?:works? at|working at|joined|employer(?:\s+is)?)\s+([A-Z][A-Za-z0-9&.'\- ]{1,40})"
@@ -45,18 +46,6 @@ def _infer_attribute(content: str) -> tuple[str, str]:
 def _sample_split_memories(text: str) -> list[MinedAtomicMemory]:
     """SAMPLE_MODE path: split compound notes without calling the LLM."""
     text = text.strip()
-    if "staying in montreal" in text.lower() or (
-        "montreal" in text.lower() and "staying" in text.lower()
-    ):
-        return [
-            MinedAtomicMemory(
-                content=text,
-                type="factual",
-                entity_names=_guess_names(text),
-                attribute_key="city",
-                attribute_value="Montreal",
-            )
-        ]
     # Move / city patterns: keep full sentence as one memory with inferred attr.
     key, value = _infer_attribute(text)
     shared_names = _guess_names(text)
@@ -167,8 +156,11 @@ class MemoryMiningService:
 
             vectors = await embed([atomic.content], input_type="passage")
             embedding = vectors[0] if vectors else []
-            ts = _now()
+            ts = str(event.metadata.get("ts") or "").strip() or _now()
             mem_id = new_memory_id(atomic.content, *entity_ids, ts)
+            if self._store.get(mem_id) is not None:
+                # Idempotent re-ingest of the same notes.jsonl line.
+                continue
             layer = "long_term" if explicit_remember else "short_term"
             memory = Memory(
                 id=mem_id,

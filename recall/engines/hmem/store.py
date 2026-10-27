@@ -37,13 +37,22 @@ CREATE TABLE IF NOT EXISTS memories (
 
 CREATE INDEX IF NOT EXISTS idx_memories_layer ON memories(layer);
 CREATE INDEX IF NOT EXISTS idx_memories_attr ON memories(attribute_key, attribute_value);
+
+CREATE TABLE IF NOT EXISTS meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL DEFAULT ''
+);
 """
 
 
 def hmem_db_path(settings: Settings | None = None) -> Path:
-    """Return data/hmem_sample.db in SAMPLE_MODE, else data/hmem.db."""
+    """Return ``data/hmem_<dataset>.db`` in SAMPLE_MODE, else ``data/hmem.db``."""
+    from recall.engines.world.store import _safe_dataset_name
+
     active = settings if settings is not None else get_settings()
-    return Path("data/hmem_sample.db" if active.sample_mode else "data/hmem.db")
+    if not active.sample_mode:
+        return Path("data/hmem.db")
+    return Path(f"data/hmem_{_safe_dataset_name(active)}.db")
 
 
 def _now() -> str:
@@ -79,6 +88,22 @@ class MemoryStoreService:
 
     def close(self) -> None:
         self._conn.close()
+
+    def get_meta(self, key: str) -> str | None:
+        """Return a meta value or None when unset."""
+        row = self._conn.execute(
+            "SELECT value FROM meta WHERE key = ?", (key,)
+        ).fetchone()
+        return None if row is None else str(row["value"])
+
+    def set_meta(self, key: str, value: str) -> None:
+        """Upsert a meta key/value."""
+        self._conn.execute(
+            "INSERT INTO meta(key, value) VALUES (?, ?) "
+            "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+            (key, value),
+        )
+        self._conn.commit()
 
     def add(self, memory: Memory) -> Memory:
         """Insert a memory row."""

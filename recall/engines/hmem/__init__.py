@@ -117,7 +117,15 @@ class _HMemFacade:
                 ledger.record("promote", memory_id=mem.id, before=before, after=mem)
         ledger.record("feedback", memory_id=mem.id, before=before, after=mem, extra={"verdict": verdict})
         if tracer is not None:
-            tracer.event("hmem", "feedback", {"memory_id": memory_id, "verdict": verdict})
+            tracer.event(
+                "hmem",
+                "feedback",
+                {
+                    "summary": f"hmem feedback memory={memory_id} verdict={verdict}",
+                    "memory_id": memory_id,
+                    "verdict": verdict,
+                },
+            )
         return mem
 
     def promote(self, memory_id: str, *, reason: str = "explicit") -> Memory | None:

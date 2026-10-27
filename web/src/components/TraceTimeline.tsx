@@ -19,6 +19,12 @@ function sortKey(agent: string): number {
 function summaryLine(event: TraceEvent): string {
   const s = event.payload.summary;
   if (typeof s === "string" && s.trim()) return s;
+  // Prefer nested verdict summary when present.
+  const verdict = event.payload.verdict;
+  if (verdict && typeof verdict === "object" && "overall" in (verdict as object)) {
+    const v = verdict as { overall?: string; missing?: unknown[] };
+    return `overall=${v.overall ?? "?"} missing=${(v.missing ?? []).length}`;
+  }
   return `${event.agent}/${event.kind}`;
 }
 

@@ -122,8 +122,17 @@ def convert(root: Path) -> None:
     contacts = []
     for i, c in enumerate(cards):
         cid = sid("c", c.get("fn", ""), str(i))
-        contacts.append({"contact_id": cid, "full_name": c.get("fn", ""), "org": c.get("org", ""), "title": c.get("title", ""),
-                         "city": c.get("city", ""), "emails": json.dumps(c["emails"]), "phones": json.dumps(c["phones"]), "source": "contacts"})
+        contacts.append({
+            "contact_id": cid,
+            "full_name": c.get("fn", ""),
+            "org": c.get("org", ""),
+            "title": c.get("title", ""),
+            "city": c.get("city", ""),
+            "nickname": c.get("nickname", ""),
+            "emails": json.dumps(c["emails"]),
+            "phones": json.dumps(c["phones"]),
+            "source": "contacts",
+        })
         for e in c["emails"]:
             add_handle("email", e, c.get("fn", ""), "contacts")
         for ph in c["phones"]:

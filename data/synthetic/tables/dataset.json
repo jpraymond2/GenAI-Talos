@@ -1,0 +1,7 @@
+{
+  "name": "synthetic",
+  "owner": "Jordan Lefebvre",
+  "now": "2026-10-26T18:00:00-04:00",
+  "timezone": "America/Toronto",
+  "answer_key": "data/synthetic/ground_truth"
+}

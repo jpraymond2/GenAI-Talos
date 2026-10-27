@@ -11,6 +11,7 @@ EvidenceSource = Literal[
     "gmail",
     "imessage",
     "whatsapp",
+    "messenger",
     "calendar",
     "web",
     "memory",
@@ -40,11 +41,25 @@ class Utterance(BaseModel):
 class Intent(BaseModel):
     """Parsed user intent for a meeting-prep turn."""
 
-    kind: Literal["brief", "note", "suggest", "action", "question", "unknown"]
+    kind: Literal[
+        "brief",
+        "note",
+        "suggest",
+        "action",
+        "question",
+        "calendar",
+        "open_loops",
+        "owe_all",
+        "upcoming_dates",
+        "unknown",
+    ]
     person_name: str | None = None
     when: str | None = None
     action_request: str | None = None
     meal_type: str | None = None
+    question_field: Literal[
+        "location", "employer", "phone", "replied", "owe", "calendar_day", "lunch_check"
+    ] | None = None
     sources_plan: list[str] = Field(default_factory=lambda: list(DEFAULT_SOURCES_PLAN))
     confidence: float
 
@@ -125,7 +140,7 @@ class PointVerdict(BaseModel):
 class CriticVerdict(BaseModel):
     """Whether the brief is good enough, with per-point notes."""
 
-    overall: Literal["pass", "revise"]
+    overall: Literal["pass", "revise", "unresolved"]
     verdicts: list[PointVerdict]
     missing: list[str] = Field(default_factory=list)
     refetch: list[str] = Field(default_factory=list)

@@ -68,7 +68,9 @@ async def run(state: RunState, deps: Any) -> RunState:
 
     # Map profile items into ephemeral evidence for citation.
     evidence: dict[str, Evidence] = {}
-    now = datetime.now(timezone.utc)
+    from recall.agents.time_context import now as frozen_now
+
+    now = frozen_now()
     for index, item in enumerate(profile.items, start=1):
         eid = f"p{index}"
         evidence[eid] = Evidence(

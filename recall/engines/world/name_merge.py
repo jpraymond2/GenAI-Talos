@@ -13,15 +13,15 @@ How a pair is judged
 1. Same phone or email on both entities  -> always the same person.
 2. Candidate pairs come from names only:
      exact same name                       base 0.75
-     nickname of the same name + surname   base 0.65   (Sasha/Alexandra Petrova, Dan/Daniel Kim)
-     "Omar B" vs "Omar Benali"             base 0.60
-     first-name-only vs a full name        base 0.55   (a card saved as "Amira")
+     nickname of the same name + surname   base 0.65
+     short form vs longer same first+last  base 0.60
+     first-name-only vs a full name        base 0.55
      a bare phone number that introduces
-     itself ("hey it's Yusuf, new number") base 0.50
+     itself ("hey it's <name>, new number") base 0.50
 3. Evidence moves the score:
      + one side's handle was announced in the other's messages ("new email is …")
      + they use different channels (contacts card vs Messenger) — typical of a split
-     + email address spells the full name (amira.khalil@ ↔ Amira Khalil)
+     + email address spells the full name (local-part ↔ display name)
      + the name is unique among all contacts
      - both have their own, different phone numbers
      - both have work emails at different companies
@@ -50,6 +50,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from recall.config import Settings
+from recall.engines.world.identity_normalize import load_name_variants
 from recall.engines.world.store import WorldStore
 from recall.tracing import Tracer
 
@@ -63,30 +64,6 @@ SEPARATE_SCORE = 0.60  # displayed confidence = 1 / (1 + exp(-(score - 0.60) / 0
 TEMPERATURE = 0.15
 TOPIC_SAME = 0.20  # cosine similarity of what two contacts talk about
 TOPIC_UNRELATED = 0.03
-
-# Nickname clusters (any form matches any other). Extends config/name_variants.yaml.
-_NICKNAMES = [
-    {"alexandra", "alexandre", "alex", "sasha", "sacha", "sandra"},
-    {"daniel", "dan", "danny", "dani"},
-    {"benjamin", "ben", "benji"},
-    {"samuel", "sam", "sammy"},
-    {"gabriel", "gabe", "gab"},
-    {"elizabeth", "liz", "lizzie", "beth", "eliza"},
-    {"katherine", "catherine", "kate", "katie", "cathy", "cat"},
-    {"william", "will", "bill", "billy", "liam"},
-    {"robert", "rob", "bob", "bobby"},
-    {"michael", "mike", "mikey", "mick"},
-    {"christopher", "chris"},
-    {"jonathan", "jon", "john", "johnny"},
-    {"joseph", "joe", "youssef", "yusuf", "yousef"},
-    {"mohamed", "mohammed", "muhammad", "mo"},
-    {"nicholas", "nicolas", "nick", "nico"},
-    {"victoria", "vicky", "tori"},
-    {"isabelle", "isabel", "izzy", "bella"},
-    {"anthony", "tony"},
-    {"matthew", "matt"},
-    {"thomas", "tom", "tommy"},
-]
 _SERVICE_LOCALS = {
     "noreply", "no-reply", "donotreply", "do-not-reply", "notifications", "notification", "digest",
     "newsletter", "news", "nouvelles", "receipts", "receipt", "alerts", "alertes", "offers", "deals",
@@ -108,19 +85,19 @@ def _fold(text: str) -> str:
 
 
 def clean_name(name: str) -> str:
-    """'Omar B (MBA)' -> 'omar b'; 'Élodie Gagnon' -> 'elodie gagnon'."""
+    """'Alex B (MBA)' -> 'alex b'; accented names fold to ASCII lowercase."""
     return _fold(re.sub(r"\([^)]*\)", " ", name))
 
 
 def _variants(first: str) -> set[str]:
-    for group in _NICKNAMES:
+    for group in load_name_variants():
         if first in group:
-            return group
+            return set(group)
     return {first}
 
 
 def full_name_key(tokens: list[str]) -> str:
-    """'dan kim' and 'daniel kim' share a key; used to count look-alike names."""
+    """Nickname-equivalent first names + same surname share a key."""
     if len(tokens) < 2:
         return ""
     return "full:" + "/".join(sorted(_variants(tokens[0]))) + " " + tokens[-1]
@@ -193,7 +170,11 @@ def _build_views(store: WorldStore, interactions: list[Any]) -> dict[str, _View]
         if "@" in val and not val.endswith("@s.whatsapp.net"):
             v.emails.add(val.lower())
         else:
-            v.phones.add("+" + _digits(val.split("@", 1)[0]))
+            # Display-name messenger links have no digits — do not invent a
+            # shared "+" phone that would merge every chat contact together.
+            digits = _digits(val.split("@", 1)[0])
+            if len(digits) >= 7:
+                v.phones.add("+" + digits)
     for row in conn.execute("SELECT entity_id, value FROM observations WHERE field = 'org' AND source_ref LIKE 'contact:%'"):
         if row["entity_id"] in views:
             views[row["entity_id"]].card_org = str(row["value"])
@@ -580,7 +561,7 @@ def run_name_merge(
             fk = full_name_key(v.tokens)
             if fk:
                 first_counts[fk] = first_counts.get(fk, 0) + 1
-            if len(v.last) > 1:  # count full surnames by initial ("omar b" -> Omar Benali)
+            if len(v.last) > 1:  # count full surnames matched by last initial
                 key = f"{v.first} {v.last[0]}"
                 first_counts[key] = first_counts.get(key, 0) + 1
     ids = roots

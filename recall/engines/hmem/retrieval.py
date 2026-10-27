@@ -117,10 +117,23 @@ class MemoryRetrievalService:
             ),
         )
         if self._tracer is not None:
+            top = [
+                {"id": m.id, "score": m.score}
+                for m in result.memories[:5]
+            ]
             self._tracer.event(
                 "hmem",
                 "retrieve",
-                {"hits": len(result.memories), "candidates": len(candidates)},
+                {
+                    "summary": (
+                        f"hmem retrieve hits={len(result.memories)} "
+                        f"candidates={len(candidates)} "
+                        f"top={[(t['id'], t['score']) for t in top]}"
+                    ),
+                    "hits": len(result.memories),
+                    "candidates": len(candidates),
+                    "top": top,
+                },
             )
         return result.model_dump()
 

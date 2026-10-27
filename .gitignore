@@ -240,3 +240,6 @@ data/relationship_scores/**
 # Recall web (Vite)
 web/node_modules/
 web/dist/
+
+# Ingest-learned aliases (per dataset)
+data/learned/

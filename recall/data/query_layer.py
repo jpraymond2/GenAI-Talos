@@ -95,6 +95,10 @@ class FallbackQueryLayer:
                         "query_layer",
                         "fallback",
                         {
+                            "summary": (
+                                f"fallback {self._primary_name}→{self._fallback_name} "
+                                f"reason=circuit_open tag={source_tag}"
+                            ),
                             "from_backend": self._primary_name,
                             "to_backend": self._fallback_name,
                             "source_tag": source_tag,
@@ -110,6 +114,10 @@ class FallbackQueryLayer:
                     "query_layer",
                     "fallback",
                     {
+                        "summary": (
+                            f"fallback {self._primary_name}→{self._fallback_name} "
+                            f"reason={exc} tag={source_tag}"
+                        ),
                         "from_backend": self._primary_name,
                         "to_backend": self._fallback_name,
                         "source_tag": source_tag,
@@ -173,13 +181,21 @@ def timed_query_event(
     if tracer is None:
         return
     latency_ms = (time.perf_counter() - started) * 1000.0
+    ms = round(latency_ms, 3)
     payload: dict[str, Any] = {
+        "summary": (
+            f"query {source_tag} rows={row_count} backend={backend} ms={ms}"
+        ),
         "backend": backend,
         "source_tag": source_tag,
         "sql": sql,
         "row_count": row_count,
-        "latency_ms": round(latency_ms, 3),
+        "latency_ms": ms,
     }
     if extra:
         payload.update(extra)
+        if "summary" not in extra:
+            payload["summary"] = (
+                f"query {source_tag} rows={row_count} backend={backend} ms={ms}"
+            )
     tracer.event("query_layer", "query", payload)

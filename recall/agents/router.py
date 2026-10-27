@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
+from recall.agents import offline
 from recall.agents.prompts import ROUTER_SYSTEM
 from recall.agents.time_context import with_today
-from recall.llm.generator import generate_json
+from recall.llm.generator import LLMOutputError, LLMUnavailable, SampleCacheMiss, generate_json
 from recall.schemas import Intent, RunState
 from recall.tracing import Tracer
 
@@ -16,17 +17,25 @@ async def run(state: RunState, deps: Any) -> RunState:
     prompt = with_today(
         f"UTTERANCE: {state.utterance.text}\n"
         f"MODE: {state.utterance.mode}\n"
-        f"TS: {state.utterance.ts.isoformat()}"
+        f"TS: {state.utterance.ts.isoformat()}",
+        settings=getattr(deps, "settings", None),
     )
     generate_json_fn = getattr(deps, "generate_json", None) or generate_json
-    intent = await generate_json_fn(prompt, ROUTER_SYSTEM, Intent, role="router")
-    assert isinstance(intent, Intent)
+    try:
+        intent = await generate_json_fn(prompt, ROUTER_SYSTEM, Intent, role="router")
+        assert isinstance(intent, Intent)
+        summary = (
+            f"kind={intent.kind} person={intent.person_name!r} "
+            f"confidence={intent.confidence:.2f} sources={len(intent.sources_plan)}"
+        )
+        _log(deps, "router", summary, {"intent": intent.model_dump(mode="json")})
+    except (SampleCacheMiss, LLMUnavailable, LLMOutputError):
+        intent = offline.route_intent(
+            state.utterance.text,
+            deps=deps,
+            settings=getattr(deps, "settings", None),
+        )
     state.intent = intent
-    summary = (
-        f"kind={intent.kind} person={intent.person_name!r} "
-        f"confidence={intent.confidence:.2f} sources={len(intent.sources_plan)}"
-    )
-    _log(deps, "router", summary, {"intent": intent.model_dump(mode="json")})
     return state
 
 

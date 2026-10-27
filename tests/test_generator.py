@@ -16,6 +16,7 @@ from recall.llm.generator import (
     LLMOutputError,
     LLMSchemaEchoError,
     LLMUnavailable,
+    SampleCacheMiss,
     build_json_instructions,
     embed,
     extract_json_value,
@@ -96,8 +97,17 @@ def test_use_sample_when_sample_mode_or_missing_key(monkeypatch: pytest.MonkeyPa
     assert use_sample_provider() is True
     monkeypatch.setenv("SAMPLE_MODE", "false")
     monkeypatch.setenv("NVIDIA_API_KEY", "")
+    monkeypatch.setenv("LLM_LIVE", "false")
     get_settings.cache_clear()
     assert use_sample_provider() is True
+
+
+def test_llm_live_disables_sample_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("LLM_LIVE", "true")
+    monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test")
+    get_settings.cache_clear()
+    assert use_sample_provider() is False
 
 
 def test_role_routing_main_vs_fast(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -124,28 +134,30 @@ def test_generate_strips_think_blocks(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     cache = Path(get_settings().cache_dir) / "llm"
+    prompt = "Say hello in five words."
+    key = hashlib.sha1(prompt.encode("utf-8")).hexdigest()
     (cache / "writer.json").write_text(
         json.dumps(
             {
-                "default": "<think>secret reasoning</think>\nHello there friend now."
+                key: "<think>secret reasoning</think>\nHello there friend now."
             }
         ),
         encoding="utf-8",
     )
-    text = asyncio.run(generate("Say hello in five words.", role="writer"))
+    text = asyncio.run(generate(prompt, role="writer"))
     assert text == "Hello there friend now."
     assert "<think>" not in text
 
 
-def test_generate_json_sample_uses_prompt_key_then_default() -> None:
+def test_generate_json_sample_uses_prompt_key_no_default_fallback() -> None:
     result = asyncio.run(
         generate_json("structured fact please", None, TinySchema, role="actions")
     )
     assert result.name == "Ada"
     assert result.count == 3
 
-    fallback = asyncio.run(generate_json("other prompt", None, TinySchema, role="actions"))
-    assert fallback.name == "fallback"
+    with pytest.raises(SampleCacheMiss):
+        asyncio.run(generate_json("other prompt", None, TinySchema, role="actions"))
 
 
 def test_strip_think_and_extract_json_from_fenced_think_output() -> None:
@@ -221,7 +233,7 @@ def test_generate_logs_preview_never_api_key(tmp_path: Path) -> None:
 def test_missing_sample_cache_raises(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("CACHE_DIR", str(tmp_path / "empty-cache"))
     get_settings.cache_clear()
-    with pytest.raises(LLMUnavailable):
+    with pytest.raises(SampleCacheMiss):
         asyncio.run(generate("no cache", role="router"))
 
 

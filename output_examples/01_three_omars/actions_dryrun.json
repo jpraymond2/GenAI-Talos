@@ -1,0 +1,18 @@
+{
+  "run_id": "example-01_three_omars-d057c330",
+  "status": "dry_run",
+  "previews": [
+    {
+      "tool": "gmail.draft",
+      "status": "dry_run",
+      "preview": {
+        "type": "gmail_draft",
+        "to": "Rachel Goldberg",
+        "cc": "Omar Haddad",
+        "subject": "Intro: Omar Haddad <> Rachel Goldberg",
+        "body": "Hi Rachel,\n\nHope you're well \u2014 Omar asked whether you'd be open to a short intro. No pressure either way; happy to connect you two if useful.\n\nBest,\n",
+        "evidence_id": "e2"
+      }
+    }
+  ]
+}

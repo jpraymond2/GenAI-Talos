@@ -102,7 +102,7 @@ def test_api_ask_passes_entity_id(
     assert mock_run.await_args.kwargs.get("entity_id") == "karim-saleh"
 
 
-def test_api_confirm_not_implemented(
+def test_api_confirm_dry_run(
     client: TestClient, api_headers: dict[str, str]
 ) -> None:
     response = client.post(
@@ -111,7 +111,9 @@ def test_api_confirm_not_implemented(
         json={"run_id": "run-test-1", "confirmed": True},
     )
     assert response.status_code == 200
-    assert response.json()["status"] == "not_implemented"
+    body = response.json()
+    assert body["status"] in {"dry_run", "cancelled", "not_enabled", "ok"}
+    assert body.get("run_id") == "run-test-1"
 
 
 def test_api_person(
