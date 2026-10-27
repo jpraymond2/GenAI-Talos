@@ -1,0 +1,1529 @@
+{
+  "mei.preseed_close": {
+    "person": "mei",
+    "statement": "Tidepool plans to close its pre-seed round by Dec 15, 2026.",
+    "evidence": [
+      {
+        "key": "m_00001",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1345,
+          "handle": "+14385550117",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_00002",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1346,
+          "handle": "+14385550117",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_00003",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "mei",
+          "gmail_id": "893fed82b4a5795d",
+          "thread_id": "893fed82b4a5795d",
+          "labels": [
+            "SENT"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_4d0bddb2cd3a",
+        "source_ref": "imessage:1345"
+      },
+      {
+        "interaction_id": "i_69b3eff58d3e",
+        "source_ref": "imessage:1346"
+      },
+      {
+        "interaction_id": "i_c5f0482fd020",
+        "source_ref": "gmail:893fed82b4a5795d"
+      }
+    ]
+  },
+  "mei.japan": {
+    "person": "mei",
+    "statement": "Mei is on vacation in Japan Nov 5–15, 2026 (limited availability).",
+    "evidence": [
+      {
+        "key": "m_00005",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1445,
+          "handle": "+14385550117",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_00006",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1446,
+          "handle": "+14385550117",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "gdpmrcg6be6umr68pqm6i4h36u",
+          "summary": "Mei OOO — Japan",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_0694731bd331",
+        "source_ref": "imessage:1445"
+      },
+      {
+        "interaction_id": "i_69f4416185cf",
+        "source_ref": "imessage:1446"
+      },
+      {
+        "event_id": "e_0a74d9bf590a",
+        "source_ref": "calendar:gdpmrcg6be6umr68pqm6i4h36u"
+      }
+    ]
+  },
+  "mei.model_ask": {
+    "person": "mei",
+    "statement": "OPEN LOOP (Jordan owes): send Mei the revised financial model; Jordan promised it by Tue Oct 27.",
+    "evidence": [
+      {
+        "key": "m_00007",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1530,
+          "handle": "+14385550117",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": "m_00008",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1531,
+          "handle": "+14385550117",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_9e5a76b42850",
+        "source_ref": "imessage:1530"
+      },
+      {
+        "interaction_id": "i_78729db62254",
+        "source_ref": "imessage:1531"
+      }
+    ]
+  },
+  "mei.pilot_hydrolab": {
+    "person": "mei",
+    "statement": "Mei is preparing the Hydrolab pilot data pipeline demo.",
+    "evidence": [
+      {
+        "key": "m_00004",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "mei",
+          "gmail_id": "20a1aa300e08d1a8",
+          "thread_id": "893fed82b4a5795d",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00009",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1543,
+          "handle": "+14385550117",
+          "text_in_attributedBody_only": false
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_013c36a9e6e4",
+        "source_ref": "gmail:20a1aa300e08d1a8"
+      },
+      {
+        "interaction_id": "i_a4df4549a996",
+        "source_ref": "imessage:1543"
+      }
+    ]
+  },
+  "omar_h.series_a": {
+    "person": "omar_h",
+    "statement": "Payloop raised an $8M Series A led by Maple Ridge Ventures (announced Oct 14, 2026).",
+    "evidence": [
+      {
+        "key": "m_00013",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1472,
+          "handle": "+15145550142",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": "m_00014",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1473,
+          "handle": "+15145550142",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_02935",
+        "source": "gmail",
+        "raw_ref": {
+          "gmail_id": "8272e5df287a63c4",
+          "thread_id": "8272e5df287a63c4",
+          "labels": [
+            "INBOX",
+            "CATEGORY_UPDATES",
+            "UNREAD"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_7df666a86ded",
+        "source_ref": "imessage:1472"
+      },
+      {
+        "interaction_id": "i_cea90331ba59",
+        "source_ref": "imessage:1473"
+      },
+      {
+        "interaction_id": "i_90093e212f6a",
+        "source_ref": "gmail:8272e5df287a63c4"
+      }
+    ]
+  },
+  "omar_h.intro_ask": {
+    "person": "omar_h",
+    "statement": "OPEN LOOP (unanswered): on Sep 30 Omar asked Jordan for an intro to Rachel Goldberg (Northwind); Jordan never replied.",
+    "evidence": [
+      {
+        "key": "m_00012",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "omar_h",
+          "gmail_id": "8ca0e41f3d8deb4d",
+          "thread_id": "8ca0e41f3d8deb4d",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_5073f03c1667",
+        "source_ref": "gmail:8ca0e41f3d8deb4d"
+      }
+    ]
+  },
+  "omar_h.coffee": {
+    "person": "omar_h",
+    "statement": "Coffee with Omar Haddad on Wed Oct 28, 10:00 at Café Névé (calendar).",
+    "evidence": [
+      {
+        "key": "m_00016",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1519,
+          "handle": "+15145550142",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_00017",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1520,
+          "handle": "+15145550142",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "j3deg1dncf54epf5dhod3docis",
+          "summary": "Coffee w/ Omar Haddad",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_7ddb0670bdd7",
+        "source_ref": "imessage:1519"
+      },
+      {
+        "interaction_id": "i_2201acc9de8c",
+        "source_ref": "imessage:1520"
+      },
+      {
+        "event_id": "e_8b5379f4ffc7",
+        "source_ref": "calendar:j3deg1dncf54epf5dhod3docis"
+      }
+    ]
+  },
+  "omar_h.hiring": {
+    "person": "omar_h",
+    "statement": "Payloop is hiring two backend engineers after the round.",
+    "evidence": [
+      {
+        "key": "m_00015",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1474,
+          "handle": "+15145550142",
+          "text_in_attributedBody_only": false
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_ac00248d1b67",
+        "source_ref": "imessage:1474"
+      }
+    ]
+  },
+  "omar_b.casecomp": {
+    "person": "omar_b",
+    "statement": "Omar Benali is on Jordan's team for the Desautels case competition on Sat Nov 7; Omar owns the slides.",
+    "evidence": [
+      {
+        "key": "m_00020",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1515,
+          "handle": "+14385550163",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": "m_00021",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1516,
+          "handle": "+14385550163",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "ogfqrclri5q3j9ufrdl5erbfqf",
+          "summary": "Desautels Case Competition",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_8454de0e3435",
+        "source_ref": "imessage:1515"
+      },
+      {
+        "interaction_id": "i_b093ca3e0441",
+        "source_ref": "imessage:1516"
+      },
+      {
+        "event_id": "e_9b41cf52a6dc",
+        "source_ref": "calendar:ogfqrclri5q3j9ufrdl5erbfqf"
+      }
+    ]
+  },
+  "omar_b.notes": {
+    "person": "omar_b",
+    "statement": "Omar Benali shared his Strategy midterm notes (Oct 19).",
+    "evidence": [
+      {
+        "key": "m_00019",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1511,
+          "handle": "+14385550163",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_70d1bf2168fa",
+        "source_ref": "imessage:1511"
+      }
+    ]
+  },
+  "omar_k.lease": {
+    "person": "omar_k",
+    "statement": "OPEN LOOP (Jordan owes): lease renewal — rent goes from $1,450 to $1,525 from July 1, 2027; Omar Kassem needs an answer by Nov 15.",
+    "evidence": [
+      {
+        "key": "m_00022",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "omar_k",
+          "gmail_id": "f7001d5c225edd23",
+          "thread_id": "f7001d5c225edd23",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_2f5f7e8f8636",
+        "source_ref": "gmail:f7001d5c225edd23"
+      }
+    ]
+  },
+  "omar_k.plumber": {
+    "person": "omar_k",
+    "statement": "Plumber visit at the apartment Fri Oct 30 between 9:00 and 12:00.",
+    "evidence": [
+      {
+        "key": "m_00023",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1535,
+          "handle": "+15145550188",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": "m_00024",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1536,
+          "handle": "+15145550188",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "vj94ceuv097efr8edt6s20b70k",
+          "summary": "Plumber — bathroom sink",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_00b588a3df07",
+        "source_ref": "imessage:1535"
+      },
+      {
+        "interaction_id": "i_54b728075b51",
+        "source_ref": "imessage:1536"
+      },
+      {
+        "event_id": "e_240e85d920c8",
+        "source_ref": "calendar:vj94ceuv097efr8edt6s20b70k"
+      }
+    ]
+  },
+  "sasha.engaged": {
+    "person": "sasha",
+    "statement": "Sasha (Alexandra Petrova) got engaged to Ben in August 2026.",
+    "evidence": [
+      {
+        "key": "m_00025",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/sashapetrova_4069878899102469",
+          "timestamp_ms": 1786938420000
+        }
+      },
+      {
+        "key": "m_00026",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/sashapetrova_4069878899102469",
+          "timestamp_ms": 1786939380000
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_b4c901a64048",
+        "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1786938420000"
+      },
+      {
+        "interaction_id": "i_db8fa20b00f0",
+        "source_ref": "messenger:inbox/sashapetrova_4069878899102469:1786939380000"
+      }
+    ]
+  },
+  "sasha.visit": {
+    "person": "sasha",
+    "statement": "Sasha is visiting Montreal Nov 13–16, 2026 and wants dinner on Sat Nov 14.",
+    "evidence": [
+      {
+        "key": "m_00028",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1496,
+          "handle": "+14165550129",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_00029",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1497,
+          "handle": "+14165550129",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_6a2a689ffe57",
+        "source_ref": "imessage:1496"
+      },
+      {
+        "interaction_id": "i_6ad9c5923b9c",
+        "source_ref": "imessage:1497"
+      }
+    ]
+  },
+  "sasha.promo": {
+    "person": "sasha",
+    "statement": "Sasha was promoted to Senior UX Designer at Fieldnote (Sept 2026).",
+    "evidence": [
+      {
+        "key": "m_00027",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1384,
+          "handle": "+14165550129",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_6404cbea954f",
+        "source_ref": "imessage:1384"
+      }
+    ]
+  },
+  "priya.job": {
+    "person": "priya",
+    "statement": "Priya Nair left Brightloop in May 2026 and joined Stellarfin as Senior Product Manager in June 2026 (contact card is stale).",
+    "evidence": [
+      {
+        "key": "m_00030",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "priya",
+          "gmail_id": "b2a8a3d6832288e0",
+          "thread_id": "b2a8a3d6832288e0",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00031",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 959,
+          "handle": "+16475550135",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_0b86adc92106",
+        "source_ref": "gmail:b2a8a3d6832288e0"
+      },
+      {
+        "interaction_id": "i_6e86118a7f3d",
+        "source_ref": "imessage:959"
+      }
+    ]
+  },
+  "priya.pilot": {
+    "person": "priya",
+    "statement": "Priya offered a Stellarfin sustainability-team pilot of Tidepool; pilot call Wed Nov 4, 13:00.",
+    "evidence": [
+      {
+        "key": "m_00032",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "priya",
+          "gmail_id": "557637173906ab87",
+          "thread_id": "557637173906ab87",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00033",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "priya",
+          "gmail_id": "8adc5b7b194458a4",
+          "thread_id": "557637173906ab87",
+          "labels": [
+            "SENT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "gi5mnbqnspuq4id074ijb6lajl",
+          "summary": "Stellarfin × Tidepool pilot kickoff",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_beb81d92f78a",
+        "source_ref": "gmail:557637173906ab87"
+      },
+      {
+        "interaction_id": "i_8463d5151643",
+        "source_ref": "gmail:8adc5b7b194458a4"
+      },
+      {
+        "event_id": "e_70e3eeb1b578",
+        "source_ref": "calendar:gi5mnbqnspuq4id074ijb6lajl"
+      }
+    ]
+  },
+  "priya.cancelled_lunch": {
+    "person": "priya",
+    "statement": "Lunch with Priya on Oct 21 was cancelled (calendar).",
+    "evidence": [
+      {
+        "key": "m_00034",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1512,
+          "handle": "+16475550135",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "m8p6g593tnovmi30diaeq5kdf2",
+          "summary": "Lunch w/ Priya",
+          "status": "cancelled"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_739032636a2d",
+        "source_ref": "imessage:1512"
+      },
+      {
+        "event_id": "e_54b9fd383f45",
+        "source_ref": "calendar:m8p6g593tnovmi30diaeq5kdf2",
+        "status": "cancelled"
+      }
+    ]
+  },
+  "lucas.paris": {
+    "person": "lucas",
+    "statement": "Lucas Moreau moved to Paris in Aug 2026 for a data-science job at Atelier Nord (address book still says Montreal).",
+    "evidence": [
+      {
+        "key": "m_00035",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1148,
+          "handle": "+15145550156",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_00036",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1149,
+          "handle": "+15145550156",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": "m_00037",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/lucasmoreau_5905741612135706",
+          "timestamp_ms": 1787594700000
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_8a20173dfef1",
+        "source_ref": "imessage:1148"
+      },
+      {
+        "interaction_id": "i_e659ce401d1e",
+        "source_ref": "imessage:1149"
+      },
+      {
+        "interaction_id": "i_726a9e723b79",
+        "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1787594700000"
+      }
+    ]
+  },
+  "lucas.xmas": {
+    "person": "lucas",
+    "statement": "Lucas is back in Montreal Dec 18, 2026 – Jan 4, 2027.",
+    "evidence": [
+      {
+        "key": "m_00038",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1484,
+          "handle": "+15145550156",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_c435b17c920f",
+        "source_ref": "imessage:1484"
+      }
+    ]
+  },
+  "elodie.boreale": {
+    "person": "elodie",
+    "statement": "Élodie introduced Tidepool to the innovation team at Énergie Boréale; call Tue Nov 3, 14:00.",
+    "evidence": [
+      {
+        "key": "m_00039",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "elodie",
+          "gmail_id": "feffd0591bd427d0",
+          "thread_id": "feffd0591bd427d0",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00040",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "elodie",
+          "gmail_id": "d30085ff1a25b344",
+          "thread_id": "feffd0591bd427d0",
+          "labels": [
+            "SENT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "018hh9788tfjgvq8kbn1jbtfq1",
+          "summary": "Énergie Boréale — appel de présentation",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_1b9b2992bf17",
+        "source_ref": "gmail:feffd0591bd427d0"
+      },
+      {
+        "interaction_id": "i_d8b7a8e8e2a8",
+        "source_ref": "gmail:d30085ff1a25b344"
+      },
+      {
+        "event_id": "e_d78becdf4efa",
+        "source_ref": "calendar:018hh9788tfjgvq8kbn1jbtfq1"
+      }
+    ]
+  },
+  "elodie.deck_fr": {
+    "person": "elodie",
+    "statement": "OPEN LOOP (Jordan owes): Élodie asked for the pitch deck in French before the Énergie Boréale call.",
+    "evidence": [
+      {
+        "key": "m_00039",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "elodie",
+          "gmail_id": "feffd0591bd427d0",
+          "thread_id": "feffd0591bd427d0",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00040",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "elodie",
+          "gmail_id": "d30085ff1a25b344",
+          "thread_id": "feffd0591bd427d0",
+          "labels": [
+            "SENT"
+          ]
+        }
+      },
+      {
+        "key": "m_00041",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1534,
+          "handle": "+14185550144",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_1b9b2992bf17",
+        "source_ref": "gmail:feffd0591bd427d0"
+      },
+      {
+        "interaction_id": "i_d8b7a8e8e2a8",
+        "source_ref": "gmail:d30085ff1a25b344"
+      },
+      {
+        "interaction_id": "i_86d3c160110d",
+        "source_ref": "imessage:1534"
+      }
+    ]
+  },
+  "daniel_vc.pitch": {
+    "person": "daniel_vc",
+    "statement": "Tidepool pitch to Daniel Kim (Maple Ridge Ventures) on Thu Oct 29, 15:00 at their office.",
+    "evidence": [
+      {
+        "key": "m_00042",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "daniel_vc",
+          "gmail_id": "61552bfc56c195ae",
+          "thread_id": "61552bfc56c195ae",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00043",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "daniel_vc",
+          "gmail_id": "23d367c3bc58e89b",
+          "thread_id": "61552bfc56c195ae",
+          "labels": [
+            "SENT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "tlgm1gedn95u771tplpft9v6se",
+          "summary": "Tidepool pitch — Maple Ridge Ventures",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_9357b5e16408",
+        "source_ref": "gmail:61552bfc56c195ae"
+      },
+      {
+        "interaction_id": "i_f5aa9b716a66",
+        "source_ref": "gmail:23d367c3bc58e89b"
+      },
+      {
+        "event_id": "e_31e6e16eae06",
+        "source_ref": "calendar:tlgm1gedn95u771tplpft9v6se"
+      }
+    ]
+  },
+  "daniel_vc.dataroom": {
+    "person": "daniel_vc",
+    "statement": "OPEN LOOP (Jordan owes): Daniel Kim asked for data-room access (Oct 23).",
+    "evidence": [
+      {
+        "key": "m_00044",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "daniel_vc",
+          "gmail_id": "b0c093418351c5f9",
+          "thread_id": "61552bfc56c195ae",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_d015c97ed99e",
+        "source_ref": "gmail:b0c093418351c5f9"
+      }
+    ]
+  },
+  "daniel_vc.payloop": {
+    "person": "daniel_vc",
+    "statement": "Maple Ridge (Daniel's fund) led Payloop's Series A.",
+    "evidence": [
+      {
+        "key": "m_00013",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1472,
+          "handle": "+15145550142",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": "m_00044",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "daniel_vc",
+          "gmail_id": "b0c093418351c5f9",
+          "thread_id": "61552bfc56c195ae",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_7df666a86ded",
+        "source_ref": "imessage:1472"
+      },
+      {
+        "interaction_id": "i_d015c97ed99e",
+        "source_ref": "gmail:b0c093418351c5f9"
+      }
+    ]
+  },
+  "daniel_cl.wedding": {
+    "person": "daniel_cl",
+    "statement": "Dan Kim (UofT friend) is getting married June 12, 2027 in Toronto; Jordan agreed to be a groomsman.",
+    "evidence": [
+      {
+        "key": "m_00045",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/danielkim_6471537279342302",
+          "timestamp_ms": 1788658800000
+        }
+      },
+      {
+        "key": "m_00046",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/danielkim_6471537279342302",
+          "timestamp_ms": 1788659520000
+        }
+      },
+      {
+        "key": "m_00047",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1462,
+          "handle": "+16475550161",
+          "text_in_attributedBody_only": false
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "h7av4ricphkqdlmttns6lr0bqc",
+          "summary": "Dan & Jess wedding 💍",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_93ccfc09e38e",
+        "source_ref": "messenger:inbox/danielkim_6471537279342302:1788658800000"
+      },
+      {
+        "interaction_id": "i_813ff4c6417c",
+        "source_ref": "messenger:inbox/danielkim_6471537279342302:1788659520000"
+      },
+      {
+        "interaction_id": "i_da93598a3df2",
+        "source_ref": "imessage:1462"
+      },
+      {
+        "event_id": "e_60e2d10fd139",
+        "source_ref": "calendar:h7av4ricphkqdlmttns6lr0bqc"
+      }
+    ]
+  },
+  "rachel.met": {
+    "person": "rachel",
+    "statement": "Jordan met Rachel Goldberg at Startupfest in July 2026; she is interested in climate data.",
+    "evidence": [
+      {
+        "key": "m_00048",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "rachel",
+          "gmail_id": "3fc9825c2d5bdc5b",
+          "thread_id": "3fc9825c2d5bdc5b",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "psc7lkr6aq1vupctn0lav2f8rm",
+          "summary": "Startupfest",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_7f57081f45ae",
+        "source_ref": "gmail:3fc9825c2d5bdc5b"
+      },
+      {
+        "event_id": "e_eb39133ff06d",
+        "source_ref": "calendar:psc7lkr6aq1vupctn0lav2f8rm"
+      }
+    ]
+  },
+  "rachel.meeting": {
+    "person": "rachel",
+    "statement": "Meeting with Rachel Goldberg Fri Nov 6, 11:00 (video), scheduled by her assistant Tyler Brooks.",
+    "evidence": [
+      {
+        "key": "m_00049",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "rachel",
+          "gmail_id": "70fa5307ac874298",
+          "thread_id": "70fa5307ac874298",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00050",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "rachel",
+          "gmail_id": "9db80c38cb307f61",
+          "thread_id": "70fa5307ac874298",
+          "labels": [
+            "SENT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "nthj1jqi7og39kok53v4m0uf1b",
+          "summary": "Northwind <> Tidepool",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_f40dc8dc9078",
+        "source_ref": "gmail:70fa5307ac874298"
+      },
+      {
+        "interaction_id": "i_7376dad03f1e",
+        "source_ref": "gmail:9db80c38cb307f61"
+      },
+      {
+        "event_id": "e_7d0073e8a1cc",
+        "source_ref": "calendar:nthj1jqi7og39kok53v4m0uf1b"
+      }
+    ]
+  },
+  "ruth.extension": {
+    "person": "ruth",
+    "statement": "Prof. Abernathy extended Jordan's term paper deadline from Oct 26 to Mon Nov 2.",
+    "evidence": [
+      {
+        "key": "m_00051",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "ruth",
+          "gmail_id": "8e2e28b40d40e360",
+          "thread_id": "8e2e28b40d40e360",
+          "labels": [
+            "SENT"
+          ]
+        }
+      },
+      {
+        "key": "m_00052",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "ruth",
+          "gmail_id": "a45196f164736e91",
+          "thread_id": "8e2e28b40d40e360",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "d73333g83dmen6khvdgajg1ben",
+          "summary": "Strategy term paper due",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_e74fce93e666",
+        "source_ref": "gmail:8e2e28b40d40e360"
+      },
+      {
+        "interaction_id": "i_25239f7a04f3",
+        "source_ref": "gmail:a45196f164736e91"
+      },
+      {
+        "event_id": "e_23fb54c75afb",
+        "source_ref": "calendar:d73333g83dmen6khvdgajg1ben"
+      }
+    ]
+  },
+  "ruth.draft": {
+    "person": "ruth",
+    "statement": "OPEN LOOP (Jordan owes): send Prof. Abernathy a draft outline by Oct 30.",
+    "evidence": [
+      {
+        "key": "m_00052",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "ruth",
+          "gmail_id": "a45196f164736e91",
+          "thread_id": "8e2e28b40d40e360",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_25239f7a04f3",
+        "source_ref": "gmail:a45196f164736e91"
+      }
+    ]
+  },
+  "hannah.final": {
+    "person": "hannah",
+    "statement": "Final-round interview with Aldridge & Co. on Fri Oct 30, 13:00 (video).",
+    "evidence": [
+      {
+        "key": "m_00053",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "hannah",
+          "gmail_id": "35645fd220a94ce4",
+          "thread_id": "35645fd220a94ce4",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "sip339fk63ri5r402ojfljooa9",
+          "summary": "Aldridge & Co. — Final round interview",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_b815570fc1de",
+        "source_ref": "gmail:35645fd220a94ce4"
+      },
+      {
+        "event_id": "e_1ba1f0fc9fa9",
+        "source_ref": "calendar:sip339fk63ri5r402ojfljooa9"
+      }
+    ]
+  },
+  "hannah.transcript": {
+    "person": "hannah",
+    "statement": "OPEN LOOP (Jordan owes): Hannah asked for an unofficial transcript before the final round.",
+    "evidence": [
+      {
+        "key": "m_00053",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "hannah",
+          "gmail_id": "35645fd220a94ce4",
+          "thread_id": "35645fd220a94ce4",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_b815570fc1de",
+        "source_ref": "gmail:35645fd220a94ce4"
+      }
+    ]
+  },
+  "kevin.vancouver": {
+    "person": "kevin",
+    "statement": "Kevin O'Brien moved to Vancouver in Sept 2026.",
+    "evidence": [
+      {
+        "key": "m_00054",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/kevinobrien_8199635501544827",
+          "timestamp_ms": 1789255500000
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_468f65175c81",
+        "source_ref": "messenger:inbox/kevinobrien_8199635501544827:1789255500000"
+      }
+    ]
+  },
+  "kevin.hiring_q": {
+    "person": "kevin",
+    "statement": "OPEN LOOP (unanswered): Kevin asked whether Tidepool is hiring data engineers.",
+    "evidence": [
+      {
+        "key": "m_00055",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/kevinobrien_8199635501544827",
+          "timestamp_ms": 1791676920000
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_ff5daddbcb86",
+        "source_ref": "messenger:inbox/kevinobrien_8199635501544827:1791676920000"
+      }
+    ]
+  },
+  "isabelle.bday": {
+    "person": "isabelle",
+    "statement": "Isabelle's birthday is Nov 3; birthday dinner Tue Nov 3, 19:30 at Le Petit Bistro.",
+    "evidence": [
+      {
+        "key": "m_00057",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1513,
+          "handle": "+15145550172",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": "m_00058",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1514,
+          "handle": "+15145550172",
+          "text_in_attributedBody_only": true
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "mp3om90bbr8qm0601fogo8mvn8",
+          "summary": "🎂 Isabelle",
+          "status": "confirmed"
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "a80fh2m8l5vf373fkkibj7j80j",
+          "summary": "Souper fête d'Isabelle",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_956e184a1daa",
+        "source_ref": "imessage:1513"
+      },
+      {
+        "interaction_id": "i_17ef583989f1",
+        "source_ref": "imessage:1514"
+      },
+      {
+        "event_id": "e_a03820d1d5c2",
+        "source_ref": "calendar:mp3om90bbr8qm0601fogo8mvn8"
+      },
+      {
+        "event_id": "e_a58de1e3944e",
+        "source_ref": "calendar:a80fh2m8l5vf373fkkibj7j80j"
+      }
+    ]
+  },
+  "isabelle.nights": {
+    "person": "isabelle",
+    "statement": "Isabelle switched to night shifts at CHUM in October 2026.",
+    "evidence": [
+      {
+        "key": "m_00056",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/isabelleroy_5027064378254886",
+          "timestamp_ms": 1791253800000
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_eb982ea61be2",
+        "source_ref": "messenger:inbox/isabelleroy_5027064378254886:1791253800000"
+      }
+    ]
+  },
+  "yusuf.newnumber": {
+    "person": "yusuf",
+    "statement": "Yusuf changed his number on Jul 12, 2026 (+1 514-555-0171); the old number +1 438-555-0150 is no longer used.",
+    "evidence": [
+      {
+        "key": "m_00059",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1098,
+          "handle": "+15145550171",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_3ad59c9ca218",
+        "source_ref": "imessage:1098"
+      }
+    ]
+  },
+  "yusuf.marathon": {
+    "person": "yusuf",
+    "statement": "Yusuf is running the Montreal half-marathon training plan; long runs on Sundays.",
+    "evidence": [
+      {
+        "key": "m_00060",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1371,
+          "handle": "+15145550171",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_ab4c4054e147",
+        "source_ref": "imessage:1371"
+      }
+    ]
+  },
+  "mom.christmas": {
+    "person": "mom",
+    "statement": "OPEN LOOP (Jordan owes): Maman asked Jordan to confirm Christmas dates in Sherbrooke.",
+    "evidence": [
+      {
+        "key": "m_00061",
+        "source": "imessage",
+        "raw_ref": {
+          "rowid": 1493,
+          "handle": "+18195550102",
+          "text_in_attributedBody_only": true
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_ec017381e294",
+        "source_ref": "imessage:1493"
+      }
+    ]
+  },
+  "chloe.exam": {
+    "person": "chloe",
+    "statement": "Chloé has a big anatomy exam on Nov 9.",
+    "evidence": [
+      {
+        "key": "m_00062",
+        "source": "messenger",
+        "raw_ref": {
+          "thread_path": "inbox/famillelefebvre_6035410557452627",
+          "timestamp_ms": 1792969320000
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_bd3dd84e0d3f",
+        "source_ref": "messenger:inbox/famillelefebvre_6035410557452627:1792969320000"
+      }
+    ]
+  },
+  "tom.intro": {
+    "person": "tom",
+    "statement": "Tom Becker (Lumen Grid, Berlin) was introduced by Omar Haddad in Dec 2025; only two emails ever exchanged.",
+    "evidence": [
+      {
+        "key": "m_00010",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "omar_h",
+          "gmail_id": "698ba55954ff5536",
+          "thread_id": "698ba55954ff5536",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": "m_00011",
+        "source": "gmail",
+        "raw_ref": {
+          "person": "omar_h",
+          "gmail_id": "7adbe53b31777d29",
+          "thread_id": "698ba55954ff5536",
+          "labels": [
+            "INBOX",
+            "CATEGORY_PERSONAL",
+            "IMPORTANT"
+          ]
+        }
+      },
+      {
+        "key": null,
+        "source": "calendar",
+        "raw_ref": {
+          "event_id": "jvqtia8d9rgn9ss777hmtf8bs7",
+          "summary": "Coffee w/ Tom Becker (Lumen Grid)",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "source_refs": [
+      {
+        "interaction_id": "i_a32cee697bf0",
+        "source_ref": "gmail:698ba55954ff5536"
+      },
+      {
+        "interaction_id": "i_e76ea63a004c",
+        "source_ref": "gmail:7adbe53b31777d29"
+      },
+      {
+        "event_id": "e_b8ff234c2611",
+        "source_ref": "calendar:jvqtia8d9rgn9ss777hmtf8bs7"
+      }
+    ]
+  }
+}

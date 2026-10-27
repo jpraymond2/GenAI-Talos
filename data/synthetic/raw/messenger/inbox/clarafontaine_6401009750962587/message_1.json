@@ -1,0 +1,34 @@
+{
+  "participants": [
+    {
+      "name": "Clara Fontaine"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Clara Fontaine",
+      "timestamp_ms": 1757251123000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "just posted them on myCourses"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1757250991000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can someone share the slides from today?"
+    }
+  ],
+  "title": "Clara Fontaine",
+  "is_still_participant": true,
+  "thread_path": "inbox/clarafontaine_6401009750962587",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

@@ -1,0 +1,43 @@
+contact_id,full_name,org,title,city,emails,phones,source
+c_ed4f859b700e,Mei Tanaka,Tidepool,CTO,Montreal,"[""mei@tidepool.earth""]","[""+14385550117""]",contacts
+c_cff58ca4cee1,Omar Haddad,Payloop,CEO,Montreal,"[""omar@payloop.co""]","[""+15145550142""]",contacts
+c_fd8409757eb5,Omar B (MBA),McGill MBA,,Montreal,"[""omar.benali@mail.mcgill.ca""]","[""+14385550163""]",contacts
+c_bb93577585e4,Omar Kassem (proprio),,Landlord — 4520 rue Saint-Denis,Montreal,"[""omar.kassem@outlook.com""]","[""+15145550188""]",contacts
+c_1ac807506e35,Alexandra Petrova,Fieldnote,UX Designer,Toronto,"[""alexandra.petrova@fieldnote.design""]","[""+14165550129""]",contacts
+c_7820232e9077,Priya Nair,Brightloop,Product Manager,Toronto,"[""priya.nair@brightloop.com""]","[""+16475550135""]",contacts
+c_30ef5a99b226,Lucas Moreau,,,Montreal,"[""lucas.moreau.qc@gmail.com""]","[""+15145550156""]",contacts
+c_5fba312179bc,Élodie Gagnon,Hydrolab,Directrice innovation,Québec,"[""elodie.gagnon@hydrolab.ca""]","[""+14185550144""]",contacts
+c_344c3ef76e06,Daniel Kim,Maple Ridge Ventures,Principal,Montreal,"[""daniel@mapleridge.vc""]",[],contacts
+c_df0bf6c56707,Dan Kim (UofT),Shopwise,,Toronto,"[""dkim.toronto@gmail.com""]","[""+16475550161""]",contacts
+c_c04b7ed0e6ad,Rachel Goldberg,Northwind Capital,Partner,Toronto,"[""rachel@northwindcap.com""]",[],contacts
+c_083d8c865517,Isabelle Roy,CHUM,,Montreal,[],"[""+15145550172""]",contacts
+c_e198e20ff254,Yusuf Demir,,,,[],"[""+14385550150""]",contacts
+c_b706ab6910c3,Nadia Lefebvre,,,Sherbrooke,"[""nadia.lefebvre@videotron.ca""]","[""+18195550102""]",contacts
+c_34b69b3b1e5a,Pierre Lefebvre,,,Sherbrooke,"[""pierre.lefebvre49@gmail.com""]","[""+18195550103""]",contacts
+c_9fa80342ad73,Chloé,,,Sherbrooke,[],"[""+18195550104""]",contacts
+c_ee78b4f7b244,Amira,McGill MBA,,Montreal,"[""amira.khalil@mail.mcgill.ca""]","[""+15145550100""]",contacts
+c_9bab4f744745,Ben Okafor,McGill MBA,,Montreal,"[""ben.okafor@mail.mcgill.ca""]","[""+14385550101""]",contacts
+c_309625b1adbb,Diego Ramírez,McGill MBA,,Montreal,[],"[""+16475550103""]",contacts
+c_ef8fcdf6fccd,Emma,McGill MBA,,Montreal,"[""emma.lindqvist@mail.mcgill.ca""]","[""+14165550104""]",contacts
+c_d0491c523524,Grace Liu,Orbitly,,Montreal,"[""grace.liu@orbitly.app""]","[""+16045550106""]",contacts
+c_d572ab9b187a,Hugo Lambert,Sève Analytics,,Montreal,[],"[""+12125550107""]",contacts
+c_c46be007e401,Jake Thompson,,,Montreal,[],"[""+14385550109""]",contacts
+c_5aa186b5860f,Kayla Morgan,,,Montreal,[],[],contacts
+c_e576fb30af02,Maya Singh,Northbeam Analytics,,Toronto,"[""maya.singh@northbeam.ai""]",[],contacts
+c_31e91b7b4510,Noah Cohen,,,New York,[],"[""+19025550113""]",contacts
+c_fa79ca165e7d,Pablo Ortiz,Startupfest,,Montreal,"[""pablo.ortiz@startupfest.example""]",[],contacts
+c_3b1090ffc88d,Quentin,,,Lyon,[],"[""+15145550116""]",contacts
+c_e0d13e9b4a5c,Samuel Girard,,,Montreal,[],"[""+12635550118""]",contacts
+c_53d5afb17d78,Tara Walsh,Kelpworks,,Halifax,"[""tara.walsh@kelpworks.co""]","[""+16475550119""]",contacts
+c_d57c8f72e751,Victor Nguyen,,,Montreal,[],"[""+19025550121""]",contacts
+c_0d63f7a1870e,Wen Zhao,Loomtrace,,Montreal,"[""wen.zhao@loomtrace.io""]","[""+16045550122""]",contacts
+c_1a70d049d369,Yara,,,Beirut,[],"[""+15145550124""]",contacts
+c_661c3304e641,Zoé Martin,McGill MBA,,Montreal,"[""zoe.martin@mail.mcgill.ca""]","[""+14385550125""]",contacts
+c_6f026d5ac4fc,Bianca Rossi,,,Montreal,[],[],contacts
+c_f16e67145e61,Cyrus,Voltane,,Toronto,"[""cyrus.farahani@voltane.com""]","[""+14165550128""]",contacts
+c_1c3c91ebbce0,Eric Boisvert,Northbeam Analytics,,Montreal,"[""eric.boisvert@northbeam.ai""]",[],contacts
+c_e288c1267f48,Fatima Zahra Idrissi,McGill MBA,,Montreal,[],"[""+12125550131""]",contacts
+c_dd8d2d43e014,Hana Sato,,,Vancouver,[],[],contacts
+c_0eeb1bb9553d,Ivan Petrov,,,Montreal,[],"[""+12635550134""]",contacts
+c_e5ce015927ae,Karl Andersen,Fjordbyte,,Montreal,"[""karl.andersen@fjordbyte.dev""]",[],contacts
+c_d527e4d5c41d,Léa Gauthier,,,Montreal,[],"[""+19025550137""]",contacts

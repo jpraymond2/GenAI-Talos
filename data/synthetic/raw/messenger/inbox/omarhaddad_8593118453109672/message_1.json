@@ -1,0 +1,118 @@
+{
+  "participants": [
+    {
+      "name": "Omar Haddad"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1787790386000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "on it, comments in 30 min"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1787790173000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "investor update draft is in the doc, can you review?"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1785716040000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "saw your Startupfest panel clip, you killed it"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1780438085000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "same, see you"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1780437784000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I'll be there"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1780436830000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anyone going to the founders dinner thursday?"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1777549861000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Suzuki is unreal this year"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1777549722000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "only the third period, what a comeback"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1777549522000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did you watch the game last night"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1770073743000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "coming down"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1770073669000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "\u00f0\u009f\u0093\u008d here"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1760661834000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tomorrow works"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1760661476000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't, deadline. tomorrow?"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1760660962000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "movie tonight?"
+    }
+  ],
+  "title": "Omar Haddad",
+  "is_still_participant": true,
+  "thread_path": "inbox/omarhaddad_8593118453109672",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

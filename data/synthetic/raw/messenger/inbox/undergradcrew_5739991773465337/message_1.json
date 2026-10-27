@@ -1,0 +1,342 @@
+{
+  "participants": [
+    {
+      "name": "Daniel Kim"
+    },
+    {
+      "name": "Lucas Moreau"
+    },
+    {
+      "name": "Isabelle Roy"
+    },
+    {
+      "name": "Victor Nguyen"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1792437723000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't wait"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1792437597000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "amazing, too short as always. photos soon"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1792437342000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "how was the trip?"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1788040169000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tomorrow works"
+    },
+    {
+      "sender_name": "Isabelle Roy",
+      "timestamp_ms": 1788039896000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't, deadline. tomorrow?"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1788039352000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "movie tonight?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1788018381000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "perfect",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1788018207000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "in 20 min?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1788018151000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "free for a quick call?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786799894000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1786799628000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1784416619000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "right??"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1784416562000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "lol"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1783598513000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "same"
+    },
+    {
+      "sender_name": "Isabelle Roy",
+      "timestamp_ms": 1783598254000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I refuse to go outside"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1783598118000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "this weather \u00f0\u009f\u0098\u00a9"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1781008143000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks!"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1781007583000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "https://podcasts.example.com/ep/412"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1781007337000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can you send me that podcast you mentioned"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1776543292000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "deal \u00f0\u009f\u0099\u008c"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1776543291000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "brunch saturday then?"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1776543140000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "saturday yes, sunday is chores day"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1776542554000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "you around this weekend?"
+    },
+    {
+      "sender_name": "Isabelle Roy",
+      "timestamp_ms": 1776444319000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "same"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1776444027000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I refuse to go outside"
+    },
+    {
+      "sender_name": "Isabelle Roy",
+      "timestamp_ms": 1776443898000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "this weather \u00f0\u009f\u0098\u00a9"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1774975401000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Montreal said yes"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1774975389000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "absolutely not. it's October"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1774974805000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "omg it's snowing already"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1769305143000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Isabelle Roy",
+      "timestamp_ms": 1769305039000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1768855918000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "lol",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1768855839000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "proud of you"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1768855686000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "ok I finally booked the dentist"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1765344588000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "coming down"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1765344000000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "\u00f0\u009f\u0093\u008d here"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1759848761000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anytime \u00e2\u009d\u00a4\u00ef\u00b8\u008f"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1759848741000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks again for yesterday, really needed that"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1758845857000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "lol"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1758845847000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "proud of you"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1758845745000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "ok I finally booked the dentist"
+    },
+    {
+      "sender_name": "Victor Nguyen",
+      "timestamp_ms": 1747096833000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "right??"
+    },
+    {
+      "sender_name": "Daniel Kim",
+      "timestamp_ms": 1747096747000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "lol"
+    }
+  ],
+  "title": "Undergrad crew",
+  "is_still_participant": true,
+  "thread_path": "inbox/undergradcrew_5739991773465337",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

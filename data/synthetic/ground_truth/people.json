@@ -1,0 +1,1688 @@
+{
+  "mei": {
+    "name": "Mei Tanaka",
+    "relationship": "cofounder",
+    "org": "Tidepool",
+    "title": "Co-founder & CTO",
+    "city": "Montreal",
+    "display_labels": [
+      "Mei Tanaka"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "mei@tidepool.earth",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14385550117",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "Tidepool",
+      "title": "CTO",
+      "city": "Montreal"
+    },
+    "facts": [
+      "mei.preseed_close",
+      "mei.japan",
+      "mei.model_ask",
+      "mei.pilot_hydrolab"
+    ],
+    "message_count": 372
+  },
+  "omar_h": {
+    "name": "Omar Haddad",
+    "relationship": "founder",
+    "org": "Payloop",
+    "title": "Founder & CEO",
+    "city": "Montreal",
+    "display_labels": [
+      "Omar Haddad"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "omar@payloop.co",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+15145550142",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "Payloop",
+      "title": "CEO",
+      "city": "Montreal"
+    },
+    "facts": [
+      "omar_h.series_a",
+      "omar_h.intro_ask",
+      "omar_h.coffee",
+      "omar_h.hiring"
+    ],
+    "message_count": 85
+  },
+  "omar_b": {
+    "name": "Omar Benali",
+    "relationship": "classmate",
+    "org": "McGill Desautels",
+    "title": "MBA candidate",
+    "city": "Montreal",
+    "display_labels": [
+      "Omar B (MBA)",
+      "Omar Benali"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "omar.benali@mail.mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14385550163",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Omar B (MBA)",
+      "org": "McGill MBA",
+      "city": "Montreal"
+    },
+    "facts": [
+      "omar_b.casecomp",
+      "omar_b.notes"
+    ],
+    "message_count": 91
+  },
+  "omar_k": {
+    "name": "Omar Kassem",
+    "relationship": "landlord",
+    "org": "",
+    "title": "Landlord",
+    "city": "Montreal",
+    "display_labels": [
+      "Omar Kassem",
+      "Omar Kassem (proprio)"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "omar.kassem@outlook.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+15145550188",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Omar Kassem (proprio)",
+      "title": "Landlord — 4520 rue Saint-Denis",
+      "city": "Montreal"
+    },
+    "facts": [
+      "omar_k.lease",
+      "omar_k.plumber"
+    ],
+    "message_count": 37
+  },
+  "sasha": {
+    "name": "Alexandra Petrova",
+    "relationship": "friend",
+    "org": "Fieldnote",
+    "title": "Senior UX Designer",
+    "city": "Toronto",
+    "display_labels": [
+      "Alexandra Petrova",
+      "Sasha",
+      "Sasha Petrova"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "alexandra.petrova@fieldnote.design",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14165550129",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "Fieldnote",
+      "title": "UX Designer",
+      "city": "Toronto",
+      "nickname": "Sasha",
+      "bday": "1998-04-17"
+    },
+    "facts": [
+      "sasha.engaged",
+      "sasha.visit",
+      "sasha.promo"
+    ],
+    "message_count": 103
+  },
+  "priya": {
+    "name": "Priya Nair",
+    "relationship": "colleague",
+    "org": "Stellarfin",
+    "title": "Senior Product Manager",
+    "city": "Toronto",
+    "display_labels": [
+      "Priya Nair"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "priya.nair@brightloop.com",
+        "source": "gmail",
+        "valid_from": "2025-05-01",
+        "valid_to": "2026-05-29"
+      },
+      {
+        "kind": "email",
+        "value": "priya@stellarfin.com",
+        "source": "gmail",
+        "valid_from": "2026-06-01",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+16475550135",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "Brightloop",
+      "title": "Product Manager",
+      "city": "Toronto"
+    },
+    "facts": [
+      "priya.job",
+      "priya.pilot",
+      "priya.cancelled_lunch"
+    ],
+    "message_count": 56
+  },
+  "lucas": {
+    "name": "Lucas Moreau",
+    "relationship": "friend",
+    "org": "Atelier Nord",
+    "title": "Data Scientist",
+    "city": "Paris",
+    "display_labels": [
+      "Lucas Moreau"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "lucas.moreau.qc@gmail.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+15145550156",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "city": "Montreal"
+    },
+    "facts": [
+      "lucas.paris",
+      "lucas.xmas"
+    ],
+    "message_count": 74
+  },
+  "elodie": {
+    "name": "Élodie Gagnon",
+    "relationship": "advisor",
+    "org": "Hydrolab",
+    "title": "Directrice innovation",
+    "city": "Quebec City",
+    "display_labels": [
+      "Élodie Gagnon"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "elodie.gagnon@hydrolab.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14185550144",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "Hydrolab",
+      "title": "Directrice innovation",
+      "city": "Québec"
+    },
+    "facts": [
+      "elodie.boreale",
+      "elodie.deck_fr"
+    ],
+    "message_count": 44
+  },
+  "daniel_vc": {
+    "name": "Daniel Kim",
+    "relationship": "investor",
+    "org": "Maple Ridge Ventures",
+    "title": "Principal",
+    "city": "Montreal",
+    "display_labels": [
+      "Daniel Kim"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "daniel@mapleridge.vc",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "Maple Ridge Ventures",
+      "title": "Principal",
+      "city": "Montreal"
+    },
+    "facts": [
+      "daniel_vc.pitch",
+      "daniel_vc.dataroom",
+      "daniel_vc.payloop"
+    ],
+    "message_count": 3
+  },
+  "daniel_cl": {
+    "name": "Daniel Kim",
+    "relationship": "friend",
+    "org": "Shopwise",
+    "title": "Software Engineer",
+    "city": "Toronto",
+    "display_labels": [
+      "Dan Kim (UofT)",
+      "Daniel Kim"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "dkim.toronto@gmail.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+16475550161",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Dan Kim (UofT)",
+      "org": "Shopwise",
+      "city": "Toronto"
+    },
+    "facts": [
+      "daniel_cl.wedding"
+    ],
+    "message_count": 78
+  },
+  "rachel": {
+    "name": "Rachel Goldberg",
+    "relationship": "investor",
+    "org": "Northwind Capital",
+    "title": "Partner",
+    "city": "Toronto",
+    "display_labels": [
+      "Rachel Goldberg"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "rachel@northwindcap.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "Northwind Capital",
+      "title": "Partner",
+      "city": "Toronto"
+    },
+    "facts": [
+      "rachel.met",
+      "rachel.meeting"
+    ],
+    "message_count": 3
+  },
+  "tyler": {
+    "name": "Tyler Brooks",
+    "relationship": "assistant",
+    "org": "Northwind Capital",
+    "title": "Executive Assistant to Rachel Goldberg",
+    "city": "Toronto",
+    "display_labels": [
+      "Tyler Brooks"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "tyler@northwindcap.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 1
+  },
+  "ruth": {
+    "name": "Ruth Abernathy",
+    "relationship": "prof",
+    "org": "McGill Desautels",
+    "title": "Professor of Strategy",
+    "city": "Montreal",
+    "display_labels": [
+      "Ruth Abernathy"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "ruth.abernathy@mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [
+      "ruth.extension",
+      "ruth.draft"
+    ],
+    "message_count": 3
+  },
+  "hannah": {
+    "name": "Hannah Weiss",
+    "relationship": "recruiter",
+    "org": "Aldridge & Co.",
+    "title": "Campus Recruiter",
+    "city": "Montreal",
+    "display_labels": [
+      "Hannah Weiss"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "hannah.weiss@aldridgeco.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [
+      "hannah.final",
+      "hannah.transcript"
+    ],
+    "message_count": 1
+  },
+  "kevin": {
+    "name": "Kevin O'Brien",
+    "relationship": "colleague",
+    "org": "Northbeam Analytics",
+    "title": "Data Engineer",
+    "city": "Vancouver",
+    "display_labels": [
+      "Kevin O'Brien"
+    ],
+    "handles": [],
+    "contact_card": null,
+    "facts": [
+      "kevin.vancouver",
+      "kevin.hiring_q"
+    ],
+    "message_count": 36
+  },
+  "isabelle": {
+    "name": "Isabelle Roy",
+    "relationship": "friend",
+    "org": "CHUM",
+    "title": "Nurse",
+    "city": "Montreal",
+    "display_labels": [
+      "Isabelle Roy"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+15145550172",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "org": "CHUM",
+      "city": "Montreal",
+      "bday": "1997-11-03"
+    },
+    "facts": [
+      "isabelle.bday",
+      "isabelle.nights"
+    ],
+    "message_count": 98
+  },
+  "yusuf": {
+    "name": "Yusuf Demir",
+    "relationship": "gym",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Yusuf Demir",
+      "+1 (514) 555-0171"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+14385550150",
+        "source": "imessage",
+        "valid_from": "2025-05-01",
+        "valid_to": "2026-07-11"
+      },
+      {
+        "kind": "phone",
+        "value": "+15145550171",
+        "source": "imessage",
+        "valid_from": "2026-07-12",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "phones_only_old": true
+    },
+    "facts": [
+      "yusuf.newnumber",
+      "yusuf.marathon"
+    ],
+    "message_count": 81
+  },
+  "mom": {
+    "name": "Nadia Lefebvre",
+    "relationship": "family",
+    "org": "",
+    "title": "",
+    "city": "Sherbrooke",
+    "display_labels": [
+      "Maman",
+      "Nadia Lefebvre"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "nadia.lefebvre@videotron.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+18195550102",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "nickname": "Maman",
+      "city": "Sherbrooke"
+    },
+    "facts": [
+      "mom.christmas"
+    ],
+    "message_count": 113
+  },
+  "dad": {
+    "name": "Pierre Lefebvre",
+    "relationship": "family",
+    "org": "",
+    "title": "",
+    "city": "Sherbrooke",
+    "display_labels": [
+      "Papa",
+      "Pierre Lefebvre"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "pierre.lefebvre49@gmail.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+18195550103",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "nickname": "Papa",
+      "city": "Sherbrooke"
+    },
+    "facts": [],
+    "message_count": 37
+  },
+  "chloe": {
+    "name": "Chloé Lefebvre",
+    "relationship": "family",
+    "org": "Université de Sherbrooke",
+    "title": "Medical student",
+    "city": "Sherbrooke",
+    "display_labels": [
+      "Chloé",
+      "Chloé Lefebvre"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+18195550104",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Chloé",
+      "city": "Sherbrooke"
+    },
+    "facts": [
+      "chloe.exam"
+    ],
+    "message_count": 58
+  },
+  "tom": {
+    "name": "Tom Becker",
+    "relationship": "acquaintance",
+    "org": "Lumen Grid",
+    "title": "Co-founder",
+    "city": "Berlin",
+    "display_labels": [
+      "Tom Becker"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "tom@lumengrid.de",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [
+      "tom.intro"
+    ],
+    "message_count": 1
+  },
+  "f_amira": {
+    "name": "Amira Khalil",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Amira",
+      "Amira Khalil"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "amira.khalil@mail.mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+15145550100",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Amira",
+      "org": "McGill MBA",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 45
+  },
+  "f_ben": {
+    "name": "Ben Okafor",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Ben Okafor"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "ben.okafor@mail.mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14385550101",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Ben Okafor",
+      "org": "McGill MBA",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 28
+  },
+  "f_clara": {
+    "name": "Clara Fontaine",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Clara Fontaine"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+12635550102",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 27
+  },
+  "f_diego": {
+    "name": "Diego Ramírez",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Diego Ramírez"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+16475550103",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Diego Ramírez",
+      "org": "McGill MBA",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 19
+  },
+  "f_emma": {
+    "name": "Emma Lindqvist",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Emma",
+      "Emma Lindqvist"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "emma.lindqvist@mail.mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14165550104",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Emma",
+      "org": "McGill MBA",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 20
+  },
+  "f_felix": {
+    "name": "Félix Bouchard",
+    "relationship": "founder",
+    "org": "Gridwise",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Félix Bouchard"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "felix.bouchard@gridwise.io",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+19025550105",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 24
+  },
+  "f_grace": {
+    "name": "Grace Liu",
+    "relationship": "founder",
+    "org": "Orbitly",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Grace Liu"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "grace.liu@orbitly.app",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+16045550106",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Grace Liu",
+      "org": "Orbitly",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 33
+  },
+  "f_hugo": {
+    "name": "Hugo Lambert",
+    "relationship": "founder",
+    "org": "Sève Analytics",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Hugo Lambert"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+12125550107",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Hugo Lambert",
+      "org": "Sève Analytics",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 19
+  },
+  "f_ines": {
+    "name": "Inès Haddad",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Inès Haddad"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+15145550108",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 33
+  },
+  "f_jake": {
+    "name": "Jake Thompson",
+    "relationship": "gym",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Jake Thompson"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+14385550109",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Jake Thompson",
+      "org": "",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 29
+  },
+  "f_kayla": {
+    "name": "Kayla Morgan",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Kayla Morgan"
+    ],
+    "handles": [],
+    "contact_card": {
+      "fn": "Kayla Morgan",
+      "org": "",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 30
+  },
+  "f_leo": {
+    "name": "Léo Tremblay",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Léo Tremblay"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+16475550111",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 30
+  },
+  "f_maya": {
+    "name": "Maya Singh",
+    "relationship": "colleague",
+    "org": "Northbeam Analytics",
+    "title": "",
+    "city": "Toronto",
+    "display_labels": [
+      "Maya Singh"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "maya.singh@northbeam.ai",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Maya Singh",
+      "org": "Northbeam Analytics",
+      "city": "Toronto"
+    },
+    "facts": [],
+    "message_count": 21
+  },
+  "f_noah": {
+    "name": "Noah Cohen",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "New York",
+    "display_labels": [
+      "Noah Cohen"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+19025550113",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Noah Cohen",
+      "org": "",
+      "city": "New York"
+    },
+    "facts": [],
+    "message_count": 24
+  },
+  "f_olivia": {
+    "name": "Olivia Brown",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Olivia Brown"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "olivia.brown@mail.mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+16045550114",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 19
+  },
+  "f_pablo": {
+    "name": "Pablo Ortiz",
+    "relationship": "acquaintance",
+    "org": "Startupfest",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Pablo Ortiz"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "pablo.ortiz@startupfest.example",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Pablo Ortiz",
+      "org": "Startupfest",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 2
+  },
+  "f_quentin": {
+    "name": "Quentin Roux",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Lyon",
+    "display_labels": [
+      "Quentin",
+      "Quentin Roux"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+15145550116",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Quentin",
+      "org": "",
+      "city": "Lyon"
+    },
+    "facts": [],
+    "message_count": 15
+  },
+  "f_rosa": {
+    "name": "Rosa Delgado",
+    "relationship": "acquaintance",
+    "org": "District 3",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Rosa Delgado"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "rosa.delgado@d3center.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 2
+  },
+  "f_sam": {
+    "name": "Samuel Girard",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Samuel Girard"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+12635550118",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Samuel Girard",
+      "org": "",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 28
+  },
+  "f_tara": {
+    "name": "Tara Walsh",
+    "relationship": "founder",
+    "org": "Kelpworks",
+    "title": "",
+    "city": "Halifax",
+    "display_labels": [
+      "Tara Walsh"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "tara.walsh@kelpworks.co",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+16475550119",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Tara Walsh",
+      "org": "Kelpworks",
+      "city": "Halifax"
+    },
+    "facts": [],
+    "message_count": 18
+  },
+  "f_uma": {
+    "name": "Uma Patel",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Uma Patel"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+14165550120",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 32
+  },
+  "f_victor": {
+    "name": "Victor Nguyen",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Victor Nguyen"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+19025550121",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Victor Nguyen",
+      "org": "",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 43
+  },
+  "f_wen": {
+    "name": "Wen Zhao",
+    "relationship": "founder",
+    "org": "Loomtrace",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Wen Zhao"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "wen.zhao@loomtrace.io",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+16045550122",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Wen Zhao",
+      "org": "Loomtrace",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 28
+  },
+  "f_xavier": {
+    "name": "Xavier Pelletier",
+    "relationship": "gym",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Xavier Pelletier"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+12125550123",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 19
+  },
+  "f_yara": {
+    "name": "Yara Haddad",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Beirut",
+    "display_labels": [
+      "Yara",
+      "Yara Haddad"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+15145550124",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Yara",
+      "org": "",
+      "city": "Beirut"
+    },
+    "facts": [],
+    "message_count": 19
+  },
+  "f_zoe": {
+    "name": "Zoé Martin",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Zoé Martin"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "zoe.martin@mail.mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14385550125",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Zoé Martin",
+      "org": "McGill MBA",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 20
+  },
+  "f_aiden": {
+    "name": "Aiden Murphy",
+    "relationship": "acquaintance",
+    "org": "Montreal NewTech",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Aiden Murphy"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "aiden.murphy@montrealnewtech.org",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 2
+  },
+  "f_bianca": {
+    "name": "Bianca Rossi",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Bianca Rossi"
+    ],
+    "handles": [],
+    "contact_card": {
+      "fn": "Bianca Rossi",
+      "org": "",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 22
+  },
+  "f_cyrus": {
+    "name": "Cyrus Farahani",
+    "relationship": "founder",
+    "org": "Voltane",
+    "title": "",
+    "city": "Toronto",
+    "display_labels": [
+      "Cyrus",
+      "Cyrus Farahani"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "cyrus.farahani@voltane.com",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14165550128",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Cyrus",
+      "org": "Voltane",
+      "city": "Toronto"
+    },
+    "facts": [],
+    "message_count": 23
+  },
+  "f_dina": {
+    "name": "Dina Saleh",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Dina Saleh"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+19025550129",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 23
+  },
+  "f_eric": {
+    "name": "Eric Boisvert",
+    "relationship": "colleague",
+    "org": "Northbeam Analytics",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Eric Boisvert"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "eric.boisvert@northbeam.ai",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Eric Boisvert",
+      "org": "Northbeam Analytics",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 15
+  },
+  "f_fatima": {
+    "name": "Fatima Zahra Idrissi",
+    "relationship": "classmate",
+    "org": "McGill MBA",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Fatima Zahra Idrissi"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+12125550131",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Fatima Zahra Idrissi",
+      "org": "McGill MBA",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 19
+  },
+  "f_gabe": {
+    "name": "Gabriel Côté",
+    "relationship": "gym",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Gabriel Côté"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+15145550132",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 16
+  },
+  "f_hana": {
+    "name": "Hana Sato",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Vancouver",
+    "display_labels": [
+      "Hana Sato"
+    ],
+    "handles": [],
+    "contact_card": {
+      "fn": "Hana Sato",
+      "org": "",
+      "city": "Vancouver"
+    },
+    "facts": [],
+    "message_count": 14
+  },
+  "f_ivan": {
+    "name": "Ivan Petrov",
+    "relationship": "acquaintance",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Ivan Petrov"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+12635550134",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Ivan Petrov",
+      "org": "",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 8
+  },
+  "f_julia": {
+    "name": "Julia Becker",
+    "relationship": "acquaintance",
+    "org": "Lumen Grid",
+    "title": "",
+    "city": "Berlin",
+    "display_labels": [
+      "Julia Becker"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "julia.becker@lumengrid.de",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 1
+  },
+  "f_karl": {
+    "name": "Karl Andersen",
+    "relationship": "founder",
+    "org": "Fjordbyte",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Karl Andersen"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "karl.andersen@fjordbyte.dev",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Karl Andersen",
+      "org": "Fjordbyte",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 2
+  },
+  "f_lea": {
+    "name": "Léa Gauthier",
+    "relationship": "friend",
+    "org": "",
+    "title": "",
+    "city": "Montreal",
+    "display_labels": [
+      "Léa Gauthier"
+    ],
+    "handles": [
+      {
+        "kind": "phone",
+        "value": "+19025550137",
+        "source": "imessage",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": {
+      "fn": "Léa Gauthier",
+      "org": "",
+      "city": "Montreal"
+    },
+    "facts": [],
+    "message_count": 22
+  },
+  "owner": {
+    "name": "Jordan Lefebvre",
+    "relationship": "self",
+    "org": "Tidepool",
+    "title": "Co-founder & CEO; MBA candidate, McGill Desautels",
+    "city": "Montreal",
+    "display_labels": [
+      "Jordan Lefebvre"
+    ],
+    "handles": [
+      {
+        "kind": "email",
+        "value": "jordan.lefebvre@mail.mcgill.ca",
+        "source": "gmail",
+        "valid_from": "",
+        "valid_to": ""
+      }
+    ],
+    "contact_card": null,
+    "facts": [],
+    "message_count": 0
+  }
+}

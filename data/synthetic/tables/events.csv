@@ -1,0 +1,177 @@
+event_id,title,start_utc,end_utc,location,attendees,source_ref
+e_8b5379f4ffc7,Coffee w/ Omar Haddad,2026-10-28T14:00:00Z,2026-10-28T14:45:00Z,"Café Névé, 151 Rue Rachel E, Montréal","[""jordan.lefebvre@mail.mcgill.ca"", ""omar@payloop.co""]",calendar:j3deg1dncf54epf5dhod3docis
+e_31e6e16eae06,Tidepool pitch — Maple Ridge Ventures,2026-10-29T19:00:00Z,2026-10-29T20:00:00Z,"Maple Ridge Ventures, 1250 Boul. René-Lévesque O, 18e étage","[""jordan.lefebvre@mail.mcgill.ca"", ""daniel@mapleridge.vc"", ""mei@tidepool.earth""]",calendar:tlgm1gedn95u771tplpft9v6se
+e_240e85d920c8,Plumber — bathroom sink,2026-10-30T13:00:00Z,2026-10-30T16:00:00Z,4520 rue Saint-Denis,[],calendar:vj94ceuv097efr8edt6s20b70k
+e_1ba1f0fc9fa9,Aldridge & Co. — Final round interview,2026-10-30T17:00:00Z,2026-10-30T18:30:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""hannah.weiss@aldridgeco.com""]",calendar:sip339fk63ri5r402ojfljooa9
+e_23fb54c75afb,Strategy term paper due,2026-11-02T00:00:00Z,2026-11-03T23:59:59Z,,[],calendar:d73333g83dmen6khvdgajg1ben
+e_d78becdf4efa,Énergie Boréale — appel de présentation,2026-11-03T19:00:00Z,2026-11-03T20:00:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""elodie.gagnon@hydrolab.ca"", ""innovation@energieboreale.ca"", ""mei@tidepool.earth""]",calendar:018hh9788tfjgvq8kbn1jbtfq1
+e_a03820d1d5c2,🎂 Isabelle,2026-11-03T00:00:00Z,2026-11-04T23:59:59Z,,[],calendar:mp3om90bbr8qm0601fogo8mvn8
+e_a58de1e3944e,Souper fête d'Isabelle,2026-11-04T00:30:00Z,2026-11-04T03:00:00Z,"Le Petit Bistro, Rue Saint-Denis",[],calendar:a80fh2m8l5vf373fkkibj7j80j
+e_70e3eeb1b578,Stellarfin × Tidepool pilot kickoff,2026-11-04T18:00:00Z,2026-11-04T19:00:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""priya@stellarfin.com"", ""mei@tidepool.earth""]",calendar:gi5mnbqnspuq4id074ijb6lajl
+e_0a74d9bf590a,Mei OOO — Japan,2026-11-05T00:00:00Z,2026-11-16T23:59:59Z,,[],calendar:gdpmrcg6be6umr68pqm6i4h36u
+e_7d0073e8a1cc,Northwind <> Tidepool,2026-11-06T16:00:00Z,2026-11-06T16:45:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""rachel@northwindcap.com"", ""tyler@northwindcap.com""]",calendar:nthj1jqi7og39kok53v4m0uf1b
+e_9b41cf52a6dc,Desautels Case Competition,2026-11-07T13:30:00Z,2026-11-07T22:00:00Z,"Bronfman Building, 1001 Sherbrooke O","[""jordan.lefebvre@mail.mcgill.ca"", ""omar.benali@mail.mcgill.ca""]",calendar:ogfqrclri5q3j9ufrdl5erbfqf
+e_60e2d10fd139,Dan & Jess wedding 💍,2027-06-12T00:00:00Z,2027-06-13T23:59:59Z,Toronto,[],calendar:h7av4ricphkqdlmttns6lr0bqc
+e_eb39133ff06d,Startupfest,2026-07-15T00:00:00Z,2026-07-18T23:59:59Z,Montréal,[],calendar:psc7lkr6aq1vupctn0lav2f8rm
+e_4844afb80d2c,Maple Ridge founders breakfast,2026-10-06T12:00:00Z,2026-10-06T13:30:00Z,Maple Ridge Ventures,"[""jordan.lefebvre@mail.mcgill.ca"", ""daniel@mapleridge.vc""]",calendar:qfj3c3bttofj2u9jsjc5ibofbc
+e_3bd14674c1a9,Coffee w/ Omar Haddad,2026-06-17T13:30:00Z,2026-06-17T14:15:00Z,Café Névé,"[""jordan.lefebvre@mail.mcgill.ca"", ""omar@payloop.co""]",calendar:26dbp9qa7efe8qeqpno792e8sc
+e_b8ff234c2611,Coffee w/ Tom Becker (Lumen Grid),2026-02-12T13:30:00Z,2026-02-12T14:15:00Z,Hotel Bonaventure lobby,"[""jordan.lefebvre@mail.mcgill.ca"", ""tom@lumengrid.de""]",calendar:jvqtia8d9rgn9ss777hmtf8bs7
+e_5e36bf8395aa,Thanksgiving — Sherbrooke,2026-10-12T00:00:00Z,2026-10-13T23:59:59Z,Sherbrooke,[],calendar:6r2nnefjq1irh1o993bka963tj
+e_58944968fb95,Hydrolab intro call,2026-09-02T14:00:00Z,2026-09-02T14:45:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""elodie.gagnon@hydrolab.ca""]",calendar:vauv3hmasq1e32e15rdrgdsjpr
+e_7171955942ee,Office hours — Prof. Abernathy,2026-10-06T18:00:00Z,2026-10-06T18:20:00Z,Bronfman 518,"[""jordan.lefebvre@mail.mcgill.ca"", ""ruth.abernathy@mcgill.ca""]",calendar:nfd46is9dik84vstqq3pt83hkk
+e_85adad130021,Tidepool weekly sync,2025-09-08T13:30:00Z,2025-09-08T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:9r1infrp2365tbic589ae376pg
+e_115045b263f0,Tidepool weekly sync,2025-09-15T13:30:00Z,2025-09-15T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:aioctiq5hgetm2qoaat7rup8pp
+e_c3de580e8a6f,Tidepool weekly sync,2025-09-22T13:30:00Z,2025-09-22T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:o51o9cv413masen9mtmo7oqsg9
+e_e048e75c6abe,Tidepool weekly sync,2025-09-29T13:30:00Z,2025-09-29T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:j4ddl36uhfkvml7ct21v6kgafr
+e_47af94bf03b1,Tidepool weekly sync,2025-10-06T13:30:00Z,2025-10-06T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:8m16mu18b4p3c2c7edqmev1rvc
+e_a436881e001c,Tidepool weekly sync,2025-10-13T13:30:00Z,2025-10-13T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:ebog872q59i9latjpuu71fm3kp
+e_75ffb9571c0a,Tidepool weekly sync,2025-10-20T13:30:00Z,2025-10-20T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:ng496loi47phssrr1qqm6plppj
+e_05c0fe2b4ae0,Tidepool weekly sync,2025-10-27T13:30:00Z,2025-10-27T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:g7cga8o61csohdmme1l6qag0nc
+e_93aaaddacf49,Tidepool weekly sync,2025-11-03T14:30:00Z,2025-11-03T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:1ltenc98e4g3jfk3r4st4dt044
+e_6158a0bc643f,Tidepool weekly sync,2025-11-10T14:30:00Z,2025-11-10T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:5hf317kiadj3f1kj0skkeg29mt
+e_826b24e9bc07,Tidepool weekly sync,2025-11-17T14:30:00Z,2025-11-17T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:ko3m8lnc3k20hjpmccuh27t4tp
+e_9ed6b159012c,Tidepool weekly sync,2025-11-24T14:30:00Z,2025-11-24T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:7l83gei051f6ccifufd2ibehmi
+e_d9dbec783045,Tidepool weekly sync,2025-12-01T14:30:00Z,2025-12-01T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:qkur7jq8nqpu1cml3kru2kqhd1
+e_911867693c2f,Tidepool weekly sync,2025-12-08T14:30:00Z,2025-12-08T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:q21j1vf6oldsqtuacojs541di9
+e_58983d76f103,Tidepool weekly sync,2025-12-15T14:30:00Z,2025-12-15T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:4tin18kiapj6gejr3qad069pka
+e_e2d21c5fec1d,Tidepool weekly sync,2025-12-22T14:30:00Z,2025-12-22T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:mj4m4ltetd8a257f6logqochvq
+e_e6b5f28692ef,Tidepool weekly sync,2025-12-29T14:30:00Z,2025-12-29T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:nfakqpmkum2vp288ab5otn3ekj
+e_1fc3a878f8bf,Tidepool weekly sync,2026-01-05T14:30:00Z,2026-01-05T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:cece1me2gpnnhccfs8gignsuv5
+e_d60b46adfc5d,Tidepool weekly sync,2026-01-12T14:30:00Z,2026-01-12T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:sb4b5g08dnfsk5amsda09g9l90
+e_3775ae51aac4,Tidepool weekly sync,2026-01-19T14:30:00Z,2026-01-19T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:f9gu0g33f5b1ntq5k2o7ic0uj6
+e_e6e085c7f390,Tidepool weekly sync,2026-01-26T14:30:00Z,2026-01-26T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:pmrtjjpu0kpumqgkgm2jjtt5rm
+e_a4cc59e58833,Tidepool weekly sync,2026-02-02T14:30:00Z,2026-02-02T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:s7bjq3ap54oolh75uqg4p3kq58
+e_f9f855a3be89,Tidepool weekly sync,2026-02-09T14:30:00Z,2026-02-09T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:gcqnkm0g7n8b1v47nl3h0dqr23
+e_32173e7cbaef,Tidepool weekly sync,2026-02-16T14:30:00Z,2026-02-16T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:3o37nkiem8oj047si80or2q5l8
+e_ee94b9eb1ccc,Tidepool weekly sync,2026-02-23T14:30:00Z,2026-02-23T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:f1jt2dfui0aanesqgjol60jn3k
+e_12a101710b9f,Tidepool weekly sync,2026-03-02T14:30:00Z,2026-03-02T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:f6hhq4oi89d87j9p9kaku79s71
+e_aa3fbe1a9426,Tidepool weekly sync,2026-03-09T13:30:00Z,2026-03-09T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:vg89jcn4ivg1v8ns5v5qdss093
+e_5e00be7fe2da,Tidepool weekly sync,2026-03-16T13:30:00Z,2026-03-16T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:tifc33d3tgacm8d2jfnc7lglc4
+e_bb6108dbf0fc,Tidepool weekly sync,2026-03-23T13:30:00Z,2026-03-23T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:cub5d9ch436ea2j84gf8nja5aa
+e_f8be60fb3cc6,Tidepool weekly sync,2026-03-30T13:30:00Z,2026-03-30T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:ld1jfs97qdcadaf2ttk9du168k
+e_a6299002fd6d,Tidepool weekly sync,2026-04-06T13:30:00Z,2026-04-06T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:rvsrdvajt5p222o6sauqr5kcsj
+e_b05060bb3296,Tidepool weekly sync,2026-04-13T13:30:00Z,2026-04-13T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:92motd37nqa27f0eo3qu8mmnmf
+e_447f17590d17,Tidepool weekly sync,2026-04-20T13:30:00Z,2026-04-20T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:91g17fjub0rbgcn9nqr5g6iqcv
+e_f872fc07f731,Tidepool weekly sync,2026-04-27T13:30:00Z,2026-04-27T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:e3hfquof3l6k1polcq0dbdq8dg
+e_603b2ece9c31,Tidepool weekly sync,2026-05-04T13:30:00Z,2026-05-04T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:u1q2h182k6pja7mckoe1i6g2be
+e_140d9d985a22,Tidepool weekly sync,2026-05-11T13:30:00Z,2026-05-11T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:6j6jr44pjbrsvkq9gu78hjdn8s
+e_0fbbe9377232,Tidepool weekly sync,2026-05-18T13:30:00Z,2026-05-18T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:dsjb6vi6asl15c4nrlilolmff9
+e_26561ff64651,Tidepool weekly sync,2026-05-25T13:30:00Z,2026-05-25T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:e4d0vs9fa48irpl1ck1a06eh0p
+e_214c3be36b46,Tidepool weekly sync,2026-06-01T13:30:00Z,2026-06-01T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:bibpfolkgtqbbgmqb7p6g0glcr
+e_1d9f802f393d,Tidepool weekly sync,2026-06-08T13:30:00Z,2026-06-08T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:oj73kb24c3d1v3pv5u3duj0p5a
+e_afa603d3f51b,Tidepool weekly sync,2026-06-15T13:30:00Z,2026-06-15T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:37cccrrcgqha5pcsht0khdrf7j
+e_059c6e85285f,Tidepool weekly sync,2026-06-22T13:30:00Z,2026-06-22T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:7o2m17t88tbpvom23a0kpuu9rs
+e_970fbf3a62c2,Tidepool weekly sync,2026-06-29T13:30:00Z,2026-06-29T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:260goj4v0imrg8ri4ga4h93j4r
+e_4971f8f093f6,Tidepool weekly sync,2026-07-06T13:30:00Z,2026-07-06T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:2ua926tltj52ofvupun5abdq9t
+e_eba27fa5cdec,Tidepool weekly sync,2026-07-13T13:30:00Z,2026-07-13T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:c06aeog413jm4936vfk1u1etlh
+e_4e01bc36de2c,Tidepool weekly sync,2026-07-20T13:30:00Z,2026-07-20T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:m4ldg0c4aatat3gabml9rjm4hj
+e_4b7917b453db,Tidepool weekly sync,2026-07-27T13:30:00Z,2026-07-27T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:daujp0rkcrge0m62bdo3c6dppo
+e_e46e52c13327,Tidepool weekly sync,2026-08-03T13:30:00Z,2026-08-03T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:ep2o4t39bpflk02las31hv2v3e
+e_5ec523a63c11,Tidepool weekly sync,2026-08-10T13:30:00Z,2026-08-10T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:bvjpifmri67pk10n32nt8no6iq
+e_2f444e6d4fc1,Tidepool weekly sync,2026-08-17T13:30:00Z,2026-08-17T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:fr2bjta2floumge1tmetfosi3s
+e_3f51c1ff55a3,Tidepool weekly sync,2026-08-24T13:30:00Z,2026-08-24T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:04b7p30glshroc3ck5mtj2ctlo
+e_b4817225aa86,Tidepool weekly sync,2026-08-31T13:30:00Z,2026-08-31T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:scdphcun0f43orf056v6dn5i9m
+e_d9c08e4c0126,Tidepool weekly sync,2026-09-07T13:30:00Z,2026-09-07T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:dk004fmtii98ppa6i0tijpvh5k
+e_2ad0b3380b53,Tidepool weekly sync,2026-09-14T13:30:00Z,2026-09-14T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:cdrtmht6hku671skeca79fvqg9
+e_34462b786bb8,Tidepool weekly sync,2026-09-21T13:30:00Z,2026-09-21T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:qpfibb3js1lkgtu2l0uo1i1qpd
+e_3b3116ded0ec,Tidepool weekly sync,2026-09-28T13:30:00Z,2026-09-28T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:tfjoki63fc68mn1ac5jsed4ve6
+e_d6e99b0341ba,Tidepool weekly sync,2026-10-05T13:30:00Z,2026-10-05T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:m8fu75j3fdvt418itvbmo6fj14
+e_879da3be2c76,Tidepool weekly sync,2026-10-12T13:30:00Z,2026-10-12T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:qgmq9o7ohf4e6ihg73km8fi1d3
+e_49f5421af6a4,Tidepool weekly sync,2026-10-19T13:30:00Z,2026-10-19T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:fmh0k1vaqhp109c0g0uhcpq0m6
+e_db89aa662468,Tidepool weekly sync,2026-10-26T13:30:00Z,2026-10-26T14:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:s2jqr6abvj98ccel38k63oe1vn
+e_3c5efe0dd30b,Tidepool weekly sync,2026-11-02T14:30:00Z,2026-11-02T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:0uav8vobp7cjjr2req0icgm5g1
+e_74254b32c231,Tidepool weekly sync,2026-11-16T14:30:00Z,2026-11-16T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:p03vdvu81pp0jina7363tkejtt
+e_fefd982a5cdf,Tidepool weekly sync,2026-11-23T14:30:00Z,2026-11-23T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:705e9ulrqbkrpbnd36msgmpdid
+e_ead2628f547b,Tidepool weekly sync,2026-11-30T14:30:00Z,2026-11-30T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:bnuub93vld4cfv93q7abuud4vk
+e_35515df94a27,Tidepool weekly sync,2026-12-07T14:30:00Z,2026-12-07T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:jvoq8ct7r1riqa8g1jo3fbihdn
+e_4d5d8a8e9c03,Tidepool weekly sync,2026-12-14T14:30:00Z,2026-12-14T15:15:00Z,,"[""jordan.lefebvre@mail.mcgill.ca"", ""mei@tidepool.earth""]",calendar:p69n027nubgae30do242obqbq5
+e_f9a8903eac31,MBA core class,2025-09-02T12:35:00Z,2025-09-02T13:55:00Z,Bronfman 151,[],calendar:aitj0gk73f4v3vcpmacio5gbdu
+e_f9d4a644ce9e,MBA core class,2025-09-04T12:35:00Z,2025-09-04T13:55:00Z,Bronfman 151,[],calendar:9i5alojh09e0noerlaqrecmd41
+e_32d1660bb58b,MBA core class,2025-09-09T12:35:00Z,2025-09-09T13:55:00Z,Bronfman 151,[],calendar:7sv4r35u42j224japq2pmhfcd3
+e_415c8a1b98db,MBA core class,2025-09-11T12:35:00Z,2025-09-11T13:55:00Z,Bronfman 151,[],calendar:6u7a88v2p20e3rueoqq808oje1
+e_9386df1d2758,MBA core class,2025-09-16T12:35:00Z,2025-09-16T13:55:00Z,Bronfman 151,[],calendar:1plj7lcu215h4jq2g10t6fr3s6
+e_67196d8ecd64,MBA core class,2025-09-18T12:35:00Z,2025-09-18T13:55:00Z,Bronfman 151,[],calendar:ljai19p1v2qbmaqdltruqpq6f9
+e_bf0d0e68be92,MBA core class,2025-09-23T12:35:00Z,2025-09-23T13:55:00Z,Bronfman 151,[],calendar:s1c621cs45q0p2im1envef6234
+e_d7449421fa48,MBA core class,2025-09-25T12:35:00Z,2025-09-25T13:55:00Z,Bronfman 151,[],calendar:bg77548le639iaom3csv27hfoe
+e_2b51f5bf5e51,MBA core class,2025-09-30T12:35:00Z,2025-09-30T13:55:00Z,Bronfman 151,[],calendar:fn7dmv8d4i4djuvmalrqfu2qt3
+e_8145d5e92557,MBA core class,2025-10-02T12:35:00Z,2025-10-02T13:55:00Z,Bronfman 151,[],calendar:ttp25qtmidn179j1vm7duae4uc
+e_611ec0dd09e5,MBA core class,2025-10-07T12:35:00Z,2025-10-07T13:55:00Z,Bronfman 151,[],calendar:mn736nndl5hdie9lak9osnkjng
+e_20351accf6d5,MBA core class,2025-10-09T12:35:00Z,2025-10-09T13:55:00Z,Bronfman 151,[],calendar:d4oq65jdick6soujtqunjo3cu2
+e_24ce72769694,MBA core class,2025-10-14T12:35:00Z,2025-10-14T13:55:00Z,Bronfman 151,[],calendar:fm7jl5v3hc0hnes90b9fm9rtfm
+e_5d7f57a181c3,MBA core class,2025-10-16T12:35:00Z,2025-10-16T13:55:00Z,Bronfman 151,[],calendar:otcga0mjtdlv068pv1lhte7ghk
+e_f6fbc8ea9f4b,MBA core class,2025-10-21T12:35:00Z,2025-10-21T13:55:00Z,Bronfman 151,[],calendar:cg4i40e1k1kfva8tjqggphj9rh
+e_b72aef48643c,MBA core class,2025-10-23T12:35:00Z,2025-10-23T13:55:00Z,Bronfman 151,[],calendar:cq1ms3nippgagd9nofkjqb53hs
+e_304b1e687ae2,MBA core class,2025-10-28T12:35:00Z,2025-10-28T13:55:00Z,Bronfman 151,[],calendar:nopdpevgcnltvf7lau44cfpjkj
+e_39108e6169d1,MBA core class,2025-10-30T12:35:00Z,2025-10-30T13:55:00Z,Bronfman 151,[],calendar:movea8c9veemd14f0k99iqtd7k
+e_7ab447901a92,MBA core class,2025-11-04T13:35:00Z,2025-11-04T14:55:00Z,Bronfman 151,[],calendar:theqopm7p9d33v23fov5tat9bh
+e_8371e98319a5,MBA core class,2025-11-06T13:35:00Z,2025-11-06T14:55:00Z,Bronfman 151,[],calendar:t7jvnf037csvfrl64phnc2l2rv
+e_f67985ade5cb,MBA core class,2025-11-11T13:35:00Z,2025-11-11T14:55:00Z,Bronfman 151,[],calendar:03t9umk3aalgp7q0g2iq4ev6rs
+e_716dcad2fd38,MBA core class,2025-11-13T13:35:00Z,2025-11-13T14:55:00Z,Bronfman 151,[],calendar:2d991bdh26tj7cu8iarjmc3lrp
+e_aa1dbe776479,MBA core class,2025-11-18T13:35:00Z,2025-11-18T14:55:00Z,Bronfman 151,[],calendar:4f291ruk9d0imdktktdt21lrt8
+e_a3cf81516ae0,MBA core class,2025-11-20T13:35:00Z,2025-11-20T14:55:00Z,Bronfman 151,[],calendar:3gq13u28rhn64kucjr84er313s
+e_c451255d3fc5,MBA core class,2025-11-25T13:35:00Z,2025-11-25T14:55:00Z,Bronfman 151,[],calendar:act01qpeg4htklh33v339v0lj4
+e_7f58d285e062,MBA core class,2025-11-27T13:35:00Z,2025-11-27T14:55:00Z,Bronfman 151,[],calendar:nve4eap53nrijophsc2si2rern
+e_76a910afda1a,MBA core class,2025-12-02T13:35:00Z,2025-12-02T14:55:00Z,Bronfman 151,[],calendar:f1behuna7i6rd6cc7h8osvvonn
+e_2a2ead3fe20f,MBA core class,2025-12-04T13:35:00Z,2025-12-04T14:55:00Z,Bronfman 151,[],calendar:bolbr51erfh324od1vqe8i577m
+e_d7f5e28c6b80,MBA core class,2026-01-06T13:35:00Z,2026-01-06T14:55:00Z,Bronfman 151,[],calendar:ksmeb6mmqmsbbe0n4aq0ku0tgc
+e_90131ae69cac,MBA core class,2026-01-08T13:35:00Z,2026-01-08T14:55:00Z,Bronfman 151,[],calendar:b7gvgj189fvu8igq2n0qbmr52k
+e_f0229a9fd050,MBA core class,2026-01-13T13:35:00Z,2026-01-13T14:55:00Z,Bronfman 151,[],calendar:iahn2baf7cneuv79napn02ggim
+e_c30ac0b01664,MBA core class,2026-01-15T13:35:00Z,2026-01-15T14:55:00Z,Bronfman 151,[],calendar:6ed8k3p88jh92epoa3ocpgmac7
+e_f5ea028c04de,MBA core class,2026-01-20T13:35:00Z,2026-01-20T14:55:00Z,Bronfman 151,[],calendar:oc4qcj7b8ggljkug2aebfeds73
+e_54e7862980cd,MBA core class,2026-01-22T13:35:00Z,2026-01-22T14:55:00Z,Bronfman 151,[],calendar:bl7nhn5hf0gfpgf1rttsj9vmaf
+e_e3d12ceb9345,MBA core class,2026-01-27T13:35:00Z,2026-01-27T14:55:00Z,Bronfman 151,[],calendar:n274nfbdbi5dls6qiqt0bu2gk6
+e_9f4390c7c230,MBA core class,2026-01-29T13:35:00Z,2026-01-29T14:55:00Z,Bronfman 151,[],calendar:8urpa4bvo0vapvfkgcu5v1eh7k
+e_b927759e17a2,MBA core class,2026-02-03T13:35:00Z,2026-02-03T14:55:00Z,Bronfman 151,[],calendar:p4fnnsaq5hl6ks3pvqbfnqjee3
+e_122358ccacfd,MBA core class,2026-02-05T13:35:00Z,2026-02-05T14:55:00Z,Bronfman 151,[],calendar:ae1ejh9r6lgqt34l6g7vunb2og
+e_b91a955bf7e5,MBA core class,2026-02-10T13:35:00Z,2026-02-10T14:55:00Z,Bronfman 151,[],calendar:vramefktqlcj8gd2qfodesari0
+e_ccea25c33cc9,MBA core class,2026-02-12T13:35:00Z,2026-02-12T14:55:00Z,Bronfman 151,[],calendar:1q11khpks2bomo21p8qadg21ps
+e_ccdb1597cd79,MBA core class,2026-02-17T13:35:00Z,2026-02-17T14:55:00Z,Bronfman 151,[],calendar:h79f3h98lo56dhmer168pvdeo8
+e_1d05c851a139,MBA core class,2026-02-19T13:35:00Z,2026-02-19T14:55:00Z,Bronfman 151,[],calendar:2hd5dpkungf8q77ie6ugnr1eh8
+e_bb882955050c,MBA core class,2026-02-24T13:35:00Z,2026-02-24T14:55:00Z,Bronfman 151,[],calendar:b8co9i1j2uc1lob7f6ncs6imtu
+e_5d49b04db26a,MBA core class,2026-02-26T13:35:00Z,2026-02-26T14:55:00Z,Bronfman 151,[],calendar:bka18oe819nnm8mt7rouc4lv4b
+e_ba996dcf0390,MBA core class,2026-03-03T13:35:00Z,2026-03-03T14:55:00Z,Bronfman 151,[],calendar:ajq782iqphr4jiiudko5kf64qo
+e_9d8c289e720b,MBA core class,2026-03-05T13:35:00Z,2026-03-05T14:55:00Z,Bronfman 151,[],calendar:4gd5gbsesli4e2th6p91m5eq2l
+e_d1e00974a452,MBA core class,2026-03-10T12:35:00Z,2026-03-10T13:55:00Z,Bronfman 151,[],calendar:p41qed8nua68vl7uo5fn43io11
+e_e37f22492a10,MBA core class,2026-03-12T12:35:00Z,2026-03-12T13:55:00Z,Bronfman 151,[],calendar:ionrhci34e87v005ul8bk31hsn
+e_5594208d7379,MBA core class,2026-03-17T12:35:00Z,2026-03-17T13:55:00Z,Bronfman 151,[],calendar:m1tqke7cma4rbealfpalolqpbb
+e_514313d78392,MBA core class,2026-03-19T12:35:00Z,2026-03-19T13:55:00Z,Bronfman 151,[],calendar:mj8ve0us48qvdfqkqfedqivv9j
+e_15adf2f4dd2c,MBA core class,2026-03-24T12:35:00Z,2026-03-24T13:55:00Z,Bronfman 151,[],calendar:dj52sbote8gejm67of85iamng7
+e_4af6c6917f96,MBA core class,2026-03-26T12:35:00Z,2026-03-26T13:55:00Z,Bronfman 151,[],calendar:vdbobosn7mlntqikdo7vt3utdu
+e_9c3d60c6b0e9,MBA core class,2026-03-31T12:35:00Z,2026-03-31T13:55:00Z,Bronfman 151,[],calendar:pjlp7bmuh18tege258eqo6u841
+e_f2127b6427c4,MBA core class,2026-04-02T12:35:00Z,2026-04-02T13:55:00Z,Bronfman 151,[],calendar:udg7fricie7ctev5fj3gdcsige
+e_3ec895b26047,MBA core class,2026-04-07T12:35:00Z,2026-04-07T13:55:00Z,Bronfman 151,[],calendar:4kpl25v1hp7hfq28ols73mim9g
+e_e38a30859de6,MBA core class,2026-04-09T12:35:00Z,2026-04-09T13:55:00Z,Bronfman 151,[],calendar:pbq8juulvm4dao0aqccuour1t1
+e_d7cabde620ae,MGCR 701 — Strategy,2026-09-01T12:35:00Z,2026-09-01T13:55:00Z,Bronfman 151,[],calendar:hoa4pdkjtqu25tipvd0luid7v8
+e_6927eb6e5430,MGCR 701 — Strategy,2026-09-03T12:35:00Z,2026-09-03T13:55:00Z,Bronfman 151,[],calendar:nv1peghubbo1ee9dm73t82t8u0
+e_b8a6ca5a61a1,MGCR 701 — Strategy,2026-09-08T12:35:00Z,2026-09-08T13:55:00Z,Bronfman 151,[],calendar:0ge864aonn11hc75bi5fls0god
+e_e528515a6366,MGCR 701 — Strategy,2026-09-10T12:35:00Z,2026-09-10T13:55:00Z,Bronfman 151,[],calendar:5k2e4mutvl9aj2klbh1ddnbn7j
+e_1b1f4ac71fd6,MGCR 701 — Strategy,2026-09-15T12:35:00Z,2026-09-15T13:55:00Z,Bronfman 151,[],calendar:6b5iqro4n7dfavkpqololmh7nr
+e_e98acb58c42c,MGCR 701 — Strategy,2026-09-17T12:35:00Z,2026-09-17T13:55:00Z,Bronfman 151,[],calendar:d9a6fe4ju7knv4pmok405ttkn6
+e_e36a5033ded4,MGCR 701 — Strategy,2026-09-22T12:35:00Z,2026-09-22T13:55:00Z,Bronfman 151,[],calendar:hsl48698r8m8jkoe02e3g05v03
+e_6d4e271d9817,MGCR 701 — Strategy,2026-09-24T12:35:00Z,2026-09-24T13:55:00Z,Bronfman 151,[],calendar:ac8035tkaj13uovk3lshibu869
+e_5c9bda4c1488,MGCR 701 — Strategy,2026-09-29T12:35:00Z,2026-09-29T13:55:00Z,Bronfman 151,[],calendar:0u8hvq2qb12e1arvs9k2bemndi
+e_fbd8a1b029bc,MGCR 701 — Strategy,2026-10-01T12:35:00Z,2026-10-01T13:55:00Z,Bronfman 151,[],calendar:5qhgjfj5mc925flitcfdkhcbuk
+e_27033dfb2817,MGCR 701 — Strategy,2026-10-06T12:35:00Z,2026-10-06T13:55:00Z,Bronfman 151,[],calendar:m0m1h5u34q6o8blklj0d6c6a66
+e_df44a847ff89,MGCR 701 — Strategy,2026-10-08T12:35:00Z,2026-10-08T13:55:00Z,Bronfman 151,[],calendar:3jdj9l2kaa14m24v8ku2mrnauu
+e_e6be4e68ce73,MGCR 701 — Strategy,2026-10-13T12:35:00Z,2026-10-13T13:55:00Z,Bronfman 151,[],calendar:vk9rf9cj5f4s5afig2rh56qf61
+e_559a04addca1,MGCR 701 — Strategy,2026-10-15T12:35:00Z,2026-10-15T13:55:00Z,Bronfman 151,[],calendar:tneqr1n5r7u38hcjsdi02pqc68
+e_0a5f350b0371,MGCR 701 — Strategy,2026-10-20T12:35:00Z,2026-10-20T13:55:00Z,Bronfman 151,[],calendar:cn78fsvlihlqvkko8oqqdokte2
+e_951b9d66e2cf,MGCR 701 — Strategy,2026-10-22T12:35:00Z,2026-10-22T13:55:00Z,Bronfman 151,[],calendar:ng48ud2o78mqkhu3ki889r1g9v
+e_5e980060cf9d,MGCR 701 — Strategy,2026-10-27T12:35:00Z,2026-10-27T13:55:00Z,Bronfman 151,[],calendar:2hi9sv2lubun7hs7118ml1mmts
+e_e174c52451e3,MGCR 701 — Strategy,2026-10-29T12:35:00Z,2026-10-29T13:55:00Z,Bronfman 151,[],calendar:e4anenhphsgmard5frua40laml
+e_cf1b2427832d,MGCR 701 — Strategy,2026-11-03T13:35:00Z,2026-11-03T14:55:00Z,Bronfman 151,[],calendar:hru23be5hrj51bbd52k11i01qj
+e_77f9e94b5afc,MGCR 701 — Strategy,2026-11-05T13:35:00Z,2026-11-05T14:55:00Z,Bronfman 151,[],calendar:hktg947adp5ipap0pf825v8cod
+e_6925ffa612fc,MGCR 701 — Strategy,2026-11-10T13:35:00Z,2026-11-10T14:55:00Z,Bronfman 151,[],calendar:clmeqfvfvf5te6pjlt5ug5kc9h
+e_b084da847241,MGCR 701 — Strategy,2026-11-12T13:35:00Z,2026-11-12T14:55:00Z,Bronfman 151,[],calendar:kdscvdgm3kon5q7fp7ao3gm4fs
+e_2f4766a8110b,MGCR 701 — Strategy,2026-11-17T13:35:00Z,2026-11-17T14:55:00Z,Bronfman 151,[],calendar:voc345ejfedmqg29qmg96se8ij
+e_e63da8b0c3e6,MGCR 701 — Strategy,2026-11-19T13:35:00Z,2026-11-19T14:55:00Z,Bronfman 151,[],calendar:blcehupdor0k14rk66laif5pjq
+e_6a3968bf2ff4,MGCR 701 — Strategy,2026-11-24T13:35:00Z,2026-11-24T14:55:00Z,Bronfman 151,[],calendar:foajc0ftu6mtn8vi10orib45lc
+e_1d2737bffdec,MGCR 701 — Strategy,2026-11-26T13:35:00Z,2026-11-26T14:55:00Z,Bronfman 151,[],calendar:618p2ss3cq8un60t71f1no5q1b
+e_efcd462c0716,MGCR 701 — Strategy,2026-12-01T13:35:00Z,2026-12-01T14:55:00Z,Bronfman 151,[],calendar:4c5tovv8gl9g1mr9civ46s4juj
+e_38193b391645,MGCR 701 — Strategy,2026-12-03T13:35:00Z,2026-12-03T14:55:00Z,Bronfman 151,[],calendar:0rdpvcld55mj1hhr63qb32l2a1
+e_1196d3bb72fc,Long run w/ Yusuf,2026-08-02T12:00:00Z,2026-08-02T13:40:00Z,Mount Royal — George-Étienne Cartier monument,[],calendar:v3p5pvp2ctr887ad27ol82kgq6
+e_5985ce0560f1,Long run w/ Yusuf,2026-08-09T12:00:00Z,2026-08-09T13:40:00Z,Mount Royal — George-Étienne Cartier monument,[],calendar:naeffl1a547s01kg9h1sno20vr
+e_2b8303640a9a,Long run w/ Yusuf,2026-09-06T12:00:00Z,2026-09-06T13:40:00Z,Mount Royal — George-Étienne Cartier monument,[],calendar:uivhvk4b1o3akm613qol7k1db2
+e_3e1995a0fe82,Long run w/ Yusuf,2026-09-13T12:00:00Z,2026-09-13T13:40:00Z,Mount Royal — George-Étienne Cartier monument,[],calendar:c98mlellqikusi8hirttmo6ui1
+e_d72e0a793adc,Long run w/ Yusuf,2026-10-11T12:00:00Z,2026-10-11T13:40:00Z,Mount Royal — George-Étienne Cartier monument,[],calendar:cjrelbbo6f7plmuvbiv1eebhdk
+e_c2d7803a81ca,Long run w/ Yusuf,2026-10-18T12:00:00Z,2026-10-18T13:40:00Z,Mount Royal — George-Étienne Cartier monument,[],calendar:fn6radsotf8j2727morrpit3co
