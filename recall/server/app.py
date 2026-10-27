@@ -4,13 +4,25 @@ from __future__ import annotations
 
 import asyncio
 import csv
+import gzip
+import json
 import logging
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, AsyncIterator
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, WebSocket
+from fastapi import (
+    Depends,
+    FastAPI,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Request,
+    UploadFile,
+    WebSocket,
+)
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -136,6 +148,55 @@ def api_status() -> dict[str, Any]:
         "totals": ingest_status.totals or counts,
         "sample_mode": get_settings().sample_mode,
     }
+
+
+@app.post("/api/ingest/mac")
+async def api_ingest_mac(
+    request: Request,
+    authorization: str | None = Header(default=None),
+) -> dict[str, Any]:
+    """Accept gzipped JSON from the Mac agent; upsert Postgres raw_* tables.
+
+    Auth is ``DEVICE_UPLOAD_TOKEN`` (not the dashboard bearer).
+    """
+    settings = get_settings()
+    expected = settings.device_upload_token.get_secret_value().strip()
+    if not expected:
+        raise HTTPException(status_code=503, detail="DEVICE_UPLOAD_TOKEN not configured")
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing bearer token")
+    got = authorization.removeprefix("Bearer ").strip()
+    if got != expected:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    raw = await request.body()
+    encoding = (request.headers.get("content-encoding") or "").lower()
+    if encoding == "gzip":
+        try:
+            raw = gzip.decompress(raw)
+        except OSError as exc:
+            raise HTTPException(status_code=400, detail="Invalid gzip body") from exc
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=400, detail="Body must be JSON") from exc
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=400, detail="JSON object required")
+
+    from recall.server.mac_ingest import (
+        schedule_debounced_world_rebuild,
+        upsert_mac_payload,
+    )
+
+    try:
+        counts = upsert_mac_payload(payload, settings=settings)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"upsert failed: {exc}") from exc
+
+    schedule_debounced_world_rebuild(settings)
+    return {"ok": True, "counts": counts}
 
 
 @app.post("/api/voice", dependencies=[Depends(require_bearer)])

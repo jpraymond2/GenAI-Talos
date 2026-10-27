@@ -26,10 +26,11 @@ def _stable_id(prefix: str, *parts: str) -> str:
 
 
 def decode_attributed_body(blob: bytes | bytearray | memoryview | None) -> str:
-    """Extract UTF-8 text after the ``NSString`` marker, skipping a length prefix.
+    """Extract UTF-8 text from iMessage ``attributedBody`` (NSKeyed / streamtyped).
 
-    When ``message.text`` is NULL, iMessage stores the body in ``attributedBody``.
-    Pure helper for tests — pass hand-made sample blobs.
+    Real ``chat.db`` blobs mark the string with ``0x2b`` (``+``) after ``NSString``,
+    then a length (1-byte, or ``0x81``/``0x82`` extended) and UTF-8 payload.
+    When ``message.text`` is NULL, this is the body. Pure helper for tests too.
     """
     if blob is None:
         return ""
@@ -38,31 +39,26 @@ def decode_attributed_body(blob: bytes | bytearray | memoryview | None) -> str:
     idx = data.find(marker)
     if idx < 0:
         return ""
-    rest = data[idx + len(marker) :]
-    # Skip typedstream class / tag bytes commonly present after the marker.
+    rest_start = idx + len(marker)
+
+    # Primary: typedstream UTF-8 string introduced by 0x2B ('+').
+    plus = data.find(0x2B, rest_start)
+    if plus >= 0:
+        text = _decode_plus_utf8(data, plus)
+        cleaned = _clean_attributed_text(text)
+        if cleaned:
+            return cleaned
+
+    # Fallback for hand-made test blobs: NSString + tag + 1-byte length + utf-8.
+    rest = data[rest_start:]
     i = 0
-    while i < len(rest) and rest[i] in {
-        0x00,
-        0x01,
-        0x02,
-        0x03,
-        0x04,
-        0x05,
-        0x84,
-        0x86,
-        0x94,
-        0x95,
-        0x96,
-        0x2B,
-        0x63,
-    }:
+    while i < len(rest) and rest[i] in {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x84, 0x94}:
         i += 1
     if i >= len(rest):
         return ""
     length = rest[i]
     i += 1
-    # One-byte length for short strings; if length looks like a tag, try next byte.
-    if length > 0x80 and i < len(rest):
+    if length >= 0x80 and i < len(rest):
         length = rest[i]
         i += 1
     raw = rest[i : i + length]
@@ -70,7 +66,51 @@ def decode_attributed_body(blob: bytes | bytearray | memoryview | None) -> str:
         text = raw.decode("utf-8")
     except UnicodeDecodeError:
         text = raw.decode("utf-8", errors="replace")
-    return "".join(ch for ch in text if ch.isprintable() or ch in "\n\t\r ")
+    return _clean_attributed_text(text)
+
+
+def _decode_plus_utf8(data: bytes, plus: int) -> str:
+    """Read length-prefixed UTF-8 starting at a typedstream ``+`` marker."""
+    i = plus + 1
+    if i >= len(data):
+        return ""
+    lead = data[i]
+    if lead < 0x80:
+        length = lead
+        start = i + 1
+    elif lead == 0x81 and i + 1 < len(data):
+        length = data[i + 1]
+        start = i + 2
+    elif lead == 0x82 and i + 2 < len(data):
+        length = int.from_bytes(data[i + 1 : i + 3], "big")
+        start = i + 3
+    else:
+        return ""
+    if length <= 0 or start + length > len(data):
+        return ""
+    raw = data[start : start + length]
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return raw.decode("utf-8", errors="replace")
+
+
+def _clean_attributed_text(text: str) -> str:
+    """Strip object-replacement / control prefixes and typedstream class junk."""
+    if not text:
+        return ""
+    # Leading U+FFFC (attachment placeholder) or tiny control tags inside the payload.
+    while text and (
+        ord(text[0]) < 9
+        or text[0] in {"\ufeff", "\ufffc", "\x00", "\x01", "\x02", "\x03"}
+    ):
+        text = text[1:]
+    for bad in ("NSDictionary", "__kIMMessagePartAttributeName", "NSNumber", "NSValue"):
+        cut = text.find(bad)
+        if cut >= 0:
+            text = text[:cut]
+    cleaned = "".join(ch for ch in text if ch.isprintable() or ch in "\n\t\r ")
+    return cleaned.strip()
 
 
 def _apple_ts_to_utc(raw: int | float | None) -> str:

@@ -27,6 +27,8 @@ dependencies = [
     "pytest",
     "pyyaml>=6.0.3",
     "tzdata>=2026.5",
+    "phonenumbers>=8.13",
+    "psycopg[binary]>=3.2",
 ]
 
 [project.optional-dependencies]

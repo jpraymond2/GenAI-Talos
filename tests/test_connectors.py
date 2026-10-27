@@ -56,8 +56,12 @@ def test_parse_whatsapp_export_iphone_android_multiline_media() -> None:
 def test_decode_attributed_body_handmade_blob() -> None:
     text = "Coffee tomorrow?"
     encoded = text.encode("utf-8")
+    # Legacy short form (tag + length).
     blob = b"prefixNSString" + bytes([0x01, len(encoded)]) + encoded + b"\x00trailing"
     assert decode_attributed_body(blob) == text
+    # Real chat.db streamtyped form: '+' then 1-byte length then UTF-8.
+    real = b"xxxxNSString\x01\x94\x84\x01\x2b" + bytes([len(encoded)]) + encoded + b"\x86NSDictionary"
+    assert decode_attributed_body(real) == text
     assert decode_attributed_body(None) == ""
     assert decode_attributed_body(b"no marker here") == ""
 

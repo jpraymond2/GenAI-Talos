@@ -149,6 +149,14 @@ class Settings(BaseSettings):
         default=True,
         description="When false, never build or serve food/places preference profiles.",
     )
+    database_url: str = Field(
+        default="",
+        description="Postgres URL for Mac ingest raw tables (VM). Empty disables /api/ingest/mac writes.",
+    )
+    device_upload_token: SecretStr = Field(
+        default=SecretStr(""),
+        description="Bearer token required by POST /api/ingest/mac.",
+    )
 
     @model_validator(mode="after")
     def _alias_zetaris_url(self) -> Self:
