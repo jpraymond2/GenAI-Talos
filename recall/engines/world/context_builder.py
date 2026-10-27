@@ -23,6 +23,14 @@ from recall.tracing import Tracer
 _OPEN_LOOP_RE = re.compile(
     r"(?i)\b(can you|could you|would you|please\b|intro\b)|[?？]"
 )
+_PROMISE_RE = re.compile(
+    r"(?i)\b("
+    r"i(?:'ll| will) send|will send(?: it| them)?|"
+    r"i promise|"
+    r"sending (?:it |them )?(?:by|before|tomorrow|tonight|"
+    r"monday|tuesday|wednesday|thursday|friday)"
+    r")\b"
+)
 
 
 def _parse_ts(value: str) -> datetime:
@@ -185,12 +193,43 @@ class ContextBuilderService:
             for e in person_events
             if e.start_utc >= now_s
         ]
+        upcoming.sort(key=lambda e: e["start_utc"])
         past = [
             e.model_dump()
             for e in person_events
             if e.start_utc < now_s
         ]
         past.sort(key=lambda e: e["start_utc"], reverse=True)
+
+        # Last contact = newest message (not calendar) at or before frozen now.
+        message_sources = {"gmail", "imessage", "whatsapp", "messenger"}
+        last_contact: dict[str, Any] | None = None
+        for row in related:
+            if row.source not in message_sources:
+                continue
+            if row.ts_utc > now_s:
+                continue
+            last_contact = {
+                "ts_utc": row.ts_utc,
+                "source": row.source,
+                "direction": row.direction,
+                "source_ref": row.source_ref,
+                "subject": row.subject,
+            }
+            break  # related is newest-first
+
+        next_meeting: dict[str, Any] | None = None
+        for ev in upcoming:
+            title = str(ev.get("title") or "")
+            if "cancel" in title.lower():
+                continue
+            next_meeting = {
+                "title": title,
+                "start_utc": ev.get("start_utc"),
+                "location": ev.get("location") or "",
+                "source_ref": ev.get("source_ref") or "",
+            }
+            break
 
         conflicts = self._store.list_conflicts(entity_id)
         linked_handles = [
@@ -235,6 +274,8 @@ class ContextBuilderService:
         )
         payload = ctx.model_dump()
         payload["linked_handles"] = linked_handles
+        payload["last_contact"] = last_contact
+        payload["next_meeting"] = next_meeting
         if self._tracer is not None:
             self._tracer.event(
                 "world",
@@ -250,38 +291,72 @@ class ContextBuilderService:
             )
         return payload
 
-    @staticmethod
-    def _find_open_loops(related: list[InteractionRow]) -> list[dict[str, Any]]:
-        """Inbound request/question with no later outbound in the same thread."""
+    def _find_open_loops(self, related: list[InteractionRow]) -> list[dict[str, Any]]:
+        """Unanswered inbound asks + owner promises (ts <= frozen now)."""
+        now_s = resolve_now(self._settings).strftime("%Y-%m-%dT%H:%M:%SZ")
         by_thread: dict[str, list[InteractionRow]] = {}
         for row in related:
+            if row.ts_utc > now_s:
+                continue
             by_thread.setdefault(row.thread_id, []).append(row)
 
         loops: list[dict[str, Any]] = []
         for thread_id, rows in by_thread.items():
             ordered = sorted(rows, key=lambda r: r.ts_utc)
             for idx, row in enumerate(ordered):
-                if row.direction != "in":
-                    continue
                 blob = f"{row.subject} {row.text}"
-                if not _OPEN_LOOP_RE.search(blob):
-                    continue
-                later_out = any(
-                    later.direction == "out" and later.ts_utc >= row.ts_utc
-                    for later in ordered[idx + 1 :]
-                )
-                if later_out:
-                    continue
-                loops.append(
-                    {
-                        "thread_id": thread_id,
-                        "ts_utc": row.ts_utc,
-                        "subject": row.subject,
-                        "text": row.text[:300],
-                        "source": row.source,
-                        "source_ref": row.source_ref,
-                    }
-                )
+                if row.direction == "in":
+                    if not _OPEN_LOOP_RE.search(blob):
+                        continue
+                    later_out = any(
+                        later.direction == "out" and later.ts_utc >= row.ts_utc
+                        for later in ordered[idx + 1 :]
+                    )
+                    if later_out:
+                        continue
+                    loops.append(
+                        {
+                            "thread_id": thread_id,
+                            "ts_utc": row.ts_utc,
+                            "subject": row.subject,
+                            "text": row.text[:300],
+                            "source": row.source,
+                            "source_ref": row.source_ref,
+                            "loop_kind": "ask",
+                        }
+                    )
+                elif row.direction == "out" and _PROMISE_RE.search(blob):
+                    # Still open unless a later outbound looks like delivery.
+                    later_delivery = any(
+                        later.direction == "out"
+                        and later.ts_utc > row.ts_utc
+                        and re.search(
+                            r"(?i)\b(sent|attached|here (?:it|they) are|done|shipped)\b",
+                            f"{later.subject} {later.text}",
+                        )
+                        for later in ordered[idx + 1 :]
+                    )
+                    if later_delivery:
+                        continue
+                    loops.append(
+                        {
+                            "thread_id": thread_id,
+                            "ts_utc": row.ts_utc,
+                            "subject": row.subject,
+                            "text": row.text[:300],
+                            "source": row.source,
+                            "source_ref": row.source_ref,
+                            "loop_kind": "promise",
+                            "prior_ask": next(
+                                (
+                                    earlier.text[:200]
+                                    for earlier in reversed(ordered[:idx])
+                                    if earlier.direction == "in"
+                                ),
+                                "",
+                            ),
+                        }
+                    )
         loops.sort(key=lambda item: item["ts_utc"], reverse=True)
         return loops
 

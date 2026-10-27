@@ -263,18 +263,38 @@ def extract_signature(body: str) -> dict[str, Any]:
         if 1 <= len(words) <= 4 and all(w[:1].isupper() for w in words if w.isalpha()):
             name = line
             break
-    for line in tail:
-        if "," in line and line != name:
+    # Title/company only from short signature-like lines (never reply body crumbs).
+    sig_lines = [ln for ln in tail if len(ln) <= 60 and ln.count(",") <= 1][-6:]
+    junk = re.compile(
+        r"(?i)^(thanks?\b|perfect|hi\b|hey\b|happy to|moving you|jordan\b|omar\b)"
+    )
+    for line in reversed(sig_lines):
+        if line == name or junk.search(line):
+            continue
+        if "," in line:
             left, right = [p.strip() for p in line.split(",", 1)]
-            if left and right:
+            if (
+                left
+                and right
+                and left[0].isupper()
+                and right[0].isupper()
+                and len(left.split()) <= 6
+                and len(right.split()) <= 5
+                and not junk.search(left)
+                and not junk.search(right)
+            ):
                 title = left
                 company = right
                 break
-        if re.search(r"\bat\b", line, re.I) and line != name:
+        if re.search(r"\bat\b", line, re.I):
             parts = re.split(r"\bat\b", line, maxsplit=1, flags=re.I)
             if len(parts) == 2:
-                title = parts[0].strip(" -–|,") or title
-                company = parts[1].strip(" -–|,") or company
+                left = parts[0].strip(" -–|,")
+                right = parts[1].strip(" -–|,")
+                if left and right and left[0].isupper() and right[0].isupper():
+                    title = left or title
+                    company = right or company
+                    break
     return {"name": name, "title": title, "company": company, "phones": phones}
 
 

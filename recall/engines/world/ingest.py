@@ -38,6 +38,9 @@ _AGENT_ID = "world_ingest"
 _CONFLICT_WINDOW_DAYS = 120
 _NAME_FUZZ_THRESHOLD = 90
 
+# Bump when attribute extraction rules change so sample DBs reingest.
+INGEST_VERSION = "phase1b-structured-v4"
+
 _CITY_PATTERNS = [
     re.compile(
         r"(?im)(?:^|\n)\s*([A-Z][A-Za-z][A-Za-z\s\-']+),\s*(?:QC|ON|AB|BC|MB|SK|NS|NB|NL|PE|YT|NT|NU|NY|CA|TX|WA)\b"
@@ -45,15 +48,50 @@ _CITY_PATTERNS = [
     re.compile(r"(?i)\bmoving to ([A-Z][A-Za-z][A-Za-z\s\-']+?)(?:\s+in\b|[.,!]|$)"),
     re.compile(r"(?i)\bbased in ([A-Z][A-Za-z][A-Za-z\s\-']+?)(?:[.,!\n]|$)"),
     re.compile(r"(?i)\bin ([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)?),\s*(?:QC|ON)\b"),
+    # FR/EN move announcements (city only — never org/title from chat bodies).
+    re.compile(
+        r"(?i)\b(?:d[ée]m[ée]nage(?:r)?|moved|moving)\s+(?:à|a|to)\s+"
+        r"([A-ZÀ-Ö][A-Za-zÀ-öø-ÿ\-']+)"
+    ),
+    re.compile(
+        r"(?i)\b(?:premier|first)\s+\w+\s+[àa]\s+"
+        r"([A-ZÀ-Ö][A-Za-zÀ-öø-ÿ\-']+)"
+    ),
 ]
 
-# Single-line "Title, Org" only — never let \s eat a prior name line.
+_KNOWN_CITIES = frozenset(
+    {
+        "paris",
+        "montreal",
+        "montréal",
+        "toronto",
+        "vancouver",
+        "quebec",
+        "québec",
+        "ottawa",
+        "berlin",
+        "london",
+        "new york",
+        "sherbrooke",
+        "lyon",
+        "beirut",
+    }
+)
+
+# Single-line email-signature "Title, Org" only (never chat / reply crumbs).
 _TITLE_PATTERNS = [
     re.compile(
         r"(?im)^([A-Z][A-Za-z][A-Za-z /&-]{0,40}),[ \t]+"
         r"([A-Z][A-Za-z0-9][A-Za-z0-9 &.']{0,40})[ \t]*$"
     ),
 ]
+
+_JUNK_ATTR_RE = re.compile(
+    r"(?i)^(thanks?\b|perfect|parfait|yes|no|ok|on it|same|amazing|see you|"
+    r"sending |will send|no worries|happy to|really needed|comments in|"
+    r"door code|sunday is|grabbed a|mountain loop|what a |only the |"
+    r"expired cert|in the security|v3 is|renewing )"
+)
 
 # "Montreal, QC" must not be parsed as Title, Org.
 _REGION_CODES = frozenset(
@@ -363,8 +401,33 @@ def _attr_conflict_key(value: str) -> str:
     return _normalize_attr_value(value).casefold()
 
 
-def extract_signature_attributes(text: str) -> dict[str, str]:
-    """Cheap regex pass over message text for city / title / org hints."""
+def _is_plausible_structured_attr(value: str, *, field: str) -> bool:
+    """Reject conversational crumbs mistakenly parsed as title/org/city."""
+    text = (value or "").strip()
+    if len(text) < 2 or len(text) > 48:
+        return False
+    if _JUNK_ATTR_RE.search(text):
+        return False
+    if text.endswith("?") or text.count(",") > 1:
+        return False
+    if field in {"org", "title"} and text[0].islower():
+        return False
+    if field == "title" and len(text.split()) > 6:
+        return False
+    if field == "org" and ("(" in text or text.lower().startswith("thanks")):
+        return False
+    return True
+
+
+def extract_signature_attributes(
+    text: str,
+    *,
+    source: str = "gmail",
+) -> dict[str, str]:
+    """Extract city freely; title/org only from gmail signature-like lines.
+
+    Never pull title/org from imessage / whatsapp / messenger bodies.
+    """
     found: dict[str, str] = {}
     if not text:
         return found
@@ -372,14 +435,35 @@ def extract_signature_attributes(text: str) -> dict[str, str]:
         match = pattern.search(text)
         if match:
             city = _normalize_attr_value(match.group(1).strip(" .,!"))
-            if city and "\n" not in city and len(city) < 40:
-                found["city"] = city
+            if not city or "\n" in city or len(city) >= 40:
+                continue
+            # Prefer a known city token inside the capture ("Paris le" → Paris).
+            tokens = re.findall(r"[A-Za-zÀ-öø-ÿ']+", city)
+            picked = ""
+            for tok in tokens:
+                if tok.casefold() in _KNOWN_CITIES:
+                    picked = tok[0].upper() + tok[1:] if tok else tok
+                    # Preserve Montréal accent when present.
+                    if tok.casefold() == "montréal":
+                        picked = "Montréal"
+                    elif tok.casefold() == "montreal":
+                        picked = "Montreal"
+                    elif tok.casefold() == "paris":
+                        picked = "Paris"
+                    break
+            if not picked and len(tokens) == 1 and tokens[0][:1].isupper():
+                picked = tokens[0]
+            if picked and _is_plausible_structured_attr(picked, field="city"):
+                found["city"] = picked
                 break
-    # Title, Org line: "Founder, Acme" (one line; never name or "City, QC").
-    for line in text.splitlines():
-        line_stripped = line.strip()
-        if not line_stripped:
-            continue
+
+    if source not in {"gmail"}:
+        return found
+
+    # Signature block: last non-empty lines only (never the reply body).
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    signature_lines = lines[-8:] if len(lines) > 8 else lines
+    for line_stripped in reversed(signature_lines):
         if any(pattern.search(line_stripped) for pattern in _CITY_PATTERNS):
             continue
         for pattern in _TITLE_PATTERNS:
@@ -390,12 +474,16 @@ def extract_signature_attributes(text: str) -> dict[str, str]:
             org = _normalize_attr_value(match.group(2))
             if org.upper() in _REGION_CODES:
                 continue
+            if not _is_plausible_structured_attr(title, field="title"):
+                continue
+            if not _is_plausible_structured_attr(org, field="org"):
+                continue
             if title and "\n" not in title and not found.get("title"):
                 found["title"] = title
             if org and "\n" not in org and not found.get("org"):
                 found["org"] = org
             break
-        if found.get("title"):
+        if found.get("title") and found.get("org"):
             break
     return found
 
@@ -617,12 +705,11 @@ class IngestPipelineService:
                 )
             )
 
-        # Contact card attributes
+        # Contact card attributes — dated well before recent messages so a
+        # newer gmail signature / move announcement wins (stale-card note).
         for contact in person.contacts:
             source_ref = f"contact:{contact.contact_id}"
-            # Contact rows have no timestamp — use sample/live "now" minus a small epsilon for stability,
-            # but prefer interaction-derived times when available. Use first_seen from interactions later.
-            contact_ts = _fmt(now - timedelta(days=60))
+            contact_ts = _fmt(now - timedelta(days=365))
             if contact.org:
                 observe("org", contact.org, contact_ts, source_ref)
             if contact.title:
@@ -644,7 +731,7 @@ class IngestPipelineService:
         related_interactions.sort(key=lambda r: r.ts_utc)
 
         for row in related_interactions:
-            extracted = extract_signature_attributes(row.text)
+            extracted = extract_signature_attributes(row.text, source=row.source)
             for field_name, value in extracted.items():
                 observe(field_name, value, row.ts_utc, row.source_ref)
 

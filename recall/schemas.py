@@ -11,6 +11,7 @@ EvidenceSource = Literal[
     "gmail",
     "imessage",
     "whatsapp",
+    "messenger",
     "calendar",
     "web",
     "memory",
@@ -54,6 +55,9 @@ class Intent(BaseModel):
     when: str | None = None
     action_request: str | None = None
     meal_type: str | None = None
+    question_field: Literal[
+        "location", "employer", "phone", "replied", "owe"
+    ] | None = None
     sources_plan: list[str] = Field(default_factory=lambda: list(DEFAULT_SOURCES_PLAN))
     confidence: float
 

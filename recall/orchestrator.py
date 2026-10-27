@@ -36,7 +36,7 @@ from recall.engines.hmem.retrieval import MemoryRetrievalService
 from recall.engines.hmem.store import MemoryStoreService, hmem_db_path
 from recall.engines.world.context_builder import ContextBuilderService
 from recall.engines.world.identity_service import IdentityService
-from recall.engines.world.ingest import IngestPipelineService
+from recall.engines.world.ingest import INGEST_VERSION, IngestPipelineService
 from recall.engines.world.store import (
     WorldStore,
     source_tables_fingerprint,
@@ -162,10 +162,16 @@ def build_deps(
         source_tables_fingerprint(settings.sample_data_dir) if settings.sample_mode else None
     )
     stored_fp = world_store.get_meta("source_fingerprint")
+    stored_ingest = world_store.get_meta("ingest_version")
     empty = world_store.count_entities() == 0
     fingerprint_mismatch = bool(expected_fp) and stored_fp != expected_fp
-    if empty or fingerprint_mismatch:
-        reason = "empty" if empty else "fingerprint_mismatch"
+    ingest_mismatch = stored_ingest != INGEST_VERSION
+    if empty or fingerprint_mismatch or ingest_mismatch:
+        reason = (
+            "empty"
+            if empty
+            else ("fingerprint_mismatch" if fingerprint_mismatch else "ingest_version")
+        )
         tracer.event(
             "orchestrator",
             "world_reingest",
@@ -173,10 +179,12 @@ def build_deps(
                 "reason": reason,
                 "fingerprint": expected_fp,
                 "prior_fingerprint": stored_fp,
+                "ingest_version": INGEST_VERSION,
+                "prior_ingest_version": stored_ingest,
                 "summary": f"world reingest ({reason})",
             },
         )
-        if fingerprint_mismatch and not empty:
+        if (fingerprint_mismatch or ingest_mismatch) and not empty:
             world_store.close()
             db_path.unlink(missing_ok=True)
             for suffix in ("-wal", "-shm"):
@@ -185,6 +193,7 @@ def build_deps(
         IngestPipelineService(store=world_store, settings=settings, tracer=tracer).run(layer)
         if expected_fp:
             world_store.set_meta("source_fingerprint", expected_fp)
+        world_store.set_meta("ingest_version", INGEST_VERSION)
 
     world = ContextBuilderService(
         store=world_store, settings=settings, query_layer=layer, tracer=tracer
@@ -442,8 +451,28 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
 
     while _last_verdict(state).overall == "revise" and state.round < MAX_CRITIC_ROUNDS:
         prev_verdict = _last_verdict(state)
+        prior_brief = state.drafts[-1] if state.drafts else None
         state.round += 1
         state = await writer.run(state, deps)
+        new_brief = state.drafts[-1] if state.drafts else None
+        if (
+            prior_brief is not None
+            and new_brief is not None
+            and prior_brief.model_dump() == new_brief.model_dump()
+        ):
+            # Drop the duplicate draft; stop rather than a fake revision round.
+            state.drafts.pop()
+            state.round -= 1
+            deps.tracer.event(
+                "orchestrator",
+                "no_change",
+                {
+                    "summary": "writer round produced no change; stopping revision",
+                    "round": state.round,
+                    "missing": list(prev_verdict.missing),
+                },
+            )
+            break
         state = await critic.run(state, deps)
         deps.tracer.event(
             "orchestrator",
@@ -453,6 +482,9 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
                 "round": state.round,
             },
         )
+
+    # If we stopped after a revise with missing evidence still uncited, leave
+    # the last non-identical draft; status stays done with best effort.
 
     brief = sanitize_brief_job_changes(
         _apply_drops(state.drafts[-1], _last_verdict(state)),
@@ -1002,6 +1034,7 @@ async def _retrieve(state: RunState, deps: Deps) -> RunState:
     state.evidence = evidence
     state.context["evidence_source_refs"] = source_map
     state.context["retrieve_caveats"] = caveats
+    state.context["person_context"] = person_ctx
     if tentative:
         state.context["tentative_identity_evidence"] = True
     state.memories = list(mem_list)
@@ -1094,12 +1127,26 @@ def _build_evidence_pack(
             has_tentative = True
         if kind == "open_loop":
             tags.append("open_loop")
+            if item.get("loop_kind") == "promise":
+                tags.append("promise")
             text = item.get("text") or item.get("subject") or "open loop"
+            prior = str(item.get("prior_ask") or "").strip()
+            if item.get("loop_kind") == "promise" and prior:
+                text = f"Promise: {text} (re: {prior})"
             src = item.get("source") or "gmail"
-            if src not in {"gmail", "imessage", "whatsapp", "calendar", "web", "memory", "linkedin"}:
+            if src not in {
+                "gmail",
+                "imessage",
+                "whatsapp",
+                "messenger",
+                "calendar",
+                "web",
+                "memory",
+                "linkedin",
+            }:
                 src = "gmail"
             _add_e(
-                source=src,
+                source=src,  # type: ignore[arg-type]
                 source_ref=str(item.get("source_ref") or item.get("thread_id") or ""),
                 ts=_ts(item.get("ts_utc")),
                 text=str(text),
@@ -1107,11 +1154,20 @@ def _build_evidence_pack(
             )
         elif kind == "interaction":
             src = item.get("source") or "gmail"
-            if src not in {"gmail", "imessage", "whatsapp", "calendar", "web", "memory", "linkedin"}:
+            if src not in {
+                "gmail",
+                "imessage",
+                "whatsapp",
+                "messenger",
+                "calendar",
+                "web",
+                "memory",
+                "linkedin",
+            }:
                 src = "gmail"
             blob = item.get("text") or item.get("subject") or ""
             _add_e(
-                source=src,
+                source=src,  # type: ignore[arg-type]
                 source_ref=str(item.get("source_ref") or item.get("interaction_id") or ""),
                 ts=_ts(item.get("ts_utc")),
                 text=str(blob),
@@ -1121,13 +1177,16 @@ def _build_evidence_pack(
             title = item.get("title") or "event"
             when = item.get("start_utc") or ""
             loc = item.get("location") or ""
-            text = f"{title} at {when}" + (f" ({loc})" if loc else "")
+            text = f"{title}" + (f" ({loc})" if loc else "")
+            cal_tags = list(tags)
+            if kind == "upcoming_event":
+                cal_tags.append("upcoming")
             _add_e(
                 source="calendar",
                 source_ref=str(item.get("source_ref") or item.get("event_id") or ""),
                 ts=_ts(str(when) if when else None),
                 text=text,
-                tags=tags,
+                tags=cal_tags,
             )
         elif kind == "conflict":
             values = item.get("values") or []
