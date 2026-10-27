@@ -42,9 +42,9 @@ Paste-ready notes for HackOS. Every LLM call still goes through `recall/llm/gene
 
 ## NVIDIA
 
-**What it does in Recall.** Nemotron 3 Ultra / Super (main vs fast) via `ROLE_MODELS`; Nemotron embeddings for H-MEM; Parakeet ASR over Riva NVCF for voice. Sample mode uses recorded fixtures then offline rules when keys are absent.
+**What it does in Recall.** Nemotron 3 Ultra / Lightning (main vs fast) via `ROLE_MODELS`; Nemotron embeddings for H-MEM; Parakeet ASR over Riva NVCF and Magpie TTS (`recall/voice/magpie.py`) for speaking. Sample mode uses recorded fixtures then offline rules when keys are absent.
 
-**Exact files.** `recall/llm/generator.py`, `recall/config.py` (`ROLE_MODELS`, model slugs), `recall/voice/stt.py`, `data/cache/llm/`.
+**Exact files.** `recall/llm/generator.py`, `recall/config.py` (`ROLE_MODELS`, model slugs), `recall/voice/stt.py`, `recall/voice/magpie.py`, `data/cache/llm/`.
 
 **How a judge verifies.** `uv run python -m recall llm-test` with keys; without keys, `make demo` / `make examples` still produce briefs via cache → offline rules. Voice: `uv run python -m recall voice --check`.
 
