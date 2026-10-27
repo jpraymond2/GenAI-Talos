@@ -109,6 +109,18 @@ Matches [metadata.json](metadata.json):
 - **Sample mode:** synthetic CSVs only (`data/sample/`). Safe to commit.
 - **Live connectors:** Gmail / Calendar / WhatsApp / iMessage write under `data/live/` (gitignored). Never commit live exports or secrets.
 
+## Testing with the synthetic world
+
+[`data/synthetic/`](data/synthetic/) is a larger fictional test world (messy same-name people, changed handles, open loops) in each app’s raw export format, converted through the real connectors into Recall tables, with an answer key for grading.
+
+```bash
+uv run python scripts/synthetic/make_synthetic.py      # raw/ + ground_truth/
+uv run python scripts/synthetic/raw_to_tables.py       # tables/ + ingest_report.md
+SAMPLE_DATA_DIR=data/synthetic/tables uv run python -m recall ask "I'm meeting Omar" --sample
+```
+
+Identity merge quality report: [`data/synthetic/identity_report.md`](data/synthetic/identity_report.md).
+
 ## Phone (iPhone + AirPods)
 
 Serve on the Windows PC (bound to `127.0.0.1:8000`), then expose via Tailscale and use Siri or the home-screen web app.
