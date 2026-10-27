@@ -51,8 +51,7 @@ def _safe_token(token: str) -> bool:
 
 
 def main() -> int:
-    # Exclude this scanner's own history — it documents the Zetaris1@ pattern
-    # and would otherwise false-positive on itself.
+    # Exclude this scanner from the blob so its own needle string is not a hit.
     proc = subprocess.run(
         [
             "git",
@@ -61,7 +60,7 @@ def main() -> int:
             "--all",
             "--",
             ".",
-            ":(exclude)scripts/secret_scan.py",
+            ":!scripts/secret_scan.py",
         ],
         cwd=ROOT,
         capture_output=True,

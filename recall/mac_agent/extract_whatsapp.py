@@ -108,7 +108,8 @@ def extract_whatsapp(
         is_group_jid = jid.endswith("@g.us")
         session_pk = int(row["session_pk"] or 0)
         n_members = member_counts.get(session_pk, 0)
-        if is_group_jid and n_members > max_group_size:
+        # Unknown/0 roster counts as over the limit — skip large/opaque groups.
+        if is_group_jid and (n_members <= 0 or n_members > max_group_size):
             skipped_large += 1
             continue
         # Unknown member count but clearly a huge LID-style group id — treat as group;

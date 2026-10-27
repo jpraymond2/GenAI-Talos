@@ -226,6 +226,11 @@ logs/**/*
 !logs/.gitkeep
 *.db
 !data/synthetic/raw/imessage/chat.db
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+ChatStorage.sqlite
+**/dry-run-preview.json
 data/live/
 data/identity_scores/**
 !data/identity_scores/.gitkeep

@@ -150,6 +150,9 @@ def api_status() -> dict[str, Any]:
     }
 
 
+_MAX_MAC_INGEST_BYTES = 20 * 1024 * 1024
+
+
 @app.post("/api/ingest/mac")
 async def api_ingest_mac(
     request: Request,
@@ -158,6 +161,7 @@ async def api_ingest_mac(
     """Accept gzipped JSON from the Mac agent; upsert Postgres raw_* tables.
 
     Auth is ``DEVICE_UPLOAD_TOKEN`` (not the dashboard bearer).
+    Bodies over 20 MiB (compressed or decompressed) are rejected with 413.
     """
     settings = get_settings()
     expected = settings.device_upload_token.get_secret_value().strip()
@@ -169,13 +173,25 @@ async def api_ingest_mac(
     if got != expected:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+    content_length = request.headers.get("content-length")
+    if content_length is not None:
+        try:
+            if int(content_length) > _MAX_MAC_INGEST_BYTES:
+                raise HTTPException(status_code=413, detail="Request body too large (max 20 MB)")
+        except ValueError:
+            pass
+
     raw = await request.body()
+    if len(raw) > _MAX_MAC_INGEST_BYTES:
+        raise HTTPException(status_code=413, detail="Request body too large (max 20 MB)")
     encoding = (request.headers.get("content-encoding") or "").lower()
     if encoding == "gzip":
         try:
             raw = gzip.decompress(raw)
         except OSError as exc:
             raise HTTPException(status_code=400, detail="Invalid gzip body") from exc
+        if len(raw) > _MAX_MAC_INGEST_BYTES:
+            raise HTTPException(status_code=413, detail="Request body too large (max 20 MB)")
     try:
         payload = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:

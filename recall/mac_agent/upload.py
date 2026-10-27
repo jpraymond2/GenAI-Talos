@@ -9,7 +9,7 @@ from typing import Any
 
 import httpx
 
-from recall.mac_agent.config import AgentConfig
+from recall.mac_agent.config import AgentConfig, ConfigError
 
 
 class UploadError(RuntimeError):
@@ -24,7 +24,10 @@ def upload_batches(
     timeout: float = 60.0,
 ) -> dict[str, Any]:
     """Split large message lists into ≤batch_size batches; return last server JSON."""
-    url = cfg.normalized_server_url()
+    try:
+        url = cfg.require_server_url()
+    except ConfigError as exc:
+        raise UploadError(str(exc)) from exc
     if not url.startswith("https://"):
         raise UploadError(f"HTTPS only; got {url!r}")
     token = cfg.device_upload_token.strip()

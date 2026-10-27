@@ -21,9 +21,9 @@ def plist_path() -> Path:
 def install() -> Path:
     logs_dir().mkdir(parents=True, exist_ok=True)
     log_path = logs_dir() / "agent.log"
-    # Prefer `uv run` from the repo if we can find it; else venv python -m.
     repo = Path(__file__).resolve().parents[2]
-    python = agent_binary_path()
+    venv_python = repo / ".venv" / "bin" / "python"
+    python = venv_python if venv_python.is_file() else agent_binary_path()
     program = [
         str(python),
         "-m",
