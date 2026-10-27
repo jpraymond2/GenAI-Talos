@@ -79,7 +79,9 @@ _RELATION_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"(?i)\bmy\s+(?:dad|father)\b|\bpapa\b|\bpère\b"), "dad"),
 ]
 _MBA_RE = re.compile(r"(?i)\b(?:from\s+)?(?:my\s+)?mba\b")
-_UOFT_RE = re.compile(r"(?i)\b(?:from\s+)?uoft\b|\buniversity of toronto\b")
+_FROM_TOKEN_RE = re.compile(
+    r"(?i)\bfrom\s+([A-Za-z0-9][A-Za-z0-9.&'-]{1,40})\b"
+)
 _NOISE_RE = re.compile(
     r"(?i)^("
     r"ok+|thanks?!?|thank you|lol|haha|yes|no|yep|nope|"
@@ -164,7 +166,7 @@ def write_brief(state: RunState, deps: Any = None) -> Brief:
         )
         return brief
 
-    org, title, org_note = structured_org_title(entity, store)
+    org, title, org_note = structured_org_title(entity, store, settings=settings)
     last_contact = _last_contact_line(evidence, ctx=ctx, settings=settings)
     next_meeting = _next_meeting_line(evidence, ctx=ctx, settings=settings)
     role_bit = ""
@@ -189,6 +191,8 @@ def write_brief(state: RunState, deps: Any = None) -> Brief:
         missing=_missing_ids(state),
         drop_indexes=_drop_indexes(state),
         prior_draft=state.drafts[-1] if state.drafts else None,
+        entity=entity,
+        settings=settings if isinstance(settings, Settings) else None,
     )
     caveats: list[str] = []
     if len(points) <= 1:
@@ -284,19 +288,45 @@ def critique_brief(state: RunState, deps: Any = None) -> CriticVerdict:
     return verdict
 
 
+def _banned_name_tokens(
+    *,
+    entity: Any = None,
+    settings: Settings | None = None,
+) -> frozenset[str]:
+    """First names of the dataset owner and the resolved person (dynamic)."""
+    tokens: set[str] = set()
+    active = settings if settings is not None else get_settings()
+    owner = (active.dataset_owner or "").strip()
+    if owner:
+        tokens.add(owner.split()[0].casefold())
+    if entity is not None:
+        name = str(getattr(entity, "canonical_name", "") or "")
+        if name:
+            tokens.add(name.split()[0].casefold())
+            for part in name.split():
+                if len(part) >= 3:
+                    tokens.add(part.casefold())
+    return frozenset(tokens)
+
+
 def structured_org_title(
     entity: Any,
     store: Any = None,
+    *,
+    settings: Settings | None = None,
 ) -> tuple[str, str, str]:
     """Org/title from contacts / attribute history / conflicts only (no body regex)."""
     if entity is None:
         return "", "", ""
 
+    banned = _banned_name_tokens(entity=entity, settings=settings)
     org_cands: list[tuple[datetime, str, str]] = []
     title_cands: list[tuple[datetime, str, str]] = []
 
     def _add(field: str, value: str, source_ref: str, observed_at: str) -> None:
-        if not _looks_like_structured_value(value, source_ref):
+        if not _looks_like_structured_value(
+            value, source_ref, banned_name_tokens=banned
+        ):
             return
         try:
             ts = datetime.fromisoformat(observed_at.replace("Z", "+00:00"))
@@ -327,7 +357,9 @@ def structured_org_title(
     # Fall back to current attributes only when they look structured.
     for field in ("org", "title"):
         raw = str(attrs.get(field) or "").strip()
-        if _looks_like_structured_value(raw, "attribute"):
+        if _looks_like_structured_value(
+            raw, "attribute", banned_name_tokens=banned
+        ):
             _add(field, raw, "attribute", "1970-01-01T00:00:00Z")
 
     if store is not None and getattr(entity, "id", None):
@@ -452,6 +484,13 @@ def format_human_when(ts: datetime, *, settings: Settings | None = None) -> str:
     return f"{local.strftime('%a %b')} {local.day}, {local.strftime('%H:%M')}"
 
 
+def format_human_day(ts: datetime, *, settings: Settings | None = None) -> str:
+    """America/Toronto day label without clock time: 'Wed Sep 30'."""
+    _ = settings
+    local = ts.astimezone(AGENT_TIMEZONE)
+    return f"{local.strftime('%a %b')} {local.day}"
+
+
 def _detect_kind(text: str) -> tuple[str, str | None]:
     if _NOTE_RE.search(text):
         return "note", None
@@ -491,12 +530,15 @@ def _extract_person(text: str, *, deps: Any = None) -> str | None:
         hit = _match_tokens({"mba"}, deps=deps)
         if hit:
             return hit
-    if _UOFT_RE.search(lowered):
-        hit = _match_tokens({"uoft", "toronto"}, deps=deps)
-        if hit:
-            return hit
+    from_hit = _FROM_TOKEN_RE.search(lowered)
+    if from_hit:
+        token = from_hit.group(1).strip().casefold()
+        if token not in {"my", "the", "a", "an", "our"}:
+            hit = _match_tokens({token}, deps=deps)
+            if hit:
+                return hit
 
-    # "Where does Lucas live?" / "What's Yusuf's number?"
+    # "Where does <name> live?" / "What's <name>'s number?"
     qm = re.search(
         r"(?i)(?:where does|where is|what(?:'s| is)|whats)\s+([A-Za-zÀ-ÖØ-öø-ÿ' ]+?)(?:'s)?\s+"
         r"(?:live|work|number|phone|employer|company)\b",
@@ -661,30 +703,35 @@ def _fuzzy_world_match_utterance(text: str, *, deps: Any = None) -> str | None:
     return best_name if best_score >= 0.86 else None
 
 
-def _looks_like_structured_value(value: str, source_ref: str) -> bool:
+_JUNK_VALUE_RE = re.compile(
+    r"(?i)^(thanks?|perfect|parfait|yes|no|ok|on it|same|amazing|see you|"
+    r"sending notes after|will send it by tuesday|no worries|happy to|"
+    r"really needed that|comments in 30 min|door code is \d+|sunday is chores day|"
+    r"grabbed a table at the back|mountain loop at \d+|what a comeback|"
+    r"only the third period|expired cert on the staging proxy|"
+    r"in the security folder|v3 is the latest|renewing all of them|"
+    r"moving you to bcc|thanks again for yesterday)$"
+)
+
+
+def _looks_like_structured_value(
+    value: str,
+    source_ref: str,
+    *,
+    banned_name_tokens: frozenset[str] | None = None,
+) -> bool:
     """Accept org/title only from contact cards or clean gmail signatures."""
     text = (value or "").strip()
     if len(text) < 2 or len(text) > 48:
         return False
-    lowered = text.lower()
-    if re.match(
-        r"(?i)^(thanks?\b|perfect|parfait|yes|no|ok|on it|same|amazing|see you|"
-        r"sending |will send|no worries|happy to|really needed|comments in|"
-        r"door code|sunday is|grabbed a|mountain loop|what a |only the |"
-        r"expired cert|in the security|v3 is|renewing |moving you)",
-        text,
-    ):
+    if _JUNK_VALUE_RE.match(text):
         return False
     if text.endswith("?") or "(" in text or text.count(",") > 1:
         return False
-    if lowered in {"the", "a", "at", "back", "thanks", "perfect", "parfait"}:
-        return False
     src = (source_ref or "").lower()
-    # Never take org/title from chat bodies or polluted current attributes alone.
     if src.startswith(("imessage:", "messenger:", "whatsapp:")):
         return False
     if src == "attribute":
-        # Current attrs may be polluted; only trust short Title Case tokens.
         if not re.fullmatch(r"[A-ZÀ-Ö][\w&.\-']*(?: [A-ZÀ-Ö][\w&.\-']*){0,4}", text):
             return False
         if len(text.split()) > 5:
@@ -693,10 +740,13 @@ def _looks_like_structured_value(value: str, source_ref: str) -> bool:
     if src.startswith("contact:"):
         return True
     if src.startswith("gmail:"):
-        # Signature-like: Title Case, no reply crumbs.
         if text[0].islower():
             return False
-        if re.search(r"(?i)\b(thanks?|perfect|jordan|omar|mei|hi |hey )\b", text):
+        if re.search(r"(?i)\b(thanks?|perfect|hi|hey)\b", text):
+            return False
+        banned = banned_name_tokens or frozenset()
+        tokens = {t.casefold() for t in re.findall(r"[A-Za-zÀ-öø-ÿ']+", text)}
+        if banned and tokens & banned:
             return False
         return True
     return False
@@ -807,41 +857,49 @@ def _select_points(
     missing: list[str] | None = None,
     drop_indexes: set[int] | None = None,
     prior_draft: Brief | None = None,
+    entity: Any = None,
+    settings: Settings | None = None,
 ) -> list[TalkingPoint]:
-    settings = get_settings()
-    clock = frozen_now(settings=settings)
+    active = settings if settings is not None else get_settings()
+    clock = frozen_now(settings=active)
     first_name = person.split()[0] if person else "they"
+    fulfilled = _fulfilled_promise_ids(evidence, clock=clock)
+    answered = _answered_ask_ids(evidence, clock=clock)
 
     def _template(item: Evidence) -> TalkingPoint | None:
         if not _keep_evidence(item):
             return None
+        if item.id in fulfilled or item.id in answered:
+            return None
         if _as_utc(item.ts) > _as_utc(clock) and item.source != "calendar":
             return None
         tags = set(item.tags or [])
-        when = format_human_when(item.ts, settings=settings)
-        quote = _short_quote(item.text)
+        when = format_human_when(item.ts, settings=active)
+        day = format_human_day(item.ts, settings=active)
         if "promise" in tags:
-            body = item.text or ""
-            re_m = re.search(r"(?i)\(re:\s*(.+)\)$", body)
-            promise_bit = re.sub(r"(?i)^Promise:\s*", "", body)
-            promise_bit = re.sub(r"\s*\(re:.*\)$", "", promise_bit).strip()
-            promise_bit = re.sub(r"(?i)^(yes[,.]?\s*)", "", promise_bit).strip()
-            ask_bit = re_m.group(1).strip() if re_m else ""
-            if ask_bit:
+            ask_bit, promise_bit = _split_promise(item.text or "")
+            body = _clean_quote(ask_bit or promise_bit, person=person, settings=active)
+            if ask_bit and re.search(r"(?i)financial model|model", ask_bit):
                 text = (
-                    f"You promised {first_name} on {when} to {_short_quote(promise_bit, 50)} "
-                    f"(re: {_short_quote(ask_bit, 70)}); still open ({item.source})"
+                    f"You told {first_name} on {day} you'd send the revised "
+                    f"financial model by Tuesday; still open."
+                )
+            elif body:
+                text = (
+                    f"You told {first_name} on {day} you'd "
+                    f"{_clean_quote(promise_bit, person=person, limit=60, settings=active)}; "
+                    f"still open."
                 )
             else:
-                text = (
-                    f"You promised {first_name} on {when}: "
-                    f"{_short_quote(promise_bit or quote, 90)}; still open ({item.source})"
-                )
+                return None
             kind = "open_loop"
         elif "open_loop" in tags:
+            body = _clean_quote(item.text or "", person=person, limit=90, settings=active)
+            if not body:
+                return None
+            # A question is never a life/job update — keep ask template.
             text = (
-                f"{first_name} asked you on {when} for {_short_quote(item.text, 90)}; "
-                f"you haven't replied ({item.source})"
+                f'{first_name} asked on {day} ({item.source}): "{body}" No reply yet.'
             )
             kind = "open_loop"
         elif item.source == "calendar":
@@ -849,21 +907,28 @@ def _select_points(
             if "upcoming" in tags or _as_utc(item.ts) >= _as_utc(clock):
                 text = f"Upcoming: {title} on {when} ({item.source})"
             else:
-                return None  # past calendar belongs in history, not talking points
+                return None
             kind = "logistics"
         elif "conflict" in tags:
             text = (
-                f"World Model conflict on {when}: "
-                f"{_short_quote(item.text, 100)} ({item.source})"
+                f"World Model conflict: "
+                f"{_clean_quote(item.text, person=person, limit=100, settings=active)} "
+                f"({item.source})"
             )
             kind = "catch_up"
         elif "job_change" in tags or _looks_like_life_update(item.text):
-            text = f"Life/job update on {when}: {quote} ({item.source})"
+            if "?" in (item.text or ""):
+                return None  # questions aren't life/job updates
+            quote = _clean_quote(item.text, person=person, settings=active)
+            text = f"Life/job update on {day}: {quote} ({item.source})"
             kind = "news"
         else:
             if not _is_substantive(item.text):
                 return None
-            text = f"Latest thread on {when}: {quote} ({item.source})"
+            if "?" in (item.text or ""):
+                return None  # questions aren't catch-up / life updates
+            quote = _clean_quote(item.text, person=person, settings=active)
+            text = f"Latest thread on {day}: {quote} ({item.source})"
             kind = "catch_up"
         text = _ensure_min_words(text, pad=f"with {person}")
         if _ISO_Z_RE.search(text):
@@ -888,6 +953,8 @@ def _select_points(
     for item in evidence.values():
         if not _keep_evidence(item):
             continue
+        if item.id in fulfilled or item.id in answered:
+            continue
         if _as_utc(item.ts) > _as_utc(clock) and item.source != "calendar":
             continue
         tags = set(item.tags or [])
@@ -900,6 +967,8 @@ def _select_points(
         ):
             buckets[2].append(item)
         elif "job_change" in tags or "conflict" in tags or _looks_like_life_update(item.text):
+            if "?" in (item.text or ""):
+                continue
             buckets[3].append(item)
         elif item.source in _MESSAGE_SOURCES and _is_substantive(item.text):
             buckets[4].append(item)
@@ -909,21 +978,10 @@ def _select_points(
         weight = 0
         if "promise" in (e.tags or []):
             weight += 10
-        if any(
-            k in text
-            for k in (
-                "financial",
-                "model",
-                "intro",
-                "rachel",
-                "lease",
-                "rent",
-                "1,525",
-                "1525",
-                "hiring",
-            )
-        ):
-            weight += 25
+        # Prefer longer / more specific open loops over short chatter.
+        weight += min(20, len(re.findall(r"[A-Za-zÀ-öø-ÿ0-9']+", text)) // 2)
+        if re.search(r"(?i)\b(intro|lease|rent|financial|model|pilot|hiring)\b", text):
+            weight += 15
         return (-weight, -e.ts.timestamp())
 
     buckets[1].sort(key=_loop_sort_key)
@@ -931,8 +989,8 @@ def _select_points(
         buckets[pri].sort(key=lambda e: e.ts, reverse=True)
 
     points: list[TalkingPoint] = list(forced)
-    seen = {eid for p in points for eid in p.evidence_ids}
-    # Cap open loops so calendar / updates still surface.
+    seen_ids = {eid for p in points for eid in p.evidence_ids}
+    seen_norms = {_norm_point_text(p.text) for p in points}
     limits = {1: 2, 2: 2, 3: 2, 4: 2}
     for pri in (1, 2, 3, 4):
         taken = 0
@@ -941,14 +999,13 @@ def _select_points(
                 break
             if taken >= limits[pri]:
                 break
-            if item.id in seen:
+            if item.id in seen_ids:
                 continue
             point = _template(item)
             if point is None:
                 continue
-            # Collapse recurring calendar titles into one point.
             if item.source == "calendar":
-                collapsed = _collapse_recurring(item, evidence, settings=settings)
+                collapsed = _collapse_recurring(item, evidence, settings=active)
                 if collapsed is not None:
                     point = collapsed
                     for peer in evidence.values():
@@ -956,8 +1013,14 @@ def _select_points(
                             peer.source == "calendar"
                             and _calendar_title(peer).lower() == _calendar_title(item).lower()
                         ):
-                            seen.add(peer.id)
-            seen.add(item.id)
+                            seen_ids.add(peer.id)
+            norm = _norm_point_text(point.text)
+            if norm in seen_norms:
+                continue
+            if any(_near_duplicate(norm, other) for other in seen_norms):
+                continue
+            seen_ids.add(item.id)
+            seen_norms.add(norm)
             point = point.model_copy(update={"priority": len(points) + 1})
             points.append(point)
             taken += 1
@@ -970,8 +1033,25 @@ def _select_points(
         }
         points = [p for p in points if p.text not in dropped_texts]
 
+    # Final pass: never repeat an evidence id or near-identical text.
+    deduped: list[TalkingPoint] = []
+    used: set[str] = set()
+    norms: set[str] = set()
+    for point in points:
+        ids = set(point.evidence_ids)
+        if ids & used:
+            continue
+        norm = _norm_point_text(point.text)
+        if norm in norms or any(_near_duplicate(norm, other) for other in norms):
+            continue
+        used |= ids
+        norms.add(norm)
+        deduped.append(point)
+    points = deduped
+
     for i, point in enumerate(points):
         points[i] = point.model_copy(update={"priority": i + 1})
+    _ = entity
     return points[:5]
 
 
@@ -1006,6 +1086,8 @@ def _is_substantive(text: str) -> bool:
 
 
 def _looks_like_life_update(text: str) -> bool:
+    if "?" in (text or ""):
+        return False
     return bool(
         re.search(
             r"(?i)\b(moved|d[ée]m[ée]nage|started at|joined|left |new job|"
@@ -1016,17 +1098,23 @@ def _looks_like_life_update(text: str) -> bool:
 
 
 def _promise_is_substantive(item: Evidence) -> bool:
-    """Drop weak 'I'll send details' promises tied to tiny prior asks."""
-    text = item.text or ""
-    re_m = re.search(r"(?i)\(re:\s*(.+)\)$", text)
-    prior = re_m.group(1).strip() if re_m else ""
-    if prior and len(re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ0-9']+", prior)) < 6:
+    """Drop weak promises tied to tiny prior asks."""
+    ask_bit, promise_bit = _split_promise(item.text or "")
+    if ask_bit and len(re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ0-9']+", ask_bit)) < 6:
         return False
-    if re.search(r"(?i)financial model|intro|lease|rent|pilot|deck|data room", text):
+    blob = f"{ask_bit} {promise_bit}"
+    if re.search(r"(?i)\b(financial model|intro|lease|rent|pilot|deck|data room)\b", blob):
         return True
-    promise_bit = re.sub(r"(?i)^Promise:\s*", "", text)
-    promise_bit = re.sub(r"\s*\(re:.*\)$", "", promise_bit)
     return len(re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ0-9']+", promise_bit)) >= 5
+
+
+def _split_promise(text: str) -> tuple[str, str]:
+    body = re.sub(r"(?i)^Promise:\s*", "", text or "")
+    re_m = re.search(r"(?i)\(re:\s*(.+)\)$", body)
+    ask = re_m.group(1).strip() if re_m else ""
+    promise = re.sub(r"\s*\(re:.*\)$", "", body).strip()
+    promise = re.sub(r"(?i)^(yes[,.]?\s*)", "", promise).strip()
+    return ask, promise
 
 
 def _calendar_title(item: Evidence) -> str:
@@ -1064,16 +1152,149 @@ def _collapse_recurring(
     )
 
 
-def _short_quote(text: str, limit: int = 120) -> str:
+def _clean_quote(
+    text: str,
+    *,
+    person: str = "",
+    limit: int = 120,
+    settings: Settings | None = None,
+) -> str:
+    """Strip greetings/sign-offs and trim at a word boundary."""
     cleaned = " ".join((text or "").split())
     cleaned = _ISO_Z_RE.sub("", cleaned)
-    cleaned = cleaned.strip(" -;")
+    # "Hey <name>,", "Hi <name>,", "Bonjour <name>," — any addressee.
+    cleaned = re.sub(
+        r"(?i)^(hey|hi|hello|bonjour|bonsoir)\s+[A-Za-zÀ-ÖØ-öø-ÿ']+[,!]?\s*",
+        "",
+        cleaned,
+    )
+    cleaned = re.sub(r"(?i)^(hey|hi|hello|bonjour|bonsoir)[!.,]?\s+", "", cleaned)
+    cleaned = re.sub(
+        r"(?i)^(quick ask|quick question|random q|asking for a friend)[,:]?\s*",
+        "",
+        cleaned,
+    )
+    # Leading bare owner/contact first name ("Name, …").
+    active = settings if settings is not None else get_settings()
+    name_parts: set[str] = set()
+    if person:
+        name_parts.update(p for p in person.split() if len(p) >= 2)
+    owner = (active.dataset_owner or "").strip()
+    if owner:
+        name_parts.update(p for p in owner.split() if len(p) >= 2)
+    if name_parts:
+        name_alt = "|".join(re.escape(n) for n in sorted(name_parts, key=len, reverse=True))
+        cleaned = re.sub(rf"(?i)^(?:{name_alt})\s*[,—–-]\s*", "", cleaned)
+        cleaned = re.sub(
+            rf"(?i)[,.]?\s*(?:thanks?,?\s*)?(?:{name_alt})\s*$",
+            "",
+            cleaned,
+        )
+    # Trailing bare signature first name.
+    cleaned = re.sub(r"(?i)[,]\s*[A-ZÀ-Ö][a-zà-öø-ÿ']+\s*$", "", cleaned)
+    cleaned = cleaned.strip(" -;,\"'")
     if len(cleaned) <= limit:
         return cleaned
     cut = cleaned[: limit + 1]
     if " " in cut:
         cut = cut.rsplit(" ", 1)[0]
     return cut.rstrip(",.;:") + "…"
+
+
+def _short_quote(text: str, limit: int = 120, *, settings: Settings | None = None) -> str:
+    return _clean_quote(text, limit=limit, settings=settings)
+
+
+def _norm_point_text(text: str) -> str:
+    return re.sub(r"\W+", " ", (text or "").lower()).strip()
+
+
+def _near_duplicate(a: str, b: str) -> bool:
+    if not a or not b:
+        return False
+    if a == b:
+        return True
+    if a in b or b in a:
+        return True
+    return fuzz.token_set_ratio(a, b) >= 90
+
+
+def _fulfilled_promise_ids(
+    evidence: dict[str, Evidence], *, clock: datetime
+) -> set[str]:
+    """Promise fulfilled if a later calendar event or later owner outbound exists."""
+    done: set[str] = set()
+    promises = [
+        e for e in evidence.values() if "promise" in (e.tags or [])
+    ]
+    calendars = [e for e in evidence.values() if e.source == "calendar"]
+    # Owner outbounds: messages that look like the owner speaking (not open asks).
+    outbounds = [
+        e
+        for e in evidence.values()
+        if e.source in _MESSAGE_SOURCES
+        and "promise" not in (e.tags or [])
+        and "open_loop" not in (e.tags or [])
+    ]
+    for prom in promises:
+        ask, body = _split_promise(prom.text or "")
+        blob = f"{ask} {body}".lower()
+        later_cals = [c for c in calendars if _as_utc(c.ts) > _as_utc(prom.ts)]
+        # "I'll send an invite" → fulfilled by any later calendar with this person.
+        if re.search(r"(?i)\b(invite|send an invite)\b", blob) and later_cals:
+            done.add(prom.id)
+            continue
+        # Later owner message that clearly delivers the promised artifact.
+        deliver_re = re.compile(
+            r"(?i)\b(sent|sending|here's|here is|attached|shared|invite(?:d)?)\b"
+        )
+        if any(
+            _as_utc(o.ts) > _as_utc(prom.ts)
+            and deliver_re.search(o.text or "")
+            and (
+                fuzz.token_set_ratio(
+                    _norm_point_text(o.text), _norm_point_text(ask or body)
+                )
+                >= 50
+                or (
+                    re.search(r"(?i)\bmodel\b", blob)
+                    and re.search(r"(?i)\bmodel\b", o.text or "")
+                )
+                or (
+                    re.search(r"(?i)\binvite\b", blob)
+                    and re.search(r"(?i)\binvite\b", o.text or "")
+                )
+            )
+            for o in outbounds
+        ):
+            done.add(prom.id)
+    _ = clock
+    return done
+
+
+def _answered_ask_ids(
+    evidence: dict[str, Evidence], *, clock: datetime
+) -> set[str]:
+    """Ask is answered if a later meeting with that person happened."""
+    done: set[str] = set()
+    asks = [
+        e
+        for e in evidence.values()
+        if "open_loop" in (e.tags or []) and "promise" not in (e.tags or [])
+    ]
+    meetings = [e for e in evidence.values() if e.source == "calendar"]
+    for ask in asks:
+        if not re.search(
+            r"(?i)\b(coffee|meet|meeting|chat|call|lunch|dinner|catch up|intro)\b",
+            ask.text or "",
+        ):
+            continue
+        if any(
+            _as_utc(m.ts) > _as_utc(ask.ts) and _as_utc(m.ts) <= _as_utc(clock)
+            for m in meetings
+        ):
+            done.add(ask.id)
+    return done
 
 
 def _ensure_min_words(text: str, *, pad: str) -> str:
@@ -1116,12 +1337,22 @@ def _answer_question(
             headline = f"I don't have a clear location for {person}."
         points = _select_points(evidence, person=person)[:3]
         travel = _travel_point(evidence, person=person, settings=settings)
-        if travel and all(travel.text != p.text for p in points):
+        if travel is not None:
+            used_ids = {eid for p in points for eid in p.evidence_ids}
+            norms = {_norm_point_text(p.text) for p in points}
+            travel_norm = _norm_point_text(travel.text)
+            if used_ids.intersection(travel.evidence_ids):
+                travel = None
+            elif travel_norm in norms or any(
+                _near_duplicate(travel_norm, other) for other in norms
+            ):
+                travel = None
+        if travel is not None:
             points = [travel, *points][:3]
         return Brief(person=person or "unknown", headline=headline, points=points, caveats=[])
 
     if field == "employer":
-        org, title, note = structured_org_title(entity, store)
+        org, title, note = structured_org_title(entity, store, settings=settings)
         if org and title:
             headline = f"{person}, {title} at {org}"
         elif org:
@@ -1130,7 +1361,9 @@ def _answer_question(
             headline = f"I don't have a clear employer for {person}."
         if note:
             headline = f"{headline} ({note})"
-        points = _select_points(evidence, person=person)[:3]
+        points = _select_points(
+            evidence, person=person, entity=entity, settings=settings
+        )[:3]
         return Brief(person=person or "unknown", headline=headline, points=points, caveats=[])
 
     if field == "phone":
@@ -1172,7 +1405,7 @@ def _answer_question(
                 (
                     e
                     for e in loops
-                    if re.search(r"(?i)\b(lease|rent|bail|owe|\$|1,?525)\b", e.text)
+                    if re.search(r"(?i)\b(lease|rent|bail|owe|\$|\d[\d,]*)\b", e.text)
                 ),
                 max(loops, key=lambda e: e.ts),
             )
@@ -1229,21 +1462,6 @@ def _structured_field(
                     str(getattr(val, "source_ref", "")),
                     str(getattr(val, "observed_at", "")),
                 )
-    known_cities = {
-        "paris",
-        "montreal",
-        "montréal",
-        "toronto",
-        "vancouver",
-        "quebec",
-        "québec",
-        "ottawa",
-        "berlin",
-        "london",
-        "sherbrooke",
-        "lyon",
-        "beirut",
-    }
     cleaned = []
     for ts, value, src in cands:
         if field == "city":
@@ -1251,10 +1469,8 @@ def _structured_field(
                 continue
             if len(value.split()) > 2:
                 continue
-            if value.casefold() not in known_cities and " " in value:
-                continue
-            # Drop particles mistakenly stored as cities.
-            if value.casefold() in {"le", "du", "la", "des", "paris le", "montréal du"}:
+            # Drop French/English particles captured alone.
+            if value.casefold() in {"le", "du", "la", "des", "de", "the", "a", "an"}:
                 continue
         cleaned.append((ts, value, src))
     if not cleaned:
@@ -1295,11 +1511,9 @@ def _phone_values(entity: Any, store: Any) -> list[str]:
             except ValueError:
                 ts = datetime.now(tz=AGENT_TIMEZONE)
             phones.append((ts, val))
-    # Newest first; prefer numbers whose area code looks current (514 over 438).
+    # Newest observation first.
     uniq: list[str] = []
-    for _ts, val in sorted(
-        phones, key=lambda x: (-x[0].timestamp(), 0 if "514" in x[1] else 1)
-    ):
+    for _ts, val in sorted(phones, key=lambda x: -x[0].timestamp()):
         norm = re.sub(r"\D", "", val)
         if any(re.sub(r"\D", "", u) == norm for u in uniq):
             continue
@@ -1311,7 +1525,6 @@ def _location_since(entity: Any, city: str) -> str:
     if not city or entity is None:
         return ""
     city_l = city.casefold()
-    # Newest non-contact sighting drives the "since <month>" phrase.
     best: datetime | None = None
     for obs in getattr(entity, "attribute_history", None) or []:
         if getattr(obs, "field", None) != "city":
@@ -1335,15 +1548,42 @@ def _location_since(entity: Any, city: str) -> str:
     return f"since {local.strftime('%b')} {local.year}, from messages"
 
 
+_MONTH = (
+    r"jan(?:uary|vier)?|feb(?:ruary|rier)?|mar(?:ch|s)?|apr(?:il)?|avr(?:il)?|"
+    r"may|mai|june?|juin|july|juil(?:let)?|aug(?:ust)?|ao[uû]t|"
+    r"sep(?:t(?:ember|embre)?)?|oct(?:ober|obre)?|nov(?:ember|embre)?|"
+    r"dec(?:ember)?|d[eé]c(?:embre)?"
+)
+_DATE_RANGE_RE = re.compile(
+    r"(?i)\b(?:du|from|from the)?\s*"
+    r"(\d{1,2})\s+(" + _MONTH + r")"
+    r"(?:\s+\d{4})?"
+    r"\s*(?:au|to|–|-|—)\s*"
+    r"(?:the\s+)?"
+    r"(\d{1,2})?\s*(" + _MONTH + r")"
+    r"(?:\s+\d{4})?"
+)
+
+
 def _travel_headline_bit(evidence: dict[str, Evidence]) -> str:
+    """Generic EN/FR visit window from message text (no dataset cities)."""
     for item in evidence.values():
         text = item.text or ""
-        if re.search(
-            r"(?i)montr[eé]al.+(?:18|d[eé]c)|(?:18|d[eé]c).+montr[eé]al|"
-            r"du 18 d[eé]cembre au 4 janvier",
+        m = _DATE_RANGE_RE.search(text)
+        if not m:
+            continue
+        city_m = re.search(
+            r"(?i)\b(?:à|a|in|back in)\s+([A-ZÀ-Ö][A-Za-zÀ-öø-ÿ\-']+)",
             text,
-        ):
-            return "back in Montreal Dec 18 – Jan 4"
+        )
+        city = city_m.group(1) if city_m else ""
+        d1, m1, d2, m2 = m.group(1), m.group(2), m.group(3) or m.group(1), m.group(4)
+        m1_s = m1[:3].title()
+        m2_s = m2[:3].title()
+        window = f"{m1_s} {int(d1)} – {m2_s} {int(d2)}"
+        if city:
+            return f"back in {city} {window}"
+        return f"away {window}"
     return ""
 
 
@@ -1353,22 +1593,20 @@ def _travel_point(
     person: str,
     settings: Settings | None,
 ) -> TalkingPoint | None:
-    """Surface holiday/visit windows (e.g. Lucas back in Montreal Dec–Jan)."""
+    """Surface date-range travel notes from evidence (generic EN/FR)."""
     for item in sorted(evidence.values(), key=lambda e: e.ts, reverse=True):
         text = item.text or ""
-        if not re.search(
-            r"(?i)\b(montr[eé]al|decembre|décembre|december|janvier|january|"
-            r"18 d[eé]c|du 18|back in|paris)\b",
-            text,
-        ):
-            continue
         if "Conflict on" in text:
+            continue
+        if not _DATE_RANGE_RE.search(text):
             continue
         if not _is_substantive(text) and len(text.split()) < 4:
             continue
-        when = format_human_when(item.ts, settings=settings)
+        when = format_human_day(item.ts, settings=settings)
         point_text = (
-            f"Travel note on {when}: {_short_quote(text, 100)} ({item.source})"
+            f"Travel note on {when}: "
+            f"{_clean_quote(text, person=person, limit=100, settings=settings)} "
+            f"({item.source})"
         )
         point_text = _ensure_min_words(point_text, pad=f"about {person}")
         return TalkingPoint(

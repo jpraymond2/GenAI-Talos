@@ -162,7 +162,9 @@ def test_critic_revise_once_triggers_exactly_one_rewrite(tmp_path: Path) -> None
 
 
 def test_critic_loop_never_exceeds_two_rounds(tmp_path: Path) -> None:
+    """Stub critic always revises with fresh missing evidence; cap at 2 rounds."""
     critic_calls = {"n": 0}
+    writer_calls = {"n": 0}
 
     async def handler(prompt: str, system: str | None, schema: type[BaseModel], **kwargs: Any):
         if schema is Intent:
@@ -175,16 +177,32 @@ def test_critic_loop_never_exceeds_two_rounds(tmp_path: Path) -> None:
                 confidence=0.9,
             )
         if schema is Brief:
-            return _brief("Point A", "Point B")
+            writer_calls["n"] += 1
+            # Each rewrite must differ so the orchestrator does not early-stop
+            # with no_change (identical drafts).
+            return _brief(
+                f"Point A round {writer_calls['n']}",
+                f"Point B round {writer_calls['n']} with missing e{writer_calls['n']}",
+            )
         if schema is CriticVerdict:
             critic_calls["n"] += 1
-            return _revise_verdict(2)
+            # Always revise with NEW missing evidence each round.
+            return CriticVerdict(
+                overall="revise",
+                verdicts=[
+                    PointVerdict(index=0, decision="keep", reason="ok", fix_hint=None),
+                    PointVerdict(index=1, decision="fix", reason="add", fix_hint="cite"),
+                ],
+                missing=[f"e{critic_calls['n'] + 10}"],
+                refetch=[],
+            )
         raise AssertionError(schema)
 
     state = asyncio.run(run("I'm meeting Karim Haddad", deps=_deps(tmp_path, handler)))
 
     assert state.status == "done"
     assert critic_calls["n"] == MAX_CRITIC_ROUNDS
+    assert critic_calls["n"] <= 2
     assert state.round == MAX_CRITIC_ROUNDS
     assert state.round <= 2
     # router + 2 writer + 2 critic

@@ -266,7 +266,7 @@ def extract_signature(body: str) -> dict[str, Any]:
     # Title/company only from short signature-like lines (never reply body crumbs).
     sig_lines = [ln for ln in tail if len(ln) <= 60 and ln.count(",") <= 1][-6:]
     junk = re.compile(
-        r"(?i)^(thanks?\b|perfect|hi\b|hey\b|happy to|moving you|jordan\b|omar\b)"
+        r"(?i)^(thanks?\b|perfect|hi\b|hey\b|happy to|moving you\b)"
     )
     for line in reversed(sig_lines):
         if line == name or junk.search(line):
@@ -851,27 +851,19 @@ def heuristic_extract_references(body: str) -> list[ContentReference]:
         "hope you're well, let's catch up",
     }:
         return []
-    if len(text.split()) <= 12 and not any(
-        key in lower
-        for key in (
-            "case interview",
-            "habs",
-            "hockey",
-            "review session",
-            "thursday",
-            "saturday",
-            "pwc",
-            "game",
-        )
-    ):
-        return []
-
     refs: list[ContentReference] = []
+    # Capture concrete phrases from the email itself (org/project/event tokens
+    # come from the body — never hardcode a dataset org or team name).
     patterns: list[tuple[str, str, float]] = [
         (r"case interview(?: tips| prep|s)?", "plan", 0.9),
-        (r"review session(?:\s+thursday)?", "event", 0.9),
-        (r"pwc advisory(?: round)?", "project", 0.85),
-        (r"habs(?: game)?(?:\s+saturday)?", "event", 0.95),
+        (r"review session(?:\s+\w+day)?", "event", 0.9),
+        (
+            r"[A-Za-z][A-Za-z0-9.&]{1,20}(?:\s+[A-Za-z][A-Za-z0-9.&]{1,20})?\s+"
+            r"advisory(?:\s+round)?",
+            "project",
+            0.85,
+        ),
+        (r"[A-Za-z]{3,20}\s+game(?:\s+\w+day)?", "event", 0.95),
         (r"hockey game", "event", 0.9),
         (r"\bsaturday\b", "date", 0.5),
         (r"\bthursday\b", "date", 0.55),
@@ -888,6 +880,8 @@ def heuristic_extract_references(body: str) -> list[ContentReference]:
             continue
         seen.add(key)
         refs.append(ContentReference(text=phrase, type=typ, specificity=spec))
+    if len(text.split()) <= 12 and not refs:
+        return []
     return refs
 
 
@@ -1710,7 +1704,7 @@ async def score_handle(
             top_two = sorted(first_name_only, key=lambda c: c.probability, reverse=True)[:2]
             margin = top_two[0].probability - top_two[1].probability
             f7a_lead = next((f for f in top_two[0].features if f.name == "f7a"), None)
-            # Shared-reference evidence can break a namesake tie (gmail92 → Haddad).
+            # Shared-reference evidence can break a namesake tie.
             content_break = bool(f7a_lead and f7a_lead.value >= 0.4)
             same_employer = []
             for cand in first_name_only:

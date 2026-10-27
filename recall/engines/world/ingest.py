@@ -39,7 +39,7 @@ _CONFLICT_WINDOW_DAYS = 120
 _NAME_FUZZ_THRESHOLD = 90
 
 # Bump when attribute extraction rules change so sample DBs reingest.
-INGEST_VERSION = "phase1b-structured-v4"
+INGEST_VERSION = "phase1c-conflicts-v1"
 
 _CITY_PATTERNS = [
     re.compile(
@@ -59,24 +59,8 @@ _CITY_PATTERNS = [
     ),
 ]
 
-_KNOWN_CITIES = frozenset(
-    {
-        "paris",
-        "montreal",
-        "montréal",
-        "toronto",
-        "vancouver",
-        "quebec",
-        "québec",
-        "ottawa",
-        "berlin",
-        "london",
-        "new york",
-        "sherbrooke",
-        "lyon",
-        "beirut",
-    }
-)
+# French/English function words that are never city names when captured alone.
+_CITY_PARTICLES = frozenset({"le", "du", "la", "des", "de", "the", "a", "an"})
 
 # Single-line email-signature "Title, Org" only (never chat / reply crumbs).
 _TITLE_PATTERNS = [
@@ -93,7 +77,7 @@ _JUNK_ATTR_RE = re.compile(
     r"expired cert|in the security|v3 is|renewing )"
 )
 
-# "Montreal, QC" must not be parsed as Title, Org.
+# "City, QC" style location lines must not be parsed as Title, Org.
 _REGION_CODES = frozenset(
     {
         "QC",
@@ -392,7 +376,7 @@ def cluster_people(
 
 
 def _normalize_attr_value(value: str) -> str:
-    """Trim and collapse internal whitespace for storage / comparison."""
+    """Trim and collapse internal whitespace for storage / matching."""
     return re.sub(r"[ \t]+", " ", (value or "").strip())
 
 
@@ -437,25 +421,19 @@ def extract_signature_attributes(
             city = _normalize_attr_value(match.group(1).strip(" .,!"))
             if not city or "\n" in city or len(city) >= 40:
                 continue
-            # Prefer a known city token inside the capture ("Paris le" → Paris).
+            # First Capitalized token; drop trailing particles ("X le" → "X").
             tokens = re.findall(r"[A-Za-zÀ-öø-ÿ']+", city)
             picked = ""
             for tok in tokens:
-                if tok.casefold() in _KNOWN_CITIES:
+                if tok.casefold() in _CITY_PARTICLES:
+                    continue
+                if tok[:1].isupper() or (tok[:1].isalpha() and tok.casefold() not in _CITY_PARTICLES):
                     picked = tok[0].upper() + tok[1:] if tok else tok
-                    # Preserve Montréal accent when present.
-                    if tok.casefold() == "montréal":
-                        picked = "Montréal"
-                    elif tok.casefold() == "montreal":
-                        picked = "Montreal"
-                    elif tok.casefold() == "paris":
-                        picked = "Paris"
                     break
-            if not picked and len(tokens) == 1 and tokens[0][:1].isupper():
-                picked = tokens[0]
-            if picked and _is_plausible_structured_attr(picked, field="city"):
-                found["city"] = picked
-                break
+            if picked and picked.casefold() not in _CITY_PARTICLES:
+                if _is_plausible_structured_attr(picked, field="city"):
+                    found["city"] = picked
+                    break
 
     if source not in {"gmail"}:
         return found
@@ -474,6 +452,9 @@ def extract_signature_attributes(
             org = _normalize_attr_value(match.group(2))
             if org.upper() in _REGION_CODES:
                 continue
+            # "Founder & CEO" → core title "Founder" (avoid title conflicts).
+            if "&" in title:
+                title = title.split("&", 1)[0].strip()
             if not _is_plausible_structured_attr(title, field="title"):
                 continue
             if not _is_plausible_structured_attr(org, field="org"):
@@ -811,29 +792,43 @@ class IngestPipelineService:
     ) -> list[Conflict]:
         conflicts: list[Conflict] = []
         for field_name, items in by_field.items():
-            # Distinct values (trimmed, case-insensitive) with earliest observation each.
-            earliest: dict[str, AttributeObservation] = {}
-            for item in sorted(items, key=lambda x: x.observed_at):
+            by_key: dict[str, list[AttributeObservation]] = {}
+            for item in items:
                 key = _attr_conflict_key(item.value)
                 if not key:
                     continue
-                if key not in earliest:
-                    earliest[key] = item
-            if len(earliest) < 2:
+                by_key.setdefault(key, []).append(item)
+            if len(by_key) < 2:
                 continue
-            values = list(earliest.values())
-            # If any two different values observed within 120 days, record conflict.
+            # Conflict if ANY observation of value A is within the window of ANY
+            # observation of value B (contact cards may be dated far in the past).
+            keys = list(by_key.keys())
             conflicted = False
-            for i, left in enumerate(values):
-                for right in values[i + 1 :]:
-                    delta = abs((_parse_ts(left.observed_at) - _parse_ts(right.observed_at)).days)
-                    if delta <= _CONFLICT_WINDOW_DAYS:
-                        conflicted = True
+            for i, key_a in enumerate(keys):
+                for key_b in keys[i + 1 :]:
+                    for left in by_key[key_a]:
+                        for right in by_key[key_b]:
+                            delta = abs(
+                                (
+                                    _parse_ts(left.observed_at) - _parse_ts(right.observed_at)
+                                ).days
+                            )
+                            if delta <= _CONFLICT_WINDOW_DAYS:
+                                conflicted = True
+                                break
+                        if conflicted:
+                            break
+                    if conflicted:
                         break
                 if conflicted:
                     break
             if not conflicted:
                 continue
+            # Represent each distinct value by its earliest observation.
+            values = [
+                sorted(obs_list, key=lambda x: x.observed_at)[0]
+                for obs_list in by_key.values()
+            ]
             conflicts.append(
                 Conflict(
                     id=_stable_conflict_id(entity_id, field_name),

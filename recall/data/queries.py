@@ -1,7 +1,7 @@
 """Named SQL reads shared by DuckDB and Zetaris against the recall schema.
 
 Dialect assumption: statements are plain ANSI SQL only — SELECT / WHERE /
-ORDER BY / LIMIT, LIKE, IN, and simple comparisons. Placeholders use the
+ORDER BY / LIMIT, LIKE, IN, and simple equality checks. Placeholders use the
 portable ``:name`` form. Backends expand list params to ``IN (?, ?, ...)``
 (or their native bind style) and convert markers; see ``sql_bind.py``.
 JSON list columns (emails, phones, attendees) and phone / WhatsApp-JID

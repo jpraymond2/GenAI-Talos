@@ -106,7 +106,7 @@ class ContextBuilderService:
                     reason=best_reason,
                 )
             )
-        # Sort by score desc, then name — equal scores stay close; do not prefer Haddad.
+        # Sort by score desc, then name — equal scores stay alphabetical, no fixed preferred.
         candidates.sort(key=lambda c: (-c.score, c.name))
         if self._tracer is not None:
             self._tracer.event(

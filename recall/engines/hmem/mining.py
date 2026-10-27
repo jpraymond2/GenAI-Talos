@@ -45,18 +45,6 @@ def _infer_attribute(content: str) -> tuple[str, str]:
 def _sample_split_memories(text: str) -> list[MinedAtomicMemory]:
     """SAMPLE_MODE path: split compound notes without calling the LLM."""
     text = text.strip()
-    if "staying in montreal" in text.lower() or (
-        "montreal" in text.lower() and "staying" in text.lower()
-    ):
-        return [
-            MinedAtomicMemory(
-                content=text,
-                type="factual",
-                entity_names=_guess_names(text),
-                attribute_key="city",
-                attribute_value="Montreal",
-            )
-        ]
     # Move / city patterns: keep full sentence as one memory with inferred attr.
     key, value = _infer_attribute(text)
     shared_names = _guess_names(text)

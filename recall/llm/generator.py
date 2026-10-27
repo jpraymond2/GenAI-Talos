@@ -58,7 +58,7 @@ _SCHEMA_EXAMPLES: dict[str, dict[str, Any]] = {
                 "fix_hint": None,
             },
         ],
-        "missing": ["Montreal vs Toronto conflict (e3, e4) not mentioned"],
+        "missing": ["city conflict (e3, e4) not mentioned"],
         "refetch": [],
     },
 }
