@@ -139,6 +139,7 @@ def build_deps(
     *,
     run_id: str | None = None,
     logs_dir: Path | str | None = None,
+    hmem_path: Path | str | None = None,
     generate: GenerateFn | None = None,
     generate_json: GenerateJsonFn | None = None,
 ) -> Deps:
@@ -199,7 +200,10 @@ def build_deps(
     world = ContextBuilderService(
         store=world_store, settings=settings, query_layer=layer, tracer=tracer
     )
-    hmem_store = MemoryStoreService(path=hmem_db_path(settings), settings=settings)
+    hmem_store = MemoryStoreService(
+        path=hmem_path if hmem_path is not None else hmem_db_path(settings),
+        settings=settings,
+    )
     hmem_ledger = TrustLedgerService(
         settings=settings, tracer=tracer, run_id=tracer.run_id
     )
@@ -611,6 +615,13 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
         if action_plan.steps:
             state.action_plan = action_plan
             _save_state(state, deps.tracer)
+            if deps.settings.sample_mode:
+                await actions.execute(
+                    run_id=state.run_id,
+                    confirmed=True,
+                    deps=deps,
+                    state=state,
+                )
     except Exception:  # noqa: BLE001 — actions must not break the brief
         logger.exception("actions.plan failed")
 
@@ -1265,6 +1276,9 @@ def _maybe_meal_hook(state: RunState, deps: Deps) -> RunState:
                 break
     if not mealish or not state.entity_id:
         return state
+    # Skip when the upcoming meeting already has a place on the calendar.
+    if _upcoming_meeting_has_location(state.evidence):
+        return state
     if not getattr(deps.settings, "preference_profiles", True):
         return state
     cached = deps.world_store.get_preference_profile(state.entity_id)
@@ -1274,6 +1288,20 @@ def _maybe_meal_hook(state: RunState, deps: Deps) -> RunState:
     state.context["meal_hook"] = True
     _ = get_preferences  # available for suggest path; briefs stay lazy
     return state
+
+
+def _upcoming_meeting_has_location(pack: dict[str, Evidence]) -> bool:
+    """True when an upcoming calendar item already includes a venue."""
+    for ev in pack.values():
+        if ev.source != "calendar":
+            continue
+        if "upcoming" not in (ev.tags or []):
+            continue
+        text = ev.text or ""
+        # Evidence text is ``Title (location)`` when location is known.
+        if re.search(r"\([^)]+\)\s*$", text):
+            return True
+    return False
 
 
 def _calendar_tiebreak(
@@ -1485,6 +1513,13 @@ def _entity_org(deps: Deps, entity_id: str) -> str:
             val = str(row.get(key) or "").strip()
             if val:
                 return val
+    entity = deps.world_store.get_entity(entity_id)
+    if entity is not None:
+        attrs = entity.attributes or {}
+        for key in ("org", "company", "employer"):
+            val = str(attrs.get(key) or "").strip()
+            if val:
+                return val
     return ""
 
 
@@ -1650,6 +1685,10 @@ async def _retrieve(state: RunState, deps: Deps) -> RunState:
         )
 
     async def _web() -> list[dict[str, Any]]:
+        # Brief/question only — skip for note / clarify / suggest / actions-only.
+        kind = state.intent.kind if state.intent else None
+        if kind not in {"brief", "question"}:
+            return []
         if not entity_id:
             return []
         entity = deps.world_store.get_entity(entity_id)

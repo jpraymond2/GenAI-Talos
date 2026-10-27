@@ -1,8 +1,8 @@
 {
-  "run_id": "example-02_brief_omar_haddad-c0844a20",
+  "run_id": "example-02_brief_omar_haddad-81deb5d7",
   "utterance": {
     "text": "I'm meeting Omar Haddad on Wednesday",
-    "ts": "2026-10-27T15:52:50.210447Z",
+    "ts": "2026-10-27T16:02:23.222382Z",
     "mode": "text"
   },
   "intent": {
@@ -65,14 +65,9 @@
       "e24": "imessage:1214",
       "e25": "calendar:26dbp9qa7efe8qeqpno792e8sc",
       "e26": "calendar:j3deg1dncf54epf5dhod3docis",
-      "m1": "mem_f01f45fe7e8e",
-      "memory:m1": "mem_f01f45fe7e8e",
-      "m2": "mem_abe94f005683",
-      "memory:m2": "mem_abe94f005683",
-      "m3": "mem_621786693965",
-      "memory:m3": "mem_621786693965",
-      "m4": "mem_48e3dabd4c4a",
-      "memory:m4": "mem_48e3dabd4c4a"
+      "m1": "mem_a13750f2de8c",
+      "memory:m1": "mem_a13750f2de8c",
+      "w1": "https://example.com/payloop-series-a"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -501,39 +496,14 @@
         "location": "Café Névé, 151 Rue Rachel E, Montréal",
         "source_ref": "calendar:j3deg1dncf54epf5dhod3docis"
       }
-    },
-    "meal_hook": true
+    }
   },
   "memories": [
     {
-      "id": "mem_f01f45fe7e8e",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "score": 0.4769,
-      "why": "entity=0.15, layer=0.10, recency=0.10"
-    },
-    {
-      "id": "mem_abe94f005683",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "score": 0.4769,
-      "why": "entity=0.15, layer=0.10, recency=0.10"
-    },
-    {
-      "id": "mem_621786693965",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "score": 0.4769,
-      "why": "entity=0.15, layer=0.10, recency=0.10"
-    },
-    {
-      "id": "mem_48e3dabd4c4a",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "score": 0.4769,
-      "why": "entity=0.15, layer=0.10, recency=0.10"
-    },
-    {
-      "id": "mem_6ee6abfc562a",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "score": 0.4769,
-      "why": "entity=0.15, layer=0.10, recency=0.10"
+      "id": "mem_a13750f2de8c",
+      "content": "Note that Omar Haddad wants an intro to Rachel Goldberg by end of month.",
+      "score": 0.4091,
+      "why": "entity=0.15, layer=0.10, keyword=0.08"
     }
   ],
   "evidence": {
@@ -786,45 +756,24 @@
     "m1": {
       "id": "m1",
       "source": "memory",
-      "source_ref": "mem_f01f45fe7e8e",
+      "source_ref": "mem_a13750f2de8c",
       "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "text": "Note that Omar Haddad wants an intro to Rachel Goldberg by end of month.",
       "url": null,
       "tags": [
         "memory"
       ]
     },
-    "m2": {
-      "id": "m2",
-      "source": "memory",
-      "source_ref": "mem_abe94f005683",
-      "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "url": null,
+    "w1": {
+      "id": "w1",
+      "source": "web",
+      "source_ref": "https://example.com/payloop-series-a",
+      "ts": "2026-09-15T00:00:00Z",
+      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by climate-focused funds, with CEO Omar Haddad citing demand from SMBs.",
+      "url": "https://example.com/payloop-series-a",
       "tags": [
-        "memory"
-      ]
-    },
-    "m3": {
-      "id": "m3",
-      "source": "memory",
-      "source_ref": "mem_621786693965",
-      "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "url": null,
-      "tags": [
-        "memory"
-      ]
-    },
-    "m4": {
-      "id": "m4",
-      "source": "memory",
-      "source_ref": "mem_48e3dabd4c4a",
-      "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "url": null,
-      "tags": [
-        "memory"
+        "web",
+        "cache"
       ]
     }
   },
@@ -842,7 +791,7 @@
           "priority": 1
         },
         {
-          "text": "You noted: Note that Omar Haddad wants an intro to Rachel by end of month (memory)",
+          "text": "You noted: Omar Haddad wants an intro to Rachel Goldberg by end of month. (memory)",
           "evidence_ids": [
             "m1"
           ],
@@ -858,17 +807,17 @@
           "priority": 3
         },
         {
-          "text": "Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (imessage)",
+          "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
           "evidence_ids": [
-            "e10"
+            "w1"
           ],
           "kind": "news",
           "priority": 4
         },
         {
-          "text": "Life/job update on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)",
+          "text": "Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (imessage)",
           "evidence_ids": [
-            "e12"
+            "e10"
           ],
           "kind": "news",
           "priority": 5
@@ -902,18 +851,21 @@
         {
           "index": 3,
           "decision": "keep",
-          "reason": "keep: cites imessage Wed Oct 14, 07:44",
+          "reason": "keep: cites web Mon Sep 14, 20:00",
           "fix_hint": null
         },
         {
           "index": 4,
           "decision": "keep",
-          "reason": "keep: cites imessage Wed Oct 14, 07:31",
+          "reason": "keep: cites imessage Wed Oct 14, 07:44",
           "fix_hint": null
         }
       ],
       "missing": [],
-      "refetch": []
+      "refetch": [
+        "memory",
+        "web"
+      ]
     }
   ],
   "final_brief": {
@@ -929,7 +881,7 @@
         "priority": 1
       },
       {
-        "text": "You noted: Note that Omar Haddad wants an intro to Rachel by end of month (memory)",
+        "text": "You noted: Omar Haddad wants an intro to Rachel Goldberg by end of month. (memory)",
         "evidence_ids": [
           "m1"
         ],
@@ -945,47 +897,40 @@
         "priority": 3
       },
       {
-        "text": "Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (imessage)",
+        "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
         "evidence_ids": [
-          "e10"
+          "w1"
         ],
         "kind": "news",
         "priority": 4
       },
       {
-        "text": "Life/job update on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)",
+        "text": "Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (imessage)",
         "evidence_ids": [
-          "e12"
+          "e10"
         ],
         "kind": "news",
         "priority": 5
       }
     ],
-    "caveats": [
-      "Ask me where to eat if you need ideas"
-    ]
+    "caveats": []
   },
   "action_plan": {
     "steps": [
       {
         "tool": "gmail.draft",
         "args": {
-          "to_entity": "Omar Haddad",
-          "evidence_id": "e4",
-          "subject": "Re: follow-up",
-          "body_preview": "Hi Omar,\n\nFollowing up on: Hi Jordan,  Just following up on my last email — any thoughts?  Omar\n\nBest,\n"
+          "to": "Rachel Goldberg",
+          "cc": "Omar Haddad",
+          "to_entity": "Rachel Goldberg",
+          "evidence_id": "e2",
+          "subject": "Intro: Omar Haddad <> Rachel Goldberg",
+          "body_preview": "Hi Rachel,\n\nHope you're well — Omar asked whether you'd be open to a short intro. No pressure either way; happy to connect you two if useful.\n\nBest,\n"
         },
-        "summary": "Draft a Gmail reply for the open loop (e4)"
-      },
-      {
-        "tool": "suggester.restaurant",
-        "args": {
-          "place_or_cuisine": "a nearby spot"
-        },
-        "summary": "Note restaurant suggestion: a nearby spot"
+        "summary": "Draft a double-opt-in intro to Rachel Goldberg (cc Omar Haddad)"
       }
     ],
-    "spoken_summary": "I can draft a gmail reply for the open loop (e4); and note restaurant suggestion: a nearby spot.",
+    "spoken_summary": "I can draft a double-opt-in intro to rachel goldberg (cc omar haddad).",
     "requires_confirmation": true
   },
   "status": "done",

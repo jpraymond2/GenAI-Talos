@@ -9,7 +9,7 @@ from recall.agents import offline
 from recall.agents.job_change import job_change_guidance
 from recall.agents.prompts import BRIEF_STYLES, WRITER_SYSTEM
 from recall.agents.time_context import with_today
-from recall.llm.generator import SampleCacheMiss, generate_json
+from recall.llm.generator import LLMOutputError, LLMUnavailable, SampleCacheMiss, generate_json
 from recall.schemas import Brief, CriticVerdict, Evidence, RunState
 from recall.tracing import Tracer
 
@@ -63,7 +63,7 @@ async def run(state: RunState, deps: Any) -> RunState:
             f"headline={brief.headline[:80]!r}"
         )
         _log(deps, "writer", summary, {"brief": brief.model_dump(mode="json")})
-    except SampleCacheMiss:
+    except (SampleCacheMiss, LLMUnavailable, LLMOutputError):
         brief = offline.write_brief(state, deps)
     state.drafts.append(brief)
     return state

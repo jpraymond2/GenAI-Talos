@@ -1,8 +1,8 @@
 {
-  "run_id": "example-04_conflicting_sources-d404365d",
+  "run_id": "example-04_conflicting_sources-7524f060",
   "utterance": {
     "text": "Where does Lucas live?",
-    "ts": "2026-10-27T15:52:50.247555Z",
+    "ts": "2026-10-27T16:02:23.296014Z",
     "mode": "text"
   },
   "intent": {
@@ -449,7 +449,7 @@
       "last_met": null,
       "next_meeting": null
     },
-    "latency_ms": 19,
+    "latency_ms": 28,
     "llm_calls": 0,
     "critic_rounds": 1
   },
@@ -806,7 +806,7 @@
           "to_entity": "Lucas Moreau",
           "evidence_id": "e1",
           "subject": "Re: follow-up",
-          "body_preview": "Hi Lucas,\n\nFollowing up on: billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?\n\nBest,\n"
+          "body_preview": "Hi Lucas,\n\nThanks for your patience — looping back on this now.\n\nBest,\n"
         },
         "summary": "Draft a Gmail reply for the open loop (e1)"
       }

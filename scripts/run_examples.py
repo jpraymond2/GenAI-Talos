@@ -153,10 +153,27 @@ def _how_it_worked_md(state: Any, trace: list[dict[str, Any]], *, ex_id: str) ->
     return "\n".join(lines).rstrip() + "\n"
 
 
-async def _run_one(example: dict[str, Any], *, logs_dir: Path, run_id: str) -> dict[str, Any]:
+async def _run_one(
+    example: dict[str, Any],
+    *,
+    logs_dir: Path,
+    run_id: str,
+    hmem_path: Path,
+) -> dict[str, Any]:
     from recall.orchestrator import build_deps, run
 
-    deps = build_deps(sample_mode=True, logs_dir=logs_dir, run_id=run_id)
+    # Fresh H-MEM per example: seed only from notes.jsonl (+ this example's note step).
+    if hmem_path.exists():
+        hmem_path.unlink()
+    for suffix in ("-wal", "-shm"):
+        Path(str(hmem_path) + suffix).unlink(missing_ok=True)
+
+    deps = build_deps(
+        sample_mode=True,
+        logs_dir=logs_dir,
+        run_id=run_id,
+        hmem_path=hmem_path,
+    )
     text = str(example["text"])
     t0 = time.perf_counter()
     state = await run(text, deps=deps, run_id=run_id)
@@ -206,8 +223,15 @@ async def main() -> None:
         out_dir.mkdir(parents=True)
 
         run_id = f"example-{ex_id}-{uuid.uuid4().hex[:8]}"
-        result = await _run_one(example, logs_dir=base_logs, run_id=run_id)
+        hmem_path = out_dir / "hmem.db"
+        result = await _run_one(
+            example, logs_dir=base_logs, run_id=run_id, hmem_path=hmem_path
+        )
         state = result["state"]
+        # Drop per-example H-MEM DB from output artifacts (deterministic seed only).
+        hmem_path.unlink(missing_ok=True)
+        for suffix in ("-wal", "-shm"):
+            Path(str(hmem_path) + suffix).unlink(missing_ok=True)
         (out_dir / "brief.md").write_text(_brief_md(state), encoding="utf-8")
         (out_dir / "run.json").write_text(
             state.model_dump_json(indent=2),

@@ -97,8 +97,17 @@ def test_use_sample_when_sample_mode_or_missing_key(monkeypatch: pytest.MonkeyPa
     assert use_sample_provider() is True
     monkeypatch.setenv("SAMPLE_MODE", "false")
     monkeypatch.setenv("NVIDIA_API_KEY", "")
+    monkeypatch.setenv("LLM_LIVE", "false")
     get_settings.cache_clear()
     assert use_sample_provider() is True
+
+
+def test_llm_live_disables_sample_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("LLM_LIVE", "true")
+    monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test")
+    get_settings.cache_clear()
+    assert use_sample_provider() is False
 
 
 def test_role_routing_main_vs_fast(monkeypatch: pytest.MonkeyPatch) -> None:

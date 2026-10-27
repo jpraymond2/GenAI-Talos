@@ -104,9 +104,15 @@ def reset_client() -> None:
 
 
 def use_sample_provider(settings: Settings | None = None) -> bool:
-    """True when offline cache should be used (sample mode or missing key)."""
+    """True when offline cache should be used (sample mode or missing key).
+
+    ``LLM_LIVE=true`` with a key forces the live NVIDIA path even in SAMPLE_MODE.
+    """
     active = settings if settings is not None else get_settings()
-    return active.sample_mode or not active.nvidia_api_key.get_secret_value()
+    has_key = bool(active.nvidia_api_key.get_secret_value())
+    if getattr(active, "llm_live", False) and has_key:
+        return False
+    return active.sample_mode or not has_key
 
 
 def resolve_tier(role: str, settings: Settings | None = None) -> ModelTier:
@@ -198,8 +204,28 @@ async def generate(
             prompt=prompt,
             error=str(exc),
             reasoning_chars=getattr(exc, "reasoning_chars", 0),
+            provider="nvidia",
         )
-        raise
+        # LLM_LIVE only: live → recorded cache → (SampleCacheMiss → offline_rules).
+        if not getattr(settings, "llm_live", False):
+            raise
+        try:
+            text = _sample_text(prompt, role=role, settings=settings)
+            text = strip_think(text)
+            _log_call(
+                role=role,
+                model="sample",
+                latency_ms=_elapsed_ms(started),
+                prompt_tokens=_estimate_tokens(prompt),
+                completion_tokens=_estimate_tokens(text),
+                success=True,
+                prompt=prompt,
+                provider="sample_cache",
+                error=f"fallback after: {exc}",
+            )
+            return text
+        except SampleCacheMiss:
+            raise
 
 
 async def generate_json(
@@ -490,24 +516,46 @@ async def _generate_json_once(
             completion_tokens = _estimate_tokens(raw)
             provider = "sample_cache"
         else:
-            raw, prompt_tokens, completion_tokens, reasoning_chars = await _with_retries(
-                lambda: _nvidia_chat(
-                    prompt=prompt,
-                    system=system,
-                    model=model,
-                    role=role,
-                    max_tokens=max_tokens,
-                    temperature=0.2,
-                    json_mode=True,
-                    settings=settings,
+            try:
+                raw, prompt_tokens, completion_tokens, reasoning_chars = await _with_retries(
+                    lambda: _nvidia_chat(
+                        prompt=prompt,
+                        system=system,
+                        model=model,
+                        role=role,
+                        max_tokens=max_tokens,
+                        temperature=0.2,
+                        json_mode=True,
+                        settings=settings,
+                    )
                 )
-            )
-            if settings.record_llm_cache:
-                try:
-                    parsed = extract_json_value(raw)
-                    _record_llm_cache(role, prompt, parsed, settings)
-                except LLMOutputError:
-                    _record_llm_cache(role, prompt, raw, settings)
+                if settings.record_llm_cache:
+                    try:
+                        parsed = extract_json_value(raw)
+                        _record_llm_cache(role, prompt, parsed, settings)
+                    except LLMOutputError:
+                        _record_llm_cache(role, prompt, raw, settings)
+            except SampleCacheMiss:
+                raise
+            except Exception as live_exc:
+                _log_call(
+                    role=role,
+                    model=model,
+                    latency_ms=_elapsed_ms(started),
+                    prompt_tokens=0,
+                    completion_tokens=0,
+                    success=False,
+                    prompt=prompt,
+                    error=str(live_exc),
+                    provider="nvidia",
+                )
+                if not getattr(settings, "llm_live", False):
+                    raise
+                raw = _sample_text(prompt, role=role, settings=settings)
+                prompt_tokens = _estimate_tokens(prompt)
+                completion_tokens = _estimate_tokens(raw)
+                provider = "sample_cache"
+                model = "sample"
 
         value = extract_json_value(raw)
         if is_echoed_schema(value):
@@ -886,7 +934,7 @@ def _log_call(
         )
     else:
         summary = (
-            f"{role} model={model} ms={latency_ms} "
+            f"{role} provider={provider or '—'} model={model} ms={latency_ms} "
             f"tokens={prompt_tokens}+{completion_tokens} success={success}"
         )
     payload: dict[str, Any] = {

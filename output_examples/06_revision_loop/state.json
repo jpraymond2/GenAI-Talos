@@ -1,8 +1,8 @@
 {
-  "run_id": "example-06_revision_loop-e7741743",
+  "run_id": "example-06_revision_loop-0505f422",
   "utterance": {
     "text": "Sync with Mei tomorrow",
-    "ts": "2026-10-27T15:52:50.299833Z",
+    "ts": "2026-10-27T16:02:23.371344Z",
     "mode": "text"
   },
   "intent": {
@@ -1375,11 +1375,11 @@
         "tool": "gmail.draft",
         "args": {
           "to_entity": "Mei Tanaka",
-          "evidence_id": "e5",
+          "evidence_id": "e1",
           "subject": "Re: follow-up",
-          "body_preview": "Hi Mei,\n\nFollowing up on: root cause?\n\nBest,\n"
+          "body_preview": "Hi Mei,\n\nCircling back on this — I'll send it over shortly.\n\nBest,\n"
         },
-        "summary": "Draft a Gmail reply for the open loop (e5)"
+        "summary": "Draft a Gmail reply for the open loop (e1)"
       },
       {
         "tool": "calendar.hold",
@@ -1391,7 +1391,7 @@
         "summary": "Hold calendar time for Mei Tanaka"
       }
     ],
-    "spoken_summary": "I can draft a gmail reply for the open loop (e5); and hold calendar time for mei tanaka.",
+    "spoken_summary": "I can draft a gmail reply for the open loop (e1); and hold calendar time for mei tanaka.",
     "requires_confirmation": true
   },
   "status": "done",

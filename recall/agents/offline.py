@@ -1328,8 +1328,20 @@ def _select_points(
             quote = _clean_quote(item.text or "", person=person, limit=100, settings=active)
             if not quote:
                 return None
+            quote = re.sub(r"(?i)^note that\s+", "", quote).strip()
+            if not quote:
+                return None
             text = f"You noted: {quote} (memory)"
             kind = "catch_up"
+        elif item.source == "web":
+            quote = _clean_quote(item.text or "", person=person, limit=110, settings=active)
+            if not quote:
+                return None
+            url = (item.url or item.source_ref or "").strip()
+            text = f"Public news: {quote}"
+            if url:
+                text = f"{text} ({url})"
+            kind = "news"
         elif "conflict" in tags:
             text = (
                 f"World Model conflict: "
@@ -1402,6 +1414,8 @@ def _select_points(
             or _as_utc(item.ts) >= _as_utc(clock)
         ):
             buckets[2].append(item)
+        elif item.source == "web":
+            buckets[3].append(item)
         elif (
             "job_change" in tags
             or "conflict" in tags
@@ -1430,6 +1444,8 @@ def _select_points(
     def _news_sort_key(e: Evidence) -> tuple[int, float]:
         text = e.text or ""
         weight = 0
+        if e.source == "web":
+            weight += 25  # prefer one public-news chip when present
         if _looks_like_life_update(text):
             weight += 20
         if _has_future_date_hint(text):
@@ -1447,6 +1463,7 @@ def _select_points(
     seen_ids = {eid for p in points for eid in p.evidence_ids}
     seen_norms = {_norm_point_text(p.text) for p in points}
     limits = {1: 2, 2: 2, 3: 2, 4: 2}
+    web_taken = 0
     for pri in (1, 2, 3, 4):
         taken = 0
         for item in buckets[pri]:
@@ -1455,6 +1472,8 @@ def _select_points(
             if taken >= limits[pri]:
                 break
             if item.id in seen_ids:
+                continue
+            if item.source == "web" and web_taken >= 1:
                 continue
             point = _template(item)
             if point is None:
@@ -1479,6 +1498,8 @@ def _select_points(
             point = point.model_copy(update={"priority": len(points) + 1})
             points.append(point)
             taken += 1
+            if item.source == "web":
+                web_taken += 1
 
     if prior_draft is not None and drop_indexes:
         dropped_texts = {
@@ -1511,8 +1532,6 @@ def _select_points(
 
 
 def _keep_evidence(item: Evidence) -> bool:
-    if item.source == "web":
-        return False
     text = (item.text or "").strip()
     if not text:
         return False
@@ -1523,6 +1542,8 @@ def _keep_evidence(item: Evidence) -> bool:
     # Short tapbacks / one-liners are not talking points even if tagged open_loop.
     if "open_loop" in tags and "promise" not in tags and words < 6:
         return False
+    if item.source == "web":
+        return words >= 4
     if item.source == "memory":
         return True
     if item.source == "calendar":

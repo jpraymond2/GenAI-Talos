@@ -67,6 +67,13 @@ class Settings(BaseSettings):
         default=True,
         description="Use sample_data_dir and data/cache, and dry-run every action.",
     )
+    llm_live: bool = Field(
+        default=False,
+        description=(
+            "When true and NVIDIA_API_KEY is set, call Nemotron even in SAMPLE_MODE "
+            "(synthetic data + live LLM). Falls back to cache → offline_rules on error."
+        ),
+    )
     data_backend: DataBackend = DataBackend.DUCKDB
 
     nvidia_api_key: SecretStr = Field(default=SecretStr(""))

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,10 @@ from recall.tracing import Tracer
 
 logger = logging.getLogger(__name__)
 
+_INTRO_TO_RE = re.compile(
+    r"(?i)\bintro(?:duce)?\s+(?:me\s+)?to\s+([A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+){0,3})"
+)
+
 
 async def plan(state: RunState, deps: Any = None) -> ActionPlan:
     """Propose up to 3 actions from the brief + evidence pack."""
@@ -20,21 +25,25 @@ async def plan(state: RunState, deps: Any = None) -> ActionPlan:
     steps: list[ActionStep] = []
     pack = state.evidence or {}
 
-    open_loop = _oldest_owner_open_loop(pack)
+    open_loop = _primary_owner_open_loop(state, pack, brief)
     if open_loop is not None:
         who = state.entity_name or (brief.person if brief else "them")
-        steps.append(
-            ActionStep(
-                tool="gmail.draft",
-                args={
-                    "to_entity": who,
-                    "evidence_id": open_loop.id,
-                    "subject": "Re: follow-up",
-                    "body_preview": _draft_body(open_loop, who),
-                },
-                summary=f"Draft a Gmail reply for the open loop ({open_loop.id})",
+        intro_step = _intro_draft_step(open_loop, requester=who)
+        if intro_step is not None:
+            steps.append(intro_step)
+        else:
+            steps.append(
+                ActionStep(
+                    tool="gmail.draft",
+                    args={
+                        "to_entity": who,
+                        "evidence_id": open_loop.id,
+                        "subject": "Re: follow-up",
+                        "body_preview": _draft_body(open_loop, who),
+                    },
+                    summary=f"Draft a Gmail reply for the open loop ({open_loop.id})",
+                )
             )
-        )
 
     when = state.intent.when if state.intent else None
     has_upcoming = any(
@@ -53,8 +62,9 @@ async def plan(state: RunState, deps: Any = None) -> ActionPlan:
             )
         )
 
-    if state.context.get("meal_hook") or (
-        state.intent and state.intent.kind == "suggest"
+    if (
+        (state.context.get("meal_hook") or (state.intent and state.intent.kind == "suggest"))
+        and not _upcoming_has_location(pack)
     ):
         place = str(state.context.get("suggested_place") or "a nearby spot")
         steps.append(
@@ -133,7 +143,6 @@ async def execute(
 
     plan_obj = state.action_plan if state is not None else None
     if plan_obj is None and state is None:
-        # Best-effort: load from logs/<run_id>/state.json
         plan_obj = _load_plan(run_id, settings)
 
     steps = list(plan_obj.steps) if plan_obj is not None else []
@@ -154,7 +163,8 @@ async def execute(
                     "status": "dry_run",
                     "preview": {
                         "type": "gmail_draft",
-                        "to": step.args.get("to_entity"),
+                        "to": step.args.get("to") or step.args.get("to_entity"),
+                        "cc": step.args.get("cc"),
                         "subject": step.args.get("subject"),
                         "body": step.args.get("body_preview"),
                         "evidence_id": step.args.get("evidence_id"),
@@ -207,7 +217,20 @@ async def execute(
     return payload
 
 
-def _oldest_owner_open_loop(pack: dict[str, Evidence]) -> Evidence | None:
+def _primary_owner_open_loop(
+    state: RunState,
+    pack: dict[str, Evidence],
+    brief: Brief | None,
+) -> Evidence | None:
+    """Prefer the brief's first open-loop point; else highest-priority owner-owed loop."""
+    if brief is not None:
+        for point in brief.points:
+            if point.kind != "open_loop":
+                continue
+            for eid in point.evidence_ids:
+                item = pack.get(eid)
+                if item is not None:
+                    return item
     loops = [
         e
         for e in pack.values()
@@ -215,18 +238,82 @@ def _oldest_owner_open_loop(pack: dict[str, Evidence]) -> Evidence | None:
     ]
     if not loops:
         return None
-    return min(loops, key=lambda e: e.ts)
+
+    def _rank(e: Evidence) -> tuple[int, float]:
+        text = (e.text or "").lower()
+        weight = 0
+        if "promise" in (e.tags or []):
+            weight += 10
+        if re.search(r"(?i)\b(intro|lease|rent|financial|model|pilot)\b", text):
+            weight += 15
+        weight += min(20, len(re.findall(r"[A-Za-zÀ-öø-ÿ0-9']+", text)) // 2)
+        return (-weight, e.ts.timestamp())
+
+    return min(loops, key=_rank)
+
+
+def _intro_draft_step(item: Evidence, *, requester: str) -> ActionStep | None:
+    """If the open loop is an intro ask, draft a double-opt-in email to the target."""
+    match = _INTRO_TO_RE.search(item.text or "")
+    if not match:
+        return None
+    target = match.group(1).strip().rstrip(".,;:")
+    # Drop trailing org clause: "First Last at OrgName" → "First Last".
+    target = re.split(r"\s+at\s+", target, maxsplit=1)[0].strip()
+    if not target:
+        return None
+    first_target = target.split()[0]
+    first_req = requester.split()[0] if requester else "them"
+    body = (
+        f"Hi {first_target},\n\n"
+        f"Hope you're well — {first_req} asked whether you'd be open to a short intro. "
+        f"No pressure either way; happy to connect you two if useful.\n\n"
+        f"Best,\n"
+    )
+    return ActionStep(
+        tool="gmail.draft",
+        args={
+            "to": target,
+            "cc": requester,
+            "to_entity": target,
+            "evidence_id": item.id,
+            "subject": f"Intro: {requester} <> {target}",
+            "body_preview": body,
+        },
+        summary=f"Draft a double-opt-in intro to {target} (cc {requester})",
+    )
 
 
 def _draft_body(item: Evidence, who: str) -> str:
-    quote = (item.text or "").strip().replace("\n", " ")
-    if len(quote) > 180:
-        quote = quote[:177] + "..."
+    """Short owner reply — never echo the original ask/promise verbatim."""
+    first = who.split()[0] if who else "there"
+    text = item.text or ""
+    if "promise" in (item.tags or []) or re.search(r"(?i)\bi'?ll\b|promise", text):
+        return (
+            f"Hi {first},\n\n"
+            f"Circling back on this — I'll send it over shortly.\n\n"
+            f"Best,\n"
+        )
+    if "?" in text or re.search(r"(?i)\basked\b", text):
+        return (
+            f"Hi {first},\n\n"
+            f"Thanks for your patience — looping back on this now.\n\n"
+            f"Best,\n"
+        )
     return (
-        f"Hi {who.split()[0] if who else 'there'},\n\n"
-        f"Following up on: {quote}\n\n"
+        f"Hi {first},\n\n"
+        f"Quick follow-up from my side — let me know if anything else would help.\n\n"
         f"Best,\n"
     )
+
+
+def _upcoming_has_location(pack: dict[str, Evidence]) -> bool:
+    for ev in pack.values():
+        if ev.source != "calendar" or "upcoming" not in (ev.tags or []):
+            continue
+        if re.search(r"\([^)]+\)\s*$", ev.text or ""):
+            return True
+    return False
 
 
 def _load_plan(run_id: str, settings: Settings) -> ActionPlan | None:

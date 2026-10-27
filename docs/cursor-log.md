@@ -145,3 +145,9 @@ Dated notes reconstructed from `git log --stat`. Each step: what we asked Cursor
 - **Asked:** README / SPONSOR_TECH / data README / metadata / cursor-log; quote non-verb promises; untrack `data/relationship_scores` JSON; secret scan PASS.
 - **Produced:** `c48020d`.
 - **Changed:** Docs match guideline paste-ins; promise template never emits “you'd early stage climate”.
+
+## 2026-10-27 — Phase 4b (deterministic examples / web / actions / LLM_LIVE)
+
+- **Asked:** Per-example fresh H-MEM; web scout on brief retrieve (Payloop); actions intro + open-loop draft; `LLM_LIVE` for Nemotron in sample mode with cache fallback.
+- **Produced:** this commit (Phase 4b).
+- **Changed:** `make examples` twice → identical `brief.md`; Omar brief shows Payloop public news.

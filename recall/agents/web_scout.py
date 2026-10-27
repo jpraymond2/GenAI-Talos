@@ -133,7 +133,20 @@ def _from_cache(
                 }
             )
             if len(out) >= _MAX_RESULTS:
-                return out
+                break
+        if len(out) >= _MAX_RESULTS:
+            break
+    if tracer is not None:
+        tracer.event(
+            "web_scout",
+            "complete",
+            {
+                "summary": f"web_scout sample hits={len(out)} org={org or '—'}",
+                "hits": len(out),
+                "org": org or None,
+                "name": full_name,
+            },
+        )
     return out
 
 

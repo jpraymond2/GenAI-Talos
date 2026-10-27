@@ -10,7 +10,7 @@ from recall.agents.job_change import job_change_guidance, matching_ids, trap_ids
 from recall.agents.prompts import CRITIC_SYSTEM
 from recall.agents.time_context import with_today
 from recall.agents.writer import format_evidence_list
-from recall.llm.generator import SampleCacheMiss, generate_json
+from recall.llm.generator import LLMOutputError, LLMUnavailable, SampleCacheMiss, generate_json
 from recall.schemas import Brief, CriticVerdict, Evidence, PointVerdict, RunState
 from recall.tracing import Tracer
 
@@ -58,7 +58,7 @@ async def run(state: RunState, deps: Any) -> RunState:
             f"missing={len(verdict.missing)} refetch={len(verdict.refetch)}"
         )
         _log(deps, "critic", summary, {"verdict": verdict.model_dump(mode="json")})
-    except SampleCacheMiss:
+    except (SampleCacheMiss, LLMUnavailable, LLMOutputError):
         verdict = offline.critique_brief(state, deps)
         state.verdicts.append(verdict)
         if verdict.overall == "pass" and state.final_brief is None:

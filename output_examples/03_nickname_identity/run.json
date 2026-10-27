@@ -1,8 +1,8 @@
 {
-  "run_id": "example-03_nickname_identity-eaa37ae1",
+  "run_id": "example-03_nickname_identity-85f1169e",
   "utterance": {
     "text": "I'm seeing Sasha soon, catch me up",
-    "ts": "2026-10-27T15:52:50.230415Z",
+    "ts": "2026-10-27T16:02:23.266945Z",
     "mode": "text"
   },
   "intent": {
@@ -429,7 +429,7 @@
       "last_met": null,
       "next_meeting": null
     },
-    "latency_ms": 11,
+    "latency_ms": 37,
     "llm_calls": 0,
     "critic_rounds": 1
   },
@@ -658,12 +658,20 @@
       "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 5 days ago on messenger",
       "points": [
         {
+          "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
+          "evidence_ids": [
+            "w1"
+          ],
+          "kind": "news",
+          "priority": 1
+        },
+        {
           "text": "Latest thread on Wed Oct 21: amazing, too short as always. photos soon (messenger)",
           "evidence_ids": [
             "e2"
           ],
           "kind": "catch_up",
-          "priority": 1
+          "priority": 2
         },
         {
           "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
@@ -671,7 +679,7 @@
             "e4"
           ],
           "kind": "catch_up",
-          "priority": 2
+          "priority": 3
         }
       ],
       "caveats": []
@@ -684,11 +692,17 @@
         {
           "index": 0,
           "decision": "keep",
-          "reason": "keep: cites messenger Wed Oct 21, 14:05",
+          "reason": "keep: cites web Mon Sep 14, 20:00",
           "fix_hint": null
         },
         {
           "index": 1,
+          "decision": "keep",
+          "reason": "keep: cites messenger Wed Oct 21, 14:05",
+          "fix_hint": null
+        },
+        {
+          "index": 2,
           "decision": "keep",
           "reason": "keep: cites imessage Sun Oct 18, 21:02",
           "fix_hint": null
@@ -703,12 +717,20 @@
     "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 5 days ago on messenger",
     "points": [
       {
+        "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
+        "evidence_ids": [
+          "w1"
+        ],
+        "kind": "news",
+        "priority": 1
+      },
+      {
         "text": "Latest thread on Wed Oct 21: amazing, too short as always. photos soon (messenger)",
         "evidence_ids": [
           "e2"
         ],
         "kind": "catch_up",
-        "priority": 1
+        "priority": 2
       },
       {
         "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
@@ -716,7 +738,7 @@
           "e4"
         ],
         "kind": "catch_up",
-        "priority": 2
+        "priority": 3
       }
     ],
     "caveats": []

@@ -199,6 +199,20 @@ Path details: USL namespace `lightning.metastore.recallai.recall`, 2 DQ rules, s
 - **Parakeet ASR** via Riva NVCF in `recall/voice/stt.py`.
 - All chat calls go through `recall/llm/generator.py` only.
 
+### See live Nemotron on synthetic data
+
+Default sample mode uses recorded cache → offline rules (zero keys). To call Nemotron while keeping the synthetic dataset:
+
+```bash
+# in .env
+SAMPLE_MODE=true
+LLM_LIVE=true
+NVIDIA_API_KEY=nvapi-…
+uv run python -m recall ask "I'm meeting Omar Haddad on Wednesday" --sample
+```
+
+Traces under `logs/<run_id>/trace.jsonl` show `provider=nvidia` and the model slug on `llm` events. On timeout or error the generator falls back to the recorded cache, then agents use `offline_rules`.
+
 ## Sponsor tech
 
 Matches [metadata.json](metadata.json) and [docs/SPONSOR_TECH.md](docs/SPONSOR_TECH.md):
