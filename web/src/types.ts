@@ -78,7 +78,7 @@ export interface PointVerdict {
 }
 
 export interface CriticVerdict {
-  overall: "pass" | "revise";
+  overall: "pass" | "revise" | "unresolved";
   verdicts: PointVerdict[];
   missing: string[];
   refetch: string[];

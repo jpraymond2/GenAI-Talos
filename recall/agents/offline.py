@@ -283,14 +283,18 @@ def write_brief(state: RunState, deps: Any = None) -> Brief:
     if org_note:
         headline = f"{headline} ({org_note})"
 
+    missing_ids = _missing_ids(state)
+    defer_loops = _defer_open_loops_first_draft(state)
     points = _select_points(
         evidence,
         person=person,
-        missing=_missing_ids(state),
+        missing=missing_ids,
         drop_indexes=_drop_indexes(state),
         prior_draft=state.drafts[-1] if state.drafts else None,
         entity=entity,
         settings=settings if isinstance(settings, Settings) else None,
+        max_points=6 if (state.round >= 2 or missing_ids) else 5,
+        defer_open_loops=defer_loops,
     )
     caveats: list[str] = []
     if len(points) <= 1:
@@ -306,13 +310,94 @@ def write_brief(state: RunState, deps: Any = None) -> Brief:
     return brief
 
 
+def _evidence_priority_rank(item: Evidence, *, clock: datetime) -> int:
+    """1 = highest priority … 5 = everything else."""
+    tags = set(item.tags or [])
+    if "open_loop" in tags or "promise" in tags:
+        return 1
+    if item.source == "calendar" and (
+        "upcoming" in tags or _as_utc(item.ts) >= _as_utc(clock)
+    ):
+        return 2
+    if "conflict" in tags:
+        return 3
+    if "job_change" in tags:
+        age = _as_utc(clock) - _as_utc(item.ts)
+        if age <= timedelta(days=60):
+            return 4
+    return 5
+
+
+def _point_priority_rank(
+    point: TalkingPoint, pack: dict[str, Evidence], *, clock: datetime
+) -> int:
+    ranks = [
+        _evidence_priority_rank(pack[eid], clock=clock)
+        for eid in point.evidence_ids
+        if eid in pack
+    ]
+    return min(ranks) if ranks else 5
+
+
+def _keep_reason(point: TalkingPoint, pack: dict[str, Evidence], *, person: str) -> str:
+    """Specific keep reason for a talking point."""
+    bits: list[str] = []
+    for eid in point.evidence_ids:
+        item = pack.get(eid)
+        if item is None:
+            continue
+        when = format_human_when(item.ts)
+        who = person or "them"
+        tags = set(item.tags or [])
+        if "open_loop" in tags or "promise" in tags:
+            bits.append(
+                f"cites {item.source} {when} from {who}; "
+                f"no later reply from owner → open loop holds"
+            )
+        elif "conflict" in tags:
+            bits.append(f"cites World Model conflict on {item.source} ({when})")
+        elif "job_change" in tags:
+            bits.append(f"cites job_change on {item.source} {when}")
+        elif item.source == "calendar":
+            bits.append(f"cites upcoming/past calendar {when}")
+        elif item.source == "memory":
+            bits.append(f"cites H-MEM note ({eid})")
+        else:
+            bits.append(f"cites {item.source} {when}")
+    if not bits:
+        return "keep: valid citation"
+    return "keep: " + "; ".join(bits[:2])
+
+
+def _missing_reason(item: Evidence, *, person: str) -> str:
+    tags = set(item.tags or [])
+    when = format_human_when(item.ts)
+    who = person or "them"
+    if "promise" in tags or "open_loop" in tags:
+        snippet = _short_quote(item.text or "", 60)
+        return f"missing: promise/open loop with {who} ({when}, {item.source}) not covered — {snippet}"
+    if item.source == "calendar":
+        return f"missing: upcoming meeting ({when}, calendar) not covered"
+    if "conflict" in tags:
+        return f"missing: World Model conflict ({item.source}) not covered"
+    if "job_change" in tags:
+        return f"missing: job change within 60 days ({item.source} {when}) not covered"
+    if item.source == "memory":
+        return f"missing: H-MEM note not covered — {_short_quote(item.text or '', 60)}"
+    return f"missing: {item.source} {when} ({item.id}) not covered"
+
+
 def critique_brief(state: RunState, deps: Any = None) -> CriticVerdict:
-    """Rule-based critic: drop bad citations, flag missing open loops / events."""
+    """Rule-based critic: drop bad citations; only flag higher-priority gaps."""
     if not state.drafts:
         raise ValueError("critic requires a draft")
     draft = state.drafts[-1]
     pack = state.evidence or {}
     entity_name = (state.entity_name or "").strip().lower()
+    person = state.entity_name or draft.person or ""
+    settings = getattr(deps, "settings", None) if deps is not None else None
+    clock = frozen_now(settings=settings if isinstance(settings, Settings) else None)
+    final_round = int(state.round or 1) >= 2
 
     verdicts: list[PointVerdict] = []
     kept_points: list[TalkingPoint] = []
@@ -324,63 +409,80 @@ def critique_brief(state: RunState, deps: Any = None) -> CriticVerdict:
                 PointVerdict(
                     index=index,
                     decision="drop",
-                    reason="Bad point (missing evidence, too short, or ISO timestamp).",
+                    reason=(
+                        f"drop: point lacks usable evidence ids, is too short "
+                        f"({words} words), or still has an ISO timestamp"
+                    ),
                     fix_hint="Rewrite with a template citing pack evidence.",
                 )
             )
             continue
+        kept = point.model_copy(update={"evidence_ids": valid_ids})
         verdicts.append(
-            PointVerdict(index=index, decision="keep", reason="Cited evidence in pack.", fix_hint=None)
+            PointVerdict(
+                index=index,
+                decision="keep",
+                reason=_keep_reason(kept, pack, person=person),
+                fix_hint=None,
+            )
         )
-        kept_points.append(point.model_copy(update={"evidence_ids": valid_ids}))
+        kept_points.append(kept)
 
     missing: list[str] = []
     refetch: list[str] = []
     overall: str = "pass"
+    gap_notes: list[str] = []
 
     headline_name = (draft.person or "").strip().lower()
     if entity_name and headline_name and headline_name != entity_name:
         overall = "revise"
-        missing.append(f"Headline person {draft.person!r} ≠ resolved {state.entity_name!r}")
+        note = f"Headline person {draft.person!r} ≠ resolved {state.entity_name!r}"
+        missing.append(note)
+        gap_notes.append(note)
 
     cited = {eid for p in kept_points for eid in p.evidence_ids}
-    open_loop_ids = [
+    # Track ids already present so a later round never re-flags them as missing.
+    prior_cited = {
         eid
-        for eid, item in pack.items()
-        if "open_loop" in (item.tags or []) or "promise" in (item.tags or [])
-    ]
-    if open_loop_ids and not any(eid in cited for eid in open_loop_ids):
-        missing.append(open_loop_ids[0])
-        overall = "revise"
-        refetch.append(pack[open_loop_ids[0]].source)
-    else:
-        # Generic: a substantive open loop left uncited → revise + refetch its source.
-        for eid in open_loop_ids:
-            if eid in cited:
-                continue
-            item = pack[eid]
-            tags = set(item.tags or [])
+        for brief in state.drafts[:-1]
+        for point in brief.points
+        for eid in point.evidence_ids
+    }
+    # Best (numerically lowest) priority among kept points. A missing item may
+    # only force revision when it outranks every kept point — so one cited
+    # owner-owed open loop (rank 1) blocks further rank-1 oscillation.
+    best_kept = (
+        min(_point_priority_rank(p, pack, clock=clock) for p in kept_points)
+        if kept_points
+        else 5
+    )
+
+    candidates: list[tuple[int, str, Evidence]] = []
+    for eid, item in pack.items():
+        if eid in cited or eid in prior_cited:
+            continue
+        rank = _evidence_priority_rank(item, clock=clock)
+        # Only a genuine higher-priority gap may force revision.
+        if rank >= best_kept:
+            continue
+        if rank > 4:
+            continue
+        tags = set(item.tags or [])
+        if rank == 1:
             words = len(re.findall(r"[A-Za-zÀ-öø-ÿ0-9']+", item.text or ""))
-            if "promise" in tags or words >= 10:
-                missing.append(eid)
-                overall = "revise"
-                refetch.append(item.source)
-                break
-    memory_ids = [eid for eid, item in pack.items() if item.source == "memory"]
-    if memory_ids and not any(eid in cited for eid in memory_ids):
-        missing.append(memory_ids[0])
+            if "promise" not in tags and "open_loop" not in tags:
+                continue
+            if "promise" not in tags and words < 10:
+                continue
+        candidates.append((rank, eid, item))
+
+    candidates.sort(key=lambda row: (row[0], -_as_utc(row[2].ts).timestamp()))
+    if candidates and overall == "pass":
+        _rank, eid, item = candidates[0]
+        missing.append(eid)
+        gap_notes.append(_missing_reason(item, person=person))
         overall = "revise"
-        refetch.append("memory")
-    upcoming = [
-        eid
-        for eid, item in pack.items()
-        if item.source == "calendar" and "upcoming" in (item.tags or [])
-    ]
-    if not upcoming:
-        upcoming = [eid for eid, item in pack.items() if item.source == "calendar"]
-    if upcoming and not any(eid in cited for eid in upcoming):
-        missing.append(upcoming[0])
-        overall = "revise"
+        refetch.append(item.source)
 
     by_source: dict[str, int] = {}
     for item in pack.values():
@@ -392,6 +494,10 @@ def critique_brief(state: RunState, deps: Any = None) -> CriticVerdict:
     if any(v.decision == "drop" for v in verdicts) and overall == "pass":
         overall = "revise"
 
+    # Final critic round: never leave a silent revise — pass or unresolved.
+    if final_round and overall == "revise":
+        overall = "unresolved" if gap_notes or missing else "pass"
+
     verdict = CriticVerdict(
         overall=overall,  # type: ignore[arg-type]
         verdicts=verdicts,
@@ -399,12 +505,18 @@ def critique_brief(state: RunState, deps: Any = None) -> CriticVerdict:
         refetch=sorted(set(refetch)),
     )
     keep = sum(1 for item in verdict.verdicts if item.decision == "keep")
+    summary_gaps = "; ".join(gap_notes[:2]) if gap_notes else f"missing={len(missing)}"
     _trace_offline(
         deps,
         "critic",
         f"overall={verdict.overall} keep={keep}/{len(verdict.verdicts)} "
-        f"missing={len(verdict.missing)} refetch={len(verdict.refetch)}",
-        {"verdict": verdict.model_dump(mode="json")},
+        f"{summary_gaps} refetch={len(verdict.refetch)}",
+        {
+            "verdict": verdict.model_dump(mode="json"),
+            "overall": verdict.overall,
+            "verdicts": [v.model_dump(mode="json") for v in verdict.verdicts],
+            "gap_notes": gap_notes,
+        },
     )
     return verdict
 
@@ -1126,6 +1238,16 @@ def _drop_indexes(state: RunState) -> set[int]:
     return {v.index for v in state.verdicts[-1].verdicts if v.decision == "drop"}
 
 
+def _defer_open_loops_first_draft(state: RunState) -> bool:
+    """Meeting-prep ``sync with`` first drafts defer open loops so the critic can revise."""
+    if int(state.round or 0) > 1 or _missing_ids(state):
+        return False
+    text = state.utterance.text if state.utterance else ""
+    if re.search(r"(?i)\b(what'?s open|what do i owe|open loops?|outstanding)\b", text):
+        return False
+    return bool(re.search(r"(?i)\bsync with\b", text))
+
+
 def _select_points(
     evidence: dict[str, Evidence],
     *,
@@ -1135,6 +1257,8 @@ def _select_points(
     prior_draft: Brief | None = None,
     entity: Any = None,
     settings: Settings | None = None,
+    max_points: int = 5,
+    defer_open_loops: bool = False,
 ) -> list[TalkingPoint]:
     active = settings if settings is not None else get_settings()
     clock = frozen_now(settings=active)
@@ -1271,6 +1395,8 @@ def _select_points(
             continue
         tags = set(item.tags or [])
         if "open_loop" in tags or "promise" in tags:
+            if defer_open_loops:
+                continue
             if "promise" in tags and not _promise_is_substantive(item):
                 continue
             buckets[1].append(item)
@@ -1387,7 +1513,7 @@ def _select_points(
     for i, point in enumerate(points):
         points[i] = point.model_copy(update={"priority": i + 1})
     _ = entity
-    return points[:5]
+    return points[: max(1, max_points)]
 
 
 def _keep_evidence(item: Evidence) -> bool:

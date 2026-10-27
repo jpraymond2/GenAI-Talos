@@ -119,10 +119,26 @@ class ContextBuilderService:
         # Sort by score desc, then name — equal scores stay alphabetical, no fixed preferred.
         candidates.sort(key=lambda c: (-c.score, c.name))
         if self._tracer is not None:
+            top = [
+                {"entity_id": c.entity_id, "name": c.name, "score": c.score, "reason": c.reason}
+                for c in candidates[:5]
+            ]
             self._tracer.event(
                 "world",
                 "resolve",
-                {"query": needle, "candidate_count": len(candidates)},
+                {
+                    "summary": (
+                        f"resolve {needle!r} candidates={len(candidates)} "
+                        + (
+                            f"top={top[0]['name']} score={top[0]['score']:.2f} ({top[0]['reason']})"
+                            if top
+                            else "none"
+                        )
+                    ),
+                    "query": needle,
+                    "candidate_count": len(candidates),
+                    "candidates": top,
+                },
             )
         return candidates
 
@@ -343,9 +359,15 @@ class ContextBuilderService:
                 "world",
                 "person_context",
                 {
+                    "summary": (
+                        f"person_context open_loops={len(open_loops)} "
+                        f"conflicts={len(conflicts)} upcoming={len(upcoming)} "
+                        f"past_events={len(past)} recent={len(recent)}"
+                    ),
                     "entity_id": entity_id,
                     "recent": len(recent),
                     "open_loops": len(open_loops),
+                    "upcoming_events": len(upcoming),
                     "past_events": len(past),
                     "conflicts": len(conflicts),
                     "linked_handles": len(linked_handles),

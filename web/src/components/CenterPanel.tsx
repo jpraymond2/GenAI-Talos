@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Candidate, Evidence, RunState, TalkingPoint } from "../types";
+import type { Candidate, Evidence, PointVerdict, RunState, TalkingPoint } from "../types";
 import { SourceChip } from "./SourceChip";
 
 interface Props {
@@ -84,12 +84,17 @@ export function CenterPanel({
       <p className="mt-2 text-sm text-ink-500">for {brief.person}</p>
 
       <div className="mt-6 space-y-4">
-        {brief.points.map((point, index) => (
+        {brief.points.map((point, index) => {
+          const lastVerdict = run.verdicts.at(-1) ?? null;
+          const pointVerdict =
+            lastVerdict?.verdicts.find((v) => v.index === index) ?? null;
+          return (
           <PointCard
             key={`${index}-${point.text.slice(0, 24)}`}
             point={point}
             index={index}
             evidence={run.evidence}
+            pointVerdict={pointVerdict}
             conflict={
               point.kind === "logistics" &&
               (brief.caveats.some((c) => c.toLowerCase().includes("conflict")) ||
@@ -97,7 +102,8 @@ export function CenterPanel({
                 point.text.toLowerCase().includes("conflict"))
             }
           />
-        ))}
+          );
+        })}
       </div>
 
       {brief.caveats.length ? (
@@ -125,11 +131,13 @@ function PointCard({
   index,
   evidence,
   conflict,
+  pointVerdict,
 }: {
   point: TalkingPoint;
   index: number;
   evidence: Record<string, Evidence>;
   conflict: boolean;
+  pointVerdict: PointVerdict | null;
 }) {
   const [open, setOpen] = useState<string | null>(null);
   const sources = point.evidence_ids
@@ -162,6 +170,15 @@ function PointCard({
           <span className="text-xs text-ink-400">No evidence chips</span>
         ) : null}
       </div>
+      {pointVerdict ? (
+        <p className="mt-2 text-xs leading-snug text-ink-500">
+          <span className="font-mono font-semibold uppercase text-ink-700">
+            {pointVerdict.decision}
+          </span>
+          {": "}
+          {pointVerdict.reason}
+        </p>
+      ) : null}
       <span className="sr-only">point {index}</span>
     </article>
   );

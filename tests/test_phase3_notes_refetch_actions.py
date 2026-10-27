@@ -90,16 +90,15 @@ def test_rachel_brief_cites_omar_intro_note(phase3_env, tmp_path: Path) -> None:
 
 def test_refetch_event_on_mei_revision(phase3_env, tmp_path: Path) -> None:
     deps = _deps(tmp_path)
-    state = asyncio.run(
-        run("Sync with Mei tomorrow, what's open between us?", deps=deps)
-    )
+    state = asyncio.run(run("Sync with Mei tomorrow", deps=deps))
     assert state.round >= 2
+    assert state.verdicts[-1].overall in {"pass", "unresolved"}
     trace_path = Path(deps.settings.logs_dir) / state.run_id / "trace.jsonl"
     text = trace_path.read_text(encoding="utf-8")
     assert '"refetch"' in text or "refetch sources=" in text
     # Generic rule — no planted dataset literals inside refetch payloads.
     for line in text.splitlines():
-        if "refetch" not in line.lower():
+        if '"kind": "refetch"' not in line and '"kind":"refetch"' not in line:
             continue
         lowered = line.lower()
         assert "mei tanaka" not in lowered

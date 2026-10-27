@@ -524,6 +524,9 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
 
     while state.round < MAX_CRITIC_ROUNDS:
         prev_verdict = _last_verdict(state)
+        if prev_verdict.overall != "revise":
+            break
+
         sources = list(prev_verdict.refetch)
         for mid in prev_verdict.missing:
             ev = state.evidence.get(mid)
@@ -532,16 +535,9 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
             elif mid in {"gmail", "calendar", "memory", "web", "hmem", "world"}:
                 if mid not in sources:
                     sources.append(mid)
-        needs_revise = prev_verdict.overall == "revise"
-        if not needs_revise and not sources:
-            break
 
-        refetched = False
         if sources:
             state = await _refetch(state, deps, sources)
-            refetched = True
-        if not needs_revise and not refetched:
-            break
 
         prior_brief = state.drafts[-1] if state.drafts else None
         state.round += 1
@@ -552,46 +548,40 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
             and new_brief is not None
             and prior_brief.model_dump() == new_brief.model_dump()
         ):
-            # Drop the duplicate draft; keep the round bump when a refetch ran
-            # so the Writer↔Critic loop is visible in traces/examples.
             state.drafts.pop()
-            if not refetched:
-                state.round -= 1
-                deps.tracer.event(
-                    "orchestrator",
-                    "no_change",
-                    {
-                        "summary": "writer round produced no change; stopping revision",
-                        "round": state.round,
-                        "missing": list(prev_verdict.missing),
-                    },
-                )
-                break
+            state.round -= 1
             deps.tracer.event(
                 "orchestrator",
                 "no_change",
                 {
-                    "summary": "writer unchanged after refetch; keeping round",
+                    "summary": "writer round produced no change; stopping revision",
                     "round": state.round,
-                    "refetch": sources,
+                    "missing": list(prev_verdict.missing),
                 },
             )
             break
         state = await critic.run(state, deps)
+        diff = _brief_point_diff(prior_brief, new_brief)
         deps.tracer.event(
             "orchestrator",
             "round",
             {
-                "summary": _revision_summary(state.round, prev_verdict),
+                "summary": _revision_summary(state.round, prev_verdict, diff),
                 "round": state.round,
+                "diff": diff,
             },
         )
 
     # If we stopped after a revise with missing evidence still uncited, leave
     # the last non-identical draft; status stays done with best effort.
 
+    last_verdict = _last_verdict(state) if state.verdicts else None
     brief = sanitize_brief_job_changes(
-        _apply_drops(state.drafts[-1], _last_verdict(state)),
+        _apply_drops(
+            state.drafts[-1],
+            last_verdict
+            or CriticVerdict(overall="pass", verdicts=[], missing=[], refetch=[]),
+        ),
         state.evidence,
     )
     extra_caveats = list(state.context.get("retrieve_caveats") or [])
@@ -599,6 +589,15 @@ async def _pipeline_from_retrieve(state: RunState, deps: Deps) -> RunState:
         hook = "Ask me where to eat if you need ideas"
         if hook.lower() not in " ".join(brief.caveats).lower():
             extra_caveats.append(hook)
+    if last_verdict is not None and last_verdict.overall == "unresolved":
+        unresolved = [
+            m for m in last_verdict.missing if m and not m.startswith("Headline")
+        ]
+        note = "Unresolved: " + (
+            ", ".join(unresolved) if unresolved else "higher-priority gaps remain"
+        )
+        if note.lower() not in " ".join(brief.caveats).lower():
+            extra_caveats.append(note)
     if extra_caveats:
         brief = brief.model_copy(
             update={"caveats": list(brief.caveats) + extra_caveats}
@@ -1499,16 +1498,16 @@ async def _refetch(state: RunState, deps: Deps, sources: list[str]) -> RunState:
             key = "memory"
         if key and key not in normalized:
             normalized.append(key)
-    deps.tracer.event(
-        "orchestrator",
-        "refetch",
-        {
-            "summary": f"refetch sources={normalized}",
-            "sources": normalized,
-            "round": state.round,
-        },
-    )
     if not entity_id or not normalized:
+        deps.tracer.event(
+            "orchestrator",
+            "refetch",
+            {
+                "summary": f"refetch sources={normalized} added=0 (skipped)",
+                "sources": normalized,
+                "round": state.round,
+            },
+        )
         return state
 
     new_evidence: dict[str, Evidence] = {}
@@ -1601,6 +1600,19 @@ async def _refetch(state: RunState, deps: Deps, sources: list[str]) -> RunState:
         )
         return state
 
+    added_ids = sorted(new_evidence)
+    deps.tracer.event(
+        "orchestrator",
+        "refetch",
+        {
+            "summary": (
+                f"refetch sources={normalized} added={len(added_ids)} ids={added_ids}"
+            ),
+            "sources": normalized,
+            "round": state.round,
+            "added": added_ids,
+        },
+    )
     if new_evidence:
         merged = dict(state.evidence)
         merged.update(new_evidence)
@@ -1610,8 +1622,8 @@ async def _refetch(state: RunState, deps: Deps, sources: list[str]) -> RunState:
             "orchestrator",
             "refetch_merged",
             {
-                "summary": f"added={len(new_evidence)} total={len(state.evidence)}",
-                "added": sorted(new_evidence),
+                "summary": f"refetch merged added={len(new_evidence)} total={len(state.evidence)}",
+                "added": added_ids,
             },
         )
     return state
@@ -2109,10 +2121,64 @@ def _last_verdict(state: RunState) -> CriticVerdict:
     return state.verdicts[-1]
 
 
-def _revision_summary(round_no: int, prev: CriticVerdict) -> str:
-    revised = sum(1 for item in prev.verdicts if item.decision == "fix")
-    dropped = sum(1 for item in prev.verdicts if item.decision == "drop")
-    return f"round {round_no}: writer revised {revised} points, dropped {dropped}"
+def _brief_point_diff(
+    prior: Brief | None, new: Brief | None
+) -> dict[str, Any]:
+    """Compute added/dropped/changed talking points between two drafts."""
+    if prior is None or new is None:
+        return {"added": [], "dropped": [], "changed": []}
+    prior_by_eid: dict[frozenset[str], TalkingPoint] = {
+        frozenset(p.evidence_ids): p for p in prior.points
+    }
+    new_by_eid: dict[frozenset[str], TalkingPoint] = {
+        frozenset(p.evidence_ids): p for p in new.points
+    }
+    prior_keys = set(prior_by_eid)
+    new_keys = set(new_by_eid)
+    added = [
+        {
+            "text": new_by_eid[k].text,
+            "evidence_ids": list(new_by_eid[k].evidence_ids),
+        }
+        for k in new_keys - prior_keys
+    ]
+    dropped = [
+        {
+            "text": prior_by_eid[k].text,
+            "evidence_ids": list(prior_by_eid[k].evidence_ids),
+        }
+        for k in prior_keys - new_keys
+    ]
+    changed = []
+    for k in prior_keys & new_keys:
+        if prior_by_eid[k].text != new_by_eid[k].text:
+            changed.append(
+                {
+                    "from": prior_by_eid[k].text,
+                    "to": new_by_eid[k].text,
+                    "evidence_ids": list(new_by_eid[k].evidence_ids),
+                }
+            )
+    return {"added": added, "dropped": dropped, "changed": changed}
+
+
+def _revision_summary(
+    round_no: int,
+    prev: CriticVerdict,
+    diff: dict[str, Any] | None = None,
+) -> str:
+    diff = diff or {"added": [], "dropped": [], "changed": []}
+    added = diff.get("added") or []
+    dropped = diff.get("dropped") or []
+    changed = diff.get("changed") or []
+    add_ids = [",".join(a.get("evidence_ids") or []) for a in added]
+    drop_ids = [",".join(d.get("evidence_ids") or []) for d in dropped]
+    return (
+        f"round {round_no}: added {len(added)} {add_ids or ''}, "
+        f"dropped {len(dropped)} {drop_ids or ''}, "
+        f"changed {len(changed)}; "
+        f"prior critic missing={list(prev.missing)}"
+    ).replace("  ", " ")
 
 
 def _apply_drops(draft: Brief, verdict: CriticVerdict) -> Brief:

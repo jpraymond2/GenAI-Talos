@@ -1,6 +1,6 @@
 # Synthetic eval report
 
-**Overall: 18/23 (78.3%)**
+**Overall: 19/23 (82.6%)**
 
 - Person accuracy: 100.0% (18/18)
 - Clarify accuracy: 100.0% (1/1)
@@ -13,7 +13,7 @@ The 23 questions were visible during development (not a held-out set). The code 
 
 | category | pass | total | pct |
 |---|---:|---:|---:|
-| brief | 7 | 9 | 78% |
+| brief | 8 | 9 | 89% |
 | calendar | 2 | 2 | 100% |
 | conflict | 2 | 2 | 100% |
 | disambiguation | 2 | 2 | 100% |
@@ -28,7 +28,7 @@ The 23 questions were visible during development (not a held-out set). The code 
 | id | category | result | notes |
 |---|---|---|---|
 | q01 | disambiguation | pass | ok |
-| q02 | brief | fail | missing omar_h.series_a |
+| q02 | brief | pass | ok |
 | q03 | brief | pass | ok |
 | q04 | open_loops | fail | missing omar_k.lease |
 | q05 | disambiguation | pass | ok |

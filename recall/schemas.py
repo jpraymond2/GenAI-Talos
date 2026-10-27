@@ -140,7 +140,7 @@ class PointVerdict(BaseModel):
 class CriticVerdict(BaseModel):
     """Whether the brief is good enough, with per-point notes."""
 
-    overall: Literal["pass", "revise"]
+    overall: Literal["pass", "revise", "unresolved"]
     verdicts: list[PointVerdict]
     missing: list[str] = Field(default_factory=list)
     refetch: list[str] = Field(default_factory=list)

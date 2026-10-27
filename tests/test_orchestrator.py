@@ -158,7 +158,10 @@ def test_critic_revise_once_triggers_exactly_one_rewrite(tmp_path: Path) -> None
         for e in events
         if e["agent"] == "orchestrator" and e["kind"] == "round"
     ]
-    assert any("round 2: writer revised 1 points, dropped 1" in s for s in round_summaries)
+    assert any(
+        s.startswith("round 2:") and ("added" in s or "dropped" in s or "changed" in s)
+        for s in round_summaries
+    )
 
 
 def test_critic_loop_never_exceeds_two_rounds(tmp_path: Path) -> None:

@@ -9,4 +9,4 @@
 - Latest thread on Fri Jul 17: Great to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as… (gmail)  
   sources: `e1`
 
-_status: done · critic rounds: 2_
+_status: done · critic rounds: 1_

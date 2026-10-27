@@ -260,6 +260,7 @@ async def embed(texts: list[str], *, input_type: str = "passage") -> list[list[f
                 completion_tokens=0,
                 success=True,
                 prompt=texts[0],
+                provider="sample",
             )
             return vectors
 
@@ -877,7 +878,19 @@ def _log_call(
     provider: str | None = None,
 ) -> None:
     """Write one LLM event. Never logs the API key or the full prompt."""
+    kind = "embed" if role == "embed" else "generate"
+    if kind == "embed":
+        summary = (
+            f"embed count≈{max(1, prompt_tokens)} provider={provider or model} "
+            f"ms={latency_ms} success={success}"
+        )
+    else:
+        summary = (
+            f"{role} model={model} ms={latency_ms} "
+            f"tokens={prompt_tokens}+{completion_tokens} success={success}"
+        )
     payload: dict[str, Any] = {
+        "summary": summary,
         "role": role,
         "model": model,
         "latency_ms": latency_ms,
@@ -893,4 +906,4 @@ def _log_call(
         payload["error"] = error
     tracer = Tracer.current()
     if tracer is not None:
-        tracer.event("llm", "generate" if role != "embed" else "embed", payload)
+        tracer.event("llm", kind, payload)

@@ -1,8 +1,8 @@
 {
-  "run_id": "4df3c434-d48a-4aef-bef1-a71a83c89c96",
+  "run_id": "example-02_brief_omar_haddad-eaa5736a",
   "utterance": {
     "text": "I'm meeting Omar Haddad on Wednesday",
-    "ts": "2026-10-27T15:36:38.650501Z",
+    "ts": "2026-10-27T15:45:42.150462Z",
     "mode": "text"
   },
   "intent": {
@@ -65,11 +65,14 @@
       "e24": "imessage:1214",
       "e25": "calendar:26dbp9qa7efe8qeqpno792e8sc",
       "e26": "calendar:j3deg1dncf54epf5dhod3docis",
-      "m1": "mem_a1f47c8be006",
-      "memory:m1": "mem_a1f47c8be006",
-      "m2": "mem_a13750f2de8c",
-      "memory:m2": "mem_a13750f2de8c",
-      "w1": "https://example.com/payloop-series-a"
+      "m1": "mem_48e3dabd4c4a",
+      "memory:m1": "mem_48e3dabd4c4a",
+      "m2": "mem_6ee6abfc562a",
+      "memory:m2": "mem_6ee6abfc562a",
+      "m3": "mem_722020ba619f",
+      "memory:m3": "mem_722020ba619f",
+      "m4": "mem_a1f47c8be006",
+      "memory:m4": "mem_a1f47c8be006"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -502,9 +505,27 @@
     "meal_hook": true,
     "latency_ms": 13,
     "llm_calls": 0,
-    "critic_rounds": 2
+    "critic_rounds": 1
   },
   "memories": [
+    {
+      "id": "mem_48e3dabd4c4a",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
+      "id": "mem_6ee6abfc562a",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
+      "id": "mem_722020ba619f",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
     {
       "id": "mem_a1f47c8be006",
       "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
@@ -768,7 +789,7 @@
     "m1": {
       "id": "m1",
       "source": "memory",
-      "source_ref": "mem_a1f47c8be006",
+      "source_ref": "mem_48e3dabd4c4a",
       "ts": "2026-10-26T18:00:00-04:00",
       "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "url": null,
@@ -779,24 +800,34 @@
     "m2": {
       "id": "m2",
       "source": "memory",
-      "source_ref": "mem_a13750f2de8c",
+      "source_ref": "mem_6ee6abfc562a",
       "ts": "2026-10-26T18:00:00-04:00",
-      "text": "Note that Omar Haddad wants an intro to Rachel Goldberg by end of month.",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "url": null,
       "tags": [
         "memory"
       ]
     },
-    "w1": {
-      "id": "w1",
-      "source": "web",
-      "source_ref": "https://example.com/payloop-series-a",
-      "ts": "2026-09-15T00:00:00Z",
-      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by climate-focused funds, with CEO Omar Haddad citing demand from SMBs.",
-      "url": "https://example.com/payloop-series-a",
+    "m3": {
+      "id": "m3",
+      "source": "memory",
+      "source_ref": "mem_722020ba619f",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "url": null,
       "tags": [
-        "web",
-        "cache"
+        "memory"
+      ]
+    },
+    "m4": {
+      "id": "m4",
+      "source": "memory",
+      "source_ref": "mem_a1f47c8be006",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "url": null,
+      "tags": [
+        "memory"
       ]
     }
   },
@@ -814,9 +845,9 @@
           "priority": 1
         },
         {
-          "text": "You noted: Note that Omar Haddad wants an intro to Rachel Goldberg by end of month. (memory)",
+          "text": "You noted: Note that Omar Haddad wants an intro to Rachel by end of month (memory)",
           "evidence_ids": [
-            "m2"
+            "m1"
           ],
           "kind": "catch_up",
           "priority": 2
@@ -847,139 +878,45 @@
         }
       ],
       "caveats": []
-    },
-    {
-      "person": "Omar Haddad",
-      "headline": "Omar Haddad, CEO at Payloop; last contact 5 days ago on imessage; next meeting: Coffee w/ Omar Haddad, Wed Oct 28, 10:00",
-      "points": [
-        {
-          "text": "Omar asked on Thu Sep 24 (messenger): \"investor update draft is in the doc, can you review?\" No reply yet.",
-          "evidence_ids": [
-            "e3"
-          ],
-          "kind": "open_loop",
-          "priority": 1
-        },
-        {
-          "text": "Omar asked on Wed Sep 30 (gmail): \"could you intro me to Rachel Goldberg at Northwind? We're starting conversations for our…\" No reply yet.",
-          "evidence_ids": [
-            "e2"
-          ],
-          "kind": "open_loop",
-          "priority": 2
-        },
-        {
-          "text": "You noted: Note that Omar Haddad wants an intro to Rachel Goldberg by end of month. (memory)",
-          "evidence_ids": [
-            "m2"
-          ],
-          "kind": "catch_up",
-          "priority": 3
-        },
-        {
-          "text": "Upcoming: Coffee w/ Omar Haddad on Wed Oct 28, 10:00 (calendar)",
-          "evidence_ids": [
-            "e26"
-          ],
-          "kind": "logistics",
-          "priority": 4
-        },
-        {
-          "text": "Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (imessage)",
-          "evidence_ids": [
-            "e10"
-          ],
-          "kind": "news",
-          "priority": 5
-        }
-      ],
-      "caveats": []
     }
   ],
   "verdicts": [
     {
-      "overall": "revise",
+      "overall": "pass",
       "verdicts": [
         {
           "index": 0,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites gmail Wed Sep 30, 08:55 from Omar Haddad; no later reply from owner → open loop holds",
           "fix_hint": null
         },
         {
           "index": 1,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites H-MEM note (m1)",
           "fix_hint": null
         },
         {
           "index": 2,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites upcoming/past calendar Wed Oct 28, 10:00",
           "fix_hint": null
         },
         {
           "index": 3,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Wed Oct 14, 07:44",
           "fix_hint": null
         },
         {
           "index": 4,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Wed Oct 14, 07:31",
           "fix_hint": null
         }
       ],
-      "missing": [
-        "e3"
-      ],
-      "refetch": [
-        "messenger",
-        "web"
-      ]
-    },
-    {
-      "overall": "revise",
-      "verdicts": [
-        {
-          "index": 0,
-          "decision": "keep",
-          "reason": "Cited evidence in pack.",
-          "fix_hint": null
-        },
-        {
-          "index": 1,
-          "decision": "keep",
-          "reason": "Cited evidence in pack.",
-          "fix_hint": null
-        },
-        {
-          "index": 2,
-          "decision": "keep",
-          "reason": "Cited evidence in pack.",
-          "fix_hint": null
-        },
-        {
-          "index": 3,
-          "decision": "keep",
-          "reason": "Cited evidence in pack.",
-          "fix_hint": null
-        },
-        {
-          "index": 4,
-          "decision": "keep",
-          "reason": "Cited evidence in pack.",
-          "fix_hint": null
-        }
-      ],
-      "missing": [
-        "e4"
-      ],
-      "refetch": [
-        "gmail",
-        "web"
-      ]
+      "missing": [],
+      "refetch": []
     }
   ],
   "final_brief": {
@@ -987,28 +924,20 @@
     "headline": "Omar Haddad, CEO at Payloop; last contact 5 days ago on imessage; next meeting: Coffee w/ Omar Haddad, Wed Oct 28, 10:00",
     "points": [
       {
-        "text": "Omar asked on Thu Sep 24 (messenger): \"investor update draft is in the doc, can you review?\" No reply yet.",
-        "evidence_ids": [
-          "e3"
-        ],
-        "kind": "open_loop",
-        "priority": 1
-      },
-      {
         "text": "Omar asked on Wed Sep 30 (gmail): \"could you intro me to Rachel Goldberg at Northwind? We're starting conversations for our…\" No reply yet.",
         "evidence_ids": [
           "e2"
         ],
         "kind": "open_loop",
-        "priority": 2
+        "priority": 1
       },
       {
-        "text": "You noted: Note that Omar Haddad wants an intro to Rachel Goldberg by end of month. (memory)",
+        "text": "You noted: Note that Omar Haddad wants an intro to Rachel by end of month (memory)",
         "evidence_ids": [
-          "m2"
+          "m1"
         ],
         "kind": "catch_up",
-        "priority": 3
+        "priority": 2
       },
       {
         "text": "Upcoming: Coffee w/ Omar Haddad on Wed Oct 28, 10:00 (calendar)",
@@ -1016,12 +945,20 @@
           "e26"
         ],
         "kind": "logistics",
-        "priority": 4
+        "priority": 3
       },
       {
         "text": "Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (imessage)",
         "evidence_ids": [
           "e10"
+        ],
+        "kind": "news",
+        "priority": 4
+      },
+      {
+        "text": "Life/job update on Wed Oct 14: it's out!! Series A closed, $8M led by Maple Ridge 🎉 announcement went live this morning (imessage)",
+        "evidence_ids": [
+          "e12"
         ],
         "kind": "news",
         "priority": 5
@@ -1055,6 +992,6 @@
     "requires_confirmation": true
   },
   "status": "done",
-  "round": 2,
+  "round": 1,
   "question": null
 }

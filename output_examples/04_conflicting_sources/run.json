@@ -1,8 +1,8 @@
 {
-  "run_id": "4df3c434-d48a-4aef-bef1-a71a83c89c96",
+  "run_id": "example-04_conflicting_sources-744c4665",
   "utterance": {
     "text": "Where does Lucas live?",
-    "ts": "2026-10-27T15:36:38.674557Z",
+    "ts": "2026-10-27T15:45:42.184254Z",
     "mode": "text"
   },
   "intent": {
@@ -449,9 +449,9 @@
       "last_met": null,
       "next_meeting": null
     },
-    "latency_ms": 16,
+    "latency_ms": 18,
     "llm_calls": 0,
-    "critic_rounds": 2
+    "critic_rounds": 1
   },
   "memories": [
     {
@@ -752,19 +752,19 @@
         {
           "index": 0,
           "decision": "drop",
-          "reason": "Bad point (missing evidence, too short, or ISO timestamp).",
+          "reason": "drop: point lacks usable evidence ids, is too short (12 words), or still has an ISO timestamp",
           "fix_hint": "Rewrite with a template citing pack evidence."
         },
         {
           "index": 1,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Fri Oct 16, 15:44 from Lucas Moreau; no later reply from owner → open loop holds",
           "fix_hint": null
         },
         {
           "index": 2,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites H-MEM note (m1)",
           "fix_hint": null
         }
       ],
@@ -815,6 +815,6 @@
     "requires_confirmation": true
   },
   "status": "done",
-  "round": 2,
+  "round": 1,
   "question": null
 }

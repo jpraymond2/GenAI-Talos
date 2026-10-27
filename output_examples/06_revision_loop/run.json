@@ -1,8 +1,8 @@
 {
-  "run_id": "4df3c434-d48a-4aef-bef1-a71a83c89c96",
+  "run_id": "example-06_revision_loop-7b739439",
   "utterance": {
-    "text": "Sync with Mei tomorrow, what's open between us?",
-    "ts": "2026-10-27T15:36:38.727959Z",
+    "text": "Sync with Mei tomorrow",
+    "ts": "2026-10-27T15:45:42.233644Z",
     "mode": "text"
   },
   "intent": {
@@ -68,7 +68,8 @@
       "e27": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6",
       "e28": "calendar:qgmq9o7ohf4e6ihg73km8fi1d3",
       "e29": "calendar:m8fu75j3fdvt418itvbmo6fj14",
-      "e30": "calendar:tfjoki63fc68mn1ac5jsed4ve6"
+      "m1": "mem_ac03c3d0c78c",
+      "memory:m1": "mem_ac03c3d0c78c"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -838,11 +839,18 @@
         "source_ref": "calendar:tlgm1gedn95u771tplpft9v6se"
       }
     },
-    "latency_ms": 17,
+    "latency_ms": 36,
     "llm_calls": 0,
     "critic_rounds": 2
   },
-  "memories": [],
+  "memories": [
+    {
+      "id": "mem_ac03c3d0c78c",
+      "content": "Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes.",
+      "score": 0.3671,
+      "why": "entity=0.15, layer=0.10, recency=0.07"
+    }
+  ],
   "evidence": {
     "e1": {
       "id": "e1",
@@ -1126,15 +1134,15 @@
         "past_meeting"
       ]
     },
-    "e30": {
-      "id": "e30",
-      "source": "calendar",
-      "source_ref": "calendar:tfjoki63fc68mn1ac5jsed4ve6",
-      "ts": "2026-09-28T13:30:00Z",
-      "text": "Tidepool weekly sync",
+    "m1": {
+      "id": "m1",
+      "source": "memory",
+      "source_ref": "mem_ac03c3d0c78c",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes.",
       "url": null,
       "tags": [
-        "past_meeting"
+        "memory"
       ]
     }
   },
@@ -1144,20 +1152,12 @@
       "headline": "Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (imessage); next meeting: Tidepool pitch — Maple Ridge Ventures, Thu Oct 29, 15:00",
       "points": [
         {
-          "text": "You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.",
+          "text": "You noted: Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes. (memory)",
           "evidence_ids": [
-            "e3"
+            "m1"
           ],
-          "kind": "open_loop",
+          "kind": "catch_up",
           "priority": 1
-        },
-        {
-          "text": "Mei asked on Fri Oct 23 (messenger): \"investor update draft is in the doc, can you review?\" No reply yet.",
-          "evidence_ids": [
-            "e2"
-          ],
-          "kind": "open_loop",
-          "priority": 2
         },
         {
           "text": "Tidepool weekly sync, Mondays 9:30 (calendar)",
@@ -1165,7 +1165,7 @@
             "e26"
           ],
           "kind": "logistics",
-          "priority": 3
+          "priority": 2
         },
         {
           "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)",
@@ -1173,12 +1173,20 @@
             "e13"
           ],
           "kind": "catch_up",
-          "priority": 4
+          "priority": 3
         },
         {
           "text": "Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)",
           "evidence_ids": [
             "e6"
+          ],
+          "kind": "catch_up",
+          "priority": 4
+        },
+        {
+          "text": "Latest thread on Sat Oct 24: early stage climate, I'll send details (imessage)",
+          "evidence_ids": [
+            "e7"
           ],
           "kind": "catch_up",
           "priority": 5
@@ -1207,11 +1215,11 @@
           "priority": 2
         },
         {
-          "text": "Mei asked on Fri Oct 23 (messenger): \"investor update draft is in the doc, can you review?\" No reply yet.",
+          "text": "You noted: Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes. (memory)",
           "evidence_ids": [
-            "e2"
+            "m1"
           ],
-          "kind": "open_loop",
+          "kind": "catch_up",
           "priority": 3
         },
         {
@@ -1241,31 +1249,31 @@
         {
           "index": 0,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites H-MEM note (m1)",
           "fix_hint": null
         },
         {
           "index": 1,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites upcoming/past calendar Mon Oct 26, 09:30",
           "fix_hint": null
         },
         {
           "index": 2,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Thu Oct 22, 17:05",
           "fix_hint": null
         },
         {
           "index": 3,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Sun Oct 25, 11:20",
           "fix_hint": null
         },
         {
           "index": 4,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Sat Oct 24, 15:09",
           "fix_hint": null
         }
       ],
@@ -1273,48 +1281,47 @@
         "e1"
       ],
       "refetch": [
-        "imessage"
+        "imessage",
+        "memory"
       ]
     },
     {
-      "overall": "revise",
+      "overall": "pass",
       "verdicts": [
         {
           "index": 0,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Sat Oct 24, 15:09 from Mei Tanaka; no later reply from owner → open loop holds",
           "fix_hint": null
         },
         {
           "index": 1,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Thu Oct 22, 17:05 from Mei Tanaka; no later reply from owner → open loop holds",
           "fix_hint": null
         },
         {
           "index": 2,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites H-MEM note (m1)",
           "fix_hint": null
         },
         {
           "index": 3,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites upcoming/past calendar Mon Oct 26, 09:30",
           "fix_hint": null
         },
         {
           "index": 4,
           "decision": "keep",
-          "reason": "Cited evidence in pack.",
+          "reason": "keep: cites imessage Thu Oct 22, 17:05",
           "fix_hint": null
         }
       ],
-      "missing": [
-        "e4"
-      ],
+      "missing": [],
       "refetch": [
-        "imessage"
+        "memory"
       ]
     }
   ],
@@ -1339,11 +1346,11 @@
         "priority": 2
       },
       {
-        "text": "Mei asked on Fri Oct 23 (messenger): \"investor update draft is in the doc, can you review?\" No reply yet.",
+        "text": "You noted: Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes. (memory)",
         "evidence_ids": [
-          "e2"
+          "m1"
         ],
-        "kind": "open_loop",
+        "kind": "catch_up",
         "priority": 3
       },
       {

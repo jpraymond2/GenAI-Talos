@@ -7,4 +7,4 @@
 - You noted: Note: Lucas Moreau moved to Paris in August 2026; the Montreal card is stale. (memory)  
   sources: `m1`
 
-_status: done · critic rounds: 2_
+_status: done · critic rounds: 1_

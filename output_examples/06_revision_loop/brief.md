@@ -6,8 +6,8 @@
   sources: `e1`
 - You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.  
   sources: `e3`
-- Mei asked on Fri Oct 23 (messenger): "investor update draft is in the doc, can you review?" No reply yet.  
-  sources: `e2`
+- You noted: Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes. (memory)  
+  sources: `m1`
 - Tidepool weekly sync, Mondays 9:30 (calendar)  
   sources: `e26`
 - Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)  
