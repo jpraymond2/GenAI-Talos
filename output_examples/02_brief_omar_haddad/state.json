@@ -1,8 +1,8 @@
 {
-  "run_id": "example-02_brief_omar_haddad-eaa5736a",
+  "run_id": "example-02_brief_omar_haddad-c0844a20",
   "utterance": {
     "text": "I'm meeting Omar Haddad on Wednesday",
-    "ts": "2026-10-27T15:45:42.150462Z",
+    "ts": "2026-10-27T15:52:50.210447Z",
     "mode": "text"
   },
   "intent": {
@@ -65,14 +65,14 @@
       "e24": "imessage:1214",
       "e25": "calendar:26dbp9qa7efe8qeqpno792e8sc",
       "e26": "calendar:j3deg1dncf54epf5dhod3docis",
-      "m1": "mem_48e3dabd4c4a",
-      "memory:m1": "mem_48e3dabd4c4a",
-      "m2": "mem_6ee6abfc562a",
-      "memory:m2": "mem_6ee6abfc562a",
-      "m3": "mem_722020ba619f",
-      "memory:m3": "mem_722020ba619f",
-      "m4": "mem_a1f47c8be006",
-      "memory:m4": "mem_a1f47c8be006"
+      "m1": "mem_f01f45fe7e8e",
+      "memory:m1": "mem_f01f45fe7e8e",
+      "m2": "mem_abe94f005683",
+      "memory:m2": "mem_abe94f005683",
+      "m3": "mem_621786693965",
+      "memory:m3": "mem_621786693965",
+      "m4": "mem_48e3dabd4c4a",
+      "memory:m4": "mem_48e3dabd4c4a"
     },
     "retrieve_caveats": [],
     "person_context": {
@@ -506,6 +506,24 @@
   },
   "memories": [
     {
+      "id": "mem_f01f45fe7e8e",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
+      "id": "mem_abe94f005683",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
+      "id": "mem_621786693965",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
+      "score": 0.4769,
+      "why": "entity=0.15, layer=0.10, recency=0.10"
+    },
+    {
       "id": "mem_48e3dabd4c4a",
       "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "score": 0.4769,
@@ -516,24 +534,6 @@
       "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "score": 0.4769,
       "why": "entity=0.15, layer=0.10, recency=0.10"
-    },
-    {
-      "id": "mem_722020ba619f",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "score": 0.4769,
-      "why": "entity=0.15, layer=0.10, recency=0.10"
-    },
-    {
-      "id": "mem_a1f47c8be006",
-      "content": "Note that Omar Haddad wants an intro to Rachel by end of month",
-      "score": 0.4769,
-      "why": "entity=0.15, layer=0.10, recency=0.10"
-    },
-    {
-      "id": "mem_a13750f2de8c",
-      "content": "Note that Omar Haddad wants an intro to Rachel Goldberg by end of month.",
-      "score": 0.4091,
-      "why": "entity=0.15, layer=0.10, keyword=0.08"
     }
   ],
   "evidence": {
@@ -786,7 +786,7 @@
     "m1": {
       "id": "m1",
       "source": "memory",
-      "source_ref": "mem_48e3dabd4c4a",
+      "source_ref": "mem_f01f45fe7e8e",
       "ts": "2026-10-26T18:00:00-04:00",
       "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "url": null,
@@ -797,7 +797,7 @@
     "m2": {
       "id": "m2",
       "source": "memory",
-      "source_ref": "mem_6ee6abfc562a",
+      "source_ref": "mem_abe94f005683",
       "ts": "2026-10-26T18:00:00-04:00",
       "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "url": null,
@@ -808,7 +808,7 @@
     "m3": {
       "id": "m3",
       "source": "memory",
-      "source_ref": "mem_722020ba619f",
+      "source_ref": "mem_621786693965",
       "ts": "2026-10-26T18:00:00-04:00",
       "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "url": null,
@@ -819,7 +819,7 @@
     "m4": {
       "id": "m4",
       "source": "memory",
-      "source_ref": "mem_a1f47c8be006",
+      "source_ref": "mem_48e3dabd4c4a",
       "ts": "2026-10-26T18:00:00-04:00",
       "text": "Note that Omar Haddad wants an intro to Rachel by end of month",
       "url": null,

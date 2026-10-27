@@ -1277,20 +1277,14 @@ def _select_points(
         when = format_human_when(item.ts, settings=active)
         day = format_human_day(item.ts, settings=active)
         if "promise" in tags:
-            ask_bit, promise_bit = _split_promise(item.text or "")
-            body = _clean_quote(ask_bit or promise_bit, person=person, settings=active)
-            if ask_bit and re.search(r"(?i)financial model|model", ask_bit):
-                text = (
-                    f"You told {first_name} on {day} you'd send the revised "
-                    f"financial model by Tuesday; still open."
-                )
-            elif body:
-                text = (
-                    f"You told {first_name} on {day} you'd "
-                    f"{_clean_quote(promise_bit, person=person, limit=60, settings=active)}; "
-                    f"still open."
-                )
-            else:
+            text = _format_promise_point(
+                item.text or "",
+                first_name=first_name,
+                day=day,
+                person=person,
+                settings=active,
+            )
+            if not text:
                 return None
             kind = "open_loop"
         elif "open_loop" in tags:
@@ -1638,6 +1632,70 @@ def _split_promise(text: str) -> tuple[str, str]:
     promise = re.sub(r"\s*\(re:.*\)$", "", body).strip()
     promise = re.sub(r"(?i)^(yes[,.]?\s*)", "", promise).strip()
     return ask, promise
+
+
+def _format_promise_point(
+    raw: str,
+    *,
+    first_name: str,
+    day: str,
+    person: str,
+    settings: Settings | None,
+) -> str | None:
+    """Render a promise open-loop line; quote when the fragment is not verb-led."""
+    ask_bit, promise_bit = _split_promise(raw)
+    promise_clean = _clean_quote(promise_bit, person=person, limit=60, settings=settings)
+    ask_clean = _clean_quote(ask_bit, person=person, limit=40, settings=settings)
+    topic, action = _split_topic_and_action(promise_clean)
+    action_clean = _clean_quote(action, person=person, limit=60, settings=settings)
+    if ask_bit and re.search(r"(?i)financial model|model", ask_bit):
+        return (
+            f"You told {first_name} on {day} you'd send the revised "
+            f"financial model by Tuesday; still open."
+        )
+    if promise_clean and _promise_is_verb_led(promise_clean):
+        return f"You told {first_name} on {day} you'd {promise_clean}; still open."
+    if action_clean and _promise_is_verb_led(action_clean):
+        # "early stage climate, I'll send details" → quote the verb clause.
+        re_topic = topic or ask_clean
+        re_bit = f" (re: {re_topic})" if re_topic else ""
+        return f'You said on {day}: "{action_clean}"{re_bit}; still open.'
+    if promise_clean:
+        re_bit = f" (re: {ask_clean})" if ask_clean else ""
+        return f'You said on {day}: "{promise_clean}"{re_bit}; still open.'
+    return None
+
+
+_VERB_LED_PROMISE = re.compile(
+    r"(?i)^(?:"
+    r"i'?ll|i will|i can|i'?m going to|i am going to|gonna|"
+    r"will|can|send|share|get|finish|bring|call|email|ping|follow|"
+    r"draft|prep|book|schedule|introduce|intro|forward|look|check|"
+    r"make|do|put|set|write|reply|confirm|update|ship|deliver"
+    r")\b"
+)
+
+_TOPIC_ACTION_SPLIT = re.compile(
+    r"(?i)^(.+?),\s*((?:i'?ll|i will|i can|i'?m going to|i am going to|"
+    r"gonna|will|can|send|share|get|finish|bring|call|email|ping|follow|"
+    r"draft|prep|book|schedule|introduce|intro|forward|look|check|"
+    r"make|do|put|set|write|reply|confirm|update|ship|deliver)\b.+)$"
+)
+
+
+def _promise_is_verb_led(text: str) -> bool:
+    """True when the promise fragment starts with a verb / I'll / will …"""
+    cleaned = re.sub(r"(?i)^to\s+", "", (text or "").strip())
+    return bool(_VERB_LED_PROMISE.match(cleaned))
+
+
+def _split_topic_and_action(promise: str) -> tuple[str, str]:
+    """Split 'early stage climate, I'll send details' into topic + action."""
+    text = (promise or "").strip()
+    match = _TOPIC_ACTION_SPLIT.match(text)
+    if not match:
+        return "", text
+    return match.group(1).strip(), match.group(2).strip()
 
 
 def _calendar_title(item: Evidence) -> str:

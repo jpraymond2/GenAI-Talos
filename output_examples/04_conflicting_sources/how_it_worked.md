@@ -1,6 +1,6 @@
 # How it worked — `04_conflicting_sources`
 
-Run `example-04_conflicting_sources-744c4665` · status `done` · critic rounds `1`
+Run `example-04_conflicting_sources-d404365d` · status `done` · critic rounds `1`
 
 ## Timeline
 
@@ -8,14 +8,14 @@ Run `example-04_conflicting_sources-744c4665` · status `done` · critic rounds 
 2. **world** `resolve` — resolve 'Lucas Moreau' candidates=1 top=Lucas Moreau score=1.00 (exact alias match)
 3. **orchestrator** `resolve` — name='Lucas Moreau' candidates=1
 4. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-5. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=59 backend=duckdb ms=0.978
+5. **query_layer** `query` · 1 ms — query world.relationship.interactions rows=59 backend=duckdb ms=1.104
 6. **orchestrator** `relationship` — label=social confidence=0.62
 7. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
 8. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
-9. **hmem** `retrieve` — hmem retrieve hits=1 candidates=9 top=[('mem_a277abbbf44d', 0.3634)]
-10. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=90 backend=duckdb ms=1.744
+9. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=90 backend=duckdb ms=1.92
+10. **hmem** `retrieve` — hmem retrieve hits=1 candidates=12 top=[('mem_a277abbbf44d', 0.3634)]
 11. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
-12. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.662
+12. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.709
 13. **world** `person_context` — person_context open_loops=1 conflicts=1 upcoming=0 past_events=0 recent=20
 14. **orchestrator** `retrieve` — world_open_loops=1 memories=1 backend=duckdb
 15. **orchestrator** `memories` — count=1 top_score=0.363
@@ -25,7 +25,7 @@ Run `example-04_conflicting_sources-744c4665` · status `done` · critic rounds 
 19. **orchestrator** `round` — round 1: initial draft + critic
 20. **world** `person_context` — person_context open_loops=1 conflicts=1 upcoming=0 past_events=0 recent=20
 21. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
-22. **hmem** `retrieve` — hmem retrieve hits=1 candidates=9 top=[('mem_a277abbbf44d', 0.3634)]
+22. **hmem** `retrieve` — hmem retrieve hits=1 candidates=12 top=[('mem_a277abbbf44d', 0.3634)]
 23. **orchestrator** `refetch` — refetch sources=['gmail', 'memory'] added=0 ids=[]
 24. **writer** `complete` — person='Lucas Moreau' points=3 headline='Lucas Moreau lives in Paris (since Aug 2026, from messages); contact card still '
 25. **orchestrator** `no_change` — writer round produced no change; stopping revision
@@ -34,7 +34,7 @@ Run `example-04_conflicting_sources-744c4665` · status `done` · critic rounds 
 28. **hmem** `feedback` — hmem/feedback
 29. **orchestrator** `feedback` — feedback=1
 30. **actions** `plan` — steps=1
-31. **orchestrator** `final` · 18 ms — status=done points=2 caveats=0 latency_ms=18 llm_calls=0
+31. **orchestrator** `final` · 19 ms — status=done points=2 caveats=0 latency_ms=19 llm_calls=0
 
 ## Candidate choice
 

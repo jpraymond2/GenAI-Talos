@@ -1,8 +1,8 @@
 {
-  "run_id": "example-05_memory_carryover-b707ec6e",
+  "run_id": "example-05_memory_carryover-33c72906",
   "utterance": {
     "text": "I'm meeting Rachel Goldberg",
-    "ts": "2026-10-27T15:45:42.219131Z",
+    "ts": "2026-10-27T15:52:50.283880Z",
     "mode": "text"
   },
   "intent": {
@@ -156,7 +156,7 @@
         "source_ref": "calendar:nthj1jqi7og39kok53v4m0uf1b"
       }
     },
-    "latency_ms": 10,
+    "latency_ms": 11,
     "llm_calls": 0,
     "critic_rounds": 1
   },

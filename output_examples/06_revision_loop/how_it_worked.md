@@ -1,6 +1,6 @@
 # How it worked — `06_revision_loop`
 
-Run `example-06_revision_loop-7b739439` · status `done` · critic rounds `2`
+Run `example-06_revision_loop-e7741743` · status `done` · critic rounds `2`
 
 ## Timeline
 
@@ -8,14 +8,14 @@ Run `example-06_revision_loop-7b739439` · status `done` · critic rounds `2`
 2. **world** `resolve` — resolve 'Mei Tanaka' candidates=1 top=Mei Tanaka score=1.00 (exact alias match)
 3. **orchestrator** `resolve` — name='Mei Tanaka' candidates=1
 4. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-5. **query_layer** `query` · 1 ms — query world.relationship.interactions rows=200 backend=duckdb ms=1.234
+5. **query_layer** `query` · 1 ms — query world.relationship.interactions rows=200 backend=duckdb ms=1.611
 6. **orchestrator** `relationship` — label=social confidence=0.85
-7. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
-8. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
-9. **hmem** `retrieve` — hmem retrieve hits=1 candidates=10 top=[('mem_ac03c3d0c78c', 0.3671)]
-10. **query_layer** `query` · 2 ms — query world.context.thread_peers rows=357 backend=duckdb ms=2.391
+7. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
+8. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
+9. **hmem** `retrieve` — hmem retrieve hits=1 candidates=13 top=[('mem_ac03c3d0c78c', 0.367)]
+10. **query_layer** `query` · 2 ms — query world.context.thread_peers rows=357 backend=duckdb ms=2.779
 11. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
-12. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.664
+12. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.692
 13. **world** `person_context` — person_context open_loops=5 conflicts=0 upcoming=9 past_events=58 recent=20
 14. **orchestrator** `retrieve` — world_open_loops=5 memories=1 backend=duckdb
 15. **orchestrator** `memories` — count=1 top_score=0.367
@@ -25,17 +25,17 @@ Run `example-06_revision_loop-7b739439` · status `done` · critic rounds `2`
 19. **orchestrator** `round` — round 1: initial draft + critic
 20. **world** `person_context` — person_context open_loops=5 conflicts=0 upcoming=9 past_events=58 recent=20
 21. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
-22. **hmem** `retrieve` — hmem retrieve hits=1 candidates=10 top=[('mem_ac03c3d0c78c', 0.3671)]
+22. **hmem** `retrieve` — hmem retrieve hits=1 candidates=13 top=[('mem_ac03c3d0c78c', 0.367)]
 23. **orchestrator** `refetch` — refetch sources=['imessage', 'memory'] added=0 ids=[]
 24. **writer** `complete` — person='Mei Tanaka' points=5 headline='Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (im'
 25. **critic** `complete` — overall=pass keep=5/5 missing=0 refetch=1
-26. **orchestrator** `round` — round 2: added 2 ['e1', 'e3'], dropped 2 ['e6', 'e7'], changed 0; prior critic missing=['e1']
+26. **orchestrator** `round` — round 2: added 2 ['e3', 'e1'], dropped 2 ['e7', 'e6'], changed 0; prior critic missing=['e1']
 27. **hmem** `promote` — hmem/promote
 28. **hmem** `feedback` — hmem/feedback
 29. **hmem** `feedback` — hmem/feedback
 30. **orchestrator** `feedback` — feedback=1
 31. **actions** `plan` — steps=2
-32. **orchestrator** `final` · 36 ms — status=done points=5 caveats=0 latency_ms=36 llm_calls=0
+32. **orchestrator** `final` · 37 ms — status=done points=5 caveats=0 latency_ms=37 llm_calls=0
 
 ## Candidate choice
 
@@ -52,7 +52,7 @@ Run `example-06_revision_loop-7b739439` · status `done` · critic rounds `2`
 
 ## Memories used
 
-- `mem_ac03c3d0c78c` score=0.3671: Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes.
+- `mem_ac03c3d0c78c` score=0.367: Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes.
 
 ## Critic verdicts
 
@@ -78,12 +78,12 @@ Run `example-06_revision_loop-7b739439` · status `done` · critic rounds `2`
 ## Round-1 vs round-2 diff
 
 ### Added (2)
-- `e1`: You told Mei on Sat Oct 24 you'd early stage climate, I'll send details; still open.
 - `e3`: You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.
+- `e1`: You said on Sat Oct 24: "I'll send details" (re: early stage climate); still open.
 
 ### Dropped (2)
-- `e6`: Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)
 - `e7`: Latest thread on Sat Oct 24: early stage climate, I'll send details (imessage)
+- `e6`: Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)
 
 ### Changed (0)
 - —

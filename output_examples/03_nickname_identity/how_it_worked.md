@@ -1,23 +1,23 @@
 # How it worked — `03_nickname_identity`
 
-Run `example-03_nickname_identity-2306091a` · status `done` · critic rounds `1`
+Run `example-03_nickname_identity-eaa37ae1` · status `done` · critic rounds `1`
 
 ## Timeline
 
 1. **router** `complete` — kind=brief person='Alexandra Petrova' field=None confidence=0.90
 2. **world** `resolve` — resolve 'Alexandra Petrova' candidates=2 top=Alexandra Petrova score=1.00 (exact alias match)
 3. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=orchestrator.calendar_tiebreak
-4. **query_layer** `query` · 0 ms — query orchestrator.calendar_tiebreak rows=24 backend=duckdb ms=0.723
+4. **query_layer** `query` · 0 ms — query orchestrator.calendar_tiebreak rows=24 backend=duckdb ms=0.814
 5. **orchestrator** `resolve` — name='Alexandra Petrova' candidates=2
 6. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-7. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=94 backend=duckdb ms=0.961
+7. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=94 backend=duckdb ms=0.903
 8. **orchestrator** `relationship` — label=social confidence=0.62
 9. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
 10. **llm** `embed` · 0 ms — embed count≈9 provider=sample ms=0 success=True
-11. **hmem** `retrieve` — hmem retrieve hits=0 candidates=9 top=[]
-12. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=94 backend=duckdb ms=1.766
+11. **hmem** `retrieve` — hmem retrieve hits=0 candidates=12 top=[]
+12. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=94 backend=duckdb ms=1.997
 13. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
-14. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.654
+14. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.656
 15. **world** `person_context` — person_context open_loops=0 conflicts=0 upcoming=0 past_events=0 recent=20
 16. **orchestrator** `retrieve` — world_open_loops=0 memories=0 backend=duckdb
 17. **orchestrator** `memories` — count=0 top_score=0.000

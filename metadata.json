@@ -2,6 +2,49 @@
   "project": "Recall",
   "track": "Solving Fragmented Intelligence",
   "team": ["Jean Philippe Raymond", "Hassan El Dada"],
+  "problem": "We are building an agent that helps a busy founder/student prepare for any meeting in under 30 seconds by reconciling everything they know about one person across Gmail, Calendar, iMessage, Messenger/WhatsApp, their own notes and the public web, producing a spoken, sourced brief with next actions.",
+  "target_user": "Busy founder / MBA student preparing for back-to-back meetings (demo owner: Jordan Lefebvre).",
+  "demo_command": "make demo",
+  "dataset": {
+    "primary": "data/synthetic",
+    "tables": "data/synthetic/tables",
+    "answer_key": "data/synthetic/ground_truth",
+    "unit_test_fixture": "data/sample",
+    "identity_report": "data/synthetic/identity_report.md"
+  },
+  "evaluation": {
+    "report": "output_examples/eval_report.md",
+    "overall": "19/23",
+    "person_accuracy": 1.0
+  },
+  "examples": {
+    "inputs": "input_examples/",
+    "outputs": "output_examples/",
+    "index": "output_examples/README.md"
+  },
+  "agents": [
+    {"name": "Router", "role": "Intent + person hint", "file": "recall/agents/router.py"},
+    {"name": "Resolver", "role": "Clarify and calendar tie-break", "file": "recall/agents/resolver.py"},
+    {"name": "Retriever", "role": "Evidence pack from World/H-MEM/query layer", "file": "recall/agents/retriever.py"},
+    {"name": "Web Scout", "role": "Public web facts", "file": "recall/agents/web_scout.py"},
+    {"name": "Writer", "role": "Draft sourced brief", "file": "recall/agents/writer.py"},
+    {"name": "Critic", "role": "Revise / refetch / pass", "file": "recall/agents/critic.py"},
+    {"name": "Actions", "role": "Confirmable next steps", "file": "recall/agents/actions.py"},
+    {"name": "Suggester", "role": "Follow-up prompts", "file": "recall/agents/suggester.py"}
+  ],
+  "meterless": {
+    "engines": {
+      "WorldStoreService": "recall/engines/world/store.py",
+      "IngestPipelineService": "recall/engines/world/ingest.py",
+      "ContextBuilderService": "recall/engines/world/context_builder.py",
+      "MemoryStoreService": "recall/engines/hmem",
+      "MemoryRetrievalService": "recall/engines/hmem",
+      "MemoryMiningService": "recall/engines/hmem",
+      "TrustLedgerService": "recall/engines/hmem",
+      "generator": "recall/llm/generator.py"
+    },
+    "not_used": ["markovian"]
+  },
   "sponsor_tech": {
     "zetaris": {
       "summary": "Federated read path and Unified Semantic Layer namespace \"recall\" over file sources (handles, interactions, contacts, events) plus a Postgres calendar source.",
@@ -33,12 +76,26 @@
       ]
     }
   },
-  "sample_mode": "SAMPLE_MODE=true runs on data/sample + data/cache with zero credentials; LLM and actions dry-run; live connectors and Zetaris are optional.",
-  "pre_existing_components": [],
+  "sample_mode": "SAMPLE_MODE=true runs on data/synthetic/tables (demo) or data/sample (tests) + data/cache with zero credentials; LLM and actions dry-run; live connectors and Zetaris are optional. Without Zetaris, query_layer falls back DuckDB (circuit_open in traces is expected).",
+  "pre_existing_components": [
+    {
+      "name": "Repository initial commit",
+      "date": "2026-10-17",
+      "detail": "GitHub template .gitignore and 2-line README only; no product code"
+    }
+  ],
+  "open_source_libraries": "Declared in pyproject.toml and web/package.json.",
   "logs": {
     "trace_jsonl": "logs/<run_id>/trace.jsonl",
+    "state_json": "logs/<run_id>/state.json",
     "run_json": "logs/<run_id>/run.json",
+    "world_provenance_jsonl": "logs/<run_id>/world_provenance.jsonl",
+    "identity_ledger_jsonl": "logs/<run_id>/identity_ledger.jsonl",
     "identity_scores_jsonl": "logs/<run_id>/identity_scores.jsonl",
-    "relationship_scores_jsonl": "logs/<run_id>/relationship_scores.jsonl"
+    "merge_decisions_jsonl": "logs/<run_id>/merge_decisions.jsonl",
+    "relationship_scores_jsonl": "logs/<run_id>/relationship_scores.jsonl",
+    "memory_ledger_jsonl": "logs/<run_id>/memory_ledger.jsonl",
+    "preferences_ledger_jsonl": "logs/<run_id>/preferences_ledger.jsonl",
+    "actions_dryrun_json": "logs/<run_id>/actions_dryrun.json"
   }
 }

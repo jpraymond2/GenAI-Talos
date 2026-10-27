@@ -2,7 +2,7 @@
 
 **Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (imessage); next meeting: Tidepool pitch — Maple Ridge Ventures, Thu Oct 29, 15:00**
 
-- You told Mei on Sat Oct 24 you'd early stage climate, I'll send details; still open.  
+- You said on Sat Oct 24: "I'll send details" (re: early stage climate); still open.  
   sources: `e1`
 - You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.  
   sources: `e3`

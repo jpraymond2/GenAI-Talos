@@ -1,8 +1,8 @@
 {
-  "run_id": "example-04_conflicting_sources-744c4665",
+  "run_id": "example-04_conflicting_sources-d404365d",
   "utterance": {
     "text": "Where does Lucas live?",
-    "ts": "2026-10-27T15:45:42.184254Z",
+    "ts": "2026-10-27T15:52:50.247555Z",
     "mode": "text"
   },
   "intent": {
@@ -449,7 +449,7 @@
       "last_met": null,
       "next_meeting": null
     },
-    "latency_ms": 18,
+    "latency_ms": 19,
     "llm_calls": 0,
     "critic_rounds": 1
   },

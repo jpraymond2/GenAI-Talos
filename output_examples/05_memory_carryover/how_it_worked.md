@@ -1,6 +1,6 @@
 # How it worked — `05_memory_carryover`
 
-Run `example-05_memory_carryover-b707ec6e` · status `done` · critic rounds `1`
+Run `example-05_memory_carryover-33c72906` · status `done` · critic rounds `1`
 
 ## Timeline
 
@@ -17,14 +17,14 @@ Run `example-05_memory_carryover-b707ec6e` · status `done` · critic rounds `1`
 11. **world** `resolve` — resolve 'Rachel Goldberg' candidates=1 top=Rachel Goldberg score=1.00 (exact alias match)
 12. **orchestrator** `resolve` — name='Rachel Goldberg' candidates=1
 13. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-14. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=1 backend=duckdb ms=0.83
+14. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=1 backend=duckdb ms=0.869
 15. **orchestrator** `relationship` — label=professional confidence=0.68
-16. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
-17. **llm** `embed` · 0 ms — embed count≈7 provider=sample ms=0 success=True
-18. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=1 backend=duckdb ms=1.724
+16. **llm** `embed` · 0 ms — embed count≈7 provider=sample ms=0 success=True
+17. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
+18. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=1 backend=duckdb ms=1.833
 19. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
-20. **hmem** `retrieve` — hmem retrieve hits=1 candidates=10 top=[('mem_a13750f2de8c', 0.4624)]
-21. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.743
+20. **hmem** `retrieve` — hmem retrieve hits=1 candidates=13 top=[('mem_a13750f2de8c', 0.4624)]
+21. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.982
 22. **world** `person_context` — person_context open_loops=0 conflicts=0 upcoming=1 past_events=0 recent=1
 23. **orchestrator** `retrieve` — world_open_loops=0 memories=1 backend=duckdb
 24. **orchestrator** `memories` — count=1 top_score=0.462
@@ -37,7 +37,7 @@ Run `example-05_memory_carryover-b707ec6e` · status `done` · critic rounds `1`
 31. **hmem** `feedback` — hmem/feedback
 32. **orchestrator** `feedback` — feedback=1
 33. **actions** `plan` — steps=0
-34. **orchestrator** `final` · 10 ms — status=done points=3 caveats=0 latency_ms=10 llm_calls=0
+34. **orchestrator** `final` · 11 ms — status=done points=3 caveats=0 latency_ms=11 llm_calls=0
 
 ## Candidate choice
 

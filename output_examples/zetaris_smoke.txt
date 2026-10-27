@@ -1,0 +1,24 @@
+Zetaris smoke (secrets redacted)
+REST=(set DATA_BACKEND=zetaris + ZETARIS_REST_URL to run live)
+ORG=(from .env) SCHEMA=(from .env)
+SAMPLE_MODE=true DATA_BACKEND=duckdb
+ZETARIS_READ_MODE=usl
+SAMPLE_DATA_DIR=data/synthetic/tables
+
+This checked-in placeholder is for judges without a cluster.
+Re-run against a live instance to overwrite this file:
+
+  DATA_BACKEND=zetaris SAMPLE_MODE=true uv run python scripts/zetaris_smoke.py
+
+Without Zetaris, sample-mode traces may show:
+  fallback zetaris→duckdb reason=circuit_open
+That is expected — DuckDB serves the same named queries via query_layer.
+
+check                                detail                                               result
+----------------------------------------------------------------------------------------------------
+auth                                 (run smoke against cluster)                          SKIP
+
+SUMMARY: placeholder — see docs/zetaris_notes.md
+
+Note: without a live cluster, SAMPLE_MODE traces may show
+fallback zetaris→duckdb reason=circuit_open — expected.

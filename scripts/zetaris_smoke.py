@@ -6,6 +6,7 @@ Never prints tokens or passwords. Loads settings from .env via recall.config.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -88,6 +89,15 @@ def main() -> int:
     results.append(("auth", auth_label, "PASS" if auth_label != "FAIL" else "FAIL"))
     if auth_label == "FAIL":
         _print_table(results)
+        _write_smoke_report(
+            settings,
+            results,
+            [
+                f"Expected counts from {sample_dir}: "
+                + ", ".join(f"{k}={v}" for k, v in expected_counts.items()),
+                "Auth failed — no live Zetaris session.",
+            ],
+        )
         return 1
 
     usl = ZetarisBackend(
@@ -170,6 +180,15 @@ def main() -> int:
             )
 
     _print_table(results)
+    _write_smoke_report(
+        settings,
+        results,
+        [
+            f"Expected counts from {sample_dir}: "
+            + ", ".join(f"{k}={v}" for k, v in expected_counts.items()),
+            f"Auth: {auth_label}",
+        ],
+    )
     return 0 if overall_ok else 1
 
 
@@ -339,6 +358,53 @@ def _print_table(rows: list[tuple[str, str, str]]) -> None:
     print()
     failed = sum(1 for *_, s in rows if s == "FAIL")
     print(f"SUMMARY: {len(rows) - failed}/{len(rows)} PASS")
+
+
+def _redact(text: str) -> str:
+    """Strip tokens/passwords that must never land in committed smoke output."""
+    out = text
+    out = re.sub(r"(?i)(bearer\s+)\S+", r"\1***", out)
+    out = re.sub(r"(?i)(api[_-]?key|token|password|secret)\s*[:=]\s*\S+", r"\1=***", out)
+    out = re.sub(r"(?i)(Authorization:\s*)\S+", r"\1***", out)
+    return out
+
+
+def _write_smoke_report(
+    settings: Settings,
+    results: list[tuple[str, str, str]],
+    lines: list[str],
+) -> Path:
+    """Write redacted smoke transcript for judges (output_examples/zetaris_smoke.txt)."""
+    dest = ROOT / "output_examples" / "zetaris_smoke.txt"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    failed = sum(1 for *_, s in results if s == "FAIL")
+    body = "\n".join(
+        [
+            "Zetaris smoke (secrets redacted)",
+            f"REST={settings.zetaris_rest_url}",
+            f"ORG={settings.zetaris_org_id} SCHEMA={settings.zetaris_schema}",
+            f"SAMPLE_MODE={settings.sample_mode} DATA_BACKEND={settings.data_backend}",
+            f"ZETARIS_READ_MODE={settings.zetaris_read_mode}",
+            f"SAMPLE_DATA_DIR={settings.sample_data_dir}",
+            "",
+            *lines,
+            "",
+            f"{'check':<36} {'detail':<52} {'result'}",
+            "-" * 100,
+            *[
+                f"{name:<36} {detail[:52]:<52} {status}"
+                for name, detail, status in results
+            ],
+            "",
+            f"SUMMARY: {len(results) - failed}/{len(results)} PASS",
+            "",
+            "Note: without a live cluster, SAMPLE_MODE traces may show",
+            "fallback zetaris→duckdb reason=circuit_open — expected.",
+        ]
+    )
+    dest.write_text(_redact(body) + "\n", encoding="utf-8")
+    print(f"Wrote {_redact(str(dest))}")
+    return dest
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 {
-  "run_id": "example-06_revision_loop-7b739439",
+  "run_id": "example-06_revision_loop-e7741743",
   "utterance": {
     "text": "Sync with Mei tomorrow",
-    "ts": "2026-10-27T15:45:42.233644Z",
+    "ts": "2026-10-27T15:52:50.299833Z",
     "mode": "text"
   },
   "intent": {
@@ -844,7 +844,7 @@
     {
       "id": "mem_ac03c3d0c78c",
       "content": "Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes.",
-      "score": 0.3671,
+      "score": 0.367,
       "why": "entity=0.15, layer=0.10, recency=0.07"
     }
   ],
@@ -1196,7 +1196,7 @@
       "headline": "Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (imessage); next meeting: Tidepool pitch — Maple Ridge Ventures, Thu Oct 29, 15:00",
       "points": [
         {
-          "text": "You told Mei on Sat Oct 24 you'd early stage climate, I'll send details; still open.",
+          "text": "You said on Sat Oct 24: \"I'll send details\" (re: early stage climate); still open.",
           "evidence_ids": [
             "e1"
           ],
@@ -1327,7 +1327,7 @@
     "headline": "Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (imessage); next meeting: Tidepool pitch — Maple Ridge Ventures, Thu Oct 29, 15:00",
     "points": [
       {
-        "text": "You told Mei on Sat Oct 24 you'd early stage climate, I'll send details; still open.",
+        "text": "You said on Sat Oct 24: \"I'll send details\" (re: early stage climate); still open.",
         "evidence_ids": [
           "e1"
         ],
