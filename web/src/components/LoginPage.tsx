@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { isMockMode } from "../api";
-import { login } from "../workspaceApi";
+import { login, loginAsGuest } from "../workspaceApi";
 import type { SessionUser } from "../types";
 import { Spinner } from "./ui";
 
@@ -10,6 +10,18 @@ export function LoginPage({ onLoggedIn }: { onLoggedIn: (user: SessionUser) => v
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const demo = isMockMode();
+
+  async function skip() {
+    setBusy(true);
+    setError(null);
+    try {
+      onLoggedIn(await loginAsGuest());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't skip sign-in");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -82,6 +94,14 @@ export function LoginPage({ onLoggedIn }: { onLoggedIn: (user: SessionUser) => v
           >
             {busy ? <Spinner /> : null}
             Sign in
+          </button>
+          <button
+            type="button"
+            onClick={() => void skip()}
+            disabled={busy}
+            className="mt-3 rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm font-semibold text-ink-800 transition hover:border-ink-400 hover:bg-ink-50 disabled:opacity-40"
+          >
+            Skip sign-in · try the demo
           </button>
           <p className="mt-4 text-center text-xs text-ink-400">
             {demo ? "Demo mode: any password works." : "Team access: the API token also works as a password."}

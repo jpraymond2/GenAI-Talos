@@ -43,6 +43,23 @@ class LoginBody(BaseModel):
     password: str = Field(min_length=1)
 
 
+def _guest_allowed() -> bool:
+    settings = get_settings()
+    return settings.sample_mode if settings.recall_allow_guest is None else bool(settings.recall_allow_guest)
+
+
+@router.post("/api/login/guest")
+def api_login_guest() -> dict[str, Any]:
+    """'Skip sign-in' for demos and judges: allowed in SAMPLE_MODE (synthetic data) unless RECALL_ALLOW_GUEST=false."""
+    if not _guest_allowed():
+        raise HTTPException(status_code=403, detail="Guest access is off on this server. Sign in with your password.")
+    token = expected_token()
+    if not token:
+        raise HTTPException(status_code=503, detail="RECALL_API_TOKEN is not configured on the server")
+    owner = (get_settings().dataset_owner or "").strip() or "Guest"
+    return {"token": token, "name": owner, "email": ""}
+
+
 @router.post("/api/login")
 def api_login(body: LoginBody) -> dict[str, Any]:
     """Exchange demo credentials (RECALL_LOGIN_EMAIL / RECALL_LOGIN_PASSWORD) for the API token.

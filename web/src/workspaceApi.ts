@@ -42,6 +42,22 @@ export async function login(email: string, password: string): Promise<SessionUse
   return user;
 }
 
+/** "Skip sign-in": demo / judging access (server allows it on synthetic data). */
+export async function loginAsGuest(): Promise<SessionUser> {
+  if (await shouldMock()) {
+    const user = { name: "Demo", email: "" };
+    setApiToken("demo");
+    setUser(user);
+    return user;
+  }
+  const res = await fetch("/api/login/guest", { method: "POST" });
+  const data = await json<{ token: string; name: string; email: string }>(res);
+  setApiToken(data.token);
+  const user = { name: data.name, email: data.email };
+  setUser(user);
+  return user;
+}
+
 export async function fetchPeople(): Promise<PersonCard[]> {
   if (await shouldMock()) return structuredClone(mockStore);
   const res = await fetch("/api/people", { headers: authHeaders() });
