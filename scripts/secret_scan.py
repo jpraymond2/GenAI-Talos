@@ -51,8 +51,17 @@ def _safe_token(token: str) -> bool:
 
 
 def main() -> int:
+    # Exclude this scanner from the blob so its own needle string is not a hit.
     proc = subprocess.run(
-        ["git", "log", "-p", "--all"],
+        [
+            "git",
+            "log",
+            "-p",
+            "--all",
+            "--",
+            ".",
+            ":!scripts/secret_scan.py",
+        ],
         cwd=ROOT,
         capture_output=True,
         text=True,
