@@ -37,6 +37,54 @@ _LOGIN_PATH = "/api/auth/login"
 # When JWT has no exp claim, refresh login on this wall-clock TTL.
 _DEFAULT_TOKEN_TTL_S = 50 * 60
 _TOKEN_SKEW_S = 60
+_CONNECT_TIMEOUT_S = 2.0
+_CIRCUIT_COOLDOWN_S = 60.0
+
+# Module-level circuit: after ConnectError/transport failure, skip Zetaris for 60s.
+_circuit_lock = threading.Lock()
+_circuit_open_until: float = 0.0
+
+
+def zetaris_circuit_is_open() -> bool:
+    """True while Zetaris is short-circuited to DuckDB after a transport failure."""
+    return time.time() < _circuit_open_until
+
+
+def trip_zetaris_circuit() -> None:
+    """Mark Zetaris down until ``now + _CIRCUIT_COOLDOWN_S``."""
+    global _circuit_open_until
+    with _circuit_lock:
+        _circuit_open_until = time.time() + _CIRCUIT_COOLDOWN_S
+        logger.warning(
+            "Zetaris circuit open for %.0fs (connect/transport failure)",
+            _CIRCUIT_COOLDOWN_S,
+        )
+
+
+def clear_zetaris_circuit() -> None:
+    """Reset the circuit breaker (tests / settings changes)."""
+    global _circuit_open_until
+    with _circuit_lock:
+        _circuit_open_until = 0.0
+
+
+def _http_timeout(read_seconds: float) -> httpx.Timeout:
+    """Fail-fast connect (2s); keep the configured read timeout."""
+    return httpx.Timeout(read_seconds, connect=_CONNECT_TIMEOUT_S)
+
+
+def _is_transport_failure(exc: BaseException) -> bool:
+    """Connect / network failures that should trip the circuit (not slow reads)."""
+    if isinstance(exc, (httpx.ConnectError, httpx.ConnectTimeout)):
+        return True
+    if isinstance(exc, httpx.NetworkError):
+        return True
+    # httpx wraps some failures as generic TransportError.
+    if isinstance(exc, httpx.TransportError) and not isinstance(
+        exc, (httpx.ReadTimeout, httpx.WriteTimeout, httpx.PoolTimeout)
+    ):
+        return True
+    return False
 
 
 class ZetarisBackend:
@@ -82,6 +130,7 @@ class ZetarisBackend:
             cls._token_expires_at = None
             cls._auth_method_shared = None
             cls._shared_instance = None
+        clear_zetaris_circuit()
 
     def query(
         self,
@@ -201,6 +250,8 @@ class ZetarisBackend:
         timeout: float,
         full_errors: bool = False,
     ) -> Any:
+        if zetaris_circuit_is_open():
+            raise DataUnavailable("Zetaris circuit open")
         attempts = _ZETARIS_RETRIES + 1
         last_error: Exception | None = None
         for attempt in range(attempts):
@@ -210,6 +261,9 @@ class ZetarisBackend:
                 )
             except DataUnavailable as exc:
                 last_error = exc
+                # Never retry ConnectError / transport failures (circuit already tripped).
+                if zetaris_circuit_is_open() or "transport error" in str(exc).lower():
+                    raise
                 if attempt + 1 >= attempts:
                     break
         raise DataUnavailable(str(last_error) if last_error else "Zetaris request failed")
@@ -235,6 +289,7 @@ class ZetarisBackend:
         if response.status_code == 400 and self._is_not_allowed(response):
             logger.info("Zetaris API key rejected (Not Allowed); falling back to login token")
             self._clear_token()
+            # Login may ConnectError — do not retry login on transport failure.
             token = self._login(timeout=timeout)
             self._store_token(token, method="login")
             response = self._post_json(url, body, token=token, timeout=timeout)
@@ -321,7 +376,7 @@ class ZetarisBackend:
             client = type(self)._http
             if client is None or client.is_closed:
                 type(self)._http = httpx.Client(
-                    timeout=timeout,
+                    timeout=_http_timeout(timeout),
                     limits=httpx.Limits(
                         max_keepalive_connections=8,
                         max_connections=16,
@@ -331,7 +386,16 @@ class ZetarisBackend:
             assert type(self)._http is not None
             return type(self)._http
 
+    def _raise_transport(self, where: str, exc: BaseException) -> None:
+        """Trip the circuit on connect/transport errors; never retry login."""
+        name = type(exc).__name__
+        if _is_transport_failure(exc):
+            trip_zetaris_circuit()
+        raise DataUnavailable(f"Zetaris {where} transport error: {name}") from exc
+
     def _login(self, *, timeout: float) -> str:
+        if zetaris_circuit_is_open():
+            raise DataUnavailable("Zetaris circuit open")
         base = self._base_url()
         if not base:
             raise DataUnavailable("ZETARIS_BASE_URL is not configured for login")
@@ -346,9 +410,11 @@ class ZetarisBackend:
                 url,
                 json={"username": user, "password": password},
                 headers={"Content-Type": "application/json", "Accept": "application/json"},
+                timeout=_http_timeout(timeout),
             )
         except httpx.HTTPError as exc:
-            raise DataUnavailable(f"Zetaris login transport error: {type(exc).__name__}") from exc
+            self._raise_transport("login", exc)
+            raise  # pragma: no cover — _raise_transport always raises
         if response.status_code >= 400:
             raise DataUnavailable(f"Zetaris login HTTP {response.status_code}")
         try:
@@ -384,9 +450,12 @@ class ZetarisBackend:
         }
         try:
             client = self._http_client(timeout)
-            return client.post(url, json=body, headers=headers)
+            return client.post(
+                url, json=body, headers=headers, timeout=_http_timeout(timeout)
+            )
         except httpx.HTTPError as exc:
-            raise DataUnavailable(f"Zetaris transport error: {type(exc).__name__}") from exc
+            self._raise_transport("SQL", exc)
+            raise  # pragma: no cover
 
     @staticmethod
     def _is_not_allowed(response: httpx.Response) -> bool:

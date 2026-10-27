@@ -1,0 +1,381 @@
+{
+  "mei.preseed_close": [
+    [
+      "dec 15",
+      "december 15",
+      "15 dec"
+    ],
+    [
+      "pre-seed",
+      "preseed",
+      "round",
+      "close"
+    ]
+  ],
+  "mei.japan": [
+    [
+      "japan"
+    ],
+    [
+      "nov 5",
+      "november 5",
+      "5 nov",
+      "nov 15",
+      "november 15"
+    ]
+  ],
+  "mei.model_ask": [
+    [
+      "financial model",
+      "model"
+    ],
+    [
+      "tuesday",
+      "oct 27",
+      "october 27",
+      "tomorrow"
+    ]
+  ],
+  "mei.pilot_hydrolab": [
+    [
+      "hydrolab"
+    ],
+    [
+      "pipeline",
+      "demo"
+    ]
+  ],
+  "omar_h.series_a": [
+    [
+      "series a"
+    ],
+    [
+      "8m",
+      "8 m",
+      "$8",
+      "8 million"
+    ]
+  ],
+  "omar_h.intro_ask": [
+    [
+      "rachel"
+    ],
+    [
+      "intro"
+    ]
+  ],
+  "omar_h.coffee": [
+    [
+      "névé",
+      "neve",
+      "coffee"
+    ],
+    [
+      "wednesday",
+      "oct 28",
+      "october 28",
+      "10"
+    ]
+  ],
+  "omar_h.hiring": [
+    [
+      "hiring",
+      "backend"
+    ]
+  ],
+  "omar_b.casecomp": [
+    [
+      "case comp",
+      "case competition"
+    ],
+    [
+      "nov 7",
+      "november 7",
+      "saturday"
+    ]
+  ],
+  "omar_b.notes": [
+    [
+      "notes"
+    ],
+    [
+      "midterm",
+      "strategy"
+    ]
+  ],
+  "omar_k.lease": [
+    [
+      "lease",
+      "renew",
+      "bail"
+    ],
+    [
+      "1,525",
+      "1525",
+      "nov 15",
+      "november 15"
+    ]
+  ],
+  "omar_k.plumber": [
+    [
+      "plumber",
+      "plombier"
+    ],
+    [
+      "oct 30",
+      "october 30",
+      "friday"
+    ]
+  ],
+  "sasha.engaged": [
+    [
+      "engaged",
+      "proposed",
+      "fiancé",
+      "fiance"
+    ]
+  ],
+  "sasha.visit": [
+    [
+      "nov 13",
+      "november 13",
+      "nov 14",
+      "november 14",
+      "13–16",
+      "13-16"
+    ]
+  ],
+  "sasha.promo": [
+    [
+      "senior"
+    ],
+    [
+      "promot",
+      "ux"
+    ]
+  ],
+  "priya.job": [
+    [
+      "stellarfin"
+    ],
+    [
+      "brightloop",
+      "left",
+      "joined",
+      "moved",
+      "new job"
+    ]
+  ],
+  "priya.pilot": [
+    [
+      "pilot"
+    ],
+    [
+      "nov 4",
+      "november 4",
+      "wednesday"
+    ]
+  ],
+  "priya.cancelled_lunch": [
+    [
+      "cancel"
+    ]
+  ],
+  "lucas.paris": [
+    [
+      "paris"
+    ]
+  ],
+  "lucas.xmas": [
+    [
+      "dec 18",
+      "december 18",
+      "18 déc",
+      "18 dec",
+      "christmas",
+      "noël",
+      "holidays"
+    ]
+  ],
+  "elodie.boreale": [
+    [
+      "boréale",
+      "boreale"
+    ],
+    [
+      "nov 3",
+      "november 3",
+      "3 novembre",
+      "tuesday",
+      "14:00",
+      "14 h",
+      "2 pm",
+      "2pm"
+    ]
+  ],
+  "elodie.deck_fr": [
+    [
+      "french",
+      "français",
+      "francais"
+    ],
+    [
+      "deck",
+      "présentation",
+      "presentation"
+    ]
+  ],
+  "daniel_vc.pitch": [
+    [
+      "pitch",
+      "maple ridge"
+    ],
+    [
+      "thursday",
+      "oct 29",
+      "october 29",
+      "3 pm",
+      "3pm",
+      "15:00"
+    ]
+  ],
+  "daniel_vc.dataroom": [
+    [
+      "data room",
+      "data-room",
+      "dataroom"
+    ]
+  ],
+  "daniel_vc.payloop": [
+    [
+      "payloop"
+    ]
+  ],
+  "daniel_cl.wedding": [
+    [
+      "wedding",
+      "married",
+      "groomsman"
+    ]
+  ],
+  "rachel.met": [
+    [
+      "startupfest"
+    ]
+  ],
+  "rachel.meeting": [
+    [
+      "nov 6",
+      "november 6",
+      "friday"
+    ],
+    [
+      "11"
+    ]
+  ],
+  "ruth.extension": [
+    [
+      "nov 2",
+      "november 2",
+      "extension"
+    ]
+  ],
+  "ruth.draft": [
+    [
+      "outline",
+      "draft"
+    ],
+    [
+      "oct 30",
+      "october 30"
+    ]
+  ],
+  "hannah.final": [
+    [
+      "final"
+    ],
+    [
+      "oct 30",
+      "october 30",
+      "friday",
+      "1 pm",
+      "1pm",
+      "13:00"
+    ]
+  ],
+  "hannah.transcript": [
+    [
+      "transcript"
+    ]
+  ],
+  "kevin.vancouver": [
+    [
+      "vancouver"
+    ]
+  ],
+  "kevin.hiring_q": [
+    [
+      "hiring",
+      "data engineer"
+    ]
+  ],
+  "isabelle.bday": [
+    [
+      "birthday",
+      "anniversaire",
+      "fête"
+    ],
+    [
+      "nov 3",
+      "november 3",
+      "petit bistro"
+    ]
+  ],
+  "isabelle.nights": [
+    [
+      "night",
+      "nuit"
+    ]
+  ],
+  "yusuf.newnumber": [
+    [
+      "555-0171",
+      "5550171",
+      "555 0171"
+    ]
+  ],
+  "yusuf.marathon": [
+    [
+      "half",
+      "marathon",
+      "long run"
+    ]
+  ],
+  "mom.christmas": [
+    [
+      "christmas",
+      "noël",
+      "noel"
+    ],
+    [
+      "dates",
+      "confirm",
+      "sherbrooke"
+    ]
+  ],
+  "chloe.exam": [
+    [
+      "anatomy",
+      "anatomie",
+      "exam",
+      "examen"
+    ]
+  ],
+  "tom.intro": [
+    [
+      "lumen grid",
+      "berlin",
+      "intro"
+    ]
+  ]
+}

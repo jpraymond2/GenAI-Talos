@@ -481,6 +481,17 @@ class IngestPipelineService:
         self._store.set_meta("ingest_stage", "identity")
         identity_counts = self._run_identity_scoring(run_id=run_id, layer=layer)
 
+        self._store.set_meta("ingest_stage", "name_merge")
+        from recall.engines.world.name_merge import run_name_merge
+
+        merge_counts = run_name_merge(
+            store=self._store,
+            settings=self._settings,
+            interactions=interactions,
+            tracer=self._tracer,
+            run_id=run_id,
+        )
+
         self._store.set_meta("ingest_stage", "relationships")
         relationship_counts = self._run_relationship_scoring(run_id=run_id, layer=layer)
 
@@ -495,6 +506,8 @@ class IngestPipelineService:
             "contacts_in": len(contacts),
             "identity_scored": int(identity_counts.get("scored", 0)),
             "relationships_scored": int(relationship_counts.get("scored", 0)),
+            "merged": int(merge_counts.get("merged", 0)),
+            "merge_questions": int(merge_counts.get("asked", 0)),
         }
         if self._tracer is not None:
             self._tracer.event("world", "ingest", counts)

@@ -86,6 +86,22 @@ class FallbackQueryLayer:
         source_tag: str,
     ) -> list[dict[str, Any]]:
         """Run on the primary backend, or DuckDB after a traced fallback."""
+        if self._primary_name == "zetaris":
+            from recall.data.zetaris_backend import zetaris_circuit_is_open
+
+            if zetaris_circuit_is_open():
+                if self._tracer is not None:
+                    self._tracer.event(
+                        "query_layer",
+                        "fallback",
+                        {
+                            "from_backend": self._primary_name,
+                            "to_backend": self._fallback_name,
+                            "source_tag": source_tag,
+                            "reason": "circuit_open",
+                        },
+                    )
+                return self._fallback.query(sql, params, source_tag=source_tag)
         try:
             return self._primary.query(sql, params, source_tag=source_tag)
         except DataUnavailable as exc:

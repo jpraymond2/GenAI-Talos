@@ -1,0 +1,48 @@
+{
+  "participants": [
+    {
+      "name": "L\u00c3\u00a9o Tremblay"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "L\u00c3\u00a9o Tremblay",
+      "timestamp_ms": 1791066066000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "je descends"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1791065967000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "\u00f0\u009f\u0093\u008d je suis arriv\u00c3\u00a9"
+    },
+    {
+      "sender_name": "L\u00c3\u00a9o Tremblay",
+      "timestamp_ms": 1780172940000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "je descends"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1780170482000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "\u00f0\u009f\u0093\u008d je suis arriv\u00c3\u00a9"
+    }
+  ],
+  "title": "L\u00c3\u00a9o Tremblay",
+  "is_still_participant": true,
+  "thread_path": "inbox/leotremblay_4470939701391847",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

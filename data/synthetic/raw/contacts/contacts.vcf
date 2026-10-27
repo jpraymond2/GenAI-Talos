@@ -1,0 +1,347 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Tanaka;Mei;;;
+FN:Mei Tanaka
+ORG:Tidepool
+TITLE:CTO
+EMAIL;TYPE=INTERNET:mei@tidepool.earth
+TEL;TYPE=CELL:+1 (438) 555-0117
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Haddad;Omar;;;
+FN:Omar Haddad
+ORG:Payloop
+TITLE:CEO
+EMAIL;TYPE=INTERNET:omar@payloop.co
+TEL;TYPE=CELL:+1 (514) 555-0142
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:B (MBA);Omar;;;
+FN:Omar B (MBA)
+ORG:McGill MBA
+EMAIL;TYPE=INTERNET:omar.benali@mail.mcgill.ca
+TEL;TYPE=CELL:+1 (438) 555-0163
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Kassem (proprio);Omar;;;
+FN:Omar Kassem (proprio)
+TITLE:Landlord — 4520 rue Saint-Denis
+EMAIL;TYPE=INTERNET:omar.kassem@outlook.com
+TEL;TYPE=CELL:+1 (514) 555-0188
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Petrova;Alexandra;;;
+FN:Alexandra Petrova
+NICKNAME:Sasha
+ORG:Fieldnote
+TITLE:UX Designer
+EMAIL;TYPE=INTERNET:alexandra.petrova@fieldnote.design
+TEL;TYPE=CELL:+1 (416) 555-0129
+ADR;TYPE=HOME:;;;Toronto;;;
+BDAY:1998-04-17
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Nair;Priya;;;
+FN:Priya Nair
+ORG:Brightloop
+TITLE:Product Manager
+EMAIL;TYPE=INTERNET:priya.nair@brightloop.com
+TEL;TYPE=CELL:+1 (647) 555-0135
+ADR;TYPE=HOME:;;;Toronto;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Moreau;Lucas;;;
+FN:Lucas Moreau
+EMAIL;TYPE=INTERNET:lucas.moreau.qc@gmail.com
+TEL;TYPE=CELL:+1 (514) 555-0156
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Gagnon;Élodie;;;
+FN:Élodie Gagnon
+ORG:Hydrolab
+TITLE:Directrice innovation
+EMAIL;TYPE=INTERNET:elodie.gagnon@hydrolab.ca
+TEL;TYPE=CELL:+1 (418) 555-0144
+ADR;TYPE=HOME:;;;Québec;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Kim;Daniel;;;
+FN:Daniel Kim
+ORG:Maple Ridge Ventures
+TITLE:Principal
+EMAIL;TYPE=INTERNET:daniel@mapleridge.vc
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Kim (UofT);Dan;;;
+FN:Dan Kim (UofT)
+ORG:Shopwise
+EMAIL;TYPE=INTERNET:dkim.toronto@gmail.com
+TEL;TYPE=CELL:+1 (647) 555-0161
+ADR;TYPE=HOME:;;;Toronto;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Goldberg;Rachel;;;
+FN:Rachel Goldberg
+ORG:Northwind Capital
+TITLE:Partner
+EMAIL;TYPE=INTERNET:rachel@northwindcap.com
+ADR;TYPE=HOME:;;;Toronto;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Roy;Isabelle;;;
+FN:Isabelle Roy
+ORG:CHUM
+TEL;TYPE=CELL:+1 (514) 555-0172
+ADR;TYPE=HOME:;;;Montreal;;;
+BDAY:1997-11-03
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Demir;Yusuf;;;
+FN:Yusuf Demir
+TEL;TYPE=CELL:+1 (438) 555-0150
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Lefebvre;Nadia;;;
+FN:Nadia Lefebvre
+NICKNAME:Maman
+EMAIL;TYPE=INTERNET:nadia.lefebvre@videotron.ca
+TEL;TYPE=CELL:+1 (819) 555-0102
+ADR;TYPE=HOME:;;;Sherbrooke;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Lefebvre;Pierre;;;
+FN:Pierre Lefebvre
+NICKNAME:Papa
+EMAIL;TYPE=INTERNET:pierre.lefebvre49@gmail.com
+TEL;TYPE=CELL:+1 (819) 555-0103
+ADR;TYPE=HOME:;;;Sherbrooke;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:;Chloé;;;
+FN:Chloé
+TEL;TYPE=CELL:+1 (819) 555-0104
+ADR;TYPE=HOME:;;;Sherbrooke;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:;Amira;;;
+FN:Amira
+ORG:McGill MBA
+EMAIL;TYPE=INTERNET:amira.khalil@mail.mcgill.ca
+TEL;TYPE=CELL:+1 (514) 555-0100
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Okafor;Ben;;;
+FN:Ben Okafor
+ORG:McGill MBA
+EMAIL;TYPE=INTERNET:ben.okafor@mail.mcgill.ca
+TEL;TYPE=CELL:+1 (438) 555-0101
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Ramírez;Diego;;;
+FN:Diego Ramírez
+ORG:McGill MBA
+TEL;TYPE=CELL:+1 (647) 555-0103
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:;Emma;;;
+FN:Emma
+ORG:McGill MBA
+EMAIL;TYPE=INTERNET:emma.lindqvist@mail.mcgill.ca
+TEL;TYPE=CELL:+1 (416) 555-0104
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Liu;Grace;;;
+FN:Grace Liu
+ORG:Orbitly
+EMAIL;TYPE=INTERNET:grace.liu@orbitly.app
+TEL;TYPE=CELL:+1 (604) 555-0106
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Lambert;Hugo;;;
+FN:Hugo Lambert
+ORG:Sève Analytics
+TEL;TYPE=CELL:+1 (212) 555-0107
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Thompson;Jake;;;
+FN:Jake Thompson
+TEL;TYPE=CELL:+1 (438) 555-0109
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Morgan;Kayla;;;
+FN:Kayla Morgan
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Singh;Maya;;;
+FN:Maya Singh
+ORG:Northbeam Analytics
+EMAIL;TYPE=INTERNET:maya.singh@northbeam.ai
+ADR;TYPE=HOME:;;;Toronto;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Cohen;Noah;;;
+FN:Noah Cohen
+TEL;TYPE=CELL:+1 (902) 555-0113
+ADR;TYPE=HOME:;;;New York;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Ortiz;Pablo;;;
+FN:Pablo Ortiz
+ORG:Startupfest
+EMAIL;TYPE=INTERNET:pablo.ortiz@startupfest.example
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:;Quentin;;;
+FN:Quentin
+TEL;TYPE=CELL:+1 (514) 555-0116
+ADR;TYPE=HOME:;;;Lyon;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Girard;Samuel;;;
+FN:Samuel Girard
+TEL;TYPE=CELL:+1 (263) 555-0118
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Walsh;Tara;;;
+FN:Tara Walsh
+ORG:Kelpworks
+EMAIL;TYPE=INTERNET:tara.walsh@kelpworks.co
+TEL;TYPE=CELL:+1 (647) 555-0119
+ADR;TYPE=HOME:;;;Halifax;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Nguyen;Victor;;;
+FN:Victor Nguyen
+TEL;TYPE=CELL:+1 (902) 555-0121
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Zhao;Wen;;;
+FN:Wen Zhao
+ORG:Loomtrace
+EMAIL;TYPE=INTERNET:wen.zhao@loomtrace.io
+TEL;TYPE=CELL:+1 (604) 555-0122
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:;Yara;;;
+FN:Yara
+TEL;TYPE=CELL:+1 (514) 555-0124
+ADR;TYPE=HOME:;;;Beirut;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Martin;Zoé;;;
+FN:Zoé Martin
+ORG:McGill MBA
+EMAIL;TYPE=INTERNET:zoe.martin@mail.mcgill.ca
+TEL;TYPE=CELL:+1 (438) 555-0125
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Rossi;Bianca;;;
+FN:Bianca Rossi
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:;Cyrus;;;
+FN:Cyrus
+ORG:Voltane
+EMAIL;TYPE=INTERNET:cyrus.farahani@voltane.com
+TEL;TYPE=CELL:+1 (416) 555-0128
+ADR;TYPE=HOME:;;;Toronto;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Boisvert;Eric;;;
+FN:Eric Boisvert
+ORG:Northbeam Analytics
+EMAIL;TYPE=INTERNET:eric.boisvert@northbeam.ai
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Zahra Idrissi;Fatima;;;
+FN:Fatima Zahra Idrissi
+ORG:McGill MBA
+TEL;TYPE=CELL:+1 (212) 555-0131
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Sato;Hana;;;
+FN:Hana Sato
+ADR;TYPE=HOME:;;;Vancouver;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Petrov;Ivan;;;
+FN:Ivan Petrov
+TEL;TYPE=CELL:+1 (263) 555-0134
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Andersen;Karl;;;
+FN:Karl Andersen
+ORG:Fjordbyte
+EMAIL;TYPE=INTERNET:karl.andersen@fjordbyte.dev
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Gauthier;Léa;;;
+FN:Léa Gauthier
+TEL;TYPE=CELL:+1 (902) 555-0137
+ADR;TYPE=HOME:;;;Montreal;;;
+END:VCARD

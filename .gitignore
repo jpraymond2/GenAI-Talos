@@ -225,6 +225,7 @@ logs/*
 logs/**/*
 !logs/.gitkeep
 *.db
+!data/synthetic/raw/imessage/chat.db
 data/live/
 data/identity_scores/**
 !data/identity_scores/.gitkeep

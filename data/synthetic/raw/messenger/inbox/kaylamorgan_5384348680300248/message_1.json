@@ -1,0 +1,254 @@
+{
+  "participants": [
+    {
+      "name": "Kayla Morgan"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1787882661000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "phew, I'll grab it next time"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1787882126000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the grey one? yes, it's on the chair"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1787881960000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did I leave my scarf at your place?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786323603000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "perfect, door code is 2041"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1786323598000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes! bringing wine"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786323467000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "are you still coming tonight?"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1785804021000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "perfect"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1785803856000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "in 20 min?"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1785803737000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "free for a quick call?"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1782678168000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't wait"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1782677687000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "amazing, too short as always. photos soon"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1782675280000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "how was the trip?"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1782400323000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1782400241000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1780789825000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Montreal said yes"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1780789779000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "absolutely not. it's October"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1780789710000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "omg it's snowing already",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1780535595000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "right??"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1780533193000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "lol"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1776343394000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "phew, I'll grab it next time",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1776343338000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the grey one? yes, it's on the chair"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1776343222000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did I leave my scarf at your place?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1767990542000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "let's go thursday"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1767990433000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "broth is 10/10, lines are long"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1767990086000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "not yet, is it good?"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1767989174000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "new ramen place on Saint-Laurent, have you tried it?"
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1759769044000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "let's go thursday"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1759768553000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "broth is 10/10, lines are long",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Kayla Morgan",
+      "timestamp_ms": 1759768460000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "not yet, is it good?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1759768448000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "new ramen place on Saint-Laurent, have you tried it?"
+    }
+  ],
+  "title": "Kayla Morgan",
+  "is_still_participant": true,
+  "thread_path": "inbox/kaylamorgan_5384348680300248",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}
