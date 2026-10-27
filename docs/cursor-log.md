@@ -140,8 +140,8 @@ Dated notes reconstructed from `git log --stat`. Each step: what we asked Cursor
 - **Produced:** `2aa6e18`.
 - **Changed:** Eval **19/23 (82.6%)**, person accuracy 100%; `06_revision_loop` shows Writer↔Critic.
 
-## 2026-10-27 — Phase 4 (docs)
+## 2026-10-27 — Phase 4 (`c48020d`)
 
 - **Asked:** README / SPONSOR_TECH / data README / metadata / cursor-log; quote non-verb promises; untrack `data/relationship_scores` JSON; secret scan PASS.
-- **Produced:** this commit (Phase 4).
+- **Produced:** `c48020d`.
 - **Changed:** Docs match guideline paste-ins; promise template never emits “you'd early stage climate”.
