@@ -58,9 +58,16 @@ class ContextBuilderService:
         if not needle:
             return []
         people = self._store.list_entities(type="person")
+        owner_name = (self._settings.dataset_owner or "").strip().lower()
+        owner_id = self._store.get_meta("user_entity_id")
         candidates: list[ResolveCandidate] = []
         needle_l = needle.lower()
         for entity in people:
+            # Never offer the dataset owner as a meeting candidate.
+            if owner_id and entity.id == owner_id:
+                continue
+            if owner_name and entity.canonical_name.strip().lower() == owner_name:
+                continue
             alias_pool = [entity.canonical_name, *entity.aliases]
             best_score = 0.0
             best_reason = "no match"

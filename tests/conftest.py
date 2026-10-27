@@ -16,8 +16,8 @@ def _force_duckdb_backend(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("DATA_BACKEND", "duckdb")
     monkeypatch.setenv("SAMPLE_MODE", "true")
     monkeypatch.setenv("RECALL_API_TOKEN", "test-token-recall")
-    # Drop leaked SAMPLE_DATA_DIR from identity_bench (sets os.environ directly).
-    monkeypatch.delenv("SAMPLE_DATA_DIR", raising=False)
+    # Pin unit-test fixture; demo default is data/synthetic/tables.
+    monkeypatch.setenv("SAMPLE_DATA_DIR", "data/sample")
     get_settings.cache_clear()
     clear_default_query_layer()
     clear_zetaris_circuit()

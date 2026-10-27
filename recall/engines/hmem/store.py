@@ -41,9 +41,13 @@ CREATE INDEX IF NOT EXISTS idx_memories_attr ON memories(attribute_key, attribut
 
 
 def hmem_db_path(settings: Settings | None = None) -> Path:
-    """Return data/hmem_sample.db in SAMPLE_MODE, else data/hmem.db."""
+    """Return ``data/hmem_<dataset>.db`` in SAMPLE_MODE, else ``data/hmem.db``."""
+    from recall.engines.world.store import _safe_dataset_name
+
     active = settings if settings is not None else get_settings()
-    return Path("data/hmem_sample.db" if active.sample_mode else "data/hmem.db")
+    if not active.sample_mode:
+        return Path("data/hmem.db")
+    return Path(f"data/hmem_{_safe_dataset_name(active)}.db")
 
 
 def _now() -> str:

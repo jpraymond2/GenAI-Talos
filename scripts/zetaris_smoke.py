@@ -42,7 +42,7 @@ _SAMPLE_TABLE_FILES = {
 
 
 def _expected_counts_from_sample(sample_dir: Path) -> dict[str, int]:
-    """Count data rows in data/sample/*.csv (header excluded)."""
+    """Count data rows in settings.sample_data_dir CSVs (header excluded)."""
     import csv
 
     counts: dict[str, int] = {}

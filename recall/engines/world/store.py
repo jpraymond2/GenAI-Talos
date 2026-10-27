@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any, Iterable
@@ -19,6 +21,13 @@ from recall.engines.world.models import (
     Relationship,
     RelationshipAssessment,
     RelationshipSignal,
+)
+
+_SAMPLE_TABLE_FILES = (
+    "contacts.csv",
+    "handles.csv",
+    "interactions.csv",
+    "events.csv",
 )
 
 _SCHEMA = """
@@ -163,10 +172,33 @@ CREATE INDEX IF NOT EXISTS idx_rel_assess_entity ON relationship_assessments(ent
 """
 
 
+def _safe_dataset_name(settings: Settings) -> str:
+    """Filesystem-safe dataset id for per-dataset SQLite paths."""
+    raw = (settings.dataset_name or "").strip() or "sample"
+    safe = re.sub(r"[^A-Za-z0-9_-]+", "_", raw).strip("_")
+    return safe or "sample"
+
+
+def source_tables_fingerprint(sample_dir: Path | str) -> str:
+    """Sha256 of the four sample CSVs (contacts/handles/interactions/events)."""
+    root = Path(sample_dir)
+    digest = hashlib.sha256()
+    for name in _SAMPLE_TABLE_FILES:
+        path = root / name
+        digest.update(name.encode("utf-8"))
+        digest.update(b"\0")
+        if path.is_file():
+            digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
 def world_db_path(settings: Settings | None = None) -> Path:
-    """Return data/world_sample.db in SAMPLE_MODE, else data/world.db."""
+    """Return ``data/world_<dataset>.db`` in SAMPLE_MODE, else ``data/world.db``."""
     active = settings if settings is not None else get_settings()
-    return Path("data/world_sample.db" if active.sample_mode else "data/world.db")
+    if not active.sample_mode:
+        return Path("data/world.db")
+    return Path(f"data/world_{_safe_dataset_name(active)}.db")
 
 
 class WorldStore:

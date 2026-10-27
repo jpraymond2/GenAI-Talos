@@ -43,7 +43,7 @@ _WORLD_EMPTY_MSG = (
 )
 
 # Opt-in only: default follows SAMPLE_MODE / DATA_BACKEND in .env.
-_SAMPLE_HELP = "Force SAMPLE_MODE / world_sample.db (default: follow .env)."
+_SAMPLE_HELP = "Force SAMPLE_MODE / world_<dataset>.db (default: follow .env)."
 
 
 def _require_world_entities() -> None:
@@ -75,7 +75,10 @@ def ingest(
     ] = False,
     sample: Annotated[
         bool,
-        typer.Option("--sample", help="Build data/world_sample.db from sample CSVs via the query layer."),
+        typer.Option(
+            "--sample",
+            help="Build data/world_<dataset>.db from SAMPLE_DATA_DIR CSVs via the query layer.",
+        ),
     ] = False,
     world_only: Annotated[
         bool,
@@ -103,6 +106,7 @@ def ingest(
         tracer = Tracer(logs_dir=settings.logs_dir)
         with tracer.activate():
             from recall.engines.world import run_world_ingest, world
+            from recall.engines.world.store import world_db_path
 
             world.reset()
             counts = run_world_ingest(sample=True, settings=settings, tracer=tracer)
@@ -110,7 +114,7 @@ def ingest(
             "Sample world ingest complete: "
             f"entities={counts.get('entities')} conflicts={counts.get('conflicts')} "
             f"identity_scored={counts.get('identity_scored')} "
-            f"observations={counts.get('observations')} -> data/world_sample.db"
+            f"observations={counts.get('observations')} -> {world_db_path(settings)}"
         )
         return
 

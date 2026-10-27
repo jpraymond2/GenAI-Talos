@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import warnings
@@ -64,7 +65,7 @@ class Settings(BaseSettings):
 
     sample_mode: bool = Field(
         default=True,
-        description="Use data/sample and data/cache, and dry-run every action.",
+        description="Use sample_data_dir and data/cache, and dry-run every action.",
     )
     data_backend: DataBackend = DataBackend.DUCKDB
 
@@ -141,10 +142,20 @@ class Settings(BaseSettings):
     max_critic_rounds: int = Field(default=2, ge=0, le=2)
     max_retries: int = Field(default=3, ge=0, le=3)
 
-    sample_data_dir: Path = Path("data/sample")
+    sample_data_dir: Path = Path("data/synthetic/tables")
     live_data_dir: Path = Path("data/live")
     cache_dir: Path = Path("data/cache")
     logs_dir: Path = Path("logs")
+    # Loaded from sample_data_dir/dataset.json when present; SAMPLE_NOW overrides now.
+    dataset_name: str = Field(default="", description="Dataset id (e.g. synthetic, sample).")
+    dataset_owner: str = Field(
+        default="",
+        description="Canonical owner name for this dataset (never a meeting candidate).",
+    )
+    sample_now: str | None = Field(
+        default=None,
+        description="Frozen 'now' in sample mode (ISO-8601). Env: SAMPLE_NOW.",
+    )
     preference_profiles: bool = Field(
         default=True,
         description="When false, never build or serve food/places preference profiles.",
@@ -157,6 +168,38 @@ class Settings(BaseSettings):
         default=SecretStr(""),
         description="Bearer token required by POST /api/ingest/mac.",
     )
+
+    @model_validator(mode="after")
+    def _load_dataset_descriptor(self) -> Self:
+        """Fill dataset_name / dataset_owner / sample_now from dataset.json when present."""
+        path = Path(self.sample_data_dir) / "dataset.json"
+        data: dict[str, Any] = {}
+        if path.is_file():
+            try:
+                loaded = json.loads(path.read_text(encoding="utf-8"))
+                if isinstance(loaded, dict):
+                    data = loaded
+            except (OSError, json.JSONDecodeError):
+                data = {}
+
+        name = str(data.get("name") or "").strip()
+        if not name:
+            root = Path(self.sample_data_dir)
+            name = root.parent.name if root.name == "tables" else root.name
+            name = name or "sample"
+
+        owner = str(data.get("owner") or "").strip()
+        # SAMPLE_NOW (already bound to sample_now) wins; else dataset.json "now".
+        now = (self.sample_now or "").strip() or str(data.get("now") or "").strip() or None
+
+        # Mutate in place — BaseSettings ignores model_copy() during __init__.
+        if not (self.dataset_name or "").strip():
+            self.dataset_name = name
+        if not (self.dataset_owner or "").strip() and owner:
+            self.dataset_owner = owner
+        if self.sample_now is None and now:
+            self.sample_now = now
+        return self
 
     @model_validator(mode="after")
     def _alias_zetaris_url(self) -> Self:

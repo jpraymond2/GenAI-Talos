@@ -497,6 +497,13 @@ class IngestPipelineService:
 
         self._store.set_meta("ingest_stage", "done")
         self._store.set_meta("last_run_id", run_id)
+        if self._settings.sample_mode:
+            from recall.engines.world.store import source_tables_fingerprint
+
+            self._store.set_meta(
+                "source_fingerprint",
+                source_tables_fingerprint(self._settings.sample_data_dir),
+            )
 
         counts = {
             "entities": entity_count,

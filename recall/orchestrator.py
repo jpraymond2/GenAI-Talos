@@ -37,7 +37,11 @@ from recall.engines.hmem.store import MemoryStoreService, hmem_db_path
 from recall.engines.world.context_builder import ContextBuilderService
 from recall.engines.world.identity_service import IdentityService
 from recall.engines.world.ingest import IngestPipelineService
-from recall.engines.world.store import WorldStore, world_db_path
+from recall.engines.world.store import (
+    WorldStore,
+    source_tables_fingerprint,
+    world_db_path,
+)
 from recall.llm import generator as llm
 from recall.schemas import Brief, Candidate, CriticVerdict, Evidence, RunState, TalkingPoint, Utterance
 from recall.tracing import Tracer
@@ -139,14 +143,35 @@ def build_deps(
     settings = get_settings()
     tracer = Tracer(logs_dir=logs_dir or settings.logs_dir, run_id=run_id)
     layer = get_query_layer(settings, tracer=tracer)
-    world_store = WorldStore(path=world_db_path(settings), settings=settings)
-    if world_store.count_entities() == 0:
+    db_path = world_db_path(settings)
+    world_store = WorldStore(path=db_path, settings=settings)
+    expected_fp = (
+        source_tables_fingerprint(settings.sample_data_dir) if settings.sample_mode else None
+    )
+    stored_fp = world_store.get_meta("source_fingerprint")
+    empty = world_store.count_entities() == 0
+    fingerprint_mismatch = bool(expected_fp) and stored_fp != expected_fp
+    if empty or fingerprint_mismatch:
+        reason = "empty" if empty else "fingerprint_mismatch"
         tracer.event(
             "orchestrator",
-            "world_ingest_on_start",
-            {"summary": "world DB empty; running ingest"},
+            "world_reingest",
+            {
+                "reason": reason,
+                "fingerprint": expected_fp,
+                "prior_fingerprint": stored_fp,
+                "summary": f"world reingest ({reason})",
+            },
         )
+        if fingerprint_mismatch and not empty:
+            world_store.close()
+            db_path.unlink(missing_ok=True)
+            for suffix in ("-wal", "-shm"):
+                Path(str(db_path) + suffix).unlink(missing_ok=True)
+            world_store = WorldStore(path=db_path, settings=settings)
         IngestPipelineService(store=world_store, settings=settings, tracer=tracer).run(layer)
+        if expected_fp:
+            world_store.set_meta("source_fingerprint", expected_fp)
 
     world = ContextBuilderService(
         store=world_store, settings=settings, query_layer=layer, tracer=tracer
