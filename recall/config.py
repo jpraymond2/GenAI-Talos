@@ -143,6 +143,18 @@ class Settings(BaseSettings):
         default=SecretStr(""),
         description="Bearer token required for /api/* and /ws/trace?token=.",
     )
+    recall_login_email: str = Field(default="", description="Demo login email for the dashboard (optional).")
+    recall_login_password: SecretStr = Field(
+        default=SecretStr(""),
+        description="Demo login password; the API token is also accepted as a password.",
+    )
+    tts_enabled: bool = Field(default=True, description="Speak answers with NVIDIA Magpie TTS (falls back to the browser voice).")
+    tts_function_id: str = Field(default="877104f7-e885-42b9-8de8-f6e4c6303969", description="NVCF function id for magpie-tts-multilingual.")
+    tts_voice: str = Field(default="Magpie-Multilingual.EN-US.Aria", description="Magpie voice name.")
+    recall_public_url: str = Field(
+        default="",
+        description="Public https URL of this server, used as the Google sign-in redirect (e.g. https://recall.example.com).",
+    )
 
     http_timeout_seconds: float = Field(default=15.0, gt=0, le=15)
     llm_timeout_seconds: float = Field(default=30.0, gt=0, le=30)

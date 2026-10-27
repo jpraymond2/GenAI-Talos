@@ -1,6 +1,6 @@
 {
-  "overall_pct": 82.6086956521739,
-  "passed": 19,
+  "overall_pct": 78.26086956521739,
+  "passed": 18,
   "total": 23,
   "person_accuracy": 1.0,
   "clarify_accuracy": 1.0,
@@ -38,14 +38,16 @@
       "id": "q03",
       "category": "brief",
       "ask": "Brief me on Omar from my MBA",
-      "passed": true,
+      "passed": false,
       "checks": {
         "person": true,
         "cover:omar_b.casecomp": true,
-        "must_not:omar_h.series_a": true,
+        "must_not:omar_h.series_a": false,
         "must_not:omar_k.lease": true
       },
-      "reasons": [],
+      "reasons": [
+        "leaked omar_h.series_a"
+      ],
       "status": "done",
       "entity_name": "Omar B (MBA)"
     },

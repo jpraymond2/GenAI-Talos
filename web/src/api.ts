@@ -71,6 +71,15 @@ export function clearForcedMock(): void {
   forceMock = null;
 }
 
+/** True only when mock is already on (VITE_MOCK or recorded-demo). Never silently forces mock. */
+export async function shouldMock(): Promise<boolean> {
+  if (useMock()) return true;
+  // Probe reachability for the banner; do not flip forceMock here.
+  const ok = await backendReachable();
+  backendDown = !ok;
+  return false;
+}
+
 function replayTraces(traces: TraceEvent[], gapMs = 280): Promise<void> {
   clearMockTimers();
   return new Promise((resolve) => {

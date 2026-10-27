@@ -151,3 +151,9 @@ Dated notes reconstructed from `git log --stat`. Each step: what we asked Cursor
 - **Asked:** Per-example fresh H-MEM; web scout on brief retrieve (Payloop); actions intro + open-loop draft; `LLM_LIVE` for Nemotron in sample mode with cache fallback.
 - **Produced:** `efb18be`.
 - **Changed:** `make examples` twice → identical `brief.md`; Omar brief shows Payloop public news.
+
+## 2026-10-27 — Merge origin/main (Hassan #17–#20)
+
+- **Asked:** Resolve mid-merge conflicts; keep Hassan's workspace UI + our mock/local-token/critic UX; SAMPLE_MODE auto-sign-in; preroute assistant→principal; refresh eval after WhatsApp synthetic regen.
+- **Produced:** this merge commit.
+- **Changed:** Conflicts in `company_aliases.yaml` (ours) and web App/api/auth/CenterPanel (combined). Eval **18/23 (78.3%)**, person accuracy 100%. Judges skip LoginPage when `/api/local-token` succeeds.

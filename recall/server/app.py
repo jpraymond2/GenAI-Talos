@@ -23,7 +23,7 @@ from fastapi import (
     UploadFile,
     WebSocket,
 )
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -60,6 +60,12 @@ class AskBody(BaseModel):
     entity_id: str | None = None
 
 
+class SpeakBody(BaseModel):
+    """Text for Recall's voice."""
+
+    text: str = Field(min_length=1, max_length=2000)
+
+
 class ConfirmBody(BaseModel):
     """Dashboard action-confirmation payload."""
 
@@ -91,6 +97,12 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(title="Recall", version=__version__, lifespan=lifespan)
 
+from recall.server.connections import router as connections_router  # noqa: E402
+from recall.server.workspace import router as workspace_router  # noqa: E402
+
+app.include_router(workspace_router)
+app.include_router(connections_router)
+
 
 @app.get("/health")
 def health() -> dict[str, str]:
@@ -100,7 +112,7 @@ def health() -> dict[str, str]:
 
 @app.get("/api/local-token")
 def api_local_token(request: Request) -> dict[str, str]:
-    """Return the sample-mode token to loopback clients only (404 otherwise)."""
+    """Return the sample-mode token (+ dataset owner) to loopback clients only."""
     if not client_is_loopback(request):
         raise HTTPException(status_code=404, detail="Not found")
     settings = get_settings()
@@ -109,7 +121,12 @@ def api_local_token(request: Request) -> dict[str, str]:
     token = expected_token()
     if not token:
         raise HTTPException(status_code=404, detail="Not found")
-    return {"token": token}
+    owner = (settings.dataset_owner or "Demo owner").strip()
+    slug = "".join(ch.lower() if ch.isalnum() else "." for ch in owner).strip(".")
+    while ".." in slug:
+        slug = slug.replace("..", ".")
+    email = f"{slug or 'owner'}@local.recall"
+    return {"token": token, "name": owner, "email": email}
 
 @app.post("/api/ask", dependencies=[Depends(require_bearer)])
 async def api_ask(body: AskBody) -> dict[str, Any]:
@@ -174,9 +191,6 @@ def api_status() -> dict[str, Any]:
     }
 
 
-_MAX_MAC_INGEST_BYTES = 20 * 1024 * 1024
-
-
 @app.post("/api/ingest/mac")
 async def api_ingest_mac(
     request: Request,
@@ -185,7 +199,6 @@ async def api_ingest_mac(
     """Accept gzipped JSON from the Mac agent; upsert Postgres raw_* tables.
 
     Auth is ``DEVICE_UPLOAD_TOKEN`` (not the dashboard bearer).
-    Bodies over 20 MiB (compressed or decompressed) are rejected with 413.
     """
     settings = get_settings()
     expected = settings.device_upload_token.get_secret_value().strip()
@@ -197,25 +210,13 @@ async def api_ingest_mac(
     if got != expected:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    content_length = request.headers.get("content-length")
-    if content_length is not None:
-        try:
-            if int(content_length) > _MAX_MAC_INGEST_BYTES:
-                raise HTTPException(status_code=413, detail="Request body too large (max 20 MB)")
-        except ValueError:
-            pass
-
     raw = await request.body()
-    if len(raw) > _MAX_MAC_INGEST_BYTES:
-        raise HTTPException(status_code=413, detail="Request body too large (max 20 MB)")
     encoding = (request.headers.get("content-encoding") or "").lower()
     if encoding == "gzip":
         try:
             raw = gzip.decompress(raw)
         except OSError as exc:
             raise HTTPException(status_code=400, detail="Invalid gzip body") from exc
-        if len(raw) > _MAX_MAC_INGEST_BYTES:
-            raise HTTPException(status_code=413, detail="Request body too large (max 20 MB)")
     try:
         payload = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -338,6 +339,21 @@ async def api_voice(
     payload["engine"] = engine
     payload["voice_timing"] = timing
     return payload
+
+
+@app.post("/api/tts", dependencies=[Depends(require_bearer)])
+async def api_tts(body: SpeakBody) -> Response:
+    """Recall's voice: NVIDIA Magpie TTS as WAV. 503 means 'use the browser voice instead'."""
+    settings = get_settings()
+    if not settings.tts_enabled:
+        raise HTTPException(status_code=503, detail="TTS disabled")
+    from recall.voice.magpie import TTSUnavailable, synthesize_wav
+
+    try:
+        wav = await asyncio.to_thread(synthesize_wav, body.text, settings)
+    except TTSUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return Response(content=wav, media_type="audio/wav", headers={"Cache-Control": "private, max-age=3600"})
 
 
 @app.websocket("/ws/trace")

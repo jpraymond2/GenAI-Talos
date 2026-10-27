@@ -29,8 +29,11 @@ def test_local_token_sample_mode_loopback(
 
     res = client.get("/api/local-token")
     assert res.status_code == 200
-    token = res.json()["token"]
+    payload = res.json()
+    token = payload["token"]
     assert token
+    assert payload.get("name")
+    assert "@" in str(payload.get("email") or "")
 
     denied = client.post("/api/ask", json={"text": "hi"})
     assert denied.status_code == 401
@@ -49,6 +52,29 @@ def test_local_token_sample_mode_loopback(
         json={"text": "hi"},
     )
     assert ok.status_code == 200
+
+
+def test_login_accepts_local_token_in_sample_mode(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """POST /api/login with the sample local token signs in as dataset_owner."""
+    monkeypatch.setenv("SAMPLE_MODE", "true")
+    monkeypatch.setenv("SAMPLE_DATA_DIR", "data/synthetic/tables")
+    monkeypatch.setenv("RECALL_API_TOKEN", "")
+    get_settings.cache_clear()
+    auth_mod.reset_ephemeral_token_for_tests()
+
+    tok = client.get("/api/local-token")
+    assert tok.status_code == 200
+    token = tok.json()["token"]
+    owner = tok.json()["name"]
+
+    res = client.post("/api/login", json={"email": "", "password": token})
+    assert res.status_code == 200
+    body = res.json()
+    assert body["token"] == token
+    assert body["name"] == owner
+    assert "@" in str(body.get("email") or "")
 
 
 def test_live_mode_requires_configured_token(

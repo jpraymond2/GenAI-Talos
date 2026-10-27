@@ -14,7 +14,7 @@
   },
   "evaluation": {
     "report": "output_examples/eval_report.md",
-    "overall": "19/23",
+    "overall": "18/23",
     "person_accuracy": 1.0
   },
   "examples": {

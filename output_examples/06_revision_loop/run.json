@@ -1,8 +1,8 @@
 {
-  "run_id": "example-06_revision_loop-0505f422",
+  "run_id": "example-06_revision_loop-0526515d",
   "utterance": {
     "text": "Sync with Mei tomorrow",
-    "ts": "2026-10-27T16:02:23.371344Z",
+    "ts": "2026-10-27T16:15:40.890672Z",
     "mode": "text"
   },
   "intent": {
@@ -39,35 +39,35 @@
     "relationship_style": "Friend. Lead with life updates, plans and anything the user promised personally. Warm, casual tone. Skip job titles unless they changed.",
     "relationship_status": "auto",
     "evidence_source_refs": {
-      "e1": "imessage:1539",
-      "e2": "messenger:inbox/startupfoundersmtl_6555437384990439:1792782894000",
-      "e3": "imessage:1531",
-      "e4": "imessage:1502",
-      "e5": "messenger:inbox/startupfoundersmtl_6555437384990439:1791145676000",
-      "e6": "imessage:1543",
-      "e7": "imessage:1539",
-      "e8": "imessage:1538",
-      "e9": "imessage:1537",
-      "e10": "messenger:inbox/startupfoundersmtl_6555437384990439:1792782894000",
-      "e11": "imessage:1533",
-      "e12": "imessage:1532",
-      "e13": "imessage:1531",
-      "e14": "imessage:1530",
-      "e15": "imessage:1528",
-      "e16": "imessage:1526",
-      "e17": "imessage:1524",
-      "e18": "gmail:f58067035b2e16c1",
-      "e19": "gmail:c6486db867d8f916",
-      "e20": "imessage:1505",
-      "e21": "imessage:1504",
-      "e22": "imessage:1503",
-      "e23": "imessage:1502",
-      "e24": "imessage:1501",
-      "e25": "imessage:1500",
-      "e26": "calendar:s2jqr6abvj98ccel38k63oe1vn",
-      "e27": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6",
-      "e28": "calendar:qgmq9o7ohf4e6ihg73km8fi1d3",
-      "e29": "calendar:m8fu75j3fdvt418itvbmo6fj14",
+      "e1": "whatsapp:AF07B309134BEEB7792B",
+      "e2": "whatsapp:A401CB34D9946AAB2BBC",
+      "e3": "whatsapp:3274EE7CC6D3F80B5C95",
+      "e4": "imessage:431",
+      "e5": "whatsapp:AA8578C09C9880BAC374",
+      "e6": "imessage:290",
+      "e7": "imessage:181",
+      "e8": "imessage:440",
+      "e9": "whatsapp:AF07B309134BEEB7792B",
+      "e10": "whatsapp:F6ED0408D3F86AF6ED00",
+      "e11": "whatsapp:0FA1D1C4008B1A4E23D2",
+      "e12": "whatsapp:A401CB34D9946AAB2BBC",
+      "e13": "imessage:439",
+      "e14": "imessage:438",
+      "e15": "whatsapp:3274EE7CC6D3F80B5C95",
+      "e16": "whatsapp:89427A87C6222AC28E34",
+      "e17": "whatsapp:3FB8D262B3AABB6DD92F",
+      "e18": "whatsapp:FE549AD9EC55C08EEC87",
+      "e19": "whatsapp:0E6D2C86C1C7142E9482",
+      "e20": "gmail:3f590cac0abedebc",
+      "e21": "gmail:59435052bd141f18",
+      "e22": "whatsapp:8EF12F6B6143BEB75443",
+      "e23": "whatsapp:B28D6F32CF8AB471207B",
+      "e24": "whatsapp:B1D6A82A3877C2F5CC46",
+      "e25": "imessage:431",
+      "e26": "imessage:430",
+      "e27": "imessage:429",
+      "e28": "calendar:s2jqr6abvj98ccel38k63oe1vn",
+      "e29": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6",
       "m1": "mem_ac03c3d0c78c",
       "memory:m1": "mem_ac03c3d0c78c"
     },
@@ -119,7 +119,7 @@
         "mention_count": 331,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "de40048e-5d86-40ba-952e-2b9fb62b3e2e"
+        "run_id": "example-01_three_omars-e6f4ccfd"
       },
       "aliases": [
         "Mei Tanaka",
@@ -130,291 +130,291 @@
         "imessage": {
           "ts_utc": "2026-10-25T15:20:00Z",
           "direction": "in",
-          "source_ref": "imessage:1543",
+          "source_ref": "imessage:440",
           "subject": ""
         },
-        "messenger": {
-          "ts_utc": "2026-10-23T19:14:54Z",
-          "direction": "in",
-          "source_ref": "messenger:inbox/startupfoundersmtl_6555437384990439:1792782894000",
+        "whatsapp": {
+          "ts_utc": "2026-10-24T19:09:09Z",
+          "direction": "out",
+          "source_ref": "whatsapp:AF07B309134BEEB7792B",
           "subject": ""
         },
         "gmail": {
           "ts_utc": "2026-10-21T04:43:51Z",
           "direction": "out",
-          "source_ref": "gmail:f58067035b2e16c1",
+          "source_ref": "gmail:3f590cac0abedebc",
           "subject": "Re: Quick question"
         }
       },
       "recent_interactions": [
         {
-          "interaction_id": "i_a4df4549a996",
+          "interaction_id": "i_2767bcc00739",
           "source": "imessage",
           "thread_id": "th_5c0fd5224d31",
           "direction": "in",
           "ts_utc": "2026-10-25T15:20:00Z",
           "subject": "",
           "text": "pipeline demo works end to end now. Hydrolab sample data loads in under a minute",
-          "source_ref": "imessage:1543",
+          "source_ref": "imessage:440",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_2145019cb472",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_cf4449b8feae",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "out",
           "ts_utc": "2026-10-24T19:09:09Z",
           "subject": "",
           "text": "early stage climate, I'll send details",
-          "source_ref": "imessage:1539",
+          "source_ref": "whatsapp:AF07B309134BEEB7792B",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_1bc973c04057",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_91b0723914f0",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "in",
           "ts_utc": "2026-10-24T19:08:21Z",
           "subject": "",
           "text": "nice, which fund?",
-          "source_ref": "imessage:1538",
+          "source_ref": "whatsapp:F6ED0408D3F86AF6ED00",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_011eb6d7572f",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_d73784957e2c",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "out",
           "ts_utc": "2026-10-24T19:06:22Z",
           "subject": "",
           "text": "got a warm intro to a VC in Toronto",
-          "source_ref": "imessage:1537",
+          "source_ref": "whatsapp:0FA1D1C4008B1A4E23D2",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_94f48b7c1cc8",
-          "source": "messenger",
-          "thread_id": "th_ed617db11dc2",
+          "interaction_id": "i_a916f9cd518b",
+          "source": "whatsapp",
+          "thread_id": "th_8a8d91d925f4",
           "direction": "in",
           "ts_utc": "2026-10-23T19:14:54Z",
           "subject": "",
           "text": "investor update draft is in the doc, can you review?",
-          "source_ref": "messenger:inbox/startupfoundersmtl_6555437384990439:1792782894000",
+          "source_ref": "whatsapp:A401CB34D9946AAB2BBC",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_d7186472b6d5",
+          "interaction_id": "i_d77e3ceaf83f",
           "source": "imessage",
           "thread_id": "th_5c0fd5224d31",
           "direction": "in",
           "ts_utc": "2026-10-23T18:31:40Z",
           "subject": "",
           "text": "let's book a demo this week",
-          "source_ref": "imessage:1533",
+          "source_ref": "imessage:439",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_463d6da6cb78",
+          "interaction_id": "i_371db08840a7",
           "source": "imessage",
           "thread_id": "th_5c0fd5224d31",
           "direction": "out",
           "ts_utc": "2026-10-23T18:25:59Z",
           "subject": "",
           "text": "new signup from a utility in Ontario 👀",
-          "source_ref": "imessage:1532",
+          "source_ref": "imessage:438",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_78729db62254",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_a4cafd2333fd",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "out",
           "ts_utc": "2026-10-22T21:05:00Z",
           "subject": "",
           "text": "yes, will send it by Tuesday",
-          "source_ref": "imessage:1531",
+          "source_ref": "whatsapp:3274EE7CC6D3F80B5C95",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_9e5a76b42850",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_0fc94110e4a7",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "in",
           "ts_utc": "2026-10-22T20:48:00Z",
           "subject": "",
           "text": "can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section",
-          "source_ref": "imessage:1530",
+          "source_ref": "whatsapp:89427A87C6222AC28E34",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_8471b9571c81",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_8812de64a853",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "out",
           "ts_utc": "2026-10-22T17:36:45Z",
           "subject": "",
           "text": "phew, I'll grab it next time",
-          "source_ref": "imessage:1528",
+          "source_ref": "whatsapp:3FB8D262B3AABB6DD92F",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_2578184bd2ec",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_f5a23f56d945",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "in",
           "ts_utc": "2026-10-22T17:32:56Z",
           "subject": "",
           "text": "the grey one? yes, it's on the chair",
-          "source_ref": "imessage:1526",
+          "source_ref": "whatsapp:FE549AD9EC55C08EEC87",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_2095e56f86da",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_d20c841a6954",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "out",
           "ts_utc": "2026-10-22T17:31:34Z",
           "subject": "",
           "text": "did I leave my scarf at your place?",
-          "source_ref": "imessage:1524",
+          "source_ref": "whatsapp:0E6D2C86C1C7142E9482",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_b89a25925020",
+          "interaction_id": "i_4b5aa05d7ee4",
           "source": "gmail",
-          "thread_id": "c6486db867d8f916",
+          "thread_id": "59435052bd141f18",
           "direction": "out",
           "ts_utc": "2026-10-21T04:43:51Z",
           "subject": "Re: Quick question",
           "text": "Hi Mei,\n\nSure — Thursday afternoon works. Send me a time.\n\nJordan",
-          "source_ref": "gmail:f58067035b2e16c1",
+          "source_ref": "gmail:3f590cac0abedebc",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_061e906b5e3d",
+          "interaction_id": "i_4d630d2a17bf",
           "source": "gmail",
-          "thread_id": "c6486db867d8f916",
+          "thread_id": "59435052bd141f18",
           "direction": "in",
           "ts_utc": "2026-10-19T23:43:51Z",
           "subject": "Quick question",
           "text": "Hi Jordan,\n\nDo you have 15 minutes this week for a quick question about your experience with pricing?\n\nThanks,\nMei",
-          "source_ref": "gmail:c6486db867d8f916",
+          "source_ref": "gmail:59435052bd141f18",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_395738f14158",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_ffcd2d741872",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "out",
           "ts_utc": "2026-10-19T21:51:57Z",
           "subject": "",
           "text": "phew, I'll grab it next time",
-          "source_ref": "imessage:1505",
+          "source_ref": "whatsapp:8EF12F6B6143BEB75443",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_b4f6206fa513",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_eaa17384df72",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "in",
           "ts_utc": "2026-10-19T21:51:54Z",
           "subject": "",
           "text": "the grey one? yes, it's on the chair",
-          "source_ref": "imessage:1504",
+          "source_ref": "whatsapp:B28D6F32CF8AB471207B",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_eef8d2697075",
-          "source": "imessage",
-          "thread_id": "th_5c0fd5224d31",
+          "interaction_id": "i_1b105635fe59",
+          "source": "whatsapp",
+          "thread_id": "th_22ee8cf77de7",
           "direction": "out",
           "ts_utc": "2026-10-19T21:46:11Z",
           "subject": "",
           "text": "did I leave my scarf at your place?",
-          "source_ref": "imessage:1503",
+          "source_ref": "whatsapp:B1D6A82A3877C2F5CC46",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_ad89ec5e18d7",
+          "interaction_id": "i_e551bd717232",
           "source": "imessage",
           "thread_id": "th_5c0fd5224d31",
           "direction": "out",
           "ts_utc": "2026-10-19T19:15:01Z",
           "subject": "",
           "text": "early stage climate, I'll send details",
-          "source_ref": "imessage:1502",
+          "source_ref": "imessage:431",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_e1926aeb5183",
+          "interaction_id": "i_ce959bb97bdf",
           "source": "imessage",
           "thread_id": "th_5c0fd5224d31",
           "direction": "in",
           "ts_utc": "2026-10-19T19:13:13Z",
           "subject": "",
           "text": "nice, which fund?",
-          "source_ref": "imessage:1501",
+          "source_ref": "imessage:430",
           "peer": false,
           "assumption": "anchored"
         },
         {
-          "interaction_id": "i_ff65f48252df",
+          "interaction_id": "i_fedee6309e26",
           "source": "imessage",
           "thread_id": "th_5c0fd5224d31",
           "direction": "out",
           "ts_utc": "2026-10-19T19:11:37Z",
           "subject": "",
           "text": "got a warm intro to a VC in Toronto",
-          "source_ref": "imessage:1500",
+          "source_ref": "imessage:429",
           "peer": false,
           "assumption": "anchored"
         }
       ],
       "open_loops": [
         {
-          "thread_id": "th_5c0fd5224d31",
+          "thread_id": "th_22ee8cf77de7",
           "ts_utc": "2026-10-24T19:09:09Z",
           "subject": "",
           "text": "early stage climate, I'll send details",
-          "source": "imessage",
-          "source_ref": "imessage:1539",
+          "source": "whatsapp",
+          "source_ref": "whatsapp:AF07B309134BEEB7792B",
           "loop_kind": "promise",
           "prior_ask": "nice, which fund?"
         },
         {
-          "thread_id": "th_ed617db11dc2",
+          "thread_id": "th_8a8d91d925f4",
           "ts_utc": "2026-10-23T19:14:54Z",
           "subject": "",
           "text": "investor update draft is in the doc, can you review?",
-          "source": "messenger",
-          "source_ref": "messenger:inbox/startupfoundersmtl_6555437384990439:1792782894000",
+          "source": "whatsapp",
+          "source_ref": "whatsapp:A401CB34D9946AAB2BBC",
           "loop_kind": "ask"
         },
         {
-          "thread_id": "th_5c0fd5224d31",
+          "thread_id": "th_22ee8cf77de7",
           "ts_utc": "2026-10-22T21:05:00Z",
           "subject": "",
           "text": "yes, will send it by Tuesday",
-          "source": "imessage",
-          "source_ref": "imessage:1531",
+          "source": "whatsapp",
+          "source_ref": "whatsapp:3274EE7CC6D3F80B5C95",
           "loop_kind": "promise",
           "prior_ask": "can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section"
         },
@@ -424,18 +424,38 @@
           "subject": "",
           "text": "early stage climate, I'll send details",
           "source": "imessage",
-          "source_ref": "imessage:1502",
+          "source_ref": "imessage:431",
           "loop_kind": "promise",
           "prior_ask": "nice, which fund?"
         },
         {
-          "thread_id": "th_ed617db11dc2",
+          "thread_id": "th_8a8d91d925f4",
           "ts_utc": "2026-10-04T20:27:56Z",
           "subject": "",
           "text": "root cause?",
-          "source": "messenger",
-          "source_ref": "messenger:inbox/startupfoundersmtl_6555437384990439:1791145676000",
+          "source": "whatsapp",
+          "source_ref": "whatsapp:AA8578C09C9880BAC374",
           "loop_kind": "ask"
+        },
+        {
+          "thread_id": "th_5c0fd5224d31",
+          "ts_utc": "2026-06-05T21:13:59Z",
+          "subject": "",
+          "text": "early stage climate, I'll send details",
+          "source": "imessage",
+          "source_ref": "imessage:290",
+          "loop_kind": "promise",
+          "prior_ask": "nice, which fund?"
+        },
+        {
+          "thread_id": "th_5c0fd5224d31",
+          "ts_utc": "2026-03-02T21:44:46Z",
+          "subject": "",
+          "text": "early stage climate, I'll send details",
+          "source": "imessage",
+          "source_ref": "imessage:181",
+          "loop_kind": "promise",
+          "prior_ask": "nice, which fund?"
         }
       ],
       "upcoming_events": [
@@ -810,20 +830,13 @@
           "probability": 0.95,
           "status": "active",
           "source_ref": "handle:h_aa43250d13fd"
-        },
-        {
-          "handle_kind": "messenger",
-          "handle_value": "Mei Tanaka",
-          "probability": 0.95,
-          "status": "active",
-          "source_ref": "handle:h_bafef1b7c047"
         }
       ],
       "last_contact": {
         "ts_utc": "2026-10-25T15:20:00Z",
         "source": "imessage",
         "direction": "in",
-        "source_ref": "imessage:1543",
+        "source_ref": "imessage:440",
         "subject": ""
       },
       "last_met": {
@@ -839,7 +852,7 @@
         "source_ref": "calendar:tlgm1gedn95u771tplpft9v6se"
       }
     },
-    "latency_ms": 34,
+    "latency_ms": 33,
     "llm_calls": 0,
     "critic_rounds": 2
   },
@@ -854,8 +867,8 @@
   "evidence": {
     "e1": {
       "id": "e1",
-      "source": "imessage",
-      "source_ref": "imessage:1539",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:AF07B309134BEEB7792B",
       "ts": "2026-10-24T19:09:09Z",
       "text": "Promise: early stage climate, I'll send details (re: nice, which fund?)",
       "url": null,
@@ -866,8 +879,8 @@
     },
     "e2": {
       "id": "e2",
-      "source": "messenger",
-      "source_ref": "messenger:inbox/startupfoundersmtl_6555437384990439:1792782894000",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:A401CB34D9946AAB2BBC",
       "ts": "2026-10-23T19:14:54Z",
       "text": "investor update draft is in the doc, can you review?",
       "url": null,
@@ -877,8 +890,8 @@
     },
     "e3": {
       "id": "e3",
-      "source": "imessage",
-      "source_ref": "imessage:1531",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:3274EE7CC6D3F80B5C95",
       "ts": "2026-10-22T21:05:00Z",
       "text": "Promise: yes, will send it by Tuesday (re: can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section)",
       "url": null,
@@ -890,7 +903,7 @@
     "e4": {
       "id": "e4",
       "source": "imessage",
-      "source_ref": "imessage:1502",
+      "source_ref": "imessage:431",
       "ts": "2026-10-19T19:15:01Z",
       "text": "Promise: early stage climate, I'll send details (re: nice, which fund?)",
       "url": null,
@@ -901,8 +914,8 @@
     },
     "e5": {
       "id": "e5",
-      "source": "messenger",
-      "source_ref": "messenger:inbox/startupfoundersmtl_6555437384990439:1791145676000",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:AA8578C09C9880BAC374",
       "ts": "2026-10-04T20:27:56Z",
       "text": "root cause?",
       "url": null,
@@ -913,185 +926,209 @@
     "e6": {
       "id": "e6",
       "source": "imessage",
-      "source_ref": "imessage:1543",
+      "source_ref": "imessage:290",
+      "ts": "2026-06-05T21:13:59Z",
+      "text": "Promise: early stage climate, I'll send details (re: nice, which fund?)",
+      "url": null,
+      "tags": [
+        "open_loop",
+        "promise"
+      ]
+    },
+    "e7": {
+      "id": "e7",
+      "source": "imessage",
+      "source_ref": "imessage:181",
+      "ts": "2026-03-02T21:44:46Z",
+      "text": "Promise: early stage climate, I'll send details (re: nice, which fund?)",
+      "url": null,
+      "tags": [
+        "open_loop",
+        "promise"
+      ]
+    },
+    "e8": {
+      "id": "e8",
+      "source": "imessage",
+      "source_ref": "imessage:440",
       "ts": "2026-10-25T15:20:00Z",
       "text": "pipeline demo works end to end now. Hydrolab sample data loads in under a minute",
       "url": null,
       "tags": []
     },
-    "e7": {
-      "id": "e7",
-      "source": "imessage",
-      "source_ref": "imessage:1539",
+    "e9": {
+      "id": "e9",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:AF07B309134BEEB7792B",
       "ts": "2026-10-24T19:09:09Z",
       "text": "early stage climate, I'll send details",
       "url": null,
       "tags": []
     },
-    "e8": {
-      "id": "e8",
-      "source": "imessage",
-      "source_ref": "imessage:1538",
+    "e10": {
+      "id": "e10",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:F6ED0408D3F86AF6ED00",
       "ts": "2026-10-24T19:08:21Z",
       "text": "nice, which fund?",
       "url": null,
       "tags": []
     },
-    "e9": {
-      "id": "e9",
-      "source": "imessage",
-      "source_ref": "imessage:1537",
+    "e11": {
+      "id": "e11",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:0FA1D1C4008B1A4E23D2",
       "ts": "2026-10-24T19:06:22Z",
       "text": "got a warm intro to a VC in Toronto",
       "url": null,
       "tags": []
     },
-    "e10": {
-      "id": "e10",
-      "source": "messenger",
-      "source_ref": "messenger:inbox/startupfoundersmtl_6555437384990439:1792782894000",
-      "ts": "2026-10-23T19:14:54Z",
-      "text": "investor update draft is in the doc, can you review?",
-      "url": null,
-      "tags": []
-    },
-    "e11": {
-      "id": "e11",
-      "source": "imessage",
-      "source_ref": "imessage:1533",
-      "ts": "2026-10-23T18:31:40Z",
-      "text": "let's book a demo this week",
-      "url": null,
-      "tags": []
-    },
     "e12": {
       "id": "e12",
-      "source": "imessage",
-      "source_ref": "imessage:1532",
-      "ts": "2026-10-23T18:25:59Z",
-      "text": "new signup from a utility in Ontario 👀",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:A401CB34D9946AAB2BBC",
+      "ts": "2026-10-23T19:14:54Z",
+      "text": "investor update draft is in the doc, can you review?",
       "url": null,
       "tags": []
     },
     "e13": {
       "id": "e13",
       "source": "imessage",
-      "source_ref": "imessage:1531",
-      "ts": "2026-10-22T21:05:00Z",
-      "text": "yes, will send it by Tuesday",
+      "source_ref": "imessage:439",
+      "ts": "2026-10-23T18:31:40Z",
+      "text": "let's book a demo this week",
       "url": null,
       "tags": []
     },
     "e14": {
       "id": "e14",
       "source": "imessage",
-      "source_ref": "imessage:1530",
-      "ts": "2026-10-22T20:48:00Z",
-      "text": "can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section",
+      "source_ref": "imessage:438",
+      "ts": "2026-10-23T18:25:59Z",
+      "text": "new signup from a utility in Ontario 👀",
       "url": null,
       "tags": []
     },
     "e15": {
       "id": "e15",
-      "source": "imessage",
-      "source_ref": "imessage:1528",
-      "ts": "2026-10-22T17:36:45Z",
-      "text": "phew, I'll grab it next time",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:3274EE7CC6D3F80B5C95",
+      "ts": "2026-10-22T21:05:00Z",
+      "text": "yes, will send it by Tuesday",
       "url": null,
       "tags": []
     },
     "e16": {
       "id": "e16",
-      "source": "imessage",
-      "source_ref": "imessage:1526",
-      "ts": "2026-10-22T17:32:56Z",
-      "text": "the grey one? yes, it's on the chair",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:89427A87C6222AC28E34",
+      "ts": "2026-10-22T20:48:00Z",
+      "text": "can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section",
       "url": null,
       "tags": []
     },
     "e17": {
       "id": "e17",
-      "source": "imessage",
-      "source_ref": "imessage:1524",
-      "ts": "2026-10-22T17:31:34Z",
-      "text": "did I leave my scarf at your place?",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:3FB8D262B3AABB6DD92F",
+      "ts": "2026-10-22T17:36:45Z",
+      "text": "phew, I'll grab it next time",
       "url": null,
       "tags": []
     },
     "e18": {
       "id": "e18",
-      "source": "gmail",
-      "source_ref": "gmail:f58067035b2e16c1",
-      "ts": "2026-10-21T04:43:51Z",
-      "text": "Hi Mei,\n\nSure — Thursday afternoon works. Send me a time.\n\nJordan",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:FE549AD9EC55C08EEC87",
+      "ts": "2026-10-22T17:32:56Z",
+      "text": "the grey one? yes, it's on the chair",
       "url": null,
       "tags": []
     },
     "e19": {
       "id": "e19",
-      "source": "gmail",
-      "source_ref": "gmail:c6486db867d8f916",
-      "ts": "2026-10-19T23:43:51Z",
-      "text": "Hi Jordan,\n\nDo you have 15 minutes this week for a quick question about your experience with pricing?\n\nThanks,\nMei",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:0E6D2C86C1C7142E9482",
+      "ts": "2026-10-22T17:31:34Z",
+      "text": "did I leave my scarf at your place?",
       "url": null,
       "tags": []
     },
     "e20": {
       "id": "e20",
-      "source": "imessage",
-      "source_ref": "imessage:1505",
-      "ts": "2026-10-19T21:51:57Z",
-      "text": "phew, I'll grab it next time",
+      "source": "gmail",
+      "source_ref": "gmail:3f590cac0abedebc",
+      "ts": "2026-10-21T04:43:51Z",
+      "text": "Hi Mei,\n\nSure — Thursday afternoon works. Send me a time.\n\nJordan",
       "url": null,
       "tags": []
     },
     "e21": {
       "id": "e21",
-      "source": "imessage",
-      "source_ref": "imessage:1504",
-      "ts": "2026-10-19T21:51:54Z",
-      "text": "the grey one? yes, it's on the chair",
+      "source": "gmail",
+      "source_ref": "gmail:59435052bd141f18",
+      "ts": "2026-10-19T23:43:51Z",
+      "text": "Hi Jordan,\n\nDo you have 15 minutes this week for a quick question about your experience with pricing?\n\nThanks,\nMei",
       "url": null,
       "tags": []
     },
     "e22": {
       "id": "e22",
-      "source": "imessage",
-      "source_ref": "imessage:1503",
-      "ts": "2026-10-19T21:46:11Z",
-      "text": "did I leave my scarf at your place?",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:8EF12F6B6143BEB75443",
+      "ts": "2026-10-19T21:51:57Z",
+      "text": "phew, I'll grab it next time",
       "url": null,
       "tags": []
     },
     "e23": {
       "id": "e23",
-      "source": "imessage",
-      "source_ref": "imessage:1502",
-      "ts": "2026-10-19T19:15:01Z",
-      "text": "early stage climate, I'll send details",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:B28D6F32CF8AB471207B",
+      "ts": "2026-10-19T21:51:54Z",
+      "text": "the grey one? yes, it's on the chair",
       "url": null,
       "tags": []
     },
     "e24": {
       "id": "e24",
-      "source": "imessage",
-      "source_ref": "imessage:1501",
-      "ts": "2026-10-19T19:13:13Z",
-      "text": "nice, which fund?",
+      "source": "whatsapp",
+      "source_ref": "whatsapp:B1D6A82A3877C2F5CC46",
+      "ts": "2026-10-19T21:46:11Z",
+      "text": "did I leave my scarf at your place?",
       "url": null,
       "tags": []
     },
     "e25": {
       "id": "e25",
       "source": "imessage",
-      "source_ref": "imessage:1500",
-      "ts": "2026-10-19T19:11:37Z",
-      "text": "got a warm intro to a VC in Toronto",
+      "source_ref": "imessage:431",
+      "ts": "2026-10-19T19:15:01Z",
+      "text": "early stage climate, I'll send details",
       "url": null,
       "tags": []
     },
     "e26": {
       "id": "e26",
+      "source": "imessage",
+      "source_ref": "imessage:430",
+      "ts": "2026-10-19T19:13:13Z",
+      "text": "nice, which fund?",
+      "url": null,
+      "tags": []
+    },
+    "e27": {
+      "id": "e27",
+      "source": "imessage",
+      "source_ref": "imessage:429",
+      "ts": "2026-10-19T19:11:37Z",
+      "text": "got a warm intro to a VC in Toronto",
+      "url": null,
+      "tags": []
+    },
+    "e28": {
+      "id": "e28",
       "source": "calendar",
       "source_ref": "calendar:s2jqr6abvj98ccel38k63oe1vn",
       "ts": "2026-10-26T13:30:00Z",
@@ -1101,33 +1138,11 @@
         "past_meeting"
       ]
     },
-    "e27": {
-      "id": "e27",
-      "source": "calendar",
-      "source_ref": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6",
-      "ts": "2026-10-19T13:30:00Z",
-      "text": "Tidepool weekly sync",
-      "url": null,
-      "tags": [
-        "past_meeting"
-      ]
-    },
-    "e28": {
-      "id": "e28",
-      "source": "calendar",
-      "source_ref": "calendar:qgmq9o7ohf4e6ihg73km8fi1d3",
-      "ts": "2026-10-12T13:30:00Z",
-      "text": "Tidepool weekly sync",
-      "url": null,
-      "tags": [
-        "past_meeting"
-      ]
-    },
     "e29": {
       "id": "e29",
       "source": "calendar",
-      "source_ref": "calendar:m8fu75j3fdvt418itvbmo6fj14",
-      "ts": "2026-10-05T13:30:00Z",
+      "source_ref": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6",
+      "ts": "2026-10-19T13:30:00Z",
       "text": "Tidepool weekly sync",
       "url": null,
       "tags": [
@@ -1162,15 +1177,15 @@
         {
           "text": "Tidepool weekly sync, Mondays 9:30 (calendar)",
           "evidence_ids": [
-            "e26"
+            "e28"
           ],
           "kind": "logistics",
           "priority": 2
         },
         {
-          "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)",
+          "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (whatsapp)",
           "evidence_ids": [
-            "e13"
+            "e15"
           ],
           "kind": "catch_up",
           "priority": 3
@@ -1178,15 +1193,15 @@
         {
           "text": "Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)",
           "evidence_ids": [
-            "e6"
+            "e8"
           ],
           "kind": "catch_up",
           "priority": 4
         },
         {
-          "text": "Latest thread on Sat Oct 24: early stage climate, I'll send details (imessage)",
+          "text": "Latest thread on Sat Oct 24: early stage climate, I'll send details (whatsapp)",
           "evidence_ids": [
-            "e7"
+            "e9"
           ],
           "kind": "catch_up",
           "priority": 5
@@ -1225,15 +1240,15 @@
         {
           "text": "Tidepool weekly sync, Mondays 9:30 (calendar)",
           "evidence_ids": [
-            "e26"
+            "e28"
           ],
           "kind": "logistics",
           "priority": 4
         },
         {
-          "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)",
+          "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (whatsapp)",
           "evidence_ids": [
-            "e13"
+            "e15"
           ],
           "kind": "catch_up",
           "priority": 5
@@ -1261,7 +1276,7 @@
         {
           "index": 2,
           "decision": "keep",
-          "reason": "keep: cites imessage Thu Oct 22, 17:05",
+          "reason": "keep: cites whatsapp Thu Oct 22, 17:05",
           "fix_hint": null
         },
         {
@@ -1273,7 +1288,7 @@
         {
           "index": 4,
           "decision": "keep",
-          "reason": "keep: cites imessage Sat Oct 24, 15:09",
+          "reason": "keep: cites whatsapp Sat Oct 24, 15:09",
           "fix_hint": null
         }
       ],
@@ -1281,8 +1296,8 @@
         "e1"
       ],
       "refetch": [
-        "imessage",
-        "memory"
+        "memory",
+        "whatsapp"
       ]
     },
     {
@@ -1291,13 +1306,13 @@
         {
           "index": 0,
           "decision": "keep",
-          "reason": "keep: cites imessage Sat Oct 24, 15:09 from Mei Tanaka; no later reply from owner → open loop holds",
+          "reason": "keep: cites whatsapp Sat Oct 24, 15:09 from Mei Tanaka; no later reply from owner → open loop holds",
           "fix_hint": null
         },
         {
           "index": 1,
           "decision": "keep",
-          "reason": "keep: cites imessage Thu Oct 22, 17:05 from Mei Tanaka; no later reply from owner → open loop holds",
+          "reason": "keep: cites whatsapp Thu Oct 22, 17:05 from Mei Tanaka; no later reply from owner → open loop holds",
           "fix_hint": null
         },
         {
@@ -1315,7 +1330,7 @@
         {
           "index": 4,
           "decision": "keep",
-          "reason": "keep: cites imessage Thu Oct 22, 17:05",
+          "reason": "keep: cites whatsapp Thu Oct 22, 17:05",
           "fix_hint": null
         }
       ],
@@ -1356,15 +1371,15 @@
       {
         "text": "Tidepool weekly sync, Mondays 9:30 (calendar)",
         "evidence_ids": [
-          "e26"
+          "e28"
         ],
         "kind": "logistics",
         "priority": 4
       },
       {
-        "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)",
+        "text": "Latest thread on Thu Oct 22: yes, will send it by Tuesday (whatsapp)",
         "evidence_ids": [
-          "e13"
+          "e15"
         ],
         "kind": "catch_up",
         "priority": 5

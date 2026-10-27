@@ -1,6 +1,6 @@
 # How it worked — `05_memory_carryover`
 
-Run `example-05_memory_carryover-7bcb986e` · status `done` · critic rounds `1`
+Run `example-05_memory_carryover-c8ec8021` · status `done` · critic rounds `1`
 
 ## Timeline
 
@@ -30,20 +30,20 @@ Run `example-05_memory_carryover-7bcb986e` · status `done` · critic rounds `1`
 24. **hmem** `create` — hmem/create
 25. **hmem** `mine` — hmem/mine
 26. **orchestrator** `note` — Noted: Note that Omar Haddad wants an intro to Rachel by end of month
-27. **orchestrator** `final` · 23 ms — status=done points=0 caveats=0 latency_ms=23 llm_calls=0
+27. **orchestrator** `final` · 21 ms — status=done points=0 caveats=0 latency_ms=21 llm_calls=0
 28. **router** `complete` — kind=brief person='Rachel Goldberg' field=None confidence=0.90
 29. **world** `resolve` — resolve 'Rachel Goldberg' candidates=1 top=Rachel Goldberg score=1.00 (exact alias match)
 30. **orchestrator** `resolve` — name='Rachel Goldberg' candidates=1
 31. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-32. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=1 backend=duckdb ms=0.854
+32. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=1 backend=duckdb ms=0.812
 33. **orchestrator** `relationship` — label=professional confidence=0.68
 34. **llm** `embed` · 0 ms — embed count≈7 provider=sample ms=0 success=True
 35. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
-36. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=1 backend=duckdb ms=1.186
-37. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
-38. **hmem** `retrieve` — hmem retrieve hits=1 candidates=6 top=[('mem_a13750f2de8c', 0.4624)]
-39. **web_scout** `complete` — web_scout sample hits=1 org=Northwind Capital
-40. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.974
+36. **hmem** `retrieve` — hmem retrieve hits=1 candidates=6 top=[('mem_a13750f2de8c', 0.4624)]
+37. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=1 backend=duckdb ms=1.392
+38. **web_scout** `complete` — web_scout sample hits=1 org=Northwind Capital
+39. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
+40. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.765
 41. **world** `person_context` — person_context open_loops=0 conflicts=0 upcoming=1 past_events=0 recent=1
 42. **orchestrator** `retrieve` — world_open_loops=0 memories=1 backend=duckdb
 43. **orchestrator** `memories` — count=1 top_score=0.462

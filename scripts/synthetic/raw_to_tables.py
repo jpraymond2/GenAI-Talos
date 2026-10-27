@@ -116,6 +116,7 @@ def convert(root: Path) -> None:
     add_handle("email", me_email, "Jordan Lefebvre", "gmail")
     add_handle("phone", "+15145550199", "Jordan Lefebvre", "contacts")
     add_handle("imessage", "+15145550199", "Jordan Lefebvre", "imessage")
+    add_handle("wa_jid", "15145550199@s.whatsapp.net", "Jordan Lefebvre", "whatsapp")
 
     # ---------------- contacts
     cards = parse_vcf(raw / "contacts" / "contacts.vcf")
@@ -166,6 +167,48 @@ def convert(root: Path) -> None:
         interactions.append(row)
         if g:
             key_to_ref[g["key"]] = {"interaction_id": row["interaction_id"], "source_ref": row["source_ref"]}
+
+    # ---------------- WhatsApp Desktop ChatStorage.sqlite — through JP's Mac-agent extractor
+    wa_db = raw / "whatsapp" / "ChatStorage.sqlite"
+    if wa_db.exists():
+        import recall.mac_agent.extract_whatsapp as wa_mod
+
+        wa_mod._find_whatsapp_sqlite = lambda: wa_db  # read the synthetic file instead of ~/Library
+        wa_msgs, wa_handles, _, _, wa_skip = wa_mod.extract_whatsapp(backfill_days=100000, max_group_size=50)
+        if wa_skip:
+            rep.hit(f"whatsapp: extractor skipped ({wa_skip})")
+        con_wa = sqlite3.connect(f"file:{wa_db}?mode=ro", uri=True)
+        member_jid = {pk: jid for pk, jid in con_wa.execute("SELECT Z_PK, ZMEMBERJID FROM ZWAGROUPMEMBER")}
+        msg_member = {pk: gm for pk, gm in con_wa.execute("SELECT Z_PK, ZGROUPMEMBER FROM ZWAMESSAGE WHERE ZGROUPMEMBER IS NOT NULL")}
+        con_wa.close()
+        gt_wa = {g["raw_ref"].get("z_pk"): g for g in gt if g["source"] == "whatsapp"}
+        for h in wa_handles:
+            add_handle(h["kind"], h["value"], h.get("display_name") or h["value"], "whatsapp")
+        for m in wa_msgs:
+            handle = str(m.get("handle") or "")
+            if m.get("is_group"):
+                if m.get("is_from_me"):
+                    handle = "+15145550199"
+                else:
+                    jid = member_jid.get(msg_member.get(m["z_pk"]))
+                    if jid:
+                        rep.hit("whatsapp: group message credited to the group, not the person who wrote it (fixed from ZGROUPMEMBER)",
+                                m["text"])
+                        handle = "+" + jid.split("@", 1)[0]
+                        add_handle("phone", handle, handle, "whatsapp")
+            row = {"interaction_id": sid("i", "whatsapp", m["guid"]), "source": "whatsapp",
+                   "thread_id": sid("th", "whatsapp", str(m.get("chat_guid") or "")), "handle_value": handle,
+                   "direction": "out" if m.get("is_from_me") else "in", "ts_utc": m["ts_utc"], "subject": "",
+                   "text": m["text"], "source_ref": f"whatsapp:{m['guid']}"}
+            interactions.append(row)
+            g = gt_wa.get(m["z_pk"])
+            if g:
+                key_to_ref[g["key"]] = {"interaction_id": row["interaction_id"], "source_ref": row["source_ref"]}
+                if row["ts_utc"] != g["ts_utc"]:
+                    rep.hit("whatsapp: timestamp differs from the answer key", f"{row['ts_utc']} vs {g['ts_utc']}")
+        dropped = sum(1 for g in gt if g["source"] == "whatsapp" and g["kind"] in ("media", "deleted"))
+        if dropped:
+            rep.hit(f"whatsapp: {dropped} photo/deleted messages correctly skipped (no text)")
 
     # ---------------- iMessage chat.db (same SQL as the connector, without the 120-day cutoff)
     con = sqlite3.connect(f"file:{raw / 'imessage' / 'chat.db'}?mode=ro", uri=True)

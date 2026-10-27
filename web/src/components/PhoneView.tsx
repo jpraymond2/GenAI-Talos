@@ -4,9 +4,11 @@ import {
   MIN_HOLD_MS,
   MIN_RECORDING_BYTES,
   pickRecorderMime,
+  watchSilence,
 } from "../recorderMime";
 import { speakText, unlockSpeech } from "../speech";
 import type { Candidate, Evidence, EvidenceSource, RunState, TraceEvent } from "../types";
+import { RecallScore } from "./RecallScore";
 import { SourceChip } from "./SourceChip";
 import { TraceTimeline } from "./TraceTimeline";
 
@@ -16,11 +18,17 @@ interface Props {
   run: RunState | null;
   events: TraceEvent[];
   busy: boolean;
-  onAsk: (text: string, opts?: { runId?: string }) => Promise<void>;
+  onAsk: (text: string, opts?: { runId?: string; typed?: boolean }) => Promise<void>;
   onVoiceState: (state: RunState) => void;
   onPickCandidate: (c: Candidate) => void;
   onConfirmActions: () => void;
   onCancelActions: () => void;
+  /** Hide the built-in "Recall" header when the app shell already shows one. */
+  showHeader?: boolean;
+  /** Rendered under the brief, e.g. the identified contact's card. */
+  contactSlot?: React.ReactNode;
+  /** Shown on the empty screen, e.g. the next meetings with a Prep button. */
+  upcomingSlot?: React.ReactNode;
 }
 
 function isEvidenceSource(value: string): value is EvidenceSource {
@@ -74,7 +82,11 @@ export function PhoneView({
   onPickCandidate,
   onConfirmActions,
   onCancelActions,
+  showHeader = true,
+  contactSlot,
+  upcomingSlot,
 }: Props) {
+  const [typed, setTyped] = useState("");
   const [recording, setRecording] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [traceOpen, setTraceOpen] = useState(false);
@@ -92,6 +104,7 @@ export function PhoneView({
   const holdStartedAtRef = useRef(0);
   const talkBtnRef = useRef<HTMLButtonElement | null>(null);
   const pulledNameRef = useRef<string | null>(null);
+  const stopSilenceRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     return () => {
@@ -102,16 +115,11 @@ export function PhoneView({
   useEffect(() => {
     const el = talkBtnRef.current;
     if (!el) return;
-    const onTouchStart = (e: TouchEvent) => {
-      e.preventDefault();
-    };
     const onContextMenu = (e: Event) => {
       e.preventDefault();
     };
-    el.addEventListener("touchstart", onTouchStart, { passive: false });
     el.addEventListener("contextmenu", onContextMenu);
     return () => {
-      el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("contextmenu", onContextMenu);
     };
   }, []);
@@ -145,7 +153,7 @@ export function PhoneView({
     if (!name || pulledNameRef.current === name) return;
     pulledNameRef.current = name;
     setStatusLine(`Pulling up ${name}…`);
-    speakText(`Pulling up ${name}`);
+    speakText(`Pulling up ${name}`, { quick: true });
   }, [thinking, run, events]);
 
   async function startHold() {
@@ -170,6 +178,8 @@ export function PhoneView({
       mediaRef.current = recorder;
       recorder.start();
       setRecording(true);
+      // Tap once to talk: Recall stops by itself when you pause (or tap again).
+      stopSilenceRef.current = watchSilence(stream, () => void endHold());
     } catch {
       holdingRef.current = false;
       holdStartedAtRef.current = 0;
@@ -180,6 +190,8 @@ export function PhoneView({
   async function endHold() {
     if (!holdingRef.current) return;
     holdingRef.current = false;
+    stopSilenceRef.current?.();
+    stopSilenceRef.current = null;
     setRecording(false);
     const heldMs = performance.now() - holdStartedAtRef.current;
     holdStartedAtRef.current = 0;
@@ -189,7 +201,7 @@ export function PhoneView({
 
     // Perceived latency: acknowledge inside the gesture chain (iOS).
     unlockSpeech();
-    speakText("One sec");
+    speakText("One sec", { quick: true });
 
     const blob = await new Promise<Blob>((resolve) => {
       recorder.onstop = () => {
@@ -210,7 +222,7 @@ export function PhoneView({
     chunksRef.current = [];
 
     if (heldMs < MIN_HOLD_MS || blob.size < MIN_RECORDING_BYTES) {
-      setHint("Hold a bit longer");
+      setHint("Didn't catch that — tap and speak a little longer.");
       return;
     }
 
@@ -239,14 +251,37 @@ export function PhoneView({
         (result.speech ? result.speech.split(/[.!?]/)[0] : "") ||
         result.question ||
         "";
-      if (headline) speakText(headline);
-      else if (result.speech) speakText(result.speech);
+      // The full spoken answer (≤90 words) in Recall's Magpie voice.
+      if (result.speech) speakText(result.speech);
+      else if (headline) speakText(headline);
 
       if (result.run_id) {
         onVoiceState(result as RunState);
       } else if (result.transcript) {
         await onAsk(result.transcript, { runId: continueId });
       }
+    } finally {
+      setThinking(false);
+      setStatusLine(null);
+    }
+  }
+
+  async function submitTyped(e: React.FormEvent) {
+    e.preventDefault();
+    const text = typed.trim();
+    if (!text || busy || thinking || recording) return;
+    unlockSpeech();
+    setTyped("");
+    setHint(null);
+    setLiveTranscript(null);
+    setExpandedChip(null);
+    pulledNameRef.current = null;
+    setThinking(true);
+    setStatusLine("Thinking…");
+    const continueId =
+      run?.status === "needs_clarification" || run?.status === "awaiting_confirmation" ? run.run_id : undefined;
+    try {
+      await onAsk(text, { runId: continueId, typed: true });
     } finally {
       setThinking(false);
       setStatusLine(null);
@@ -269,6 +304,7 @@ export function PhoneView({
       className="mx-auto flex min-h-[100dvh] max-w-lg flex-col bg-white text-ink-950"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
+      {showHeader ? (
       <header className="sticky top-0 z-20 flex items-center justify-between bg-white px-4 pb-3 pt-3">
         <p className="font-display text-2xl font-semibold tracking-tight text-ink-950 opacity-100">
           Recall
@@ -278,6 +314,7 @@ export function PhoneView({
           Connected
         </div>
       </header>
+      ) : <div className="h-3" />}
 
       <div className="flex items-center gap-2 px-4 pb-2">
         {(["Listening", "Transcribing", "Thinking", "Ready"] as PhoneStep[]).map((s) => (
@@ -296,8 +333,15 @@ export function PhoneView({
 
       <div
         className="flex-1 space-y-4 overflow-y-auto px-4 pb-4"
-        style={{ paddingBottom: "calc(11rem + env(safe-area-inset-bottom, 0px))" }}
+        style={{ paddingBottom: "calc(15rem + env(safe-area-inset-bottom, 0px))" }}
       >
+        {!run && !thinking && !recording && !liveTranscript ? (
+          <section className="mt-6 rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-5 text-center">
+            <p className="font-display text-xl font-semibold text-ink-900">Who are you meeting?</p>
+            <p className="mt-1 text-sm text-ink-500">Tap Recall and say something like “I’m meeting Karim at 3” — or type it below.</p>
+          </section>
+        ) : null}
+        {!run && !thinking && !recording ? upcomingSlot : null}
         {statusLine ? (
           <p className="text-sm font-medium text-sea-700">{statusLine}</p>
         ) : null}
@@ -424,6 +468,10 @@ export function PhoneView({
           </section>
         ) : null}
 
+        {run && (run.status === "done" || run.status === "needs_clarification") && !thinking ? <RecallScore run={run} compact /> : null}
+
+        {contactSlot}
+
         {hint ? (
           <p className="break-words text-center text-sm text-ember-600">{hint}</p>
         ) : null}
@@ -446,26 +494,39 @@ export function PhoneView({
         className="fixed inset-x-0 bottom-0 z-30 flex flex-col items-center bg-white/95 px-4 pt-3"
         style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))" }}
       >
+        <form onSubmit={(e) => void submitTyped(e)} className="mb-3 flex w-full max-w-lg gap-2">
+          <input
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            placeholder="Or type: I'm meeting Karim at 3"
+            enterKeyHint="send"
+            disabled={busy || thinking || recording}
+            aria-label="Type a question for Recall"
+            className="min-w-0 flex-1 rounded-full border border-ink-200 bg-white px-4 py-2.5 text-[16px] text-ink-900 outline-none ring-sea-500/40 placeholder:text-ink-400 focus:border-sea-500 focus:ring-2 disabled:opacity-60"
+          />
+          <button
+            type="submit"
+            disabled={!typed.trim() || busy || thinking || recording}
+            className="shrink-0 rounded-full bg-ink-900 px-4 text-sm font-semibold text-white transition hover:bg-ink-800 disabled:opacity-30"
+          >
+            Ask
+          </button>
+        </form>
         <button
           ref={talkBtnRef}
           type="button"
           disabled={busy || thinking}
-          onPointerDown={(e) => {
-            e.preventDefault();
-            e.currentTarget.setPointerCapture(e.pointerId);
-            void startHold();
-          }}
-          onPointerUp={() => void endHold()}
-          onPointerCancel={() => void endHold()}
+          onClick={() => (recording ? void endHold() : void startHold())}
           onContextMenu={(e) => e.preventDefault()}
+          aria-label={recording ? "Stop and send" : "Tap to Recall"}
           style={{
             userSelect: "none",
             WebkitUserSelect: "none",
             WebkitTouchCallout: "none",
             WebkitTapHighlightColor: "transparent",
-            touchAction: "none",
+            touchAction: "manipulation",
           }}
-          className={`relative flex h-28 w-28 select-none touch-none flex-col items-center justify-center rounded-full text-base font-semibold text-white shadow-lg transition active:scale-95 disabled:opacity-50 ${
+          className={`relative flex h-24 w-24 select-none flex-col items-center justify-center rounded-full text-base font-semibold text-white shadow-lg transition active:scale-95 disabled:opacity-50 ${
             recording ? "recording-pulse bg-ember-600" : thinking ? "bg-ink-700" : "bg-sea-600"
           }`}
         >
@@ -483,12 +544,12 @@ export function PhoneView({
                 WebkitTouchCallout: "none",
               }}
             >
-              {recording ? formatTimer(elapsedMs) : "Hold"}
+              {recording ? formatTimer(elapsedMs) : "Recall"}
             </span>
           )}
         </button>
         <p className="mt-2 text-center text-xs text-ink-400">
-          {recording ? "Listening…" : thinking ? "Working…" : "Release to send"}
+          {recording ? "Listening… pause or tap to send" : thinking ? "Working…" : "Tap to Recall"}
         </p>
       </div>
     </div>

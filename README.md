@@ -119,7 +119,7 @@ Regenerate: `make examples`.
 
 ## Evaluation
 
-Headline from [output_examples/eval_report.md](output_examples/eval_report.md): **19/23 (82.6%)**, person accuracy **100%** (18/18).
+Headline from [output_examples/eval_report.md](output_examples/eval_report.md): **18/23 (78.3%)**, person accuracy **100%** (18/18).
 
 Method note: the 23 questions were visible during development (not held-out). Code has no dataset-specific literals (`tests/test_no_hardcoding.py`). Failures are left honest.
 
@@ -221,6 +221,18 @@ Matches [metadata.json](metadata.json) and [docs/SPONSOR_TECH.md](docs/SPONSOR_T
 - **Meterless** — World Model + H-MEM (`recall/engines/world`, `recall/engines/hmem`).
 - **Cursor** — `.cursor/rules`, [docs/cursor-log.md](docs/cursor-log.md).
 - **NVIDIA** — Nemotron via generator, embeddings, Parakeet ASR.
+
+## Testing with the synthetic world
+
+[`data/synthetic/`](data/synthetic/) is a larger fictional test world (messy same-name people, changed handles, open loops) in each app’s raw export format, converted through the real connectors into Recall tables, with an answer key for grading.
+
+```bash
+uv run python scripts/synthetic/make_synthetic.py      # raw/ + ground_truth/
+uv run python scripts/synthetic/raw_to_tables.py       # tables/ + ingest_report.md
+SAMPLE_DATA_DIR=data/synthetic/tables uv run python -m recall ask "I'm meeting Omar" --sample
+```
+
+Identity merge quality report: [`data/synthetic/identity_report.md`](data/synthetic/identity_report.md).
 
 ## Phone (iPhone + AirPods)
 

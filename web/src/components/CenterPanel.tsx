@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Candidate, Evidence, PointVerdict, RunState, TalkingPoint } from "../types";
+import { RecallScore } from "./RecallScore";
 import { SourceChip } from "./SourceChip";
 
 interface Props {
@@ -62,6 +63,9 @@ export function CenterPanel({
             onCancel={onCancelActions}
           />
         ) : null}
+        <div className="mt-auto pt-6">
+          <RecallScore run={run} />
+        </div>
       </section>
     );
   }
@@ -89,19 +93,19 @@ export function CenterPanel({
           const pointVerdict =
             lastVerdict?.verdicts.find((v) => v.index === index) ?? null;
           return (
-          <PointCard
-            key={`${index}-${point.text.slice(0, 24)}`}
-            point={point}
-            index={index}
-            evidence={run.evidence}
-            pointVerdict={pointVerdict}
-            conflict={
-              point.kind === "logistics" &&
-              (brief.caveats.some((c) => c.toLowerCase().includes("conflict")) ||
-                point.text.toLowerCase().includes("disagree") ||
-                point.text.toLowerCase().includes("conflict"))
-            }
-          />
+            <PointCard
+              key={`${index}-${point.text.slice(0, 24)}`}
+              point={point}
+              index={index}
+              evidence={run.evidence}
+              pointVerdict={pointVerdict}
+              conflict={
+                point.kind === "logistics" &&
+                (brief.caveats.some((c) => c.toLowerCase().includes("conflict")) ||
+                  point.text.toLowerCase().includes("disagree") ||
+                  point.text.toLowerCase().includes("conflict"))
+              }
+            />
           );
         })}
       </div>
@@ -114,7 +118,7 @@ export function CenterPanel({
         </ul>
       ) : null}
 
-      {run.action_plan ? (
+      {run.action_plan && run.status === "awaiting_confirmation" ? (
         <ActionBlock
           run={run}
           busy={busy}
@@ -122,6 +126,10 @@ export function CenterPanel({
           onCancel={onCancelActions}
         />
       ) : null}
+
+      <div className="mt-5">
+        <RecallScore run={run} />
+      </div>
     </section>
   );
 }

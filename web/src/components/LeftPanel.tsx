@@ -4,6 +4,7 @@ import {
   MIN_HOLD_MS,
   MIN_RECORDING_BYTES,
   pickRecorderMime,
+  watchSilence,
 } from "../recorderMime";
 import { unlockSpeech } from "../speech";
 import type { TranscriptEntry } from "../types";
@@ -34,6 +35,7 @@ export function LeftPanel({
   const holdingRef = useRef(false);
   const holdStartedAtRef = useRef(0);
   const talkBtnRef = useRef<HTMLButtonElement | null>(null);
+  const stopSilenceRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,16 +45,11 @@ export function LeftPanel({
   useEffect(() => {
     const el = talkBtnRef.current;
     if (!el) return;
-    const onTouchStart = (e: TouchEvent) => {
-      e.preventDefault();
-    };
     const onContextMenu = (e: Event) => {
       e.preventDefault();
     };
-    el.addEventListener("touchstart", onTouchStart, { passive: false });
     el.addEventListener("contextmenu", onContextMenu);
     return () => {
-      el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("contextmenu", onContextMenu);
     };
   }, []);
@@ -66,6 +63,9 @@ export function LeftPanel({
 
     if (isMockMode()) {
       setRecording(true);
+      // Demo: pretend the speaker paused after a moment.
+      const id = window.setTimeout(() => void endHold(), 1600);
+      stopSilenceRef.current = () => window.clearTimeout(id);
       return;
     }
 
@@ -82,6 +82,8 @@ export function LeftPanel({
       // No timeslice: one complete container on stop (required for iOS mp4).
       recorder.start();
       setRecording(true);
+      // Tap once to talk: stops by itself when you pause (or tap again).
+      stopSilenceRef.current = watchSilence(stream, () => void endHold());
     } catch {
       holdingRef.current = false;
       holdStartedAtRef.current = 0;
@@ -92,6 +94,8 @@ export function LeftPanel({
   async function endHold() {
     if (!holdingRef.current) return;
     holdingRef.current = false;
+    stopSilenceRef.current?.();
+    stopSilenceRef.current = null;
     setRecording(false);
     const heldMs = performance.now() - holdStartedAtRef.current;
     holdStartedAtRef.current = 0;
@@ -133,7 +137,7 @@ export function LeftPanel({
     chunksRef.current = [];
 
     if (heldMs < MIN_HOLD_MS || blob.size < MIN_RECORDING_BYTES) {
-      setVoiceHint("Hold a bit longer");
+      setVoiceHint("Didn't catch that — tap and speak a little longer.");
       return;
     }
     const outcome = await sendVoice(blob);
@@ -180,22 +184,17 @@ export function LeftPanel({
           ref={talkBtnRef}
           type="button"
           disabled={busy}
-          onPointerDown={(e) => {
-            e.preventDefault();
-            e.currentTarget.setPointerCapture(e.pointerId);
-            void startHold();
-          }}
-          onPointerUp={() => void endHold()}
-          onPointerCancel={() => void endHold()}
+          onClick={() => (recording ? void endHold() : void startHold())}
           onContextMenu={(e) => e.preventDefault()}
+          aria-label={recording ? "Stop and send" : "Tap to Recall"}
           style={{
             userSelect: "none",
             WebkitUserSelect: "none",
             WebkitTouchCallout: "none",
             WebkitTapHighlightColor: "transparent",
-            touchAction: "none",
+            touchAction: "manipulation",
           }}
-          className={`relative flex h-36 w-36 select-none touch-none flex-col items-center justify-center rounded-full border-4 border-sea-500/30 bg-gradient-to-b from-sea-500 to-sea-600 text-white shadow-lg transition hover:brightness-110 disabled:opacity-60 ${
+          className={`relative flex h-36 w-36 select-none flex-col items-center justify-center rounded-full border-4 border-sea-500/30 bg-gradient-to-b from-sea-500 to-sea-600 text-white shadow-lg transition hover:brightness-110 disabled:opacity-60 ${
             recording ? "recording-pulse" : ""
           }`}
           aria-pressed={recording}
@@ -210,14 +209,14 @@ export function LeftPanel({
               WebkitTapHighlightColor: "transparent",
             }}
           >
-            {recording ? "Listening" : "Hold to talk"}
+            {recording ? "Listening" : "Tap to Recall"}
           </span>
         </button>
         {voiceHint ? (
           <p className="mt-3 max-w-[16rem] text-center text-xs text-ink-400">{voiceHint}</p>
         ) : (
           <p className="mt-3 text-center text-xs text-ink-400">
-            Hold the button to talk — or type below
+            Tap, speak, and Recall stops when you pause — or type below
           </p>
         )}
       </div>
@@ -248,7 +247,7 @@ export function LeftPanel({
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Type an utterance…"
+          placeholder="Or type: I'm meeting Karim at 3"
           disabled={busy}
           className="min-w-0 flex-1 rounded-xl border border-ink-200 bg-white px-3 py-2.5 text-sm outline-none ring-sea-500/40 focus:ring-2"
         />

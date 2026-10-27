@@ -1,0 +1,180 @@
+{
+  "participants": [
+    {
+      "name": "Bianca Rossi"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1788302668000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Montreal said yes"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1788302346000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "absolutely not. it's October"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1788302191000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "omg it's snowing already"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1783446024000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1783445673000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1780024800000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tomorrow works"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1780024599000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't, deadline. tomorrow?"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1780022195000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "movie tonight?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1772001336000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Montreal said yes"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1772000819000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "absolutely not. it's October",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1772000323000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "omg it's snowing already"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1770489822000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "lol"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1770489806000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "proud of you"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1770487370000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "ok I finally booked the dentist"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1764123662000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "let's go thursday"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1764121252000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "broth is 10/10, lines are long"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1764121088000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "not yet, is it good?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1764120992000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "new ramen place on Saint-Laurent, have you tried it?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1759529426000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1759529418000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Bianca Rossi",
+      "timestamp_ms": 1748291583000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "no worries, grabbed a table at the back"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1748291045000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "running 10 min late sorry!!"
+    }
+  ],
+  "title": "Bianca Rossi",
+  "is_still_participant": true,
+  "thread_path": "inbox/biancarossi_8629915146707194",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

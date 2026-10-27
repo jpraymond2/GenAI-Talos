@@ -1,6 +1,6 @@
 # How it worked — `04_conflicting_sources`
 
-Run `example-04_conflicting_sources-7524f060` · status `done` · critic rounds `1`
+Run `example-04_conflicting_sources-023c73ca` · status `done` · critic rounds `1`
 
 ## Timeline
 
@@ -26,15 +26,15 @@ Run `example-04_conflicting_sources-7524f060` · status `done` · critic rounds 
 20. **world** `resolve` — resolve 'Lucas Moreau' candidates=1 top=Lucas Moreau score=1.00 (exact alias match)
 21. **orchestrator** `resolve` — name='Lucas Moreau' candidates=1
 22. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-23. **query_layer** `query` · 1 ms — query world.relationship.interactions rows=59 backend=duckdb ms=1.126
+23. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=55 backend=duckdb ms=0.977
 24. **orchestrator** `relationship` — label=social confidence=0.62
 25. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
 26. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
 27. **hmem** `retrieve` — hmem retrieve hits=1 candidates=5 top=[('mem_a277abbbf44d', 0.3634)]
-28. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=90 backend=duckdb ms=1.405
+28. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=81 backend=duckdb ms=1.353
 29. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
 30. **web_scout** `complete` — web_scout sample hits=3 org=Atelier Nord
-31. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.715
+31. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.689
 32. **world** `person_context` — person_context open_loops=1 conflicts=1 upcoming=0 past_events=0 recent=20
 33. **orchestrator** `retrieve` — world_open_loops=1 memories=1 backend=duckdb
 34. **orchestrator** `memories` — count=1 top_score=0.363
@@ -54,7 +54,7 @@ Run `example-04_conflicting_sources-7524f060` · status `done` · critic rounds 
 48. **orchestrator** `feedback` — feedback=1
 49. **actions** `plan` — steps=1
 50. **actions** `dry_run` — dry_run steps=1
-51. **orchestrator** `final` · 28 ms — status=done points=2 caveats=0 latency_ms=28 llm_calls=0
+51. **orchestrator** `final` · 29 ms — status=done points=2 caveats=0 latency_ms=29 llm_calls=0
 
 ## Candidate choice
 
@@ -63,9 +63,9 @@ Run `example-04_conflicting_sources-7524f060` · status `done` · critic rounds 
 ## Sources & backend
 
 - fallback: zetaris → duckdb (circuit_open)
-- `world.relationship.interactions` → duckdb (59 rows)
+- `world.relationship.interactions` → duckdb (55 rows)
 - fallback: zetaris → duckdb (circuit_open)
-- `world.context.thread_peers` → duckdb (90 rows)
+- `world.context.thread_peers` → duckdb (81 rows)
 - fallback: zetaris → duckdb (circuit_open)
 - `world.context.events` → duckdb (167 rows)
 
@@ -78,6 +78,6 @@ Run `example-04_conflicting_sources-7524f060` · status `done` · critic rounds 
 ### Round 1 — overall `revise`
 
 - point 0 **drop**: drop: point lacks usable evidence ids, is too short (12 words), or still has an ISO timestamp
-- point 1 **keep**: keep: cites imessage Fri Oct 16, 15:44 from Lucas Moreau; no later reply from owner → open loop holds
+- point 1 **keep**: keep: cites whatsapp Fri Oct 16, 15:44 from Lucas Moreau; no later reply from owner → open loop holds
 - point 2 **keep**: keep: cites H-MEM note (m1)
 - refetch: gmail, memory

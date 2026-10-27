@@ -9,8 +9,8 @@
 - You noted: Remember: Mei Tanaka leaves for Japan on Nov 5 — finish the revised financial model before she goes. (memory)  
   sources: `m1`
 - Tidepool weekly sync, Mondays 9:30 (calendar)  
-  sources: `e26`
-- Latest thread on Thu Oct 22: yes, will send it by Tuesday (imessage)  
-  sources: `e13`
+  sources: `e28`
+- Latest thread on Thu Oct 22: yes, will send it by Tuesday (whatsapp)  
+  sources: `e15`
 
 _status: done · critic rounds: 2_

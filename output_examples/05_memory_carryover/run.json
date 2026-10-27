@@ -1,8 +1,8 @@
 {
-  "run_id": "example-05_memory_carryover-7bcb986e",
+  "run_id": "example-05_memory_carryover-c8ec8021",
   "utterance": {
     "text": "I'm meeting Rachel Goldberg",
-    "ts": "2026-10-27T16:02:23.343844Z",
+    "ts": "2026-10-27T16:15:40.864316Z",
     "mode": "text"
   },
   "intent": {
@@ -39,7 +39,7 @@
     "relationship_style": "Professional contact. Lead with role and company, the latest work thread, open asks or commitments, and relevant company news. Neutral tone. No personal-life details.",
     "relationship_status": "auto",
     "evidence_source_refs": {
-      "e1": "gmail:3fc9825c2d5bdc5b",
+      "e1": "gmail:2627e8c1a216daa8",
       "e2": "calendar:nthj1jqi7og39kok53v4m0uf1b",
       "m1": "mem_a13750f2de8c",
       "memory:m1": "mem_a13750f2de8c",
@@ -85,7 +85,7 @@
         "mention_count": 1,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "de40048e-5d86-40ba-952e-2b9fb62b3e2e"
+        "run_id": "example-01_three_omars-e6f4ccfd"
       },
       "aliases": [
         "Rachel Goldberg",
@@ -95,20 +95,20 @@
         "gmail": {
           "ts_utc": "2026-07-17T22:22:00Z",
           "direction": "in",
-          "source_ref": "gmail:3fc9825c2d5bdc5b",
+          "source_ref": "gmail:2627e8c1a216daa8",
           "subject": "Great meeting at Startupfest"
         }
       },
       "recent_interactions": [
         {
-          "interaction_id": "i_7f57081f45ae",
+          "interaction_id": "i_3d4a3c8f1b4e",
           "source": "gmail",
-          "thread_id": "3fc9825c2d5bdc5b",
+          "thread_id": "2627e8c1a216daa8",
           "direction": "in",
           "ts_utc": "2026-07-17T22:22:00Z",
           "subject": "Great meeting at Startupfest",
           "text": "Jordan,\n\nGreat to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as you raise.\n\nRachel Goldberg\nPartner, Northwind Capital",
-          "source_ref": "gmail:3fc9825c2d5bdc5b",
+          "source_ref": "gmail:2627e8c1a216daa8",
           "peer": false,
           "assumption": "anchored"
         }
@@ -145,7 +145,7 @@
         "ts_utc": "2026-07-17T22:22:00Z",
         "source": "gmail",
         "direction": "in",
-        "source_ref": "gmail:3fc9825c2d5bdc5b",
+        "source_ref": "gmail:2627e8c1a216daa8",
         "subject": "Great meeting at Startupfest"
       },
       "last_met": null,
@@ -172,7 +172,7 @@
     "e1": {
       "id": "e1",
       "source": "gmail",
-      "source_ref": "gmail:3fc9825c2d5bdc5b",
+      "source_ref": "gmail:2627e8c1a216daa8",
       "ts": "2026-07-17T22:22:00Z",
       "text": "Jordan,\n\nGreat to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as you raise.\n\nRachel Goldberg\nPartner, Northwind Capital",
       "url": null,

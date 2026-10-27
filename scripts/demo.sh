@@ -9,6 +9,9 @@ if [[ ! -f .env ]]; then
   cp -n .env.example .env || cp .env.example .env
 fi
 export SAMPLE_MODE=true
+# Judges / demo always use the synthetic tables (Omar Haddad et al.), not a
+# local SAMPLE_DATA_DIR override pointing at the tiny data/sample fixture.
+export SAMPLE_DATA_DIR="${SAMPLE_DATA_DIR:-data/synthetic/tables}"
 uv run python -m recall ingest --sample
 (
   cd web
