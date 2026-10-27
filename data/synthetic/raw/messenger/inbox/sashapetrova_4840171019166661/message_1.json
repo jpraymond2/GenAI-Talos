@@ -1,0 +1,315 @@
+{
+  "participants": [
+    {
+      "name": "Sasha Petrova"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1790627181000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1790626974000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786939380000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "WHAT!!! congrats to you both, I'm so happy for you"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1786938420000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "JORDAN. Ben proposed tonight \u00f0\u009f\u0092\u008d\u00f0\u009f\u0098\u00ad I said yes obviously"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1784987361000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "photos": [
+        {
+          "uri": "messages/inbox/sashapetrova_4840171019166661/photos/1784987361000.jpg",
+          "creation_timestamp": 1784987361
+        }
+      ]
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1784984942000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anytime \u00e2\u009d\u00a4\u00ef\u00b8\u008f"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1784984879000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks again for yesterday, really needed that"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1784296778000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "phew, I'll grab it next time"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1784296732000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the grey one? yes, it's on the chair"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1784295823000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did I leave my scarf at your place?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1779476545000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "lol"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1779476060000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "proud of you"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1779473636000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "ok I finally booked the dentist"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1776129363000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "perfect"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1776129146000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "in 20 min?"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1776129076000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "free for a quick call?"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1772482714000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't wait"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1772480308000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "amazing, too short as always. photos soon"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1772480086000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "how was the trip?"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1771546033000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1771545082000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1770145333000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anytime \u00e2\u009d\u00a4\u00ef\u00b8\u008f"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1770144976000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks again for yesterday, really needed that"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1769582663000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Montreal said yes"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1769582443000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "absolutely not. it's October"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1769582142000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "omg it's snowing already"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1766894155000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1766894068000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1762114949000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "perfect, door code is 2041"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1762114415000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes! bringing wine"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1762114176000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "are you still coming tonight?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1760975296000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "phew, I'll grab it next time"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1760975098000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the grey one? yes, it's on the chair"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1760974794000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did I leave my scarf at your place?"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1760108703000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anytime \u00e2\u009d\u00a4\u00ef\u00b8\u008f"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1760108497000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks again for yesterday, really needed that"
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1759684127000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "photos": [
+        {
+          "uri": "messages/inbox/sashapetrova_4840171019166661/photos/1759684127000.jpg",
+          "creation_timestamp": 1759684127
+        }
+      ]
+    },
+    {
+      "sender_name": "Sasha Petrova",
+      "timestamp_ms": 1759683178000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "no worries, grabbed a table at the back"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1759680722000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "running 10 min late sorry!!"
+    }
+  ],
+  "title": "Sasha Petrova",
+  "is_still_participant": true,
+  "thread_path": "inbox/sashapetrova_4840171019166661",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

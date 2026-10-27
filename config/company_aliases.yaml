@@ -81,3 +81,68 @@ learned:
     - Internet
     - Documentation
     - Testing
+  montrealnewtech.org:
+    company: Montrealnewtech
+    aliases:
+    - Montrealnewtech
+    industry: []
+  banqueboreale.ca:
+    company: Banqueboreale
+    aliases:
+    - Banqueboreale
+    industry: []
+  google.com:
+    company: Google
+    aliases:
+    - Google
+    industry: []
+  climatetechweekly.news:
+    company: Climatetechweekly
+    aliases:
+    - Climatetechweekly
+    industry: []
+  gridwise.io:
+    company: Gridwise
+    aliases:
+    - Gridwise
+    industry: []
+  aldridgeco.com:
+    company: Aldridgeco
+    aliases:
+    - Aldridgeco
+    industry: []
+  mtlstartupdigest.ca:
+    company: Mtlstartupdigest
+    aliases:
+    - Mtlstartupdigest
+    industry: []
+  lumengrid.de:
+    company: Lumengrid
+    aliases:
+    - Lumengrid
+    industry: []
+  hydrolab.ca:
+    company: Hydrolab
+    aliases:
+    - Hydrolab
+    industry: []
+  stellarfin.com:
+    company: Stellarfin
+    aliases:
+    - Stellarfin
+    industry: []
+  ridenow.app:
+    company: Ridenow
+    aliases:
+    - Ridenow
+    industry: []
+  d3center.ca:
+    company: D3center
+    aliases:
+    - D3center
+    industry: []
+  northwindcap.com:
+    company: Northwindcap
+    aliases:
+    - Northwindcap
+    industry: []

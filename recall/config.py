@@ -135,6 +135,11 @@ class Settings(BaseSettings):
         default=SecretStr(""),
         description="Bearer token required for /api/* and /ws/trace?token=.",
     )
+    recall_login_email: str = Field(default="", description="Demo login email for the dashboard (optional).")
+    recall_login_password: SecretStr = Field(
+        default=SecretStr(""),
+        description="Demo login password; the API token is also accepted as a password.",
+    )
 
     http_timeout_seconds: float = Field(default=15.0, gt=0, le=15)
     llm_timeout_seconds: float = Field(default=30.0, gt=0, le=30)

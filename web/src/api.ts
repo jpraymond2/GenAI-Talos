@@ -52,7 +52,7 @@ async function backendReachable(): Promise<boolean> {
   }
 }
 
-async function shouldMock(): Promise<boolean> {
+export async function shouldMock(): Promise<boolean> {
   if (useMock()) return true;
   const ok = await backendReachable();
   if (!ok) {

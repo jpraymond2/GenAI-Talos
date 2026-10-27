@@ -230,6 +230,7 @@ logs/**/*
 *.sqlite-wal
 *.sqlite-shm
 ChatStorage.sqlite
+!data/synthetic/raw/whatsapp/ChatStorage.sqlite
 **/dry-run-preview.json
 data/live/
 data/identity_scores/**

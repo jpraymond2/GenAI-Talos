@@ -6,6 +6,7 @@ Writes:
     raw/gmail/messages.jsonl          Gmail API users.messages.get (format=full), one per line
     raw/gmail/profile.json            Gmail API users.getProfile
     raw/calendar/events.json          Calendar API events.list (singleEvents=true, showDeleted=true)
+    raw/whatsapp/ChatStorage.sqlite   WhatsApp Desktop for Mac database (subset of the real schema)
     raw/imessage/chat.db              macOS Messages database (subset of the real schema)
     raw/messenger/inbox/*/message_1.json   Facebook "Download your information" export
     raw/contacts/contacts.vcf         vCard 3.0 address book export
@@ -182,7 +183,11 @@ class World:
                     t += timedelta(minutes=rng.choice([0, 1, 1, 2, 3, 5, 8, 15, 40]), seconds=rng.randrange(60))
                 # Realistic clutter
                 r = rng.random()
-                if src == "imessage" and r < 0.2:
+                if src == "whatsapp" and r < 0.12:
+                    self.add(source=src, chat=p.pid, sender=p.pid, ts=t, text="<photo>", kind="media")
+                elif src == "whatsapp" and r < 0.15:
+                    self.add(source=src, chat=p.pid, sender=p.pid, ts=t, text="", kind="deleted")
+                elif src == "imessage" and r < 0.2:
                     last = self.msgs[-1]
                     self.add(source=src, chat=p.pid, sender="me" if last.sender != "me" else p.pid,
                              ts=t, text=f"Loved “{last.text}”", kind="tapback")
@@ -453,6 +458,93 @@ class Export:
         (d / "profile.json").write_text(json.dumps({"emailAddress": OWNER.emails[0][0], "messagesTotal": len(lines),
                                                     "threadsTotal": len(threads), "historyId": str(hist)}, indent=2), encoding="utf-8")
 
+    # ---------------- WhatsApp Desktop ChatStorage.sqlite (macOS)
+    def whatsapp(self) -> None:
+        d = self.out / "raw" / "whatsapp"
+        d.mkdir(parents=True, exist_ok=True)
+        path = d / "ChatStorage.sqlite"
+        if path.exists():
+            path.unlink()
+        con = sqlite3.connect(path)
+        con.executescript(
+            """
+            CREATE TABLE ZWACHATSESSION (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZARCHIVED INTEGER,
+                ZSESSIONTYPE INTEGER, ZUNREADCOUNT INTEGER, ZLASTMESSAGEDATE TIMESTAMP, ZCONTACTJID VARCHAR,
+                ZPARTNERNAME VARCHAR, ZLASTMESSAGETEXT VARCHAR);
+            CREATE TABLE ZWAGROUPMEMBER (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZISACTIVE INTEGER,
+                ZISADMIN INTEGER, ZCHATSESSION INTEGER, ZCONTACTNAME VARCHAR, ZFIRSTNAME VARCHAR, ZMEMBERJID VARCHAR);
+            CREATE TABLE ZWAMESSAGE (Z_PK INTEGER PRIMARY KEY, Z_ENT INTEGER, Z_OPT INTEGER, ZCHILDMESSAGESDELIVEREDCOUNT INTEGER,
+                ZISFROMME INTEGER, ZMESSAGESTATUS INTEGER, ZMESSAGETYPE INTEGER, ZCHATSESSION INTEGER, ZGROUPMEMBER INTEGER,
+                ZMESSAGEDATE TIMESTAMP, ZSENTDATE TIMESTAMP, ZFROMJID VARCHAR, ZTOJID VARCHAR, ZPUSHNAME VARCHAR,
+                ZSTANZAID VARCHAR, ZTEXT VARCHAR);
+            CREATE TABLE ZWAPROFILEPUSHNAME (Z_PK INTEGER PRIMARY KEY, ZJID VARCHAR, ZPUSHNAME VARCHAR);
+            """
+        )
+        apple = lambda t: (t.astimezone(UTC) - APPLE_EPOCH).total_seconds()  # noqa: E731 — seconds since 2001
+        jid_of = lambda phone: phone.lstrip("+") + "@s.whatsapp.net"  # noqa: E731
+        sessions: dict[str, int] = {}
+        members: dict[tuple[int, str], int] = {}
+        pushnames: dict[str, str] = {}
+
+        def push_name(p: Person) -> str:
+            return p.name.split(" ")[0] if p.pid != "yusuf" else "Yusuf ✌️"
+
+        def session_for(m: Msg) -> int:
+            if m.chat in GROUPS:
+                key = m.chat
+                if key not in sessions:
+                    gid = f"1203630{self.rng.randint(10**11, 10**12 - 1)}@g.us"
+                    cur = con.execute("INSERT INTO ZWACHATSESSION (Z_ENT, Z_OPT, ZARCHIVED, ZSESSIONTYPE, ZUNREADCOUNT, ZCONTACTJID, ZPARTNERNAME) "
+                                      "VALUES (5, 1, 0, 1, 0, ?, ?)", (gid, GROUPS[m.chat]["name"]))
+                    sessions[key] = cur.lastrowid
+                    for pid in GROUPS[m.chat]["members"]:
+                        p = self.P[pid]
+                        phone = p.phones[-1][0] if p.phones else "+1514555" + str(9000 + len(members))
+                        mc = con.execute("INSERT INTO ZWAGROUPMEMBER (Z_ENT, Z_OPT, ZISACTIVE, ZISADMIN, ZCHATSESSION, ZCONTACTNAME, ZFIRSTNAME, ZMEMBERJID) "
+                                         "VALUES (6, 1, 1, 0, ?, ?, ?, ?)",
+                                         (cur.lastrowid, p.phone_label or "", p.name.split(" ")[0], jid_of(phone)))
+                        members[(cur.lastrowid, pid)] = mc.lastrowid
+                return sessions[key]
+            p = self.P[m.chat]
+            phone = valid_at(p.phones, m.ts) or p.phones[0][0]
+            saved = p.phone_label if not (p.pid == "yusuf" and m.ts.date() >= date(2026, 7, 12)) else None
+            if phone not in sessions:
+                partner = saved or push_name(p)
+                cur = con.execute("INSERT INTO ZWACHATSESSION (Z_ENT, Z_OPT, ZARCHIVED, ZSESSIONTYPE, ZUNREADCOUNT, ZCONTACTJID, ZPARTNERNAME) "
+                                  "VALUES (5, 1, 0, 0, 0, ?, ?)", (jid_of(phone), partner))
+                sessions[phone] = cur.lastrowid
+                pushnames[jid_of(phone)] = push_name(p)
+            return sessions[phone]
+
+        for m in self.w.msgs:
+            if m.source != "whatsapp":
+                continue
+            sid = session_for(m)
+            group = m.chat in GROUPS
+            mine = m.sender == "me"
+            sender = None if mine else self.P[m.sender]
+            sender_phone = None if mine else (valid_at(sender.phones, m.ts) or (sender.phones[0][0] if sender.phones else ""))
+            jid = con.execute("SELECT ZCONTACTJID FROM ZWACHATSESSION WHERE Z_PK = ?", (sid,)).fetchone()[0]
+            mtype, text = 0, m.text
+            if m.kind == "media":
+                mtype, text = 1, None
+            elif m.kind == "deleted":
+                mtype, text = 14, None
+            stanza = "".join(self.rng.choice("0123456789ABCDEF") for _ in range(20))
+            cur = con.execute(
+                "INSERT INTO ZWAMESSAGE (Z_ENT, Z_OPT, ZCHILDMESSAGESDELIVEREDCOUNT, ZISFROMME, ZMESSAGESTATUS, ZMESSAGETYPE, ZCHATSESSION, "
+                "ZGROUPMEMBER, ZMESSAGEDATE, ZSENTDATE, ZFROMJID, ZTOJID, ZPUSHNAME, ZSTANZAID, ZTEXT) VALUES (9, 1, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (1 if mine else 0, 8 if mine else 0, mtype, sid,
+                 members.get((sid, m.sender)) if group and not mine else None,
+                 apple(m.ts), apple(m.ts), None if mine else jid, jid if mine else None,
+                 None if mine or not sender_phone else push_name(sender), stanza, text),
+            )
+            m.raw_ref = {"z_pk": cur.lastrowid, "chat_jid": jid}
+        for jid, name in pushnames.items():
+            con.execute("INSERT INTO ZWAPROFILEPUSHNAME (ZJID, ZPUSHNAME) VALUES (?, ?)", (jid, name))
+        con.commit()
+        con.close()
+
     # ---------------- iMessage chat.db
     def imessage(self) -> None:
         d = self.out / "raw" / "imessage"
@@ -645,7 +737,8 @@ def answer_key(w: World, events: list[dict], out: Path) -> None:
         for e, frm, to in p.emails:
             handles.append({"kind": "email", "value": e, "source": "gmail", "valid_from": frm, "valid_to": to})
         for ph, frm, to in p.phones:
-            for src in ["imessage"] if p.imessage else []:
+            in_wa_group = any(p.pid in g["members"] for g in GROUPS.values() if g["source"] == "whatsapp")
+            for src in (["whatsapp"] if p.channels.get("whatsapp") or in_wa_group else []) + (["imessage"] if p.imessage else []):
                 handles.append({"kind": "phone", "value": ph, "source": src, "valid_from": frm, "valid_to": to})
         labels = sorted({x for x in [p.name, p.phone_label, p.msgr_name, (p.card or {}).get("nickname")] if x})
         if p.pid == "yusuf":
@@ -672,6 +765,7 @@ def main() -> None:
     w.run()
     ex = Export(w, out)
     ex.gmail()
+    ex.whatsapp()
     ex.imessage()
     ex.messenger()
     ex.contacts()

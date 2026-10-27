@@ -1,0 +1,295 @@
+{
+  "participants": [
+    {
+      "name": "Kevin O'Brien"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1791676920000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "random q, is Tidepool hiring data engineers? asking for me \u00f0\u009f\u0098\u0085"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1790285437000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Suzuki is unreal this year"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1790285230000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "only the third period, what a comeback"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1790284280000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did you watch the game last night"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1789255500000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "update from the west coast: moved to Vancouver last week, new job at the same company just remote. the caf\u00c3\u00a9 near my place is great"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1786045469000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "photos": [
+        {
+          "uri": "messages/inbox/kevinobrien_2492191620836897/photos/1786045469000.jpg",
+          "creation_timestamp": 1786045469
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786045325000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes, sending notes after"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1786045017000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can you jump on the customer call at 2?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1784480761000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes, sending notes after"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1784480241000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can you jump on the customer call at 2?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1779833134000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tomorrow works"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1779832814000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't, deadline. tomorrow?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1779832760000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "movie tonight?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1778094843000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "no worries, grabbed a table at the back"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1778094759000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "running 10 min late sorry!!"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1778013767000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tomorrow works"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1778011327000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can't, deadline. tomorrow?"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1778010411000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "movie tonight?"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1777380229000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "let's book a demo this week",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1777379321000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "new signup from a utility in Ontario \u00f0\u009f\u0091\u0080"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1772994804000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "same, see you"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1772994693000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I'll be there"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1772994540000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anyone going to the founders dinner thursday?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1771805803000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "phew, I'll grab it next time",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1771805291000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the grey one? yes, it's on the chair"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1771804755000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did I leave my scarf at your place?"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1768967644000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks!"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1768967149000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "https://podcasts.example.com/ep/412"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1768964740000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can you send me that podcast you mentioned"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1764955343000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "let's book a demo this week"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1764955293000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "new signup from a utility in Ontario \u00f0\u009f\u0091\u0080"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1755377364000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "same"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1755376839000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I refuse to go outside"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1755374400000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "this weather \u00f0\u009f\u0098\u00a9"
+    },
+    {
+      "sender_name": "Kevin O'Brien",
+      "timestamp_ms": 1752493542000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I'll do the metrics section"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1752493391000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "board deck due friday",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    }
+  ],
+  "title": "Kevin O'Brien",
+  "is_still_participant": true,
+  "thread_path": "inbox/kevinobrien_2492191620836897",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

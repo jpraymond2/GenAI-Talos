@@ -1,0 +1,90 @@
+{
+  "participants": [
+    {
+      "name": "Quentin Roux"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Quentin Roux",
+      "timestamp_ms": 1781299031000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "parfait, le code de porte c'est 2041"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1781298845000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "oui! j'apporte du vin"
+    },
+    {
+      "sender_name": "Quentin Roux",
+      "timestamp_ms": 1781297909000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tu viens toujours ce soir?"
+    },
+    {
+      "sender_name": "Quentin Roux",
+      "timestamp_ms": 1777424248000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "avec plaisir \u00e2\u009d\u00a4\u00ef\u00b8\u008f"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1777424150000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "merci encore pour hier"
+    },
+    {
+      "sender_name": "Quentin Roux",
+      "timestamp_ms": 1773845445000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "avec plaisir \u00e2\u009d\u00a4\u00ef\u00b8\u008f"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1773845119000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "merci encore pour hier"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1764601190000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "parfait, le code de porte c'est 2041"
+    },
+    {
+      "sender_name": "Quentin Roux",
+      "timestamp_ms": 1764600859000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "oui! j'apporte du vin"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1764600665000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tu viens toujours ce soir?"
+    }
+  ],
+  "title": "Quentin Roux",
+  "is_still_participant": true,
+  "thread_path": "inbox/quentinroux_7939832501582669",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

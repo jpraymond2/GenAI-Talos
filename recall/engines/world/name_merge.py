@@ -317,11 +317,12 @@ def judge(a: _View, b: _View, first_counts: dict[str, int], topics: TopicModel |
             score += 0.40
             pro.append(f"{x.name}'s messages mention {y.name}'s handle")
             break
-    if a.is_bare_handle or b.is_bare_handle:
-        bare = a if a.is_bare_handle else b
-        if any(k in t.lower() for t in bare.inbound_text for k in _NEW_HANDLE):
+    # "new number, save this one" from either side: a strong sign of one person with two numbers
+    for x in (a, b):
+        if any(k in t.lower() for t in x.inbound_text for k in _NEW_HANDLE):
             score += 0.35
-            pro.append("the number says it is a new number")
+            pro.append(f"{x.name} says it's a new number")
+            break
 
     if a.channels and b.channels and not (a.channels & b.channels):
         score += 0.10
@@ -548,6 +549,17 @@ def run_name_merge(
         )
 
 
+    # 0) what the user told us in the dashboard wins over any inference
+    from recall.engines.world import user_edits
+
+    user_merges, user_splits = user_edits.forced_pairs(c)
+    for a, b in user_merges:
+        if a in views and b in views and find(a) != find(b):
+            w, lo = winner_of(find(a), find(b))
+            parent[lo] = w
+            record(Judgement(a, b, 1.0, ["you said these are the same person"], []), "merged", w)
+    split_pairs = {frozenset(p) for p in user_splits}
+
     # 1) identical handles -> always merge
     by_handle: dict[str, list[str]] = {}
     for v in views.values():
@@ -598,6 +610,8 @@ def run_name_merge(
     # unambiguous; when another contact is about as good a match, or the evidence
     # is middling, Recall asks the user (an LLM may settle it first in live mode).
     pair_score = {frozenset((j.a, j.b)): j.score for j in judged}
+    for pair in split_pairs:  # "different people" from the user blocks any merge across them
+        pair_score[pair] = 0.0
     cands: dict[str, list[Judgement]] = {}
     for j in judged:
         cands.setdefault(j.a, []).append(j)
@@ -670,11 +684,13 @@ def run_name_merge(
             applied += 1
     c.commit()
 
+    edits_applied = user_edits.reapply(c)
+
     with log_path.open("a", encoding="utf-8") as fh:
         for d in decisions:
             fh.write(json.dumps(d, ensure_ascii=False) + "\n")
     counts = {"merged": applied, "asked": asked, "kept_apart": sum(1 for d in decisions if d["decision"] == "kept_apart"),
-              "not_people": len(not_people)}
+              "not_people": len(not_people), "user_edits": edits_applied}
     if tracer is not None:
         tracer.event("world", "name_merge", counts)
     return counts

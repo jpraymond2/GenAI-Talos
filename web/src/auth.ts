@@ -1,12 +1,15 @@
-/** API bearer token for /api/* and /ws/trace?token=. */
+/** Dashboard session: API bearer token + who's signed in (localStorage). */
 
-const STORAGE_KEY = "recall_api_token";
+import type { SessionUser } from "./types";
+
+const TOKEN_KEY = "recall_api_token";
+const USER_KEY = "recall_user";
 
 export function getApiToken(): string {
   const fromEnv = String(import.meta.env.VITE_RECALL_API_TOKEN ?? "").trim();
   if (fromEnv) return fromEnv;
   try {
-    return String(localStorage.getItem(STORAGE_KEY) ?? "").trim();
+    return String(localStorage.getItem(TOKEN_KEY) ?? "").trim();
   } catch {
     return "";
   }
@@ -14,29 +17,45 @@ export function getApiToken(): string {
 
 export function setApiToken(token: string): void {
   try {
-    localStorage.setItem(STORAGE_KEY, token.trim());
+    localStorage.setItem(TOKEN_KEY, token.trim());
   } catch {
     /* private mode / blocked storage */
   }
 }
 
-/** Prompt once when live mode needs a token and none is configured. */
-export function ensureApiToken(): string {
-  let token = getApiToken();
-  if (token) return token;
-  if (typeof window === "undefined") return "";
-  const entered = window.prompt(
-    "Enter RECALL_API_TOKEN (from the PC .env). Stored in localStorage.",
-  );
-  if (entered && entered.trim()) {
-    setApiToken(entered.trim());
-    token = entered.trim();
+export function getUser(): SessionUser | null {
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    return raw ? (JSON.parse(raw) as SessionUser) : null;
+  } catch {
+    return null;
   }
-  return token;
+}
+
+export function setUser(user: SessionUser): void {
+  try {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function logout(): void {
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Token for requests. The login page sets it; there is no browser prompt anymore. */
+export function ensureApiToken(): string {
+  return getApiToken();
 }
 
 export function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
-  const token = ensureApiToken();
+  const token = getApiToken();
   const headers: Record<string, string> = { ...extra };
   if (token) headers.Authorization = `Bearer ${token}`;
   return headers;

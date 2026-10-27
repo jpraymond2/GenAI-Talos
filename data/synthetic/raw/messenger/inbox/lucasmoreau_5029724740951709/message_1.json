@@ -1,0 +1,213 @@
+{
+  "participants": [
+    {
+      "name": "Lucas Moreau"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1787760132000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "Suzuki est malade cette ann\u00c3\u00a9e"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1787760037000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "juste la troisi\u00c3\u00a8me p\u00c3\u00a9riode, quelle remont\u00c3\u00a9e"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1787759804000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "as-tu vu le match hier?"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1787594700000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "premier dimanche \u00c3\u00a0 Paris, l'appart est minuscule mais la vue est folle"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786857802000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "jeudi \u00c3\u00a7a marche"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1786857656000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "jeudi?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786857429000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "on se fait un souper la semaine prochaine?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1781582699000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "parfait, le code de porte c'est 2041"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1781582167000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "oui! j'apporte du vin"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1781581678000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tu viens toujours ce soir?"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1778950781000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "chanceux"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1778949859000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "il est en voyage au Portugal je pense"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1778949345000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "t'as des nouvelles de Marc?"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1772069834000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "exactement \u00f0\u009f\u0098\u0082"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1772069649000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "haha"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1769545271000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "oui je suis l\u00c3\u00a0 apr\u00c3\u00a8s 17h",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1769545181000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "je passe chercher mes affaires demain?"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1764437306000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "go pour demain"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1764436794000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "pas ce soir, demain?"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1764436483000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "film ce soir?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1752965999000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "parfait, le code de porte c'est 2041"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1752965515000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "oui! j'apporte du vin"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1752964585000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "tu viens toujours ce soir?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1748655750000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "je descends"
+    },
+    {
+      "sender_name": "Lucas Moreau",
+      "timestamp_ms": 1748653334000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "\u00f0\u009f\u0093\u008d je suis arriv\u00c3\u00a9"
+    }
+  ],
+  "title": "Lucas Moreau",
+  "is_still_participant": true,
+  "thread_path": "inbox/lucasmoreau_5029724740951709",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

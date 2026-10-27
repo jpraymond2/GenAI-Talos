@@ -1,0 +1,157 @@
+{
+  "participants": [
+    {
+      "name": "Omar Haddad"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1786842798000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "on it, comments in 30 min"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786842734000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "investor update draft is in the doc, can you review?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1785716040000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "saw your Startupfest panel clip, you killed it"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1785267551000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "let's book a demo this week"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1785267481000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "new signup from a utility in Ontario \u00f0\u009f\u0091\u0080"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1781536913000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "fixing"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1781536741000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "slide 7 still has the old revenue number"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1781536590000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "demo day slides v4 uploaded"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1772932801000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "photos": [
+        {
+          "uri": "messages/inbox/omarhaddad_2476145076007655/photos/1772932801000.jpg",
+          "creation_timestamp": 1772932801
+        }
+      ]
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1772932704000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "in the security folder, v3 is the latest"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1772932368000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "do we have the SOC 2 questionnaire answers somewhere?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1769010886000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes approved"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1769010824000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "payroll goes out tomorrow, all good on your side?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1767933289000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "finally. what a week"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1767932961000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "happy friday \u00f0\u009f\u008d\u00bb"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1750989327000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "same, see you"
+    },
+    {
+      "sender_name": "Omar Haddad",
+      "timestamp_ms": 1750989021000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I'll be there"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1750988935000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anyone going to the founders dinner thursday?"
+    }
+  ],
+  "title": "Omar Haddad",
+  "is_still_participant": true,
+  "thread_path": "inbox/omarhaddad_2476145076007655",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}
