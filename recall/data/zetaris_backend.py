@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import json
 import logging
+import re
 import threading
 import time
 import uuid
@@ -32,6 +33,8 @@ def _secret_text(value: SecretStr | str | None) -> str:
 
 _ZETARIS_RETRIES = 2
 _DEFAULT_LIMIT = 1000
+# Hard stop when a query has no LIMIT of its own (safety against infinite pages).
+_MAX_UNLIMITED_ROWS = 100_000
 _SQL_RUN_PATH = "/sql-editor/sqls/run"
 _LOGIN_PATH = "/api/auth/login"
 # When JWT has no exp claim, refresh login on this wall-clock TTL.
@@ -39,6 +42,11 @@ _DEFAULT_TOKEN_TTL_S = 50 * 60
 _TOKEN_SKEW_S = 60
 _CONNECT_TIMEOUT_S = 2.0
 _CIRCUIT_COOLDOWN_S = 60.0
+
+# Trailing ``LIMIT n`` (optionally with ``OFFSET m``) outside string literals.
+_TRAILING_LIMIT = re.compile(
+    r"(?is)\s+LIMIT\s+(\d+)(?:\s+OFFSET\s+(\d+))?\s*$"
+)
 
 # Module-level circuit: after ConnectError/transport failure, skip Zetaris for 60s.
 _circuit_lock = threading.Lock()
@@ -166,7 +174,7 @@ class ZetarisBackend:
         except Exception as exc:  # noqa: BLE001
             raise DataUnavailable(f"Zetaris SQL prepare failed: {type(exc).__name__}") from exc
 
-        rows = self._request_with_retries(rest, rendered)
+        rows = self._fetch_all_pages(rest, rendered)
         extra: dict[str, Any] = {"zetaris_mode": mode.value}
         if mode is ZetarisReadMode.USL:
             extra["usl_tables"] = list(usl_meta.usl_tables) if usl_meta else []
@@ -235,6 +243,34 @@ class ZetarisBackend:
 
     def _base_url(self) -> str:
         return (self._settings.zetaris_base_url or "").strip().rstrip("/")
+
+    def _fetch_all_pages(self, rest: str, sql: str) -> list[dict[str, Any]]:
+        """Page past the REST 1000-row cap via SQL LIMIT/OFFSET.
+
+        Respects a trailing ``LIMIT n`` on the query (query's own cap). Stops when
+        a page returns fewer rows than requested.
+        """
+        max_rows, base_sql = _split_trailing_limit(sql)
+        page_size = _DEFAULT_LIMIT
+        offset = 0
+        out: list[dict[str, Any]] = []
+        while True:
+            if max_rows is not None and len(out) >= max_rows:
+                break
+            if max_rows is None and len(out) >= _MAX_UNLIMITED_ROWS:
+                break
+            take = page_size
+            if max_rows is not None:
+                take = min(page_size, max_rows - len(out))
+            if take <= 0:
+                break
+            page_sql = f"{base_sql}\nLIMIT {take} OFFSET {offset}"
+            page = self._request_with_retries(rest, page_sql)
+            out.extend(page)
+            if len(page) < take:
+                break
+            offset += len(page)
+        return out
 
     def _request_with_retries(self, rest: str, sql: str) -> list[dict[str, Any]]:
         payload = self._request_payload_with_retries(
@@ -560,6 +596,38 @@ class ZetarisBackend:
                     cells.append(None)
             rows.append(dict(zip(names, cells, strict=True)))
         return rows
+
+
+def _split_trailing_limit(sql: str) -> tuple[int | None, str]:
+    """Return ``(limit_or_none, sql_without_trailing_limit_offset)``."""
+    match = _TRAILING_LIMIT.search(sql)
+    if not match:
+        return None, sql.rstrip()
+    # Ignore LIMIT that sits inside a trailing string literal by requiring the
+    # match to start outside quotes — _TRAILING_LIMIT only looks at the end.
+    if _limit_match_inside_string(sql, match.start()):
+        return None, sql.rstrip()
+    return int(match.group(1)), sql[: match.start()].rstrip()
+
+
+def _limit_match_inside_string(sql: str, index: int) -> bool:
+    """True when ``index`` falls inside a single-quoted SQL string literal."""
+    in_string = False
+    i = 0
+    while i < index:
+        ch = sql[i]
+        if in_string:
+            if ch == "'" and i + 1 < len(sql) and sql[i + 1] == "'":
+                i += 2
+                continue
+            if ch == "'":
+                in_string = False
+            i += 1
+            continue
+        if ch == "'":
+            in_string = True
+        i += 1
+    return in_string
 
 
 def _infer_token_expiry(token: str) -> float:

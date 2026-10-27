@@ -52,6 +52,10 @@ def test_unified_select_list_aliases_renames() -> None:
     contacts = unified_select_list("contacts")
     assert "organisation AS org" in contacts
     assert "source_system AS source" in contacts
+    assert "nickname" in contacts
+    assert UNIFIED_COLUMNS["contacts"].index("nickname") == UNIFIED_COLUMNS[
+        "contacts"
+    ].index("city") + 1
 
     interactions = unified_select_list("interactions")
     assert "source_system AS source" in interactions

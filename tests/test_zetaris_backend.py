@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import threading
 import time
 from collections.abc import Iterator
@@ -105,6 +106,26 @@ def _make_handler(state: _ZetarisMockState) -> type[BaseHTTPRequestHandler]:
                     self._write(503, {"msg": "down"})
                     return
 
+                if state.mode == "paginate_1386":
+                    # 1000 + 386 rows; honour LIMIT/OFFSET in the SQL body.
+                    sql = str(body.get("sql") or "")
+                    offset = 0
+                    limit = 1000
+                    m_off = re.search(r"(?i)\bOFFSET\s+(\d+)\b", sql)
+                    m_lim = re.search(r"(?i)\bLIMIT\s+(\d+)\b", sql)
+                    if m_off:
+                        offset = int(m_off.group(1))
+                    if m_lim:
+                        limit = int(m_lim.group(1))
+                    total = 1386
+                    end = min(total, offset + limit)
+                    data = [[str(i), f"row-{i}"] for i in range(offset, end)]
+                    self._write(
+                        200,
+                        {"headers": ["id", "label"], "data": data},
+                    )
+                    return
+
                 # happy
                 self._write(
                     200,
@@ -170,6 +191,28 @@ def _settings(rest: str, base: str, **kwargs: Any) -> Settings:
     }
     defaults.update(kwargs)
     return Settings(**defaults)
+
+
+def test_pages_past_rest_1000_row_cap(
+    mock_zetaris: tuple[str, str, _ZetarisMockState],
+) -> None:
+    """all_interactions-style LIMIT 5000 must fetch 1000 + 386 via OFFSET pages."""
+    rest, base, state = mock_zetaris
+    state.mode = "paginate_1386"
+    backend = ZetarisBackend(_settings(rest, base))
+    rows = backend.query(
+        "SELECT id, label FROM recall.interactions ORDER BY id LIMIT :limit_n",
+        {"limit_n": 5000},
+        source_tag="test.paginate",
+    )
+    assert len(rows) == 1386
+    assert rows[0] == {"id": "0", "label": "row-0"}
+    assert rows[1000] == {"id": "1000", "label": "row-1000"}
+    assert rows[-1] == {"id": "1385", "label": "row-1385"}
+    sql_calls = [r for r in state.requests if "/sql-editor/sqls/run" in r["path"]]
+    assert len(sql_calls) == 2
+    assert "OFFSET 0" in sql_calls[0]["body"]["sql"]
+    assert "OFFSET 1000" in sql_calls[1]["body"]["sql"]
 
 
 def test_happy_path_and_headers(mock_zetaris: tuple[str, str, _ZetarisMockState]) -> None:

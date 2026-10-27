@@ -186,7 +186,7 @@ def _variants() -> list[UslVariant]:
     """COMPILE attempts in the order requested by the user."""
     # --- (baseline) multi-table, original column names ---
     baseline_ddl = """\
-CREATE TABLE contact (contact_id varchar(64) NOT NULL PRIMARY KEY, full_name varchar(200), org varchar(200), title varchar(200), city varchar(100), emails varchar(1000), phones varchar(1000), source varchar(50));
+CREATE TABLE contact (contact_id varchar(64) NOT NULL PRIMARY KEY, full_name varchar(200), org varchar(200), title varchar(200), city varchar(100), nickname varchar(200), emails varchar(1000), phones varchar(1000), source varchar(50));
 CREATE TABLE handle (handle_id varchar(64) NOT NULL PRIMARY KEY, kind varchar(20), value varchar(200), display_name varchar(200), source varchar(50));
 CREATE TABLE interaction (interaction_id varchar(64) NOT NULL PRIMARY KEY, source varchar(20), thread_id varchar(100), handle_value varchar(200), direction varchar(5), ts_utc varchar(40), subject varchar(500), text varchar(4000), source_ref varchar(100));
 CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300), start_utc varchar(40), end_utc varchar(40), location varchar(300), attendees varchar(2000), source_ref varchar(100))"""
@@ -195,7 +195,7 @@ CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300
         "contact": (
             f"{_USL_PATH}.contact",
             "SELECT COALESCE(contact_id,'') AS contact_id, full_name, org, title, city, "
-            "emails, phones, source FROM recall.contacts",
+            "nickname, emails, phones, source FROM recall.contacts",
         ),
         "handle": (
             f"{_USL_PATH}.handle",
@@ -229,7 +229,7 @@ CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300
 
     # --- (a) rename possibly-reserved columns ---
     renamed_ddl = """\
-CREATE TABLE contact (contact_id varchar(64) NOT NULL PRIMARY KEY, full_name varchar(200), organisation varchar(200), title varchar(200), city varchar(100), emails varchar(1000), phones varchar(1000), source_system varchar(50));
+CREATE TABLE contact (contact_id varchar(64) NOT NULL PRIMARY KEY, full_name varchar(200), organisation varchar(200), title varchar(200), city varchar(100), nickname varchar(200), emails varchar(1000), phones varchar(1000), source_system varchar(50));
 CREATE TABLE handle (handle_id varchar(64) NOT NULL PRIMARY KEY, kind varchar(20), handle_value varchar(200), display_name varchar(200), source_system varchar(50));
 CREATE TABLE interaction (interaction_id varchar(64) NOT NULL PRIMARY KEY, source_system varchar(20), thread_id varchar(100), handle_value varchar(200), direction varchar(5), ts_utc varchar(40), subject varchar(500), body varchar(4000), source_ref varchar(100));
 CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300), start_utc varchar(40), end_utc varchar(40), place varchar(300), attendees varchar(2000), source_ref varchar(100))"""
@@ -238,7 +238,7 @@ CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300
         "contact": (
             f"{_USL_PATH}.contact",
             "SELECT COALESCE(contact_id,'') AS contact_id, full_name, "
-            "org AS organisation, title, city, emails, phones, "
+            "org AS organisation, title, city, nickname, emails, phones, "
             "source AS source_system FROM recall.contacts",
         ),
         "handle": (
@@ -268,6 +268,7 @@ CREATE TABLE contact (
   organisation varchar(200),
   title varchar(200),
   city varchar(100),
+  nickname varchar(200),
   emails varchar(1000),
   phones varchar(1000),
   source_system varchar(50)
@@ -332,6 +333,7 @@ CREATE TABLE event (
   organisation varchar(200),
   title varchar(200),
   city varchar(100),
+  nickname varchar(200),
   emails varchar(1000),
   phones varchar(1000),
   source_system varchar(50)

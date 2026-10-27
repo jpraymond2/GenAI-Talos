@@ -53,6 +53,7 @@ UNIFIED_COLUMNS: dict[str, tuple[str, ...]] = {
         "org",
         "title",
         "city",
+        "nickname",
         "emails",
         "phones",
         "source",

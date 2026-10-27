@@ -157,6 +157,34 @@ Upload these four files from **`SAMPLE_DATA_DIR`** (default **`data/synthetic/ta
 
 Then run `scripts/zetaris_load_sample.sql` (one statement at a time), `scripts/zetaris_setup_usl.py`, and `scripts/zetaris_smoke.py`. Smoke/setup take expected row counts from `settings.sample_data_dir`.
 
+## Live setup on our GCP VM
+
+How the current team instance is wired (no credentials in this doc — use the VM’s `.env` / secrets):
+
+1. **CSVs in NDP file-store.** Upload the four tables from `SAMPLE_DATA_DIR` (default `data/synthetic/tables/`) into the platform file browser under **`file-store/recall/`** so they resolve as `dffs://recall/{contacts,handles,interactions,events}.csv`.
+
+2. **FILESTORE tables with explicit schema.** Create the Lightning FILESTORE tables with `inferSchema "false"` (and `header "true"`). For **`interactions`**, also set `multiLine "true"` so quoted newlines in message bodies do not split rows. Prefer the statements in `scripts/zetaris_load_sample.sql` (one REST statement at a time) over UI inference.
+
+3. **Events from Postgres (`calendar_pg`).** The `events` USL activation reads `calendar_pg.calendar_events`, not the CSV FILESTORE:
+   - In the **`pg`** container, create a `calendar_events` table whose columns match the CSV (`event_id`, `title`, `start_utc`, `end_utc`, `location`, `attendees`, `source_ref`) and load the CSV rows into it.
+   - Create a **read-only** Postgres role that can `SELECT` that table only (store the password in secrets / env — never commit it).
+   - In Zetaris SQL:
+     ```sql
+     CREATE DATASOURCE calendar_pg DESCRIBE BY "PostgreSQL" OPTIONS (
+       jdbcdriver "org.postgresql.Driver",
+       jdbcurl "jdbc:postgresql://pg:5432/<database>",
+       username "<readonly_user>", password "<from secrets>", fetchsize "1000")
+     REGISTER DATASOURCE TABLES FROM calendar_pg
+     ```
+   - Confirm `SHOW TABLES IN calendar_pg` lists `calendar_events`.
+
+4. **USL + smoke.** From the repo on the VM (with `DATA_BACKEND=zetaris` and REST/login env set):
+   ```sh
+   uv run python scripts/zetaris_setup_usl.py --reset
+   uv run python scripts/zetaris_smoke.py
+   ```
+   Expect table + USL counts to match the CSVs, and named-query parity against DuckDB. The REST SQL editor caps each response at **1000** rows; `ZetarisBackend` pages with `LIMIT`/`OFFSET` so `all_interactions` still returns the full query limit.
+
 ## Sources
 
 - HackOS Resources → Zetaris folder (24 items): "Zetaris: Getting Started Prompt" (read in full); repo/website, install, connect, SQL reference/companion, troubleshooting links all point to github.com/zetaris/getting-started / zetaris.github.io/getting-started.

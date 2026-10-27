@@ -241,6 +241,7 @@ def test_empty_content_with_reasoning_retries_then_raises(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setenv("SAMPLE_MODE", "false")
+    monkeypatch.setenv("LLM_LIVE", "false")
     monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test-key")
     monkeypatch.setenv("REASONING_ROLES", "")
     get_settings.cache_clear()

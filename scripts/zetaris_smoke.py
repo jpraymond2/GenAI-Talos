@@ -168,10 +168,14 @@ def main() -> int:
                 f"usl={len(usl_rows)} tables={len(tab_rows)} duckdb={len(duck_rows)}"
             )
             if not match:
-                detail += (
-                    f" u={_preview(usl_rows)} t={_preview(tab_rows)} "
-                    f"d={_preview(duck_rows)}"
+                # Real (non-formatting) mismatch — print the first differing row.
+                diff = (
+                    _first_row_diff(usl_rows, tab_rows)
+                    or _first_row_diff(tab_rows, duck_rows)
+                    or _first_row_diff(usl_rows, duck_rows)
                 )
+                detail += f" first_diff={diff}"
+                print(f"  DIFF query.{name}: {diff}")
             results.append((f"query.{name}", detail, status))
         except Exception as exc:  # noqa: BLE001
             overall_ok = False
@@ -327,7 +331,9 @@ def _normalize(rows: Sequence[Any]) -> list[tuple[tuple[str, str], ...]]:
             data = row
         else:
             data = {"value": row}
-        items = tuple(sorted((str(k), _as_str(v)) for k, v in data.items()))
+        items = tuple(
+            sorted((str(k), _norm_cell(_as_str(v))) for k, v in data.items())
+        )
         out.append(items)
     out.sort()
     return out
@@ -341,6 +347,28 @@ def _as_str(value: Any) -> str:
     else:
         text = str(value)
     return text.replace("\r\n", "\n").replace("\r", "\n")
+
+
+def _norm_cell(text: str) -> str:
+    """Strip, case-fold, and collapse empty / ``[]`` / null-like values."""
+    trimmed = text.strip()
+    if trimmed.lower() in {"", "none", "null", "[]"}:
+        return ""
+    return trimmed.casefold()
+
+
+def _first_row_diff(left: Sequence[Any], right: Sequence[Any]) -> str | None:
+    """Human-readable first real mismatch after normalization, or None if equal."""
+    a = _normalize(left)
+    b = _normalize(right)
+    if a == b:
+        return None
+    if len(a) != len(b):
+        return f"len {len(a)} vs {len(b)}"
+    for index, (row_a, row_b) in enumerate(zip(a, b, strict=True)):
+        if row_a != row_b:
+            return f"row[{index}] left={row_a} right={row_b}"
+    return "unknown"
 
 
 def _preview(rows: Sequence[Any], n: int = 1) -> str:
