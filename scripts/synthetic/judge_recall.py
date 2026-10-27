@@ -57,6 +57,14 @@ def fact_hit(keywords: list[list[str]], text: str) -> bool:
     return bool(keywords) and all(any(_norm(k) in low for k in group) for group in keywords)
 
 
+def fact_share(keywords: list[list[str]], text: str) -> float:
+    """Share of a fact's keyword groups that were said (Nov 6 but not 11am = half)."""
+    low = _norm(text)
+    if not keywords:
+        return 0.0
+    return sum(1 for group in keywords if any(_norm(k) in low for k in group)) / len(keywords)
+
+
 def said_text(state: dict[str, Any]) -> str:
     brief = state.get("final_brief") or ((state.get("drafts") or [None])[-1]) or {}
     parts = [brief.get("headline", ""), *(p.get("text", "") for p in brief.get("points") or []),
@@ -104,9 +112,15 @@ def grade(q: dict[str, Any], state: dict[str, Any], people: dict[str, Any], keyw
                 "notes": ["said it doesn't know them" if ok else f"made up a brief about {who}"]}
 
     if exp.get("person"):
+        offered = [c.get("name", "") for c in state.get("candidates") or []]
+        if state.get("status") == "needs_clarification" and len(offered) >= 2 and any(
+                same_person(o, people[exp["person"]]) for o in offered):
+            # Asked between real look-alikes, right person among them: a fair question, half marks.
+            return {"score": 0.5, "parts": {"asked": 0.5},
+                    "notes": [f"asked between {', '.join(offered)} — the context could have settled it"]}
         if state.get("status") == "needs_clarification":
-            parts["person"] = 0.5
-            notes.append("asked who you meant")
+            parts["person"] = 0.0
+            notes.append("asked who you meant, without the right person as an option")
         else:
             ok = same_person(who, people[exp["person"]])
             parts["person"] = 1.0 if ok else 0.0
@@ -116,8 +130,12 @@ def grade(q: dict[str, Any], state: dict[str, Any], people: dict[str, Any], keyw
     covers = []
     for fid in exp.get("must_cover") or []:
         kw = keywords.get(fid) or []
-        if fact_hit(kw, said):
+        share = fact_share(kw, said)
+        if share == 1.0:
             covers.append(1.0)
+        elif share > 0:
+            covers.append(round(share, 2))
+            notes.append(f"partly said: {fid}")
         elif fact_hit(kw, fetched):
             covers.append(0.25)
             notes.append(f"found but didn't say: {fid}")
@@ -184,28 +202,21 @@ def _setup(root: Path, work: Path, live: bool) -> None:
     store = WorldStore(path=work / "data" / "world_sample.db", settings=settings)
     IngestPipelineService(store=store, settings=settings).run(get_query_layer(settings))
     store.close()
+    from recall.llm.generator import reset_client
+
+    reset_client()  # ingest may have opened the model client on its own event loop
 
 
 async def _ask(text: str, timeout: float) -> dict[str, Any]:
-    from recall.judge import judge_run
-    from recall.orchestrator import run as orchestrate
-    from recall.server.session import build_speech
+    """Same path as the app's /api/ask (pre-routing + agent), without the 18 s phone time budget."""
+    from recall.server.session import enrich_ask_payload, run_ask
 
-    state = await asyncio.wait_for(orchestrate(text), timeout=timeout)
-    data = state.model_dump(mode="json")
-    data["speech"] = build_speech(state)
-    data["judge"] = judge_run(data)
-    return data
+    state = await run_ask(text, soft_timeout=timeout)
+    return enrich_ask_payload(state)
 
 
-async def _ask_all(
-    questions: list[dict[str, Any]],
-    people: dict[str, Any],
-    keywords: dict[str, Any],
-    timeout: float,
-) -> list[dict[str, Any]]:
-    """Run every question on one event loop (httpx / LLM clients stay valid)."""
-    results: list[dict[str, Any]] = []
+async def _ask_all(questions: list[dict[str, Any]], people: dict[str, Any], keywords: dict[str, Any], timeout: float) -> list[dict[str, Any]]:
+    results = []
     for q in questions:
         steps = [s.strip() for s in re.split(r"\bThen:\s*", q["ask"]) if s.strip()]
         t0 = time.perf_counter()
@@ -222,7 +233,7 @@ async def _ask_all(
                         "answer": said_text(state)[:600], "status": state.get("status"), "person": state.get("entity_name"),
                         "live_judge": live_judge})
         mark = "✓" if g["score"] >= 0.8 else "~" if g["score"] >= 0.4 else "✗"
-        print(f"{mark} {q['id']} {round(100 * g['score']):>3}%  {q['ask'][:52]:<52}  {'; '.join(g['notes'])[:90]}")
+        print(f"{mark} {q['id']} {round(100 * g['score']):>3}%  {q['ask'][:52]:<52}  {'; '.join(g['notes'])[:90]}", flush=True)
     return results
 
 
@@ -251,8 +262,8 @@ def main() -> None:
         print("Note: the offline sample model only knows the canned demo questions, so most answers will fail.\n"
               "      Run with --live for a real score.\n")
 
-    # One asyncio.run for the whole suite — per-question run() closes the loop and
-    # breaks reused httpx/OpenAI clients on later questions ("Event loop is closed").
+    # One event loop for the whole run: the model client keeps connections bound to the
+    # loop it was created on, so a fresh asyncio.run() per question fails with "Event loop is closed".
     results = asyncio.run(_ask_all(questions, people, keywords, args.timeout))
 
     os.chdir(cwd)

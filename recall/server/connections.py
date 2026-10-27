@@ -49,9 +49,9 @@ def _source_counts() -> dict[str, dict[str, Any]]:
     """Rows and newest timestamp per source, from whichever backend is live. Never raises."""
     out: dict[str, dict[str, Any]] = {}
     try:
-        from recall.data.query_layer import get_default_query_layer
+        from recall.data.query_layer import get_query_layer
 
-        ql = get_default_query_layer()
+        ql = get_query_layer(get_settings())  # fresh each time so counts move after a pull
         for row in ql.query(
             "SELECT source, COUNT(*) AS n, MAX(ts_utc) AS last_ts FROM recall.interactions GROUP BY source",
             {},
@@ -224,7 +224,10 @@ def api_calendar_upcoming(days: int = 14, limit: int = 60) -> dict[str, Any]:
     now = resolve_now(settings)
     days = max(1, min(days, 90))
     try:
-        events = all_events_in_window(source_tag="calendar_view", days_back=1, days_forward=days, now=now, settings=settings)
+        from recall.data.query_layer import get_query_layer
+
+        events = all_events_in_window(source_tag="calendar_view", days_back=1, days_forward=days, now=now, settings=settings,
+                                      layer=get_query_layer(settings))
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=503, detail=f"Calendar unavailable: {type(exc).__name__}") from exc
 
@@ -332,7 +335,10 @@ def _likely_owner(settings: Any, now: datetime) -> set[str]:
     from recall.data.queries import all_events_in_window
 
     try:
-        events = all_events_in_window(source_tag="calendar_owner", days_back=365, days_forward=30, now=now, settings=settings)
+        from recall.data.query_layer import get_query_layer
+
+        events = all_events_in_window(source_tag="calendar_owner", days_back=365, days_forward=30, now=now, settings=settings,
+                                      layer=get_query_layer(settings))
     except Exception:  # noqa: BLE001
         return set()
     invites = [ev for ev in events if ev.attendees]
