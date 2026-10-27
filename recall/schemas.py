@@ -40,7 +40,16 @@ class Utterance(BaseModel):
 class Intent(BaseModel):
     """Parsed user intent for a meeting-prep turn."""
 
-    kind: Literal["brief", "note", "suggest", "action", "question", "unknown"]
+    kind: Literal[
+        "brief",
+        "note",
+        "suggest",
+        "action",
+        "question",
+        "calendar",
+        "open_loops",
+        "unknown",
+    ]
     person_name: str | None = None
     when: str | None = None
     action_request: str | None = None

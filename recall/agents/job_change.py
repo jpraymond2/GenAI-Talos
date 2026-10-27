@@ -36,7 +36,12 @@ def classify_job_changes(
     Matching: tagged job_change, within 60 days, company appears in non-LinkedIn text.
     Trap: tagged job_change whose company does not appear in non-LinkedIn text.
     """
-    clock = now or datetime.now(timezone.utc)
+    if now is None:
+        from recall.agents.time_context import now as frozen_now
+
+        clock = frozen_now()
+    else:
+        clock = now
     if clock.tzinfo is None:
         clock = clock.replace(tzinfo=timezone.utc)
     cutoff = clock - timedelta(days=_JOB_CHANGE_WINDOW_DAYS)

@@ -90,9 +90,9 @@ def test_today_line_format() -> None:
     from recall.agents.time_context import today_line, with_today
 
     fixed = datetime(2026, 10, 22, 15, 30, tzinfo=ZoneInfo("America/Toronto"))
-    line = today_line(now=fixed)
+    line = today_line(clock=fixed)
     assert line == "TODAY: 2026-10-22, Thursday, time zone America/Toronto"
-    assert with_today("UTTERANCE: hi", now=fixed).startswith(line + "\n")
+    assert with_today("UTTERANCE: hi", clock=fixed).startswith(line + "\n")
 
 
 def test_agents_prepend_today_to_user_prompt(monkeypatch: pytest.MonkeyPatch) -> None:

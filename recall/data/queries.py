@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field
 from recall.config import Settings, get_settings
 from recall.data.query_layer import QueryLayer, get_default_query_layer
 
-# Fixed "now" for SAMPLE_MODE so named-query results stay stable across runs.
+# Legacy fixed anchor; prefer recall.agents.time_context.now() / resolve_now().
 SAMPLE_ANCHOR = datetime(2026, 10, 15, 12, 0, 0, tzinfo=timezone.utc)
 
 _HANDLES_BY_DISPLAY_SQL = """
@@ -123,12 +123,14 @@ def resolve_now(
     settings: Settings | None = None,
     now: datetime | None = None,
 ) -> datetime:
-    """Return an explicit now, the sample anchor, or the current UTC time."""
+    """Return an explicit now, the frozen sample clock, or the current UTC time."""
     if now is not None:
         return _as_utc(now)
     active = settings if settings is not None else get_settings()
     if active.sample_mode:
-        return SAMPLE_ANCHOR
+        from recall.agents.time_context import now as frozen_now
+
+        return _as_utc(frozen_now(settings=active))
     return datetime.now(timezone.utc)
 
 

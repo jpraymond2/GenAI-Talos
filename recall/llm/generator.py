@@ -71,6 +71,15 @@ class LLMUnavailable(Exception):
     """Raised when NVIDIA fails after retries; callers may fall back."""
 
 
+class SampleCacheMiss(Exception):
+    """Sample-mode cache has no entry for this role/prompt (no default fallback)."""
+
+    def __init__(self, role: str, key: str) -> None:
+        self.role = role
+        self.key = key
+        super().__init__(f"Sample cache miss for role={role!r} key={key!r}")
+
+
 class LLMOutputError(Exception):
     """Raised when the model response cannot be parsed or validated."""
 
@@ -81,6 +90,10 @@ class LLMOutputError(Exception):
 
 class LLMSchemaEchoError(LLMOutputError):
     """Raised when the model returns a JSON Schema document instead of an instance."""
+
+
+# Roles that must not fall back to a global "default" cache entry.
+_NO_DEFAULT_ROLES = frozenset({"router", "writer", "critic", "actions", "web_extract"})
 
 
 def reset_client() -> None:
@@ -141,6 +154,7 @@ async def generate(
                 completion_tokens=_estimate_tokens(text),
                 success=True,
                 prompt=prompt,
+                provider="sample_cache",
             )
             return text
 
@@ -168,8 +182,11 @@ async def generate(
             success=True,
             prompt=prompt,
             reasoning_chars=reasoning_chars,
+            provider="nvidia",
         )
         return text
+    except SampleCacheMiss:
+        raise
     except Exception as exc:
         _log_call(
             role=role,
@@ -465,10 +482,12 @@ async def _generate_json_once(
     started = time.perf_counter()
     try:
         reasoning_chars = 0
+        provider = "nvidia"
         if use_sample_provider(settings):
             raw = _sample_text(prompt, role=role, settings=settings)
             prompt_tokens = _estimate_tokens(prompt)
             completion_tokens = _estimate_tokens(raw)
+            provider = "sample_cache"
         else:
             raw, prompt_tokens, completion_tokens, reasoning_chars = await _with_retries(
                 lambda: _nvidia_chat(
@@ -502,8 +521,11 @@ async def _generate_json_once(
             success=True,
             prompt=prompt,
             reasoning_chars=reasoning_chars,
+            provider=provider,
         )
         return model_obj
+    except SampleCacheMiss:
+        raise
     except Exception as exc:
         _log_call(
             role=role,
@@ -740,7 +762,11 @@ def _get_client(settings: Settings) -> AsyncOpenAI:
 
 
 def _sample_text(prompt: str, *, role: str, settings: Settings) -> str:
-    """Load a canned response from data/cache/llm/<role>.json."""
+    """Load a canned response from data/cache/llm/<role>.json.
+
+    Agent roles (router/writer/critic/actions/web_extract) never fall back to
+    a global ``"default"`` entry — a miss raises ``SampleCacheMiss``.
+    """
     path = Path(settings.cache_dir) / "llm" / f"{role}.json"
     cache = _read_json_file(path)
     if not isinstance(cache, dict):
@@ -749,9 +775,11 @@ def _sample_text(prompt: str, *, role: str, settings: Settings) -> str:
     key = _prompt_key(prompt)
     if key in cache:
         return _cache_entry_to_text(cache[key])
+    if role in _NO_DEFAULT_ROLES:
+        raise SampleCacheMiss(role, key)
     if "default" in cache:
         return _cache_entry_to_text(cache["default"])
-    raise LLMUnavailable(f"Sample LLM cache missing key {key!r} and default in {path}")
+    raise SampleCacheMiss(role, key)
 
 
 def _sample_embedding(text: str, settings: Settings) -> list[float]:
@@ -782,8 +810,7 @@ def _record_llm_cache(role: str, prompt: str, value: Any, settings: Settings) ->
     if not isinstance(cache, dict):
         cache = {}
     cache[_prompt_key(prompt)] = value
-    if "default" not in cache:
-        cache["default"] = value
+    # Never write a global "default" for agent roles — keys must match prompts.
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(cache, indent=2, default=str) + "\n", encoding="utf-8")
 
@@ -847,6 +874,7 @@ def _log_call(
     prompt: str,
     error: str | None = None,
     reasoning_chars: int = 0,
+    provider: str | None = None,
 ) -> None:
     """Write one LLM event. Never logs the API key or the full prompt."""
     payload: dict[str, Any] = {
@@ -859,6 +887,8 @@ def _log_call(
         "prompt_preview": prompt[:_PROMPT_PREVIEW_CHARS],
         "reasoning_chars": reasoning_chars,
     }
+    if provider is not None:
+        payload["provider"] = provider
     if error is not None:
         payload["error"] = error
     tracer = Tracer.current()

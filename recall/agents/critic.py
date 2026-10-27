@@ -5,11 +5,12 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from recall.agents import offline
 from recall.agents.job_change import job_change_guidance, matching_ids, trap_ids
 from recall.agents.prompts import CRITIC_SYSTEM
 from recall.agents.time_context import with_today
 from recall.agents.writer import format_evidence_list
-from recall.llm.generator import generate_json
+from recall.llm.generator import SampleCacheMiss, generate_json
 from recall.schemas import Brief, CriticVerdict, Evidence, PointVerdict, RunState
 from recall.tracing import Tracer
 
@@ -39,21 +40,29 @@ async def run(state: RunState, deps: Any) -> RunState:
             parts.append(f"STYLE: {style}")
     if state.context.get("suggest_result"):
         parts.append("SUGGEST: treat this draft as place suggestions; enforce citation rules.")
-    prompt = with_today("\n".join(parts))
-    generate_json_fn = getattr(deps, "generate_json", None) or generate_json
-    verdict = await generate_json_fn(prompt, CRITIC_SYSTEM, CriticVerdict, role="critic")
-    assert isinstance(verdict, CriticVerdict)
-    verdict = _enforce_job_change_rules(verdict, draft, state.evidence)
-    state.verdicts.append(verdict)
-    if verdict.overall == "pass":
-        state.final_brief = draft
-
-    keep = sum(1 for item in verdict.verdicts if item.decision == "keep")
-    summary = (
-        f"overall={verdict.overall} keep={keep}/{len(verdict.verdicts)} "
-        f"missing={len(verdict.missing)} refetch={len(verdict.refetch)}"
+    prompt = with_today(
+        "\n".join(parts),
+        settings=getattr(deps, "settings", None),
     )
-    _log(deps, "critic", summary, {"verdict": verdict.model_dump(mode="json")})
+    generate_json_fn = getattr(deps, "generate_json", None) or generate_json
+    try:
+        verdict = await generate_json_fn(prompt, CRITIC_SYSTEM, CriticVerdict, role="critic")
+        assert isinstance(verdict, CriticVerdict)
+        verdict = _enforce_job_change_rules(verdict, draft, state.evidence)
+        state.verdicts.append(verdict)
+        if verdict.overall == "pass":
+            state.final_brief = draft
+        keep = sum(1 for item in verdict.verdicts if item.decision == "keep")
+        summary = (
+            f"overall={verdict.overall} keep={keep}/{len(verdict.verdicts)} "
+            f"missing={len(verdict.missing)} refetch={len(verdict.refetch)}"
+        )
+        _log(deps, "critic", summary, {"verdict": verdict.model_dump(mode="json")})
+    except SampleCacheMiss:
+        verdict = offline.critique_brief(state, deps)
+        state.verdicts.append(verdict)
+        if verdict.overall == "pass" and state.final_brief is None:
+            state.final_brief = state.drafts[-1]
     return state
 
 

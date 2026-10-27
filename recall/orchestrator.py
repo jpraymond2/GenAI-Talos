@@ -14,7 +14,7 @@ import time
 import uuid
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Literal
 
@@ -97,12 +97,25 @@ class Deps:
         self.generate_json = self._tracked_generate_json  # type: ignore[method-assign]
 
     async def _tracked_generate(self, *args: Any, **kwargs: Any) -> str:
+        from recall.llm.generator import SampleCacheMiss
+
         self._count_llm_call()
-        return await self._raw_generate(*args, **kwargs)
+        try:
+            return await self._raw_generate(*args, **kwargs)
+        except SampleCacheMiss:
+            self.llm_calls = max(0, self.llm_calls - 1)
+            raise
 
     async def _tracked_generate_json(self, *args: Any, **kwargs: Any) -> BaseModel:
+        from recall.llm.generator import SampleCacheMiss
+
         self._count_llm_call()
-        return await self._raw_generate_json(*args, **kwargs)
+        try:
+            return await self._raw_generate_json(*args, **kwargs)
+        except SampleCacheMiss:
+            # Offline fallback is not an LLM call — undo the count.
+            self.llm_calls = max(0, self.llm_calls - 1)
+            raise
 
     def _count_llm_call(self) -> None:
         self.llm_calls += 1
@@ -555,12 +568,17 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
         )
         for c in ranked
     ]
+    when = state.intent.when if state.intent else None
+    candidates, calendar_hit = _calendar_tiebreak(
+        candidates, name=name, when=when, deps=deps
+    )
     deps.tracer.event(
         "orchestrator",
         "resolve",
         {
             "summary": f"name={name!r} candidates={len(candidates)}",
             "candidates": [c.model_dump() for c in candidates],
+            "calendar_tiebreak": calendar_hit,
         },
     )
 
@@ -579,6 +597,16 @@ def _resolve(state: RunState, deps: Deps) -> RunState:
         and top.name.lower() == name.lower()
     )
     margin_clear = second is None or (top.score - second.score) >= RESOLVE_MARGIN
+    # Calendar uniquely names one person near a parseable `when` → resolve.
+    from recall.agents.offline import parse_when_datetime
+    from recall.agents.time_context import now as frozen_now
+
+    when_dt = parse_when_datetime(when, frozen_now(settings=deps.settings)) if when else None
+    if calendar_hit and when_dt is not None:
+        state.entity_id = top.entity_id
+        state.entity_name = top.name
+        state.candidates = candidates
+        return state
     ambiguous = top.score < RESOLVE_MIN_SCORE or not (multi_exact or margin_clear)
     if ambiguous:
         shown = _clarification_candidates(candidates, limit=3)
@@ -672,6 +700,97 @@ def _maybe_meal_hook(state: RunState, deps: Deps) -> RunState:
     state.context["meal_hook"] = True
     _ = get_preferences  # available for suggest path; briefs stay lazy
     return state
+
+
+def _calendar_tiebreak(
+    candidates: list[Candidate],
+    *,
+    name: str,
+    when: str | None,
+    deps: Deps,
+) -> tuple[list[Candidate], bool]:
+    """If exactly one candidate has a calendar event near ``when``/now, rank them first."""
+    if len(candidates) < 2:
+        return candidates, False
+    from recall.agents.offline import parse_when_datetime
+    from recall.agents.time_context import now as frozen_now
+    from recall.data.queries import all_events_in_window
+
+    clock = frozen_now(settings=deps.settings)
+    anchor = parse_when_datetime(when, clock) or clock
+    window_start = anchor - timedelta(days=7)
+    window_end = anchor + timedelta(days=7)
+    try:
+        events = all_events_in_window(
+            source_tag="orchestrator.calendar_tiebreak",
+            days_back=14,
+            days_forward=14,
+            settings=deps.settings,
+            layer=deps.query_layer,
+            now=clock,
+        )
+    except Exception:  # noqa: BLE001 — tie-break is best-effort
+        return candidates, False
+
+    hits: list[tuple[Candidate, str, str]] = []
+    for cand in candidates:
+        entity = deps.world_store.get_entity(cand.entity_id)
+        if entity is None:
+            continue
+        emails = {a.lower() for a in entity.aliases if "@" in a}
+        if not emails:
+            continue
+        for ev in events:
+            try:
+                start = datetime.fromisoformat(ev.start_utc.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if start.tzinfo is None:
+                start = start.replace(tzinfo=timezone.utc)
+            if not (window_start <= start <= window_end):
+                continue
+            if any(att.lower() in emails for att in (ev.attendees or [])):
+                hits.append((cand, ev.title or "event", ev.start_utc[:10]))
+                break
+
+    unique_ids = {c.entity_id for c, _, _ in hits}
+    needle = (name or "").strip().lower()
+    reordered = list(candidates)
+    calendar_hit = False
+    if len(unique_ids) == 1:
+        winner_id = next(iter(unique_ids))
+        title, day = next((t, d) for c, t, d in hits if c.entity_id == winner_id)
+        reason = f"calendar: {title} {day}"
+        boosted: list[Candidate] = []
+        for cand in candidates:
+            if cand.entity_id == winner_id:
+                boosted.append(
+                    Candidate(
+                        entity_id=cand.entity_id,
+                        name=cand.name,
+                        score=max(cand.score, 0.99),
+                        reason=reason,
+                    )
+                )
+        for cand in candidates:
+            if cand.entity_id != winner_id:
+                boosted.append(cand)
+        reordered = boosted
+        calendar_hit = True
+
+    # Exact multi-token canonical match always stays first (full-name asks).
+    if needle and len(needle.split()) >= 2:
+        exact = [c for c in reordered if c.name.lower() == needle]
+        if exact:
+            lead = exact[0]
+            reordered = [lead] + [c for c in reordered if c.entity_id != lead.entity_id]
+            # Calendar auto-resolve only when the exact person is the calendar hit.
+            if calendar_hit and lead.reason.startswith("calendar:"):
+                pass
+            elif calendar_hit and lead.entity_id not in unique_ids:
+                calendar_hit = False
+
+    return reordered, calendar_hit
 
 
 def _clarification_candidates(
@@ -909,7 +1028,9 @@ def _build_evidence_pack(
     """Convert world/hmem/web into Evidence with e*/m*/w* ids."""
     evidence: dict[str, Evidence] = {}
     source_map: dict[str, str] = {}
-    now = datetime.now(timezone.utc)
+    from recall.agents.time_context import now as frozen_now
+
+    now = frozen_now()
     e_idx = 1
     has_tentative = tentative_identity
 
