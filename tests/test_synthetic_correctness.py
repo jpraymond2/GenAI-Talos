@@ -207,6 +207,41 @@ def test_headline_uses_structured_fields_only(synthetic_env, tmp_path: Path) -> 
     _assert_point_quality(state.final_brief)
 
 
+def test_tom_becker_sparse_brief_has_intro_and_past_meeting(
+    synthetic_env, tmp_path: Path
+) -> None:
+    """Sparse contacts still get 1–2 grounded points + last-met headline."""
+    state = asyncio.run(run("I'm meeting Tom Becker", deps=_deps(tmp_path)))
+    assert state.status == "done"
+    assert state.final_brief is not None
+    brief = state.final_brief
+    assert 1 <= len(brief.points) <= 3
+    headline = brief.headline.lower()
+    assert "last met" in headline and "feb" in headline and "calendar" in headline
+    assert "last message" in headline and "dec" in headline and "gmail" in headline
+    blob = _brief_text(brief)
+    assert "bonaventure" in blob or "coffee" in blob
+    assert "connecting" in blob or "intro" in blob or "lumen" in blob
+    assert not any("no reply yet" in p.text.lower() for p in brief.points)
+    _assert_point_quality(brief)
+
+
+def test_omar_connecting_intro_not_open_loop(synthetic_env, tmp_path: Path) -> None:
+    """Intro email where Tom already replied is not an owner open loop."""
+    state = asyncio.run(
+        run("I'm meeting Omar Haddad on Wednesday", deps=_deps(tmp_path))
+    )
+    assert state.status == "done"
+    assert state.final_brief is not None
+    for point in state.final_brief.points:
+        lowered = point.text.lower()
+        if "connecting you" in lowered or "lumen grid" in lowered:
+            assert "no reply yet" not in lowered, point.text
+    # Rachel intro ask must still surface.
+    assert _covers("omar_h.intro_ask", _brief_text(state.final_brief))
+    _assert_point_quality(state.final_brief)
+
+
 def test_revision_adds_missing_evidence(synthetic_env, tmp_path: Path) -> None:
     """When the critic reports missing=[eX], round-2 brief must cite eX."""
     calls = {"writer": 0}

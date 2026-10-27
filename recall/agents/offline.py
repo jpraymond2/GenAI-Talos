@@ -167,7 +167,7 @@ def write_brief(state: RunState, deps: Any = None) -> Brief:
         return brief
 
     org, title, org_note = structured_org_title(entity, store, settings=settings)
-    last_contact = _last_contact_line(evidence, ctx=ctx, settings=settings)
+    contact_bits = _contact_headline_bits(evidence, ctx=ctx, settings=settings)
     next_meeting = _next_meeting_line(evidence, ctx=ctx, settings=settings)
     role_bit = ""
     if title and org:
@@ -177,8 +177,7 @@ def write_brief(state: RunState, deps: Any = None) -> Brief:
     elif title:
         role_bit = f", {title}"
     parts = [f"{person}{role_bit}"]
-    if last_contact:
-        parts.append(last_contact)
+    parts.extend(contact_bits)
     if next_meeting:
         parts.append(next_meeting)
     headline = "; ".join(parts)
@@ -752,32 +751,91 @@ def _looks_like_structured_value(
     return False
 
 
+def _parse_ctx_ts(raw: Any) -> datetime | None:
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def _short_month_day(ts: datetime) -> str:
+    local = ts.astimezone(AGENT_TIMEZONE)
+    return f"{local.strftime('%b')} {local.day}"
+
+
+def _contact_headline_bits(
+    evidence: dict[str, Evidence],
+    *,
+    ctx: dict[str, Any],
+    settings: Settings | None,
+) -> list[str]:
+    """Prefer 'last met …; last message …' when a past meeting exists."""
+    clock = frozen_now(settings=settings)
+    bits: list[str] = []
+
+    last_met = ctx.get("last_met") if isinstance(ctx, dict) else None
+    met_ts: datetime | None = None
+    if isinstance(last_met, dict):
+        met_ts = _parse_ctx_ts(last_met.get("start_utc"))
+    if met_ts is None:
+        past = [
+            e
+            for e in evidence.values()
+            if e.source == "calendar"
+            and "past_meeting" in (e.tags or [])
+            and _as_utc(e.ts) <= _as_utc(clock)
+            and "cancel" not in (e.text or "").lower()
+        ]
+        if past:
+            met_ts = max(past, key=lambda e: e.ts).ts
+    if met_ts is not None:
+        bits.append(f"last met {_short_month_day(met_ts)} (calendar)")
+
+    lc = ctx.get("last_contact") if isinstance(ctx, dict) else None
+    msg_ts: datetime | None = None
+    msg_src = ""
+    if isinstance(lc, dict) and lc.get("source") and lc.get("ts_utc"):
+        msg_ts = _parse_ctx_ts(lc.get("ts_utc"))
+        msg_src = str(lc.get("source") or "")
+    if msg_ts is None:
+        items = [
+            e
+            for e in evidence.values()
+            if e.source in _MESSAGE_SOURCES and _as_utc(e.ts) <= _as_utc(clock)
+        ]
+        if items:
+            newest = max(items, key=lambda e: e.ts)
+            msg_ts, msg_src = newest.ts, newest.source
+
+    # When the last meeting is more recent than the last message (sparse /
+    # post-meeting), prefer "last met …; last message …". Otherwise keep the
+    # relative "last contact …" form for active threads.
+    if (
+        met_ts is not None
+        and msg_ts is not None
+        and _as_utc(met_ts) >= _as_utc(msg_ts)
+    ):
+        bits.append(f"last message {_short_month_day(msg_ts)} ({msg_src})")
+    elif msg_ts is not None:
+        # Drop last-met bit when message is newer — active contact.
+        bits = [_relative_contact(msg_ts, msg_src, clock)]
+    elif met_ts is not None:
+        pass  # already have last met
+    else:
+        bits.append("no recent message on file")
+    return bits
+
+
 def _last_contact_line(
     evidence: dict[str, Evidence],
     *,
     ctx: dict[str, Any],
     settings: Settings | None,
 ) -> str:
-    clock = frozen_now(settings=settings)
-    # Prefer world-context summary when present.
-    lc = ctx.get("last_contact") if isinstance(ctx, dict) else None
-    if isinstance(lc, dict) and lc.get("source") and lc.get("ts_utc"):
-        try:
-            ts = datetime.fromisoformat(str(lc["ts_utc"]).replace("Z", "+00:00"))
-        except ValueError:
-            ts = None
-        if ts is not None:
-            return _relative_contact(ts, str(lc["source"]), clock)
-
-    items = [
-        e
-        for e in evidence.values()
-        if e.source in _MESSAGE_SOURCES and _as_utc(e.ts) <= _as_utc(clock)
-    ]
-    if not items:
-        return "no recent message on file"
-    newest = max(items, key=lambda e: e.ts)
-    return _relative_contact(newest.ts, newest.source, clock)
+    bits = _contact_headline_bits(evidence, ctx=ctx, settings=settings)
+    return bits[0] if bits else ""
 
 
 def _next_meeting_line(
@@ -904,11 +962,32 @@ def _select_points(
             kind = "open_loop"
         elif item.source == "calendar":
             title = _calendar_title(item)
+            loc_m = re.search(r"\(([^)]+)\)\s*$", item.text or "")
+            loc = loc_m.group(1).strip() if loc_m else ""
             if "upcoming" in tags or _as_utc(item.ts) >= _as_utc(clock):
                 text = f"Upcoming: {title} on {when} ({item.source})"
+                kind = "logistics"
+            elif "past_meeting" in tags or _as_utc(item.ts) < _as_utc(clock):
+                if "cancel" in (item.text or "").lower():
+                    return None
+                has_upcoming = any(
+                    e.source == "calendar"
+                    and (
+                        "upcoming" in (e.tags or [])
+                        or _as_utc(e.ts) >= _as_utc(clock)
+                    )
+                    for e in evidence.values()
+                )
+                msg_n = sum(1 for e in evidence.values() if e.source in _MESSAGE_SOURCES)
+                # Past meetings matter for sparse packs; skip when upcoming exists
+                # and there is already plenty of message evidence.
+                if has_upcoming and msg_n >= 3:
+                    return None
+                where = f" at {loc}" if loc else ""
+                text = f"You met for {title}{where} on {day} ({item.source})"
+                kind = "logistics"
             else:
                 return None
-            kind = "logistics"
         elif "conflict" in tags:
             text = (
                 f"World Model conflict: "
@@ -925,11 +1004,20 @@ def _select_points(
         else:
             if not _is_substantive(item.text):
                 return None
-            if "?" in (item.text or ""):
-                return None  # questions aren't catch-up / life updates
             quote = _clean_quote(item.text, person=person, settings=active)
-            text = f"Latest thread on {day}: {quote} ({item.source})"
-            kind = "catch_up"
+            subj = ""
+            # Intro emails from a thread peer: surface as an intro, not an open ask.
+            if re.search(r"(?i)\bintro\b|connecting you", item.text or ""):
+                text = (
+                    f"Intro email on {day} ({item.source}): \"{quote}\""
+                )
+                kind = "catch_up"
+            elif "?" in (item.text or "") and len((item.text or "").split()) < 20:
+                return None  # short questions aren't catch-up / life updates
+            else:
+                text = f"Latest thread on {day}: {quote} ({item.source})"
+                kind = "catch_up"
+            _ = subj
         text = _ensure_min_words(text, pad=f"with {person}")
         if _ISO_Z_RE.search(text):
             text = _ISO_Z_RE.sub(when, text)
@@ -963,7 +1051,9 @@ def _select_points(
                 continue
             buckets[1].append(item)
         elif item.source == "calendar" and (
-            "upcoming" in tags or _as_utc(item.ts) >= _as_utc(clock)
+            "upcoming" in tags
+            or "past_meeting" in tags
+            or _as_utc(item.ts) >= _as_utc(clock)
         ):
             buckets[2].append(item)
         elif "job_change" in tags or "conflict" in tags or _looks_like_life_update(item.text):
@@ -1277,17 +1367,25 @@ def _answered_ask_ids(
 ) -> set[str]:
     """Ask is answered if a later meeting with that person happened."""
     done: set[str] = set()
+    meet_re = re.compile(
+        r"(?i)\b(coffee|meet|meeting|chat|call|lunch|dinner|catch up|intro)\b"
+    )
     asks = [
         e
         for e in evidence.values()
-        if "open_loop" in (e.tags or []) and "promise" not in (e.tags or [])
+        if e.source in _MESSAGE_SOURCES
+        and (
+            ("open_loop" in (e.tags or []) and "promise" not in (e.tags or []))
+            or meet_re.search(e.text or "")
+        )
     ]
-    meetings = [e for e in evidence.values() if e.source == "calendar"]
+    meetings = [
+        e
+        for e in evidence.values()
+        if e.source == "calendar" and "cancel" not in (e.text or "").lower()
+    ]
     for ask in asks:
-        if not re.search(
-            r"(?i)\b(coffee|meet|meeting|chat|call|lunch|dinner|catch up|intro)\b",
-            ask.text or "",
-        ):
+        if not meet_re.search(ask.text or ""):
             continue
         if any(
             _as_utc(m.ts) > _as_utc(ask.ts) and _as_utc(m.ts) <= _as_utc(clock)

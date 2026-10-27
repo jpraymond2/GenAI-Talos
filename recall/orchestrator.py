@@ -1181,6 +1181,8 @@ def _build_evidence_pack(
             cal_tags = list(tags)
             if kind == "upcoming_event":
                 cal_tags.append("upcoming")
+            else:
+                cal_tags.append("past_meeting")
             _add_e(
                 source="calendar",
                 source_ref=str(item.get("source_ref") or item.get("event_id") or ""),

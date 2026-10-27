@@ -13,6 +13,7 @@ from recall.data.queries import (
     InteractionRow,
     all_events_in_window,
     interactions_for_entity_handles,
+    interactions_for_threads,
     resolve_now,
 )
 from recall.data.query_layer import QueryLayer, get_query_layer
@@ -21,7 +22,16 @@ from recall.engines.world.store import WorldStore, world_db_path
 from recall.tracing import Tracer
 
 _OPEN_LOOP_RE = re.compile(
-    r"(?i)\b(can you|could you|would you|please\b|intro\b)|[?？]"
+    r"(?i)\b(can you|could you|would you|please\b)|[?？]"
+)
+# Connecting intros / cc-only intros are not asks the owner owes.
+_INTRO_THREAD_RE = re.compile(
+    r"(?i)("
+    r"\bconnecting you(?:\s+two)?\b|"
+    r"\bintro(?:ducing)?\s+you\b|"
+    r"\b(?:moved|moving)(?:\s+you)?\s+to bcc\b|"
+    r"(?:^|[\s\[])intro:"
+    r")"
 )
 _PROMISE_RE = re.compile(
     r"(?i)\b("
@@ -144,10 +154,41 @@ class ContextBuilderService:
             settings=self._settings,
             layer=layer,
         )
+        # Pull peer messages on the same threads (intros, replies from others).
+        thread_ids = [r.thread_id for r in related if r.thread_id]
+        if thread_ids:
+            peers = interactions_for_threads(
+                thread_ids,
+                source_tag="world.context.thread_peers",
+                since_days=400,
+                limit=400,
+                settings=self._settings,
+                layer=layer,
+            )
+            seen_ids = {r.interaction_id for r in related}
+            for peer in peers:
+                if peer.interaction_id not in seen_ids:
+                    related.append(peer)
+                    seen_ids.add(peer.interaction_id)
         related.sort(key=lambda r: r.ts_utc, reverse=True)
+
+        own_handles = {
+            h.lower()
+            for h in [*entity.aliases, *linked_values]
+            if h and ("@" in h or h.startswith("+") or h.isdigit())
+        }
+        # Prefer email/phone handles; fall back to any linked value.
+        if not own_handles:
+            own_handles = {str(h).lower() for h in linked_values if h}
+        own_handles |= {str(h).lower() for h in linked_values if h}
+
+        def _is_own(row: InteractionRow) -> bool:
+            return (row.handle_value or "").lower() in own_handles
 
         last_per_source: dict[str, dict[str, Any]] = {}
         for row in related:
+            if not _is_own(row):
+                continue
             if row.source not in last_per_source:
                 last_per_source[row.source] = {
                     "ts_utc": row.ts_utc,
@@ -156,6 +197,10 @@ class ContextBuilderService:
                     "subject": row.subject,
                 }
 
+        # Prefer the person's own messages, then thread peers (intros etc.).
+        own_rows = [r for r in related if _is_own(r)]
+        peer_rows = [r for r in related if not _is_own(r)]
+        recent_rows = (own_rows + peer_rows)[:20]
         recent = [
             {
                 "interaction_id": row.interaction_id,
@@ -166,11 +211,12 @@ class ContextBuilderService:
                 "subject": row.subject,
                 "text": row.text[:240],
                 "source_ref": row.source_ref,
+                "peer": not _is_own(row),
             }
-            for row in related[:15]
+            for row in recent_rows
         ]
 
-        open_loops = self._find_open_loops(related)
+        open_loops = self._find_open_loops(related, own_handles=own_handles)
 
         emails = [a for a in entity.aliases if "@" in a and "whatsapp.net" not in a]
         events = all_events_in_window(
@@ -201,10 +247,12 @@ class ContextBuilderService:
         ]
         past.sort(key=lambda e: e["start_utc"], reverse=True)
 
-        # Last contact = newest message (not calendar) at or before frozen now.
+        # Last message = newest own message (not calendar) at or before frozen now.
         message_sources = {"gmail", "imessage", "whatsapp", "messenger"}
         last_contact: dict[str, Any] | None = None
         for row in related:
+            if not _is_own(row):
+                continue
             if row.source not in message_sources:
                 continue
             if row.ts_utc > now_s:
@@ -217,6 +265,19 @@ class ContextBuilderService:
                 "subject": row.subject,
             }
             break  # related is newest-first
+
+        last_met: dict[str, Any] | None = None
+        for ev in past:
+            title = str(ev.get("title") or "")
+            if "cancel" in title.lower():
+                continue
+            last_met = {
+                "title": title,
+                "start_utc": ev.get("start_utc"),
+                "location": ev.get("location") or "",
+                "source_ref": ev.get("source_ref") or "",
+            }
+            break
 
         next_meeting: dict[str, Any] | None = None
         for ev in upcoming:
@@ -275,6 +336,7 @@ class ContextBuilderService:
         payload = ctx.model_dump()
         payload["linked_handles"] = linked_handles
         payload["last_contact"] = last_contact
+        payload["last_met"] = last_met
         payload["next_meeting"] = next_meeting
         if self._tracer is not None:
             self._tracer.event(
@@ -291,9 +353,19 @@ class ContextBuilderService:
             )
         return payload
 
-    def _find_open_loops(self, related: list[InteractionRow]) -> list[dict[str, Any]]:
-        """Unanswered inbound asks + owner promises (ts <= frozen now)."""
+    def _find_open_loops(
+        self,
+        related: list[InteractionRow],
+        *,
+        own_handles: set[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Unanswered inbound asks + owner promises (ts <= frozen now).
+
+        Intro / "connecting you two" threads are not owner open loops once
+        another party replies, or when the owner is only being cc'd into an intro.
+        """
         now_s = resolve_now(self._settings).strftime("%Y-%m-%dT%H:%M:%SZ")
+        own = {h.lower() for h in (own_handles or set())}
         by_thread: dict[str, list[InteractionRow]] = {}
         for row in related:
             if row.ts_utc > now_s:
@@ -304,6 +376,9 @@ class ContextBuilderService:
         for thread_id, rows in by_thread.items():
             ordered = sorted(rows, key=lambda r: r.ts_utc)
             for idx, row in enumerate(ordered):
+                # Only score asks that arrived on this person's own handle.
+                if own and (row.handle_value or "").lower() not in own:
+                    continue
                 blob = f"{row.subject} {row.text}"
                 if row.direction == "in":
                     if not _OPEN_LOOP_RE.search(blob):
@@ -313,6 +388,24 @@ class ContextBuilderService:
                         for later in ordered[idx + 1 :]
                     )
                     if later_out:
+                        continue
+                    later_peer = any(
+                        later.ts_utc > row.ts_utc
+                        and (later.handle_value or "").lower()
+                        != (row.handle_value or "").lower()
+                        for later in ordered[idx + 1 :]
+                    )
+                    introish = bool(
+                        _INTRO_THREAD_RE.search(blob)
+                        or _INTRO_THREAD_RE.search(row.subject or "")
+                    )
+                    # Connecting intro: peer already replied, or no direct ask to owner.
+                    if introish and later_peer:
+                        continue
+                    if introish and not re.search(
+                        r"(?i)\b(can you|could you|would you|please)\b",
+                        row.text or "",
+                    ):
                         continue
                     loops.append(
                         {

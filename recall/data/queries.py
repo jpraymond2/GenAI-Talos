@@ -61,6 +61,16 @@ ORDER BY ts_utc DESC
 LIMIT :limit_n
 """
 
+_INTERACTIONS_BY_THREAD_SQL = """
+SELECT interaction_id, source, thread_id, handle_value, direction,
+       ts_utc, subject, text, source_ref
+FROM recall.interactions
+WHERE thread_id IN (:thread_ids)
+  AND ts_utc >= :since_ts
+ORDER BY ts_utc DESC
+LIMIT :limit_n
+"""
+
 _EVENTS_WINDOW_SQL = """
 SELECT event_id, title, start_utc, end_utc, location, attendees, source_ref
 FROM recall.events
@@ -207,6 +217,36 @@ def interactions_for_handles(
         _INTERACTIONS_SQL,
         {
             "handle_values": cleaned,
+            "since_ts": since_ts,
+            "limit_n": int(limit),
+        },
+        source_tag=source_tag,
+    )
+    return [InteractionRow.model_validate(_stringify_row(row)) for row in rows]
+
+
+def interactions_for_threads(
+    thread_ids: list[str],
+    *,
+    source_tag: str,
+    since_days: int = 400,
+    limit: int = 200,
+    now: datetime | None = None,
+    settings: Settings | None = None,
+    layer: QueryLayer | None = None,
+) -> list[InteractionRow]:
+    """All messages on the given threads (newest first), for open-loop / intro context."""
+    cleaned = _unique_handle_values(thread_ids)
+    if not cleaned:
+        return []
+    active = settings if settings is not None else get_settings()
+    ql = _resolve_layer(layer)
+    anchor = resolve_now(active, now)
+    since_ts = (anchor - timedelta(days=since_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    rows = ql.query(
+        _INTERACTIONS_BY_THREAD_SQL,
+        {
+            "thread_ids": cleaned,
             "since_ts": since_ts,
             "limit_n": int(limit),
         },
