@@ -45,25 +45,27 @@ def test_table_map_plural_to_singular() -> None:
 
 def test_unified_select_list_aliases_renames() -> None:
     handles = unified_select_list("handles")
-    assert "handle_value AS value" in handles
-    assert "source_system AS source" in handles
-    assert "handle_id" in handles
+    assert "COALESCE(handle_value, '') AS value" in handles
+    assert "COALESCE(source_system, '') AS source" in handles
+    assert "COALESCE(handle_id, '') AS handle_id" in handles
 
     contacts = unified_select_list("contacts")
-    assert "organisation AS org" in contacts
-    assert "source_system AS source" in contacts
-    assert "nickname" in contacts
+    assert "COALESCE(organisation, '') AS org" in contacts
+    assert "COALESCE(source_system, '') AS source" in contacts
+    assert "COALESCE(nickname, '') AS nickname" in contacts
+    assert "COALESCE(emails, '[]') AS emails" in contacts
     assert UNIFIED_COLUMNS["contacts"].index("nickname") == UNIFIED_COLUMNS[
         "contacts"
     ].index("city") + 1
 
     interactions = unified_select_list("interactions")
-    assert "source_system AS source" in interactions
-    assert "body AS text" in interactions
-    assert "handle_value" in interactions  # already unified name
+    assert "COALESCE(source_system, '') AS source" in interactions
+    assert "COALESCE(body, '') AS text" in interactions
+    assert "COALESCE(handle_value, '') AS handle_value" in interactions
 
     events = unified_select_list("events")
-    assert "place AS location" in events
+    assert "COALESCE(place, '') AS location" in events
+    assert "COALESCE(attendees, '[]') AS attendees" in events
 
 
 def test_physical_column_identity_and_rename() -> None:
@@ -105,7 +107,7 @@ def test_usl_subquery_shape() -> None:
     sub = usl_subquery("handles")
     assert sub.startswith("(SELECT ")
     assert f"FROM {DEFAULT_USL_NAMESPACE}.handle) AS handles" in sub
-    assert "handle_value AS value" in sub
+    assert "COALESCE(handle_value, '') AS value" in sub
 
 
 def test_prepare_usl_mode_rewrites_and_binds() -> None:
@@ -123,8 +125,8 @@ def test_prepare_usl_mode_rewrites_and_binds() -> None:
     assert meta is not None
     assert meta.usl_tables == (f"{DEFAULT_USL_NAMESPACE}.handle",)
     assert "lightning.metastore.recallai.recall.handle" in rendered
-    assert "handle_value AS value" in rendered
-    assert "source_system AS source" in rendered
+    assert "COALESCE(handle_value, '') AS value" in rendered
+    assert "COALESCE(source_system, '') AS source" in rendered
     assert "'%karim%'" in rendered
     assert ":pattern" not in rendered
 

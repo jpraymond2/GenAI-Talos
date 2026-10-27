@@ -115,17 +115,23 @@ def physical_column(usl_table: str, unified_column: str) -> str:
     return renames.get(unified_column, unified_column)
 
 
+# JSON-list columns default to ``[]``; other unified text columns to ``''``.
+_JSON_LIST_COLUMNS = frozenset({"emails", "phones", "attendees"})
+
+
 def unified_select_list(recall_table: str) -> str:
-    """``phys AS unified, …`` projection that restores the recall.* schema."""
+    """``COALESCE(phys, …) AS unified, …`` projection restoring the recall.* schema.
+
+    Null physical values become empty strings (or ``[]`` for JSON-list columns) so
+    USL rows parity-match DuckDB CSV reads after smoke normalization.
+    """
     key = recall_table.lower()
     usl_table = RECALL_TO_USL_TABLE[key]
     parts: list[str] = []
     for col in UNIFIED_COLUMNS[key]:
         phys = physical_column(usl_table, col)
-        if phys == col:
-            parts.append(col)
-        else:
-            parts.append(f"{phys} AS {col}")
+        empty = "'[]'" if col in _JSON_LIST_COLUMNS else "''"
+        parts.append(f"COALESCE({phys}, {empty}) AS {col}")
     return ", ".join(parts)
 
 

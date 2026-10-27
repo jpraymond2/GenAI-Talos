@@ -194,8 +194,12 @@ CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300
     baseline_tables = {
         "contact": (
             f"{_USL_PATH}.contact",
-            "SELECT COALESCE(contact_id,'') AS contact_id, full_name, org, title, city, "
-            "nickname, emails, phones, source FROM recall.contacts",
+            "SELECT COALESCE(contact_id,'') AS contact_id, "
+            "COALESCE(full_name,'') AS full_name, COALESCE(org,'') AS org, "
+            "COALESCE(title,'') AS title, COALESCE(city,'') AS city, "
+            "COALESCE(nickname,'') AS nickname, "
+            "COALESCE(emails,'[]') AS emails, COALESCE(phones,'[]') AS phones, "
+            "COALESCE(source,'') AS source FROM recall.contacts",
         ),
         "handle": (
             f"{_USL_PATH}.handle",
@@ -210,8 +214,11 @@ CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300
         ),
         "event": (
             f"{_USL_PATH}.event",
-            "SELECT COALESCE(event_id,'') AS event_id, title, start_utc, end_utc, "
-            "location, attendees, source_ref FROM calendar_pg.calendar_events",
+            "SELECT COALESCE(event_id,'') AS event_id, "
+            "COALESCE(title,'') AS title, start_utc, end_utc, "
+            "COALESCE(location,'') AS location, "
+            "COALESCE(attendees,'[]') AS attendees, "
+            "COALESCE(source_ref,'') AS source_ref FROM calendar_pg.calendar_events",
         ),
     }
     baseline_dq = [
@@ -237,9 +244,12 @@ CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300
     renamed_tables = {
         "contact": (
             f"{_USL_PATH}.contact",
-            "SELECT COALESCE(contact_id,'') AS contact_id, full_name, "
-            "org AS organisation, title, city, nickname, emails, phones, "
-            "source AS source_system FROM recall.contacts",
+            "SELECT COALESCE(contact_id,'') AS contact_id, "
+            "COALESCE(full_name,'') AS full_name, "
+            "COALESCE(org,'') AS organisation, COALESCE(title,'') AS title, "
+            "COALESCE(city,'') AS city, COALESCE(nickname,'') AS nickname, "
+            "COALESCE(emails,'[]') AS emails, COALESCE(phones,'[]') AS phones, "
+            "COALESCE(source,'') AS source_system FROM recall.contacts",
         ),
         "handle": (
             f"{_USL_PATH}.handle",
@@ -255,8 +265,11 @@ CREATE TABLE event (event_id varchar(64) NOT NULL PRIMARY KEY, title varchar(300
         ),
         "event": (
             f"{_USL_PATH}.event",
-            "SELECT COALESCE(event_id,'') AS event_id, title, start_utc, end_utc, "
-            "location AS place, attendees, source_ref FROM calendar_pg.calendar_events",
+            "SELECT COALESCE(event_id,'') AS event_id, "
+            "COALESCE(title,'') AS title, start_utc, end_utc, "
+            "COALESCE(location,'') AS place, "
+            "COALESCE(attendees,'[]') AS attendees, "
+            "COALESCE(source_ref,'') AS source_ref FROM calendar_pg.calendar_events",
         ),
     }
 
