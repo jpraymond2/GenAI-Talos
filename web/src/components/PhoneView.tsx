@@ -153,7 +153,7 @@ export function PhoneView({
     if (!name || pulledNameRef.current === name) return;
     pulledNameRef.current = name;
     setStatusLine(`Pulling up ${name}…`);
-    speakText(`Pulling up ${name}`);
+    speakText(`Pulling up ${name}`, { quick: true });
   }, [thinking, run, events]);
 
   async function startHold() {
@@ -201,7 +201,7 @@ export function PhoneView({
 
     // Perceived latency: acknowledge inside the gesture chain (iOS).
     unlockSpeech();
-    speakText("One sec");
+    speakText("One sec", { quick: true });
 
     const blob = await new Promise<Blob>((resolve) => {
       recorder.onstop = () => {
@@ -251,8 +251,9 @@ export function PhoneView({
         (result.speech ? result.speech.split(/[.!?]/)[0] : "") ||
         result.question ||
         "";
-      if (headline) speakText(headline);
-      else if (result.speech) speakText(result.speech);
+      // The full spoken answer (≤90 words) in Recall's Magpie voice.
+      if (result.speech) speakText(result.speech);
+      else if (headline) speakText(headline);
 
       if (result.run_id) {
         onVoiceState(result as RunState);
