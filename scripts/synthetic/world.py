@@ -28,7 +28,7 @@ class Person:
     # (address, valid_from, valid_to) — dates inclusive, "" = open
     emails: list[tuple[str, str, str]] = field(default_factory=list)
     phones: list[tuple[str, str, str]] = field(default_factory=list)
-    phone_label: str | None = None  # label saved in the owner's phone (address-book name); None = unsaved number
+    phone_label: str | None = None  # name saved in the owner's phone (what WhatsApp/iMessage show); None = unsaved number
     msgr_name: str | None = None  # Facebook display name; None = not on Messenger
     imessage: bool = False
     # Contact card in the owner's address book (may be stale on purpose); None = no card
@@ -59,7 +59,7 @@ CORE: list[Person] = [
         phones=[("+14385550117", "", "")],
         phone_label="Mei Tanaka", imessage=True,
         card={"org": "Tidepool", "title": "CTO", "city": "Montreal"},
-        channels={"imessage": 7, "gmail": 2}, filler_sessions=70,
+        channels={"whatsapp": 5, "imessage": 2, "gmail": 2}, filler_sessions=70,
     ),
     Person(
         "omar_h", "Omar Haddad", "founder", "Payloop", "Founder & CEO",
@@ -67,7 +67,7 @@ CORE: list[Person] = [
         phones=[("+15145550142", "", "")],
         phone_label="Omar Haddad", msgr_name="Omar Haddad",
         card={"org": "Payloop", "title": "CEO", "city": "Montreal"},
-        channels={"gmail": 2, "messenger": 1, "imessage": 3}, filler_sessions=14,
+        channels={"whatsapp": 3, "gmail": 2, "messenger": 1}, filler_sessions=14,
     ),
     Person(
         "omar_b", "Omar Benali", "classmate", "McGill Desautels", "MBA candidate",
@@ -75,7 +75,7 @@ CORE: list[Person] = [
         phones=[("+14385550163", "", "")],
         phone_label="Omar B (MBA)",
         card={"fn": "Omar B (MBA)", "org": "McGill MBA", "city": "Montreal"},
-        channels={"gmail": 1, "imessage": 4}, filler_sessions=16,
+        channels={"whatsapp": 4, "gmail": 1}, filler_sessions=16,
     ),
     Person(
         "omar_k", "Omar Kassem", "landlord", "", "Landlord",
@@ -83,7 +83,7 @@ CORE: list[Person] = [
         phones=[("+15145550188", "", "")],
         phone_label="Omar Kassem (proprio)",
         card={"fn": "Omar Kassem (proprio)", "title": "Landlord — 4520 rue Saint-Denis", "city": "Montreal"},
-        channels={"gmail": 1, "imessage": 3}, filler_sessions=6,
+        channels={"whatsapp": 3, "gmail": 1}, filler_sessions=6,
     ),
     Person(
         "sasha", "Alexandra Petrova", "friend", "Fieldnote", "Senior UX Designer", city="Toronto",
@@ -91,7 +91,7 @@ CORE: list[Person] = [
         phones=[("+14165550129", "", "")],
         phone_label="Sasha", msgr_name="Sasha Petrova",
         card={"org": "Fieldnote", "title": "UX Designer", "city": "Toronto", "nickname": "Sasha", "bday": "1998-04-17"},
-        channels={"messenger": 3, "imessage": 3}, filler_sessions=22,
+        channels={"whatsapp": 3, "messenger": 3}, filler_sessions=22,
     ),
     Person(
         "priya", "Priya Nair", "colleague", "Stellarfin", "Senior Product Manager", city="Toronto",
@@ -100,7 +100,7 @@ CORE: list[Person] = [
         phone_label="Priya Nair",
         # Stale on purpose: the card still shows her old job.
         card={"org": "Brightloop", "title": "Product Manager", "city": "Toronto"},
-        channels={"gmail": 2, "imessage": 2}, filler_sessions=10,
+        channels={"whatsapp": 2, "gmail": 2}, filler_sessions=10,
     ),
     Person(
         "lucas", "Lucas Moreau", "friend", "Atelier Nord", "Data Scientist", city="Paris",
@@ -109,7 +109,7 @@ CORE: list[Person] = [
         phone_label="Lucas Moreau", msgr_name="Lucas Moreau",
         # Stale on purpose: card says Montreal; he moved to Paris in Aug 2026.
         card={"city": "Montreal"},
-        channels={"messenger": 2, "imessage": 3}, filler_sessions=14, lang="fr",
+        channels={"whatsapp": 3, "messenger": 2}, filler_sessions=14, lang="fr",
     ),
     Person(
         "elodie", "Élodie Gagnon", "advisor", "Hydrolab", "Directrice innovation", city="Quebec City",
@@ -117,7 +117,7 @@ CORE: list[Person] = [
         phones=[("+14185550144", "", "")],
         phone_label="Élodie Gagnon",
         card={"org": "Hydrolab", "title": "Directrice innovation", "city": "Québec"},
-        channels={"gmail": 3, "imessage": 2}, filler_sessions=8, lang="fr",
+        channels={"gmail": 3, "whatsapp": 2}, filler_sessions=8, lang="fr",
     ),
     Person(
         "daniel_vc", "Daniel Kim", "investor", "Maple Ridge Ventures", "Principal",
@@ -131,7 +131,7 @@ CORE: list[Person] = [
         phones=[("+16475550161", "", "")],
         phone_label="Dan Kim (UofT)", msgr_name="Daniel Kim",
         card={"fn": "Dan Kim (UofT)", "org": "Shopwise", "city": "Toronto"},
-        channels={"messenger": 2, "imessage": 3}, filler_sessions=14,
+        channels={"whatsapp": 3, "messenger": 2}, filler_sessions=14,
     ),
     Person(
         "rachel", "Rachel Goldberg", "investor", "Northwind Capital", "Partner", city="Toronto",
@@ -172,7 +172,7 @@ CORE: list[Person] = [
         phone_label="Yusuf Demir",  # saved under the OLD number only
         imessage=True,
         card={"phones_only_old": True},
-        channels={"imessage": 4}, filler_sessions=18,
+        channels={"whatsapp": 3, "imessage": 1}, filler_sessions=18,
     ),
     Person(
         "mom", "Nadia Lefebvre", "family", "", "", city="Sherbrooke",
@@ -180,7 +180,7 @@ CORE: list[Person] = [
         phones=[("+18195550102", "", "")],
         phone_label="Maman", imessage=True,
         card={"nickname": "Maman", "city": "Sherbrooke"},
-        channels={"imessage": 4}, filler_sessions=26, lang="fr",
+        channels={"imessage": 3, "whatsapp": 1}, filler_sessions=26, lang="fr",
     ),
     Person(
         "dad", "Pierre Lefebvre", "family", "", "", city="Sherbrooke",
@@ -188,14 +188,14 @@ CORE: list[Person] = [
         phones=[("+18195550103", "", "")],
         phone_label="Papa",
         card={"nickname": "Papa", "city": "Sherbrooke"},
-        channels={"gmail": 1, "imessage": 1}, filler_sessions=6, lang="fr",
+        channels={"whatsapp": 1, "gmail": 1}, filler_sessions=6, lang="fr",
     ),
     Person(
         "chloe", "Chloé Lefebvre", "family", "Université de Sherbrooke", "Medical student", city="Sherbrooke",
         phones=[("+18195550104", "", "")],
         phone_label="Chloé", imessage=True,
         card={"fn": "Chloé", "city": "Sherbrooke"},
-        channels={"imessage": 3}, filler_sessions=12, lang="fr",
+        channels={"imessage": 2, "whatsapp": 1}, filler_sessions=12, lang="fr",
     ),
     Person(
         "tom", "Tom Becker", "acquaintance", "Lumen Grid", "Co-founder", city="Berlin",
@@ -207,41 +207,41 @@ CORE: list[Person] = [
 # --------------------------------------------------------------------------- filler cast
 # (pid, name, rel, org, city, channels, sessions, lang)
 _FILLER_SPECS = [
-    ("f_amira", "Amira Khalil", "classmate", "McGill MBA", "Montreal", {"imessage": 3, "gmail": 1}, 8, "en"),
-    ("f_ben", "Ben Okafor", "classmate", "McGill MBA", "Montreal", {"imessage": 2, "gmail": 1}, 6, "en"),
+    ("f_amira", "Amira Khalil", "classmate", "McGill MBA", "Montreal", {"whatsapp": 3, "gmail": 1}, 8, "en"),
+    ("f_ben", "Ben Okafor", "classmate", "McGill MBA", "Montreal", {"whatsapp": 2, "gmail": 1}, 6, "en"),
     ("f_clara", "Clara Fontaine", "classmate", "McGill MBA", "Montreal", {"imessage": 2, "messenger": 1}, 6, "fr"),
-    ("f_diego", "Diego Ramírez", "classmate", "McGill MBA", "Montreal", {"imessage": 2}, 5, "en"),
+    ("f_diego", "Diego Ramírez", "classmate", "McGill MBA", "Montreal", {"whatsapp": 2}, 5, "en"),
     ("f_emma", "Emma Lindqvist", "classmate", "McGill MBA", "Montreal", {"gmail": 2, "imessage": 1}, 5, "en"),
-    ("f_felix", "Félix Bouchard", "founder", "Gridwise", "Montreal", {"imessage": 2, "gmail": 1}, 5, "fr"),
-    ("f_grace", "Grace Liu", "founder", "Orbitly", "Montreal", {"imessage": 2, "gmail": 1}, 5, "en"),
-    ("f_hugo", "Hugo Lambert", "founder", "Sève Analytics", "Montreal", {"imessage": 2}, 4, "fr"),
+    ("f_felix", "Félix Bouchard", "founder", "Gridwise", "Montreal", {"whatsapp": 2, "gmail": 1}, 5, "fr"),
+    ("f_grace", "Grace Liu", "founder", "Orbitly", "Montreal", {"whatsapp": 2, "gmail": 1}, 5, "en"),
+    ("f_hugo", "Hugo Lambert", "founder", "Sève Analytics", "Montreal", {"whatsapp": 2}, 4, "fr"),
     ("f_ines", "Inès Haddad", "friend", "", "Montreal", {"imessage": 3}, 8, "fr"),
-    ("f_jake", "Jake Thompson", "gym", "", "Montreal", {"imessage": 2}, 6, "en"),
+    ("f_jake", "Jake Thompson", "gym", "", "Montreal", {"whatsapp": 2}, 6, "en"),
     ("f_kayla", "Kayla Morgan", "friend", "", "Montreal", {"messenger": 2}, 6, "en"),
-    ("f_leo", "Léo Tremblay", "friend", "", "Montreal", {"imessage": 2, "messenger": 1}, 7, "fr"),
+    ("f_leo", "Léo Tremblay", "friend", "", "Montreal", {"whatsapp": 2, "messenger": 1}, 7, "fr"),
     ("f_maya", "Maya Singh", "colleague", "Northbeam Analytics", "Toronto", {"gmail": 1, "messenger": 1}, 4, "en"),
-    ("f_noah", "Noah Cohen", "friend", "", "New York", {"imessage": 2}, 5, "en"),
-    ("f_olivia", "Olivia Brown", "classmate", "McGill MBA", "Montreal", {"gmail": 1, "imessage": 1}, 4, "en"),
+    ("f_noah", "Noah Cohen", "friend", "", "New York", {"whatsapp": 2}, 5, "en"),
+    ("f_olivia", "Olivia Brown", "classmate", "McGill MBA", "Montreal", {"gmail": 1, "whatsapp": 1}, 4, "en"),
     ("f_pablo", "Pablo Ortiz", "acquaintance", "Startupfest", "Montreal", {"gmail": 1}, 3, "en"),
-    ("f_quentin", "Quentin Roux", "friend", "", "Lyon", {"messenger": 1, "imessage": 1}, 4, "fr"),
+    ("f_quentin", "Quentin Roux", "friend", "", "Lyon", {"messenger": 1, "whatsapp": 1}, 4, "fr"),
     ("f_rosa", "Rosa Delgado", "acquaintance", "District 3", "Montreal", {"gmail": 2}, 4, "en"),
     ("f_sam", "Samuel Girard", "friend", "", "Montreal", {"imessage": 2}, 6, "fr"),
-    ("f_tara", "Tara Walsh", "founder", "Kelpworks", "Halifax", {"gmail": 1, "imessage": 1}, 3, "en"),
-    ("f_uma", "Uma Patel", "classmate", "McGill MBA", "Montreal", {"imessage": 2}, 5, "en"),
+    ("f_tara", "Tara Walsh", "founder", "Kelpworks", "Halifax", {"gmail": 1, "whatsapp": 1}, 3, "en"),
+    ("f_uma", "Uma Patel", "classmate", "McGill MBA", "Montreal", {"whatsapp": 2}, 5, "en"),
     ("f_victor", "Victor Nguyen", "friend", "", "Montreal", {"messenger": 2, "imessage": 1}, 6, "en"),
-    ("f_wen", "Wen Zhao", "founder", "Loomtrace", "Montreal", {"gmail": 1, "imessage": 1}, 3, "en"),
-    ("f_xavier", "Xavier Pelletier", "gym", "", "Montreal", {"imessage": 2}, 4, "fr"),
-    ("f_yara", "Yara Haddad", "friend", "", "Beirut", {"imessage": 2}, 4, "en"),
-    ("f_zoe", "Zoé Martin", "classmate", "McGill MBA", "Montreal", {"imessage": 1, "gmail": 1}, 4, "fr"),
+    ("f_wen", "Wen Zhao", "founder", "Loomtrace", "Montreal", {"gmail": 1, "whatsapp": 1}, 3, "en"),
+    ("f_xavier", "Xavier Pelletier", "gym", "", "Montreal", {"whatsapp": 2}, 4, "fr"),
+    ("f_yara", "Yara Haddad", "friend", "", "Beirut", {"whatsapp": 2}, 4, "en"),
+    ("f_zoe", "Zoé Martin", "classmate", "McGill MBA", "Montreal", {"whatsapp": 1, "gmail": 1}, 4, "fr"),
     ("f_aiden", "Aiden Murphy", "acquaintance", "Montreal NewTech", "Montreal", {"gmail": 1}, 2, "en"),
     ("f_bianca", "Bianca Rossi", "friend", "", "Montreal", {"messenger": 2}, 5, "en"),
-    ("f_cyrus", "Cyrus Farahani", "founder", "Voltane", "Toronto", {"gmail": 1, "imessage": 1}, 3, "en"),
-    ("f_dina", "Dina Saleh", "classmate", "McGill MBA", "Montreal", {"imessage": 2}, 4, "en"),
+    ("f_cyrus", "Cyrus Farahani", "founder", "Voltane", "Toronto", {"gmail": 1, "whatsapp": 1}, 3, "en"),
+    ("f_dina", "Dina Saleh", "classmate", "McGill MBA", "Montreal", {"whatsapp": 2}, 4, "en"),
     ("f_eric", "Eric Boisvert", "colleague", "Northbeam Analytics", "Montreal", {"gmail": 1, "messenger": 1}, 3, "fr"),
-    ("f_fatima", "Fatima Zahra Idrissi", "classmate", "McGill MBA", "Montreal", {"imessage": 2}, 4, "fr"),
+    ("f_fatima", "Fatima Zahra Idrissi", "classmate", "McGill MBA", "Montreal", {"whatsapp": 2}, 4, "fr"),
     ("f_gabe", "Gabriel Côté", "gym", "", "Montreal", {"imessage": 2}, 3, "fr"),
     ("f_hana", "Hana Sato", "friend", "", "Vancouver", {"messenger": 1}, 3, "en"),
-    ("f_ivan", "Ivan Petrov", "acquaintance", "", "Montreal", {"imessage": 1}, 2, "en"),
+    ("f_ivan", "Ivan Petrov", "acquaintance", "", "Montreal", {"whatsapp": 1}, 2, "en"),
     ("f_julia", "Julia Becker", "acquaintance", "Lumen Grid", "Berlin", {"gmail": 1}, 1, "en"),
     ("f_karl", "Karl Andersen", "founder", "Fjordbyte", "Montreal", {"gmail": 1}, 2, "en"),
     ("f_lea", "Léa Gauthier", "friend", "", "Montreal", {"imessage": 2, "messenger": 1}, 5, "fr"),
@@ -275,12 +275,12 @@ def build_filler() -> list[Person]:
             local = _slug(name)
             emails.append((f"{local}@{dom}" if dom else f"{local.replace('.', '')}{(i * 7) % 90 + 10}@gmail.com", "", ""))
         phones = []
-        if "imessage" in channels:
+        if "imessage" in channels or "whatsapp" in channels:
             ac = area_codes[i % len(area_codes)]
             phones.append((f"+1{ac}555{(100 + (phone_n + i) % 100):04d}"[:12], "", ""))
         has_card = i % 3 != 2
         phone_label = None
-        if "imessage" in channels and has_card:
+        if ("imessage" in channels or "whatsapp" in channels) and has_card:
             # saved contacts show the address-book name (sometimes just a first name)
             phone_label = first if i % 4 == 0 else name
         people.append(
@@ -298,9 +298,9 @@ def build_filler() -> list[Person]:
 
 # --------------------------------------------------------------------------- groups
 GROUPS = {
-    "msgr_founders": {"source": "messenger", "name": "Startup founders MTL 🚀",
+    "wa_founders": {"source": "whatsapp", "name": "Startup founders MTL 🚀",
                     "members": ["omar_h", "mei", "f_felix", "f_grace", "f_hugo", "f_wen", "f_cyrus"], "sessions": 14},
-    "msgr_family": {"source": "messenger", "name": "Famille Lefebvre ❤️",
+    "wa_family": {"source": "whatsapp", "name": "Famille Lefebvre ❤️",
                   "members": ["mom", "dad", "chloe"], "sessions": 18},
     "msgr_studygroup": {"source": "messenger", "name": "MBA Study Group B",
                       "members": ["omar_b", "f_amira", "f_uma", "f_dina"], "sessions": 16},

@@ -2,6 +2,7 @@ handle_id,kind,value,display_name,source
 h_9f5afa7099db,email,jordan.lefebvre@mail.mcgill.ca,Jordan Lefebvre,gmail
 h_134401621880,phone,+15145550199,Jordan Lefebvre,contacts
 h_263116c12019,imessage,+15145550199,Jordan Lefebvre,imessage
+h_af234bb9cd17,wa_jid,15145550199@s.whatsapp.net,Jordan Lefebvre,whatsapp
 h_25ed13e8cebc,email,mei@tidepool.earth,Mei Tanaka,contacts
 h_aa43250d13fd,phone,+14385550117,Mei Tanaka,contacts
 h_5a5b63224422,email,omar@payloop.co,Omar Haddad,contacts
@@ -60,9 +61,9 @@ h_a6c40cd28001,phone,+12125550131,Fatima Zahra Idrissi,contacts
 h_954f21125824,phone,+12635550134,Ivan Petrov,contacts
 h_004738d3234c,email,karl.andersen@fjordbyte.dev,Karl Andersen,contacts
 h_ab6e02253b19,phone,+19025550137,Léa Gauthier,contacts
+h_b568961a323e,email,digest@climatetechweekly.news,Climate Tech Weekly,gmail
 h_927270134116,email,studentaffairs.desautels@mcgill.ca,Desautels Student Affairs,gmail
 h_812a49dab84e,email,hello@mtlstartupdigest.ca,Montreal Startup Digest,gmail
-h_b568961a323e,email,digest@climatetechweekly.news,Climate Tech Weekly,gmail
 h_16729d0941ab,email,calendar-notification@google.com,Google Calendar,gmail
 h_dd65a8be381a,email,noreply@mcgill.ca,McGill IT Services,gmail
 h_6a33cc265efa,email,nouvelles@hydrolab.ca,Hydrolab Newsletter,gmail
@@ -78,57 +79,30 @@ h_00468a421b09,email,ruth.abernathy@mcgill.ca,Ruth Abernathy,gmail
 h_876f53b79649,email,hannah.weiss@aldridgeco.com,Hannah Weiss,gmail
 h_82666c2c656b,email,tyler@northwindcap.com,Tyler Brooks,gmail
 h_569e8b3e719a,email,olivia.brown@mail.mcgill.ca,Olivia Brown,gmail
+h_710c16d66c17,phone,+16475550111,Léo,whatsapp
+h_b53fd1878bd0,phone,+14165550120,Uma,whatsapp
+h_f8eb878bf0ce,phone,+19025550129,Dina,whatsapp
+h_38580657cef8,phone,+16045550114,Olivia,whatsapp
+h_eafa0f5736d8,phone,+12125550123,Xavier,whatsapp
+h_bf343a147a3a,phone,+19025550105,Félix,whatsapp
+h_968433f55765,phone,+15145550171,Yusuf ✌️,whatsapp
 h_92b267ad4a34,imessage,+12635550118,+12635550118,imessage
-h_30379a10788f,imessage,+14385550163,+14385550163,imessage
-h_9169a4b7e0b6,imessage,+15145550100,+15145550100,imessage
 h_44555593f359,imessage,+18195550104,+18195550104,imessage
-h_3bd30ee73062,imessage,+15145550156,+15145550156,imessage
-h_acd8975f72e4,imessage,+14385550101,+14385550101,imessage
-h_436ecfb9101b,imessage,+16475550135,+16475550135,imessage
 h_d5b1cc3eb4ab,imessage,+18195550102,+18195550102,imessage
-h_83286a15b910,imessage,+15145550142,+15145550142,imessage
-h_5c0fd5224d31,imessage,+14385550117,+14385550117,imessage
-h_603425df0fc0,imessage,+12125550107,+12125550107,imessage
-h_a21abb76e621,imessage,+16475550119,+16475550119,imessage
-h_22183c4d7505,imessage,+14385550125,+14385550125,imessage
-h_e3de208a8224,imessage,+16475550103,+16475550103,imessage
 h_c25f8bb355b7,imessage,+12635550102,+12635550102,imessage
 h_7b9cc1fc8ee4,imessage,+19025550137,+19025550137,imessage
 h_f903ef4e256c,imessage,+14385550150,+14385550150,imessage
 h_b051ee97c903,imessage,+14165550104,+14165550104,imessage
-h_19149d68e453,imessage,+14385550109,+14385550109,imessage
-h_76bf6cf87f74,imessage,+16045550106,+16045550106,imessage
-h_c63d581929df,imessage,+14165550128,+14165550128,imessage
-h_dd4f41289fd1,imessage,+19025550113,+19025550113,imessage
-h_756ffbbf0d83,imessage,+18195550103,+18195550103,imessage
-h_03b8e669f163,imessage,+16475550111,+16475550111,imessage
-h_2690416674b5,imessage,+16045550122,+16045550122,imessage
+h_5c0fd5224d31,imessage,+14385550117,+14385550117,imessage
 h_aca8337039f4,imessage,+15145550108,+15145550108,imessage
-h_454747c13807,imessage,+14165550129,+14165550129,imessage
-h_a8c43cf6a694,imessage,+14185550144,+14185550144,imessage
-h_2ca3fd9c325b,imessage,+16475550161,+16475550161,imessage
 h_8e225f7c0714,imessage,+15145550172,+15145550172,imessage
-h_6677e7d12e09,imessage,+14165550120,+14165550120,imessage
 h_38f78cf3fc61,imessage,+19025550121,+19025550121,imessage
 h_7041ce436c84,imessage,+15145550132,+15145550132,imessage
-h_edb073f41c8c,imessage,+15145550188,+15145550188,imessage
-h_0a4114aae635,imessage,+19025550129,+19025550129,imessage
-h_973b0e7f99cf,imessage,+16045550114,+16045550114,imessage
-h_1ed4571ba4a3,imessage,+12125550123,+12125550123,imessage
-h_dd57dd5d7ed7,imessage,+19025550105,+19025550105,imessage
-h_6474093c37b9,imessage,+12125550131,+12125550131,imessage
-h_1d63f36ee809,imessage,+15145550124,+15145550124,imessage
-h_c150773e6505,imessage,+15145550116,+15145550116,imessage
-h_8f82024f2e46,imessage,+12635550134,+12635550134,imessage
 h_00f70ff5ed3b,imessage,+15145550171,+15145550171,imessage
 h_7eafc93027ff,messenger,Bianca Rossi,Bianca Rossi,messenger
 h_35bd1ab0532f,messenger,Clara Fontaine,Clara Fontaine,messenger
 h_5673d931f2fa,messenger,Daniel Kim,Daniel Kim,messenger
 h_0ce1b8fa8b4f,messenger,Eric Boisvert,Eric Boisvert,messenger
-h_c71f1376e1c4,messenger,Jordan Lefebvre,Jordan Lefebvre,messenger
-h_7fc0965c34f3,messenger,Nadia Lefebvre,Nadia Lefebvre,messenger
-h_b08e35ad2811,messenger,Chloé Lefebvre,Chloé Lefebvre,messenger
-h_8619e0cddf27,messenger,Pierre Lefebvre,Pierre Lefebvre,messenger
 h_b42a789c9b0c,messenger,Hana Sato,Hana Sato,messenger
 h_6d997360f078,messenger,Isabelle Roy,Isabelle Roy,messenger
 h_35bb35a445fd,messenger,Kayla Morgan,Kayla Morgan,messenger
@@ -137,17 +111,12 @@ h_a1d15a3cf94e,messenger,Léa Gauthier,Léa Gauthier,messenger
 h_be50e7279b70,messenger,Léo Tremblay,Léo Tremblay,messenger
 h_bb6608488ae8,messenger,Lucas Moreau,Lucas Moreau,messenger
 h_b64333b690c6,messenger,Maya Singh,Maya Singh,messenger
-h_4a5b5c25fad5,messenger,Omar Benali,Omar Benali,messenger
 h_0476244e1de6,messenger,Dina Saleh,Dina Saleh,messenger
+h_4a5b5c25fad5,messenger,Omar Benali,Omar Benali,messenger
 h_a5d7596cbb96,messenger,Amira Khalil,Amira Khalil,messenger
+h_c71f1376e1c4,messenger,Jordan Lefebvre,Jordan Lefebvre,messenger
 h_398d144f945e,messenger,Uma Patel,Uma Patel,messenger
 h_88391b83d9cd,messenger,Omar Haddad,Omar Haddad,messenger
 h_01fed5cc25da,messenger,Quentin Roux,Quentin Roux,messenger
 h_720b0cfb8a67,messenger,Sasha Petrova,Sasha Petrova,messenger
-h_0f0dbb9a4389,messenger,Grace Liu,Grace Liu,messenger
-h_bafef1b7c047,messenger,Mei Tanaka,Mei Tanaka,messenger
-h_748d96b84235,messenger,Wen Zhao,Wen Zhao,messenger
-h_de59fb201ccc,messenger,Hugo Lambert,Hugo Lambert,messenger
-h_8f6356c89fa8,messenger,Cyrus Farahani,Cyrus Farahani,messenger
-h_7bb34023c055,messenger,Félix Bouchard,Félix Bouchard,messenger
 h_a5a6316ee920,messenger,Victor Nguyen,Victor Nguyen,messenger

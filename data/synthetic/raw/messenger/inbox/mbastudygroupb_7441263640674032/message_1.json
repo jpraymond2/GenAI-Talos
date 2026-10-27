@@ -1,0 +1,477 @@
+{
+  "participants": [
+    {
+      "name": "Omar Benali"
+    },
+    {
+      "name": "Amira Khalil"
+    },
+    {
+      "name": "Uma Patel"
+    },
+    {
+      "name": "Dina Saleh"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1789060982000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks, I'll merge tonight"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1789060837000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "uploaded my part to the shared drive"
+    },
+    {
+      "sender_name": "Amira Khalil",
+      "timestamp_ms": 1786581333000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "ahh ok that makes sense"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1786581315000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I think it's asking for the NPV with the second scenario"
+    },
+    {
+      "sender_name": "Amira Khalil",
+      "timestamp_ms": 1786581070000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did anyone get what the prof meant by question 3?"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1785729577000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "booked room 245"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1785729441000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "works for me"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1785729413000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "group meeting tomorrow 6pm Bronfman 2nd floor?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1785360216000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "6, and the HBR case"
+    },
+    {
+      "sender_name": "Uma Patel",
+      "timestamp_ms": 1785359964000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "is the reading for Thursday chapter 6 or 7?"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1785338703000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks, I'll merge tonight"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1785338641000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "uploaded my part to the shared drive"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1783020422000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes, Second Cup at 8:10",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1783020270000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "coffee before class?"
+    },
+    {
+      "sender_name": "Amira Khalil",
+      "timestamp_ms": 1782334501000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "just posted them on myCourses"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1782334407000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can someone share the slides from today?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1781346368000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "skim the exhibits first, trust me",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Amira Khalil",
+      "timestamp_ms": 1781345775000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the case is so long \u00f0\u009f\u0098\u00a9",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1780277466000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes, Second Cup at 8:10"
+    },
+    {
+      "sender_name": "Uma Patel",
+      "timestamp_ms": 1780277432000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "coffee before class?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1779367778000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks for the heads up"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1779367536000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "exam room changed to Leacock 132 btw"
+    },
+    {
+      "sender_name": "Uma Patel",
+      "timestamp_ms": 1778871427000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "ahh ok that makes sense"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1778871149000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I think it's asking for the NPV with the second scenario"
+    },
+    {
+      "sender_name": "Uma Patel",
+      "timestamp_ms": 1778870852000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "did anyone get what the prof meant by question 3?"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1777673911000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks for the heads up"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1777673664000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "exam room changed to Leacock 132 btw"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1776958847000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "6, and the HBR case"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1776958704000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "is the reading for Thursday chapter 6 or 7?"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1772559278000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "booked room 245"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1772559274000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "works for me"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1772559154000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "group meeting tomorrow 6pm Bronfman 2nd floor?"
+    },
+    {
+      "sender_name": "Amira Khalil",
+      "timestamp_ms": 1769450146000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "just posted them on myCourses"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1769449556000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can someone share the slides from today?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1769285009000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "me, I'll share after class",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1769284724000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "who's taking notes today?"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1766630719000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks, I'll merge tonight"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1766630540000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "uploaded my part to the shared drive"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1761533355000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "booked room 245"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1761532810000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "works for me"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1761532514000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "group meeting tomorrow 6pm Bronfman 2nd floor?"
+    },
+    {
+      "sender_name": "Amira Khalil",
+      "timestamp_ms": 1759085949000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "just posted them on myCourses"
+    },
+    {
+      "sender_name": "Uma Patel",
+      "timestamp_ms": 1759085358000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can someone share the slides from today?"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1759079208000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "just posted them on myCourses"
+    },
+    {
+      "sender_name": "Uma Patel",
+      "timestamp_ms": 1759079107000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can someone share the slides from today?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1758845847000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "thanks for the heads up"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1758845745000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "exam room changed to Leacock 132 btw",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1756068146000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "booked room 245"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1756068074000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "works for me"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1756068061000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "group meeting tomorrow 6pm Bronfman 2nd floor?"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1754242909000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "just posted them on myCourses"
+    },
+    {
+      "sender_name": "Amira Khalil",
+      "timestamp_ms": 1754242610000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can someone share the slides from today?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1751653404000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes, Second Cup at 8:10"
+    },
+    {
+      "sender_name": "Dina Saleh",
+      "timestamp_ms": 1751653226000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "coffee before class?"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1750270624000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "skim the exhibits first, trust me"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1750270339000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the case is so long \u00f0\u009f\u0098\u00a9"
+    },
+    {
+      "sender_name": "Omar Benali",
+      "timestamp_ms": 1750109124000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes, Second Cup at 8:10"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1750108826000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "coffee before class?"
+    }
+  ],
+  "title": "MBA Study Group B",
+  "is_still_participant": true,
+  "thread_path": "inbox/mbastudygroupb_7441263640674032",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

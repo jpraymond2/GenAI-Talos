@@ -9,7 +9,7 @@ from typing import Annotated, Optional
 import typer
 
 from recall.mac_agent import __version__
-from recall.mac_agent.config import AgentConfig, ConfigError, load_config, save_config
+from recall.mac_agent.config import load_config, save_config
 from recall.mac_agent.fda import check_full_disk_access, require_darwin
 from recall.mac_agent.paths import dry_run_preview_path, ensure_support_dirs
 from recall.mac_agent.pipeline import payload_dict, run_extract
@@ -39,13 +39,6 @@ def cmd_run(
     ensure_support_dirs()
     check_full_disk_access(open_settings=True)
     cfg = load_config()
-    if not dry_run:
-        cfg = _ensure_consent(cfg)
-        try:
-            cfg.require_server_url()
-        except ConfigError as exc:
-            print(str(exc))
-            raise SystemExit(1) from exc
     state = load_state()
 
     # First-ever run: cursors are 0 → backfill_days window applies inside extractors.
@@ -113,25 +106,28 @@ def cmd_run(
     print(f"upload ok: {json.dumps(response, ensure_ascii=False)[:500]}")
 
 
+@app.command("watch")
+def cmd_watch(
+    interval: Annotated[float, typer.Option("--interval", help="Seconds between check-ins.")] = 5.0,
+) -> None:
+    """Stay running and pick up "Pull messages" requests from the dashboard."""
+    ensure_support_dirs()
+    check_full_disk_access(open_settings=True)
+    cfg = load_config()
+    if not cfg.device_upload_token:
+        print("Missing device_upload_token — run: python -m recall.mac_agent init-config --token <DEVICE_UPLOAD_TOKEN>")
+        raise SystemExit(1)
+    from recall.mac_agent.jobs import watch
+
+    watch(cfg, load_state(), interval=interval)
+
+
 @app.command("install")
 def cmd_install() -> None:
     """Install LaunchAgent (every 15 minutes)."""
     from recall.mac_agent.launchd import install
 
     check_full_disk_access(open_settings=True)
-    cfg = load_config()
-    _ensure_consent(cfg)
-    try:
-        cfg.require_server_url()
-    except ConfigError as exc:
-        print(str(exc))
-        raise SystemExit(1) from exc
-    if not cfg.device_upload_token:
-        print(
-            "Missing device_upload_token in "
-            "~/Library/Application Support/Recall/config.json"
-        )
-        raise SystemExit(1)
     path = install()
     print(f"installed: {path}")
     print("Grant Full Disk Access to the Python binary printed above if needed.")
@@ -156,12 +152,10 @@ def cmd_status() -> None:
     print(f"version: {__version__}")
     print(f"config: {config_path()}")
     print(f"state: {state_path()}")
-    print(f"server_url: {cfg.server_url or '(unset — set config.json or RECALL_SERVER_URL)'}")
+    print(f"server_url: {cfg.server_url}")
     print(f"device_id: {cfg.device_id}")
     print(f"token_set: {bool(cfg.device_upload_token)}")
-    print(f"consent_at: {cfg.consent_at or '(none)'}")
     print(f"backfill_days: {cfg.backfill_days}")
-    print(f"max_group_size: {cfg.max_group_size}")
     for line in status_lines():
         print(line)
 
@@ -181,69 +175,6 @@ def cmd_init_config(
         cfg.server_url = server_url
     path = save_config(cfg)
     print(f"wrote {path}")
-
-
-@app.command("seed-cursors")
-def cmd_seed_cursors() -> None:
-    """Mark current DB high-water marks as synced without uploading.
-
-    Use this so the next ``run`` / LaunchAgent only sends *new* rows, not a
-    full backfill of existing history.
-    """
-    ensure_support_dirs()
-    check_full_disk_access(open_settings=True)
-    cfg = _ensure_consent(load_config())
-    # Ignore existing cursors so we see the true max ROWID / Z_PK.
-    empty = load_state()
-    empty.imessage_last_rowid = 0
-    empty.whatsapp_last_zpk = 0
-    empty.contacts_last_zpk = 0
-    result = run_extract(cfg, empty)
-    state = load_state()
-    state.imessage_last_rowid = int(result.cursors.get("imessage_last_rowid") or 0)
-    state.whatsapp_last_zpk = int(result.cursors.get("whatsapp_last_zpk") or 0)
-    state.contacts_last_zpk = int(result.cursors.get("contacts_last_zpk") or 0)
-    from datetime import datetime, timezone
-
-    state.last_upload_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    state.extra["seeded_without_upload"] = True
-    save_state(state)
-    print("seeded cursors (no upload):")
-    print(f"  imessage_last_rowid={state.imessage_last_rowid}")
-    print(f"  whatsapp_last_zpk={state.whatsapp_last_zpk}")
-    print(f"  contacts_last_zpk={state.contacts_last_zpk}")
-    print("Next real run will only send messages newer than these marks.")
-
-
-def _ensure_consent(cfg: AgentConfig) -> AgentConfig:
-    """Prompt once for collection consent; persist timestamp in config.json."""
-    if (cfg.consent_at or "").strip():
-        return cfg
-    print("Recall Mac agent — consent required before reading or uploading data.")
-    print()
-    print("What would be collected (text only — no photo/video/file attachments):")
-    print("  Sources:  iMessage/SMS (chat.db), WhatsApp Desktop (if installed),")
-    print("            macOS Contacts (AddressBook)")
-    print("  Fields:   message text, timestamps, handles/phones/emails,")
-    print("            chat ids, group participant lists (small groups only),")
-    print("            contact name / organization / title")
-    print(f"  Backfill: last {cfg.backfill_days} days on first sync")
-    print(f"  Groups:   chats with more than {cfg.max_group_size} participants are skipped")
-    print("  Upload:   HTTPS to your configured Recall server (when not --dry-run)")
-    print()
-    try:
-        reply = input('Type "yes" to consent (anything else aborts): ').strip().lower()
-    except EOFError:
-        reply = ""
-    if reply != "yes":
-        print("Consent declined; nothing was read or uploaded.")
-        raise SystemExit(1)
-    from datetime import datetime, timezone
-
-    cfg.consent_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    save_config(cfg)
-    print(f"Consent recorded at {cfg.consent_at}")
-    return cfg
 
 
 def _looks_garbled(text: str) -> bool:

@@ -19,6 +19,13 @@
       {
         "kind": "phone",
         "value": "+14385550117",
+        "source": "whatsapp",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+14385550117",
         "source": "imessage",
         "valid_from": "",
         "valid_to": ""
@@ -35,7 +42,7 @@
       "mei.model_ask",
       "mei.pilot_hydrolab"
     ],
-    "message_count": 372
+    "message_count": 370
   },
   "omar_h": {
     "name": "Omar Haddad",
@@ -57,7 +64,7 @@
       {
         "kind": "phone",
         "value": "+15145550142",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -73,7 +80,7 @@
       "omar_h.coffee",
       "omar_h.hiring"
     ],
-    "message_count": 85
+    "message_count": 84
   },
   "omar_b": {
     "name": "Omar Benali",
@@ -96,7 +103,7 @@
       {
         "kind": "phone",
         "value": "+14385550163",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -110,7 +117,7 @@
       "omar_b.casecomp",
       "omar_b.notes"
     ],
-    "message_count": 91
+    "message_count": 93
   },
   "omar_k": {
     "name": "Omar Kassem",
@@ -133,7 +140,7 @@
       {
         "kind": "phone",
         "value": "+15145550188",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -171,7 +178,7 @@
       {
         "kind": "phone",
         "value": "+14165550129",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -217,7 +224,7 @@
       {
         "kind": "phone",
         "value": "+16475550135",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -232,7 +239,7 @@
       "priya.pilot",
       "priya.cancelled_lunch"
     ],
-    "message_count": 56
+    "message_count": 55
   },
   "lucas": {
     "name": "Lucas Moreau",
@@ -254,7 +261,7 @@
       {
         "kind": "phone",
         "value": "+15145550156",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -266,7 +273,7 @@
       "lucas.paris",
       "lucas.xmas"
     ],
-    "message_count": 74
+    "message_count": 71
   },
   "elodie": {
     "name": "Élodie Gagnon",
@@ -288,7 +295,7 @@
       {
         "kind": "phone",
         "value": "+14185550144",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -302,7 +309,7 @@
       "elodie.boreale",
       "elodie.deck_fr"
     ],
-    "message_count": 44
+    "message_count": 43
   },
   "daniel_vc": {
     "name": "Daniel Kim",
@@ -355,7 +362,7 @@
       {
         "kind": "phone",
         "value": "+16475550161",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -368,7 +375,7 @@
     "facts": [
       "daniel_cl.wedding"
     ],
-    "message_count": 78
+    "message_count": 77
   },
   "rachel": {
     "name": "Rachel Goldberg",
@@ -515,7 +522,7 @@
       "isabelle.bday",
       "isabelle.nights"
     ],
-    "message_count": 98
+    "message_count": 100
   },
   "yusuf": {
     "name": "Yusuf Demir",
@@ -531,9 +538,23 @@
       {
         "kind": "phone",
         "value": "+14385550150",
+        "source": "whatsapp",
+        "valid_from": "2025-05-01",
+        "valid_to": "2026-07-11"
+      },
+      {
+        "kind": "phone",
+        "value": "+14385550150",
         "source": "imessage",
         "valid_from": "2025-05-01",
         "valid_to": "2026-07-11"
+      },
+      {
+        "kind": "phone",
+        "value": "+15145550171",
+        "source": "whatsapp",
+        "valid_from": "2026-07-12",
+        "valid_to": ""
       },
       {
         "kind": "phone",
@@ -573,6 +594,13 @@
       {
         "kind": "phone",
         "value": "+18195550102",
+        "source": "whatsapp",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+18195550102",
         "source": "imessage",
         "valid_from": "",
         "valid_to": ""
@@ -585,7 +613,7 @@
     "facts": [
       "mom.christmas"
     ],
-    "message_count": 113
+    "message_count": 111
   },
   "dad": {
     "name": "Pierre Lefebvre",
@@ -608,7 +636,7 @@
       {
         "kind": "phone",
         "value": "+18195550103",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -618,7 +646,7 @@
       "city": "Sherbrooke"
     },
     "facts": [],
-    "message_count": 37
+    "message_count": 50
   },
   "chloe": {
     "name": "Chloé Lefebvre",
@@ -634,6 +662,13 @@
       {
         "kind": "phone",
         "value": "+18195550104",
+        "source": "whatsapp",
+        "valid_from": "",
+        "valid_to": ""
+      },
+      {
+        "kind": "phone",
+        "value": "+18195550104",
         "source": "imessage",
         "valid_from": "",
         "valid_to": ""
@@ -646,7 +681,7 @@
     "facts": [
       "chloe.exam"
     ],
-    "message_count": 58
+    "message_count": 65
   },
   "tom": {
     "name": "Tom Becker",
@@ -693,7 +728,7 @@
       {
         "kind": "phone",
         "value": "+15145550100",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -704,7 +739,7 @@
       "city": "Montreal"
     },
     "facts": [],
-    "message_count": 45
+    "message_count": 42
   },
   "f_ben": {
     "name": "Ben Okafor",
@@ -726,7 +761,7 @@
       {
         "kind": "phone",
         "value": "+14385550101",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -774,7 +809,7 @@
       {
         "kind": "phone",
         "value": "+16475550103",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -841,7 +876,7 @@
       {
         "kind": "phone",
         "value": "+19025550105",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -870,7 +905,7 @@
       {
         "kind": "phone",
         "value": "+16045550106",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -881,7 +916,7 @@
       "city": "Montreal"
     },
     "facts": [],
-    "message_count": 33
+    "message_count": 32
   },
   "f_hugo": {
     "name": "Hugo Lambert",
@@ -896,7 +931,7 @@
       {
         "kind": "phone",
         "value": "+12125550107",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -944,7 +979,7 @@
       {
         "kind": "phone",
         "value": "+14385550109",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -955,7 +990,7 @@
       "city": "Montreal"
     },
     "facts": [],
-    "message_count": 29
+    "message_count": 27
   },
   "f_kayla": {
     "name": "Kayla Morgan",
@@ -988,14 +1023,14 @@
       {
         "kind": "phone",
         "value": "+16475550111",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
     ],
     "contact_card": null,
     "facts": [],
-    "message_count": 30
+    "message_count": 28
   },
   "f_maya": {
     "name": "Maya Singh",
@@ -1036,7 +1071,7 @@
       {
         "kind": "phone",
         "value": "+19025550113",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1047,7 +1082,7 @@
       "city": "New York"
     },
     "facts": [],
-    "message_count": 24
+    "message_count": 23
   },
   "f_olivia": {
     "name": "Olivia Brown",
@@ -1069,14 +1104,14 @@
       {
         "kind": "phone",
         "value": "+16045550114",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
     ],
     "contact_card": null,
     "facts": [],
-    "message_count": 19
+    "message_count": 18
   },
   "f_pablo": {
     "name": "Pablo Ortiz",
@@ -1118,7 +1153,7 @@
       {
         "kind": "phone",
         "value": "+15145550116",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1199,7 +1234,7 @@
       {
         "kind": "phone",
         "value": "+16475550119",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1225,14 +1260,14 @@
       {
         "kind": "phone",
         "value": "+14165550120",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
     ],
     "contact_card": null,
     "facts": [],
-    "message_count": 32
+    "message_count": 28
   },
   "f_victor": {
     "name": "Victor Nguyen",
@@ -1258,7 +1293,7 @@
       "city": "Montreal"
     },
     "facts": [],
-    "message_count": 43
+    "message_count": 42
   },
   "f_wen": {
     "name": "Wen Zhao",
@@ -1280,7 +1315,7 @@
       {
         "kind": "phone",
         "value": "+16045550122",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1291,7 +1326,7 @@
       "city": "Montreal"
     },
     "facts": [],
-    "message_count": 28
+    "message_count": 27
   },
   "f_xavier": {
     "name": "Xavier Pelletier",
@@ -1306,7 +1341,7 @@
       {
         "kind": "phone",
         "value": "+12125550123",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1329,7 +1364,7 @@
       {
         "kind": "phone",
         "value": "+15145550124",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1362,7 +1397,7 @@
       {
         "kind": "phone",
         "value": "+14385550125",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1373,7 +1408,7 @@
       "city": "Montreal"
     },
     "facts": [],
-    "message_count": 20
+    "message_count": 19
   },
   "f_aiden": {
     "name": "Aiden Murphy",
@@ -1436,7 +1471,7 @@
       {
         "kind": "phone",
         "value": "+14165550128",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1462,14 +1497,14 @@
       {
         "kind": "phone",
         "value": "+19025550129",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
     ],
     "contact_card": null,
     "facts": [],
-    "message_count": 23
+    "message_count": 25
   },
   "f_eric": {
     "name": "Eric Boisvert",
@@ -1510,7 +1545,7 @@
       {
         "kind": "phone",
         "value": "+12125550131",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }
@@ -1576,7 +1611,7 @@
       {
         "kind": "phone",
         "value": "+12635550134",
-        "source": "imessage",
+        "source": "whatsapp",
         "valid_from": "",
         "valid_to": ""
       }

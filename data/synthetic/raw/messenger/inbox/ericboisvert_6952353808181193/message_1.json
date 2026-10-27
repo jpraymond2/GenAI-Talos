@@ -1,0 +1,129 @@
+{
+  "participants": [
+    {
+      "name": "Eric Boisvert"
+    },
+    {
+      "name": "Jordan Lefebvre"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1793066056000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "same, see you"
+    },
+    {
+      "sender_name": "Eric Boisvert",
+      "timestamp_ms": 1793065852000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "I'll be there"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1793065643000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "anyone going to the founders dinner thursday?"
+    },
+    {
+      "sender_name": "Eric Boisvert",
+      "timestamp_ms": 1789146640000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "yes, sending notes after"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1789146597000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "can you jump on the customer call at 2?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Eric Boisvert",
+      "timestamp_ms": 1780056685000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "expired cert on the staging proxy, renewing all of them"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1780054263000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "root cause?"
+    },
+    {
+      "sender_name": "Eric Boisvert",
+      "timestamp_ms": 1780054059000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the API was down for 4 min, fixed now",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Eric Boisvert",
+      "timestamp_ms": 1755786543000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "great idea thanks"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1755786475000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "hiring tip: post on the McGill job board, got 3 good applicants"
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1754620758000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "expired cert on the staging proxy, renewing all of them"
+    },
+    {
+      "sender_name": "Eric Boisvert",
+      "timestamp_ms": 1754620666000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "root cause?",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Jordan Lefebvre"
+        }
+      ]
+    },
+    {
+      "sender_name": "Jordan Lefebvre",
+      "timestamp_ms": 1754620576000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false,
+      "content": "the API was down for 4 min, fixed now"
+    }
+  ],
+  "title": "Eric Boisvert",
+  "is_still_participant": true,
+  "thread_path": "inbox/ericboisvert_6952353808181193",
+  "magic_words": [],
+  "joinable_mode": {
+    "mode": 1,
+    "link": ""
+  }
+}

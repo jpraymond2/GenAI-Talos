@@ -1,11 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
 import { ask, confirm, isMockMode, onTrace } from "./api";
+import { getApiToken, getUser, logout } from "./auth";
 import { CenterPanel } from "./components/CenterPanel";
+import { ContactsPage, IdentifiedContact } from "./components/Contacts";
 import { LeftPanel } from "./components/LeftPanel";
+import { LoginPage } from "./components/LoginPage";
 import { PhoneView } from "./components/PhoneView";
 import { RightPanel } from "./components/RightPanel";
+import { SyncPage } from "./components/SyncPage";
+import { TopBar, type Tab } from "./components/TopBar";
 import { speakBrief, speakText, unlockSpeech } from "./speech";
-import type { Candidate, RunState, TraceEvent, TranscriptEntry } from "./types";
+import type { Candidate, DeviceMode, RunState, SessionUser, TraceEvent, TranscriptEntry } from "./types";
+
+const DEVICE_KEY = "recall_device";
+
+function initialDevice(): DeviceMode {
+  try {
+    const saved = localStorage.getItem(DEVICE_KEY);
+    if (saved === "mac" || saved === "phone") return saved;
+  } catch {
+    /* ignore */
+  }
+  return typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches ? "phone" : "mac";
+}
 
 function useIsPhone(): boolean {
   const [phone, setPhone] = useState(
@@ -27,6 +44,19 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const sampleMode = isMockMode();
   const isPhone = useIsPhone();
+  const [user, setUserState] = useState<SessionUser | null>(() => (getApiToken() ? getUser() ?? { name: "Recall user", email: "" } : null));
+  const [device, setDevice] = useState<DeviceMode>(initialDevice);
+  const [tab, setTab] = useState<Tab>("assistant");
+  const [focusContact, setFocusContact] = useState<string | null>(null);
+
+  function chooseDevice(d: DeviceMode) {
+    setDevice(d);
+    try {
+      localStorage.setItem(DEVICE_KEY, d);
+    } catch {
+      /* ignore */
+    }
+  }
 
   useEffect(() => {
     return onTrace((event) => {
@@ -150,32 +180,54 @@ export default function App() {
     }
   }
 
-  if (isPhone) {
-    return (
-      <div className="min-h-[100dvh] bg-white">
-        <PhoneView
-          run={run}
-          events={events}
-          busy={busy}
-          onAsk={(t, o) => handleAsk(t, { runId: o?.runId, fromVoice: true })}
-          onVoiceState={(state) => {
-            setRun(state);
-            if (state.status === "needs_clarification" && state.question) {
-              pushTranscript("assistant", state.question);
-            } else if (state.final_brief) {
-              pushTranscript("assistant", state.final_brief.headline);
-            }
-          }}
-          onPickCandidate={(c) => void handlePick(c)}
-          onConfirmActions={() => void handleConfirmActions()}
-          onCancelActions={() => void handleCancelActions()}
-        />
-      </div>
-    );
+  if (!user) {
+    return <LoginPage onLoggedIn={setUserState} />;
   }
 
-  return (
-    <div className="min-h-screen bg-grain px-3 py-4 md:px-6 md:py-6">
+  const identified =
+    run?.entity_id && (run.status === "done" || run.status === "awaiting_confirmation") ? run.entity_id : null;
+
+  const phoneView = (
+    <PhoneView
+      run={run}
+      events={events}
+      busy={busy}
+      showHeader={false}
+      onAsk={(t, o) => handleAsk(t, { runId: o?.runId, fromVoice: true })}
+      onVoiceState={(state) => {
+        setRun(state);
+        if (state.status === "needs_clarification" && state.question) {
+          pushTranscript("assistant", state.question);
+        } else if (state.final_brief) {
+          pushTranscript("assistant", state.final_brief.headline);
+        }
+      }}
+      onPickCandidate={(c) => void handlePick(c)}
+      onConfirmActions={() => void handleConfirmActions()}
+      onCancelActions={() => void handleCancelActions()}
+      contactSlot={identified ? <IdentifiedContact entityId={identified} compact /> : null}
+    />
+  );
+
+  let body: React.ReactNode;
+  if (tab === "contacts") {
+    body = <ContactsPage onGoSync={() => setTab("sync")} focusId={focusContact} />;
+  } else if (tab === "sync") {
+    body = <SyncPage device={device} onSwitchDevice={chooseDevice} onViewContacts={() => setTab("contacts")} />;
+  } else if (isPhone) {
+    body = phoneView;
+  } else if (device === "phone") {
+    // Desktop preview of the phone app, inside a device frame.
+    body = (
+      <div className="flex justify-center py-2">
+        <div className="relative h-[780px] w-[392px] overflow-hidden rounded-[46px] border-[10px] border-ink-900 bg-white shadow-2xl" style={{ transform: "translateZ(0)" }}>
+          <div className="absolute left-1/2 top-2 z-40 h-6 w-28 -translate-x-1/2 rounded-full bg-ink-900" aria-hidden />
+          <div className="scroll-thin h-full overflow-y-auto pt-8">{phoneView}</div>
+        </div>
+      </div>
+    );
+  } else {
+    body = (
       <div className="mx-auto grid max-w-[1400px] gap-4 lg:grid-cols-12 lg:gap-5">
         <div className="lg:col-span-3">
           <LeftPanel
@@ -195,10 +247,44 @@ export default function App() {
             onCancelActions={() => void handleCancelActions()}
           />
         </div>
-        <div className="lg:col-span-4">
+        <div className="space-y-4 lg:col-span-4">
+          {identified ? <IdentifiedContact entityId={identified} /> : null}
+          {identified ? (
+            <button
+              type="button"
+              onClick={() => {
+                setFocusContact(identified);
+                setTab("contacts");
+              }}
+              className="-mt-2 w-full text-right text-xs font-semibold text-sea-600 hover:underline"
+            >
+              Open in Contacts →
+            </button>
+          ) : null}
           <RightPanel events={events} entityId={run?.entity_id ?? null} />
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-[100dvh] bg-grain">
+      <TopBar
+        device={device}
+        onDevice={chooseDevice}
+        tab={tab}
+        onTab={(t) => {
+          setFocusContact(null);
+          setTab(t);
+        }}
+        user={user}
+        onLogout={() => {
+          logout();
+          setUserState(null);
+        }}
+        sampleMode={sampleMode}
+      />
+      <main className={tab === "assistant" && isPhone ? "" : "px-3 py-4 md:px-6 md:py-6"}>{body}</main>
     </div>
   );
 }
