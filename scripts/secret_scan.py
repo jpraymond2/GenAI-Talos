@@ -51,8 +51,18 @@ def _safe_token(token: str) -> bool:
 
 
 def main() -> int:
+    # Exclude this scanner's own history — it documents the Zetaris1@ pattern
+    # and would otherwise false-positive on itself.
     proc = subprocess.run(
-        ["git", "log", "-p", "--all"],
+        [
+            "git",
+            "log",
+            "-p",
+            "--all",
+            "--",
+            ".",
+            ":(exclude)scripts/secret_scan.py",
+        ],
         cwd=ROOT,
         capture_output=True,
         text=True,
