@@ -8,7 +8,7 @@
   sources: `m1`
 - Upcoming: Coffee w/ Omar Haddad on Wed Oct 28, 10:00 (calendar)  
   sources: `e26`
-- Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)  
+- Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced an $8M Series A led by… (https://example.com/payloop-series-a)  
   sources: `w1`
 - Life/job update on Wed Oct 14: thanks man. now the fun part, hiring two backend engineers asap. send anyone good my way (whatsapp)  
   sources: `e10`

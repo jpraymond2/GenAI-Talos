@@ -1,8 +1,8 @@
 {
-  "run_id": "example-05_memory_carryover-c8ec8021",
+  "run_id": "example-05_memory_carryover-78ece649",
   "utterance": {
     "text": "I'm meeting Rachel Goldberg",
-    "ts": "2026-10-27T16:15:40.864316Z",
+    "ts": "2026-10-27T16:25:54.663960Z",
     "mode": "text"
   },
   "intent": {
@@ -85,7 +85,7 @@
         "mention_count": 1,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "example-01_three_omars-e6f4ccfd"
+        "run_id": "f4a9f038-b6bf-46fe-9dc1-e7b9efffec79"
       },
       "aliases": [
         "Rachel Goldberg",
@@ -156,7 +156,7 @@
         "source_ref": "calendar:nthj1jqi7og39kok53v4m0uf1b"
       }
     },
-    "latency_ms": 9,
+    "latency_ms": 15,
     "llm_calls": 0,
     "critic_rounds": 1
   },

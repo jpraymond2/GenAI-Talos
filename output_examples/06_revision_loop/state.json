@@ -1,8 +1,8 @@
 {
-  "run_id": "example-06_revision_loop-0526515d",
+  "run_id": "example-06_revision_loop-f217f843",
   "utterance": {
     "text": "Sync with Mei tomorrow",
-    "ts": "2026-10-27T16:15:40.890672Z",
+    "ts": "2026-10-27T16:25:54.705228Z",
     "mode": "text"
   },
   "intent": {
@@ -119,7 +119,7 @@
         "mention_count": 331,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "example-01_three_omars-e6f4ccfd"
+        "run_id": "f4a9f038-b6bf-46fe-9dc1-e7b9efffec79"
       },
       "aliases": [
         "Mei Tanaka",

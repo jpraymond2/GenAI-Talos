@@ -1,8 +1,8 @@
 {
-  "run_id": "example-02_brief_omar_haddad-935e247e",
+  "run_id": "example-02_brief_omar_haddad-d637abb4",
   "utterance": {
     "text": "I'm meeting Omar Haddad on Wednesday",
-    "ts": "2026-10-27T16:15:40.759845Z",
+    "ts": "2026-10-27T16:25:54.538511Z",
     "mode": "text"
   },
   "intent": {
@@ -117,7 +117,7 @@
         "mention_count": 71,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "example-01_three_omars-e6f4ccfd"
+        "run_id": "f4a9f038-b6bf-46fe-9dc1-e7b9efffec79"
       },
       "aliases": [
         "Omar Haddad",
@@ -502,7 +502,7 @@
     {
       "id": "mem_a13750f2de8c",
       "content": "Note that Omar Haddad wants an intro to Rachel Goldberg by end of month.",
-      "score": 0.4091,
+      "score": 0.409,
       "why": "entity=0.15, layer=0.10, keyword=0.08"
     }
   ],
@@ -768,8 +768,8 @@
       "id": "w1",
       "source": "web",
       "source_ref": "https://example.com/payloop-series-a",
-      "ts": "2026-09-15T00:00:00Z",
-      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by climate-focused funds, with CEO Omar Haddad citing demand from SMBs.",
+      "ts": "2026-10-14T00:00:00Z",
+      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced an $8M Series A led by Maple Ridge Ventures, with CEO Omar Haddad citing demand from SMBs.",
       "url": "https://example.com/payloop-series-a",
       "tags": [
         "web",
@@ -807,7 +807,7 @@
           "priority": 3
         },
         {
-          "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
+          "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced an $8M Series A led by… (https://example.com/payloop-series-a)",
           "evidence_ids": [
             "w1"
           ],
@@ -851,7 +851,7 @@
         {
           "index": 3,
           "decision": "keep",
-          "reason": "keep: cites web Mon Sep 14, 20:00",
+          "reason": "keep: cites web Tue Oct 13, 20:00",
           "fix_hint": null
         },
         {
@@ -897,7 +897,7 @@
         "priority": 3
       },
       {
-        "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
+        "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced an $8M Series A led by… (https://example.com/payloop-series-a)",
         "evidence_ids": [
           "w1"
         ],

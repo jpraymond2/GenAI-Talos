@@ -1,6 +1,6 @@
 # How it worked — `04_conflicting_sources`
 
-Run `example-04_conflicting_sources-023c73ca` · status `done` · critic rounds `1`
+Run `example-04_conflicting_sources-2414eac2` · status `done` · critic rounds `1`
 
 ## Timeline
 
@@ -26,15 +26,15 @@ Run `example-04_conflicting_sources-023c73ca` · status `done` · critic rounds 
 20. **world** `resolve` — resolve 'Lucas Moreau' candidates=1 top=Lucas Moreau score=1.00 (exact alias match)
 21. **orchestrator** `resolve` — name='Lucas Moreau' candidates=1
 22. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-23. **query_layer** `query` · 0 ms — query world.relationship.interactions rows=55 backend=duckdb ms=0.977
+23. **query_layer** `query` · 1 ms — query world.relationship.interactions rows=55 backend=duckdb ms=1.035
 24. **orchestrator** `relationship` — label=social confidence=0.62
-25. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
-26. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
+25. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
+26. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
 27. **hmem** `retrieve` — hmem retrieve hits=1 candidates=5 top=[('mem_a277abbbf44d', 0.3634)]
-28. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=81 backend=duckdb ms=1.353
-29. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
-30. **web_scout** `complete` — web_scout sample hits=3 org=Atelier Nord
-31. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.689
+28. **web_scout** `complete` — web_scout sample hits=3 org=Atelier Nord
+29. **query_layer** `query` · 1 ms — query world.context.thread_peers rows=81 backend=duckdb ms=1.556
+30. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
+31. **query_layer** `query` · 12 ms — query world.context.events rows=167 backend=duckdb ms=12.827
 32. **world** `person_context` — person_context open_loops=1 conflicts=1 upcoming=0 past_events=0 recent=20
 33. **orchestrator** `retrieve` — world_open_loops=1 memories=1 backend=duckdb
 34. **orchestrator** `memories` — count=1 top_score=0.363
@@ -54,7 +54,7 @@ Run `example-04_conflicting_sources-023c73ca` · status `done` · critic rounds 
 48. **orchestrator** `feedback` — feedback=1
 49. **actions** `plan` — steps=1
 50. **actions** `dry_run` — dry_run steps=1
-51. **orchestrator** `final` · 29 ms — status=done points=2 caveats=0 latency_ms=29 llm_calls=0
+51. **orchestrator** `final` · 49 ms — status=done points=2 caveats=0 latency_ms=49 llm_calls=0
 
 ## Candidate choice
 

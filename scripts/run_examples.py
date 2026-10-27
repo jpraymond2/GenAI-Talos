@@ -202,6 +202,29 @@ async def _run_one(
     }
 
 
+def _eval_headline_line(eval_path: Path = OUTPUT / "eval_results.json") -> str | None:
+    """Format the README eval blurb from eval_results.json, or None if missing."""
+    if not eval_path.is_file():
+        return None
+    try:
+        data = json.loads(eval_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    passed = data.get("passed")
+    total = data.get("total")
+    pct = data.get("overall_pct")
+    person = data.get("person_accuracy")
+    if not isinstance(passed, int) or not isinstance(total, int) or not isinstance(pct, (int, float)):
+        return None
+    person_bit = ""
+    if isinstance(person, (int, float)):
+        person_bit = f", person accuracy **{person * 100:.0f}%**"
+    return (
+        f"Synthetic eval (see [`eval_report.md`](./eval_report.md)): "
+        f"**{passed}/{total} ({pct:.1f}%)**{person_bit}."
+    )
+
+
 async def main() -> None:
     os.environ.setdefault("SAMPLE_MODE", "true")
     os.environ.setdefault("SAMPLE_DATA_DIR", "data/synthetic/tables")
@@ -283,13 +306,18 @@ async def main() -> None:
         )
         print(f"wrote {out_dir}")
 
-    readme = [
-        "# Output examples\n",
-        "Each folder has `brief.md`, `run.json`, `trace.jsonl` (this run only), "
-        "and [`how_it_worked.md`](./01_three_omars/how_it_worked.md) (timeline + critic).\n",
-        "| id | input | shows | rounds | provider | ms | how |",
-        "|---|---|---|---|---|---|---|",
-    ]
+    readme = ["# Output examples\n"]
+    headline = _eval_headline_line()
+    if headline:
+        readme.append(headline + "\n")
+    readme.extend(
+        [
+            "Each folder has `brief.md`, `run.json`, `trace.jsonl` (this run only), "
+            "and [`how_it_worked.md`](./01_three_omars/how_it_worked.md) (timeline + critic).\n",
+            "| id | input | shows | rounds | provider | ms | how |",
+            "|---|---|---|---|---|---|---|",
+        ]
+    )
     for row in rows:
         readme.append(
             f"| `{row['id']}` | {row['text']} | {row['why']} | "

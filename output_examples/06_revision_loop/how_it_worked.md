@@ -1,6 +1,6 @@
 # How it worked — `06_revision_loop`
 
-Run `example-06_revision_loop-0526515d` · status `done` · critic rounds `2`
+Run `example-06_revision_loop-f217f843` · status `done` · critic rounds `2`
 
 ## Timeline
 
@@ -26,15 +26,15 @@ Run `example-06_revision_loop-0526515d` · status `done` · critic rounds `2`
 20. **world** `resolve` — resolve 'Mei Tanaka' candidates=1 top=Mei Tanaka score=1.00 (exact alias match)
 21. **orchestrator** `resolve` — name='Mei Tanaka' candidates=1
 22. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.relationship.interactions
-23. **query_layer** `query` · 1 ms — query world.relationship.interactions rows=200 backend=duckdb ms=1.225
+23. **query_layer** `query` · 1 ms — query world.relationship.interactions rows=200 backend=duckdb ms=1.229
 24. **orchestrator** `relationship` — label=social confidence=0.85
 25. **llm** `embed` · 0 ms — embed count≈6 provider=sample ms=0 success=True
 26. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.thread_peers
 27. **hmem** `retrieve` — hmem retrieve hits=1 candidates=5 top=[('mem_ac03c3d0c78c', 0.367)]
 28. **web_scout** `complete` — web_scout sample hits=3 org=Tidepool
-29. **query_layer** `query` · 2 ms — query world.context.thread_peers rows=357 backend=duckdb ms=2.224
+29. **query_layer** `query` · 2 ms — query world.context.thread_peers rows=357 backend=duckdb ms=2.5
 30. **query_layer** `fallback` — fallback zetaris→duckdb reason=circuit_open tag=world.context.events
-31. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.706
+31. **query_layer** `query` · 0 ms — query world.context.events rows=167 backend=duckdb ms=0.795
 32. **world** `person_context` — person_context open_loops=7 conflicts=0 upcoming=9 past_events=58 recent=20
 33. **orchestrator** `retrieve` — world_open_loops=7 memories=1 backend=duckdb
 34. **orchestrator** `memories` — count=1 top_score=0.367
@@ -48,14 +48,14 @@ Run `example-06_revision_loop-0526515d` · status `done` · critic rounds `2`
 42. **orchestrator** `refetch` — refetch sources=['memory', 'whatsapp'] added=0 ids=[]
 43. **writer** `complete` — person='Mei Tanaka' points=5 headline='Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (im'
 44. **critic** `complete` — overall=pass keep=5/5 missing=0 refetch=1
-45. **orchestrator** `round` — round 2: added 2 ['e3', 'e1'], dropped 2 ['e8', 'e9'], changed 0; prior critic missing=['e1']
+45. **orchestrator** `round` — round 2: added 2 ['e1', 'e3'], dropped 2 ['e8', 'e9'], changed 0; prior critic missing=['e1']
 46. **hmem** `promote` — hmem/promote
 47. **hmem** `feedback` — hmem/feedback
 48. **hmem** `feedback` — hmem/feedback
 49. **orchestrator** `feedback` — feedback=1
 50. **actions** `plan` — steps=2
 51. **actions** `dry_run` — dry_run steps=2
-52. **orchestrator** `final` · 33 ms — status=done points=5 caveats=0 latency_ms=33 llm_calls=0
+52. **orchestrator** `final` · 46 ms — status=done points=5 caveats=0 latency_ms=46 llm_calls=0
 
 ## Candidate choice
 
@@ -98,8 +98,8 @@ Run `example-06_revision_loop-0526515d` · status `done` · critic rounds `2`
 ## Round-1 vs round-2 diff
 
 ### Added (2)
-- `e3`: You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.
 - `e1`: You said on Sat Oct 24: "I'll send details" (re: early stage climate); still open.
+- `e3`: You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.
 
 ### Dropped (2)
 - `e8`: Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)

@@ -1,8 +1,8 @@
 {
-  "run_id": "example-03_nickname_identity-19d9581f",
+  "run_id": "example-03_nickname_identity-1b486fda",
   "utterance": {
     "text": "I'm seeing Sasha soon, catch me up",
-    "ts": "2026-10-27T16:15:40.789840Z",
+    "ts": "2026-10-27T16:25:54.570556Z",
     "mode": "text"
   },
   "intent": {
@@ -126,7 +126,7 @@
         "mention_count": 94,
         "confidence": 0.8,
         "agent_id": "world_ingest",
-        "run_id": "example-01_three_omars-e6f4ccfd"
+        "run_id": "f4a9f038-b6bf-46fe-9dc1-e7b9efffec79"
       },
       "aliases": [
         "Alexandra Petrova",
@@ -429,7 +429,7 @@
       "last_met": null,
       "next_meeting": null
     },
-    "latency_ms": 21,
+    "latency_ms": 23,
     "llm_calls": 0,
     "critic_rounds": 1
   },
@@ -619,8 +619,8 @@
       "id": "w1",
       "source": "web",
       "source_ref": "https://example.com/payloop-series-a",
-      "ts": "2026-09-15T00:00:00Z",
-      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by climate-focused funds, with CEO Omar Haddad citing demand from SMBs.",
+      "ts": "2026-10-14T00:00:00Z",
+      "text": "Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced an $8M Series A led by Maple Ridge Ventures, with CEO Omar Haddad citing demand from SMBs.",
       "url": "https://example.com/payloop-series-a",
       "tags": [
         "web",
@@ -658,7 +658,7 @@
       "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 5 days ago on whatsapp",
       "points": [
         {
-          "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
+          "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced an $8M Series A led by… (https://example.com/payloop-series-a)",
           "evidence_ids": [
             "w1"
           ],
@@ -692,7 +692,7 @@
         {
           "index": 0,
           "decision": "keep",
-          "reason": "keep: cites web Mon Sep 14, 20:00",
+          "reason": "keep: cites web Tue Oct 13, 20:00",
           "fix_hint": null
         },
         {
@@ -717,7 +717,7 @@
     "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 5 days ago on whatsapp",
     "points": [
       {
-        "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced a Series A led by… (https://example.com/payloop-series-a)",
+        "text": "Public news: Payloop raises Series A to expand payroll rails. Montreal fintech Payloop announced an $8M Series A led by… (https://example.com/payloop-series-a)",
         "evidence_ids": [
           "w1"
         ],
