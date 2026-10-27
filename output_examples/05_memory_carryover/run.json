@@ -1,0 +1,272 @@
+{
+  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "utterance": {
+    "text": "I'm meeting Rachel Goldberg",
+    "ts": "2026-10-27T02:42:38.031437Z",
+    "mode": "text"
+  },
+  "intent": {
+    "kind": "brief",
+    "person_name": "Rachel Goldberg",
+    "when": null,
+    "action_request": null,
+    "meal_type": null,
+    "question_field": null,
+    "sources_plan": [
+      "gmail",
+      "imessage",
+      "whatsapp",
+      "linkedin",
+      "calendar",
+      "web",
+      "memory"
+    ],
+    "confidence": 0.9
+  },
+  "candidates": [
+    {
+      "entity_id": "ent_661c8077a70a",
+      "name": "Rachel Goldberg",
+      "score": 1.0,
+      "reason": "exact alias match"
+    }
+  ],
+  "entity_id": "ent_661c8077a70a",
+  "entity_name": "Rachel Goldberg",
+  "context": {
+    "relationship_label": "professional",
+    "relationship_confidence": 0.68,
+    "relationship_style": "Professional contact. Lead with role and company, the latest work thread, open asks or commitments, and relevant company news. Neutral tone. No personal-life details.",
+    "relationship_status": "auto",
+    "evidence_source_refs": {
+      "e1": "gmail:3fc9825c2d5bdc5b",
+      "e2": "calendar:nthj1jqi7og39kok53v4m0uf1b",
+      "m1": "mem_404de197df17",
+      "memory:m1": "mem_404de197df17"
+    },
+    "retrieve_caveats": [],
+    "person_context": {
+      "entity": {
+        "id": "ent_661c8077a70a",
+        "type": "person",
+        "canonical_name": "Rachel Goldberg",
+        "aliases": [
+          "Rachel Goldberg",
+          "rachel@northwindcap.com"
+        ],
+        "attributes": {
+          "org": "Northwind Capital",
+          "title": "Partner",
+          "city": "Toronto"
+        },
+        "attribute_history": [
+          {
+            "field": "org",
+            "value": "Northwind Capital",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_c04b7ed0e6ad"
+          },
+          {
+            "field": "title",
+            "value": "Partner",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_c04b7ed0e6ad"
+          },
+          {
+            "field": "city",
+            "value": "Toronto",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_c04b7ed0e6ad"
+          }
+        ],
+        "first_seen_at": "2026-07-17T22:22:00Z",
+        "last_seen_at": "2026-07-17T22:22:00Z",
+        "mention_count": 1,
+        "confidence": 0.8,
+        "agent_id": "world_ingest",
+        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+      },
+      "aliases": [
+        "Rachel Goldberg",
+        "rachel@northwindcap.com"
+      ],
+      "last_interaction_per_source": {
+        "gmail": {
+          "ts_utc": "2026-07-17T22:22:00Z",
+          "direction": "in",
+          "source_ref": "gmail:3fc9825c2d5bdc5b",
+          "subject": "Great meeting at Startupfest"
+        }
+      },
+      "recent_interactions": [
+        {
+          "interaction_id": "i_7f57081f45ae",
+          "source": "gmail",
+          "thread_id": "3fc9825c2d5bdc5b",
+          "direction": "in",
+          "ts_utc": "2026-07-17T22:22:00Z",
+          "subject": "Great meeting at Startupfest",
+          "text": "Jordan,\n\nGreat to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as you raise.\n\nRachel Goldberg\nPartner, Northwind Capital",
+          "source_ref": "gmail:3fc9825c2d5bdc5b",
+          "peer": false,
+          "assumption": "anchored"
+        }
+      ],
+      "open_loops": [],
+      "upcoming_events": [
+        {
+          "event_id": "e_7d0073e8a1cc",
+          "title": "Northwind <> Tidepool",
+          "start_utc": "2026-11-06T16:00:00Z",
+          "end_utc": "2026-11-06T16:45:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "rachel@northwindcap.com",
+            "tyler@northwindcap.com"
+          ],
+          "source_ref": "calendar:nthj1jqi7og39kok53v4m0uf1b"
+        }
+      ],
+      "past_events": [],
+      "conflicts": [],
+      "selection_reason": "entity_id=ent_661c8077a70a",
+      "linked_handles": [],
+      "last_contact": {
+        "ts_utc": "2026-07-17T22:22:00Z",
+        "source": "gmail",
+        "direction": "in",
+        "source_ref": "gmail:3fc9825c2d5bdc5b",
+        "subject": "Great meeting at Startupfest"
+      },
+      "last_met": null,
+      "next_meeting": {
+        "title": "Northwind <> Tidepool",
+        "start_utc": "2026-11-06T16:00:00Z",
+        "location": "",
+        "source_ref": "calendar:nthj1jqi7og39kok53v4m0uf1b"
+      }
+    },
+    "latency_ms": 5,
+    "llm_calls": 0,
+    "critic_rounds": 1
+  },
+  "memories": [
+    {
+      "id": "mem_404de197df17",
+      "content": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
+      "score": 0.55,
+      "why": "keyword=0.20, entity=0.15, layer=0.10"
+    }
+  ],
+  "evidence": {
+    "e1": {
+      "id": "e1",
+      "source": "gmail",
+      "source_ref": "gmail:3fc9825c2d5bdc5b",
+      "ts": "2026-07-17T22:22:00Z",
+      "text": "Jordan,\n\nGreat to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as you raise.\n\nRachel Goldberg\nPartner, Northwind Capital",
+      "url": null,
+      "tags": []
+    },
+    "e2": {
+      "id": "e2",
+      "source": "calendar",
+      "source_ref": "calendar:nthj1jqi7og39kok53v4m0uf1b",
+      "ts": "2026-11-06T16:00:00Z",
+      "text": "Northwind <> Tidepool",
+      "url": null,
+      "tags": [
+        "upcoming"
+      ]
+    },
+    "m1": {
+      "id": "m1",
+      "source": "memory",
+      "source_ref": "mem_404de197df17",
+      "ts": "2026-10-26T18:00:00-04:00",
+      "text": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
+      "url": null,
+      "tags": [
+        "memory"
+      ]
+    }
+  },
+  "drafts": [
+    {
+      "person": "Rachel Goldberg",
+      "headline": "Rachel Goldberg, Partner at Northwind Capital; last contact 14 weeks ago on gmail; next meeting: Northwind <> Tidepool, Fri Nov 6, 11:00",
+      "points": [
+        {
+          "text": "Upcoming: Northwind <> Tidepool on Fri Nov 6, 11:00 (calendar)",
+          "evidence_ids": [
+            "e2"
+          ],
+          "kind": "logistics",
+          "priority": 1
+        },
+        {
+          "text": "Latest thread on Fri Jul 17: Great to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as… (gmail)",
+          "evidence_ids": [
+            "e1"
+          ],
+          "kind": "catch_up",
+          "priority": 2
+        }
+      ],
+      "caveats": []
+    }
+  ],
+  "verdicts": [
+    {
+      "overall": "pass",
+      "verdicts": [
+        {
+          "index": 0,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        },
+        {
+          "index": 1,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        }
+      ],
+      "missing": [],
+      "refetch": [
+        "calendar",
+        "gmail",
+        "memory"
+      ]
+    }
+  ],
+  "final_brief": {
+    "person": "Rachel Goldberg",
+    "headline": "Rachel Goldberg, Partner at Northwind Capital; last contact 14 weeks ago on gmail; next meeting: Northwind <> Tidepool, Fri Nov 6, 11:00",
+    "points": [
+      {
+        "text": "Upcoming: Northwind <> Tidepool on Fri Nov 6, 11:00 (calendar)",
+        "evidence_ids": [
+          "e2"
+        ],
+        "kind": "logistics",
+        "priority": 1
+      },
+      {
+        "text": "Latest thread on Fri Jul 17: Great to meet you at Startupfest. Climate data infrastructure is a big theme for us this year. Let's stay in touch as… (gmail)",
+        "evidence_ids": [
+          "e1"
+        ],
+        "kind": "catch_up",
+        "priority": 2
+      }
+    ],
+    "caveats": []
+  },
+  "action_plan": null,
+  "status": "done",
+  "round": 1,
+  "question": null
+}

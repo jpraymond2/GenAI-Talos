@@ -1,0 +1,369 @@
+{
+  "overall_pct": 39.130434782608695,
+  "passed": 9,
+  "total": 23,
+  "person_accuracy": 0.7222222222222222,
+  "clarify_accuracy": 1.0,
+  "results": [
+    {
+      "id": "q01",
+      "category": "disambiguation",
+      "ask": "I'm meeting Omar",
+      "passed": true,
+      "checks": {
+        "clarify": true
+      },
+      "reasons": [],
+      "status": "needs_clarification",
+      "entity_name": null
+    },
+    {
+      "id": "q02",
+      "category": "brief",
+      "ask": "I'm meeting Omar Haddad on Wednesday",
+      "passed": true,
+      "checks": {
+        "person": true,
+        "cover:omar_h.coffee": true,
+        "cover:omar_h.series_a": true,
+        "cover:omar_h.intro_ask": true,
+        "must_not:omar_b.casecomp": true,
+        "must_not:omar_k.lease": true
+      },
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Omar Haddad"
+    },
+    {
+      "id": "q03",
+      "category": "brief",
+      "ask": "Brief me on Omar from my MBA",
+      "passed": false,
+      "checks": {
+        "person": false,
+        "cover:omar_b.casecomp": false,
+        "must_not:omar_h.series_a": true,
+        "must_not:omar_k.lease": true
+      },
+      "reasons": [
+        "person want=omar_b got=Amira Khalil",
+        "missing omar_b.casecomp"
+      ],
+      "status": "done",
+      "entity_name": "Amira Khalil"
+    },
+    {
+      "id": "q04",
+      "category": "open_loops",
+      "ask": "What do I owe my landlord?",
+      "passed": false,
+      "checks": {
+        "person": true,
+        "cover:omar_k.lease": false,
+        "cover:omar_k.plumber": true
+      },
+      "reasons": [
+        "missing omar_k.lease"
+      ],
+      "status": "done",
+      "entity_name": "Omar Kassem (proprio)"
+    },
+    {
+      "id": "q05",
+      "category": "disambiguation",
+      "ask": "I'm meeting Daniel Kim on Thursday",
+      "passed": true,
+      "checks": {
+        "person": true,
+        "cover:daniel_vc.pitch": true,
+        "cover:daniel_vc.dataroom": true,
+        "must_not:daniel_cl.wedding": true
+      },
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Daniel Kim"
+    },
+    {
+      "id": "q06",
+      "category": "brief",
+      "ask": "What's new with Dan from UofT?",
+      "passed": false,
+      "checks": {
+        "person": true,
+        "cover:daniel_cl.wedding": false,
+        "must_not:daniel_vc.pitch": true
+      },
+      "reasons": [
+        "missing daniel_cl.wedding"
+      ],
+      "status": "done",
+      "entity_name": "Dan Kim (UofT)"
+    },
+    {
+      "id": "q07",
+      "category": "identity",
+      "ask": "I'm seeing Sasha soon, catch me up",
+      "passed": false,
+      "checks": {
+        "person": true,
+        "cover:sasha.visit": false,
+        "cover:sasha.engaged": false,
+        "cover:sasha.promo": true
+      },
+      "reasons": [
+        "missing sasha.visit",
+        "missing sasha.engaged"
+      ],
+      "status": "done",
+      "entity_name": "Alexandra Petrova"
+    },
+    {
+      "id": "q08",
+      "category": "conflict",
+      "ask": "Where does Priya work now?",
+      "passed": true,
+      "checks": {
+        "person": true,
+        "cover:priya.job": true
+      },
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Priya Nair"
+    },
+    {
+      "id": "q09",
+      "category": "brief",
+      "ask": "Prep me for the Stellarfin pilot call",
+      "passed": false,
+      "checks": {
+        "person": false,
+        "cover:priya.pilot": false,
+        "cover:priya.job": false
+      },
+      "reasons": [
+        "person want=priya got=Ben Okafor",
+        "missing priya.pilot",
+        "missing priya.job"
+      ],
+      "status": "done",
+      "entity_name": "Ben Okafor"
+    },
+    {
+      "id": "q10",
+      "category": "conflict",
+      "ask": "Where does Lucas live?",
+      "passed": true,
+      "checks": {
+        "person": true,
+        "cover:lucas.paris": true,
+        "cover:lucas.xmas": true
+      },
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Lucas Moreau"
+    },
+    {
+      "id": "q11",
+      "category": "identity",
+      "ask": "What's Yusuf's number?",
+      "passed": true,
+      "checks": {
+        "person": true,
+        "cover:yusuf.newnumber": true
+      },
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Yusuf Demir"
+    },
+    {
+      "id": "q12",
+      "category": "brief",
+      "ask": "Who am I meeting on November 6 and what should I know?",
+      "passed": false,
+      "checks": {
+        "person": false,
+        "cover:rachel.meeting": false,
+        "cover:rachel.met": false
+      },
+      "reasons": [
+        "person want=rachel got=None",
+        "missing rachel.meeting",
+        "missing rachel.met"
+      ],
+      "status": "needs_clarification",
+      "entity_name": null
+    },
+    {
+      "id": "q13",
+      "category": "brief",
+      "ask": "Prep me for the \u00c9nergie Bor\u00e9ale call",
+      "passed": false,
+      "checks": {
+        "person": false,
+        "cover:elodie.boreale": false,
+        "cover:elodie.deck_fr": false
+      },
+      "reasons": [
+        "person want=elodie got=Ben Okafor",
+        "missing elodie.boreale",
+        "missing elodie.deck_fr"
+      ],
+      "status": "done",
+      "entity_name": "Ben Okafor"
+    },
+    {
+      "id": "q14",
+      "category": "open_loops",
+      "ask": "What do I owe people this week?",
+      "passed": false,
+      "checks": {
+        "cover:mei.model_ask": false,
+        "cover:daniel_vc.dataroom": false,
+        "cover:hannah.transcript": false,
+        "cover:ruth.draft": false,
+        "cover:elodie.deck_fr": false
+      },
+      "reasons": [
+        "missing mei.model_ask",
+        "missing daniel_vc.dataroom",
+        "missing hannah.transcript",
+        "missing ruth.draft",
+        "missing elodie.deck_fr"
+      ],
+      "status": "needs_clarification",
+      "entity_name": null
+    },
+    {
+      "id": "q15",
+      "category": "open_loops",
+      "ask": "Did I ever reply to Kevin?",
+      "passed": true,
+      "checks": {
+        "person": true,
+        "cover:kevin.hiring_q": true
+      },
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Kevin O'Brien"
+    },
+    {
+      "id": "q16",
+      "category": "sparse",
+      "ask": "I'm meeting Tom Becker",
+      "passed": true,
+      "checks": {
+        "person": true,
+        "cover:tom.intro": true
+      },
+      "reasons": [],
+      "status": "done",
+      "entity_name": "Tom Becker"
+    },
+    {
+      "id": "q17",
+      "category": "unknown",
+      "ask": "I'm meeting Sarah Whitfield",
+      "passed": true,
+      "checks": {
+        "unknown": true
+      },
+      "reasons": [],
+      "status": "needs_clarification",
+      "entity_name": null
+    },
+    {
+      "id": "q18",
+      "category": "calendar",
+      "ask": "What's on my calendar Friday?",
+      "passed": false,
+      "checks": {
+        "cover:omar_k.plumber": false,
+        "cover:hannah.final": false
+      },
+      "reasons": [
+        "missing omar_k.plumber",
+        "missing hannah.final"
+      ],
+      "status": "needs_clarification",
+      "entity_name": null
+    },
+    {
+      "id": "q19",
+      "category": "calendar",
+      "ask": "Am I having lunch with Priya on the 21st?",
+      "passed": false,
+      "checks": {
+        "person": true,
+        "cover:priya.cancelled_lunch": false
+      },
+      "reasons": [
+        "missing priya.cancelled_lunch"
+      ],
+      "status": "done",
+      "entity_name": "Priya Nair"
+    },
+    {
+      "id": "q20",
+      "category": "brief",
+      "ask": "Anything I need to answer my mom about?",
+      "passed": false,
+      "checks": {
+        "person": false,
+        "cover:mom.christmas": false
+      },
+      "reasons": [
+        "person want=mom got=None",
+        "missing mom.christmas"
+      ],
+      "status": "needs_clarification",
+      "entity_name": null
+    },
+    {
+      "id": "q21",
+      "category": "brief",
+      "ask": "Sync with Mei tomorrow, what's open between us?",
+      "passed": false,
+      "checks": {
+        "person": true,
+        "cover:mei.model_ask": true,
+        "cover:mei.preseed_close": false,
+        "cover:mei.japan": false
+      },
+      "reasons": [
+        "missing mei.preseed_close",
+        "missing mei.japan"
+      ],
+      "status": "done",
+      "entity_name": "Mei Tanaka"
+    },
+    {
+      "id": "q22",
+      "category": "brief",
+      "ask": "Whose birthday is coming up?",
+      "passed": false,
+      "checks": {
+        "cover:isabelle.bday": false
+      },
+      "reasons": [
+        "missing isabelle.bday"
+      ],
+      "status": "needs_clarification",
+      "entity_name": null
+    },
+    {
+      "id": "q23",
+      "category": "memory",
+      "ask": "Note that Omar Haddad wants an intro to Rachel by end of month. Then: I'm meeting Rachel Goldberg",
+      "passed": false,
+      "checks": {
+        "person": true,
+        "cover:rachel.meeting": false
+      },
+      "reasons": [
+        "missing rachel.meeting"
+      ],
+      "status": "done",
+      "entity_name": "Rachel Goldberg"
+    }
+  ]
+}

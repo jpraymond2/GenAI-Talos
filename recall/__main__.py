@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import sys
 import time
 import uuid
 from datetime import datetime, timezone
@@ -448,11 +449,30 @@ def ask(
         str | None,
         typer.Option("--run-id", help="Resume a prior needs_clarification run."),
     ] = None,
+    pick: Annotated[
+        int | None,
+        typer.Option("--pick", help="1-based candidate index when clarifying."),
+    ] = None,
+    non_interactive: Annotated[
+        bool,
+        typer.Option(
+            "--non-interactive",
+            help="Never prompt; print clarification + continue-with line and exit.",
+        ),
+    ] = False,
 ) -> None:
     """Run the meeting-prep orchestrator and print the brief."""
     if sample:
         _enable_sample_mode()
-    asyncio.run(_run_ask(utterance, entity_id=entity_id, run_id=run_id))
+    asyncio.run(
+        _run_ask(
+            utterance,
+            entity_id=entity_id,
+            run_id=run_id,
+            pick=pick,
+            non_interactive=non_interactive,
+        )
+    )
 
 
 @app.command()
@@ -494,15 +514,21 @@ async def _run_ask(
     *,
     entity_id: str | None,
     run_id: str | None = None,
+    pick: int | None = None,
+    non_interactive: bool = False,
 ) -> None:
     from recall.orchestrator import run as orchestrate
 
     state = await orchestrate(utterance, entity_id=entity_id, run_id=run_id)
     if state.status == "needs_clarification" and state.candidates:
-        chosen = _prompt_for_candidate(state)
+        chosen = _resolve_clarification(
+            state, pick=pick, non_interactive=non_interactive
+        )
         if chosen is None:
             _print_ask_result(state)
-            return
+            if non_interactive or not sys.stdin.isatty():
+                _print_continue_with(state)
+            return  # noqa: PIE781 — early exit after clarification
         print(f"resolved: {chosen[1]} ({chosen[0]})")
         # Continue the same run with the clarification reply.
         state = await orchestrate(
@@ -511,6 +537,31 @@ async def _run_ask(
             clarification_reply=chosen[1],
         )
     _print_ask_result(state)
+
+
+def _print_continue_with(state: RunState) -> None:
+    print(f"continue with: --run-id {state.run_id} --pick N")
+    for index, candidate in enumerate(state.candidates, start=1):
+        print(f"  {index} = {candidate.name}")
+
+
+def _resolve_clarification(
+    state: RunState,
+    *,
+    pick: int | None,
+    non_interactive: bool,
+) -> tuple[str, str] | None:
+    if pick is not None:
+        if 1 <= pick <= len(state.candidates):
+            chosen = state.candidates[pick - 1]
+            return chosen.entity_id, chosen.name
+        print(f"Invalid --pick {pick}; choose 1..{len(state.candidates)}")
+        return None
+    if non_interactive:
+        _print_clarification_prompt(state)
+        return None
+    # Piped stdin (tests / scripts) still prompts; bare non-TTY EOF → continue-with.
+    return _prompt_for_candidate(state)
 
 
 def _prompt_for_candidate(state: RunState) -> tuple[str, str] | None:

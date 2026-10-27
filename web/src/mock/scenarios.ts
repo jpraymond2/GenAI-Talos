@@ -30,16 +30,16 @@ const evidence: Record<string, Evidence> = {
     source: "gmail",
     source_ref: "gmail:fcc03c83f9",
     ts: "2026-06-12T18:10:00Z",
-    text: "Hey Alex — quick update from Ledgerly. We're iterating on the spend dashboard ahead of the seed round. Free for a coffee next week?",
+    text: "Hey Alex — quick update from Payloop. We're iterating on the spend dashboard ahead of the seed round. Free for a coffee next week?",
     url: null,
-    tags: ["seed", "ledgerly"],
+    tags: ["seed", "payloop"],
   },
   ev_lina: {
     id: "ev_lina",
     source: "gmail",
     source_ref: "gmail:644c7c5984",
     ts: "2026-09-26T10:14:00Z",
-    text: "Intro ask: Lina Chen? — Alex — any chance you could intro me to Lina Chen at Northbridge? She's the associate I mentioned; would love 20 minutes on the seed narrative.",
+    text: "Intro ask: Rachel Goldberg? — Alex — any chance you could intro me to Rachel Goldberg at Northwind? She's the associate I mentioned; would love 20 minutes on the seed narrative.",
     url: null,
     tags: ["open_loop", "intro"],
   },
@@ -55,18 +55,18 @@ const evidence: Record<string, Evidence> = {
   ev_city_contact: {
     id: "ev_city_contact",
     source: "imessage",
-    source_ref: "contact:c_karim_haddad",
+    source_ref: "contact:c_omar_haddad",
     ts: "2026-01-01T00:00:00Z",
-    text: "Contact card lists city as Montreal (Ledgerly / Founder).",
+    text: "Contact card lists city as Montreal (Payloop / Founder).",
     url: null,
     tags: ["conflict", "city"],
   },
   ev_coffee: {
     id: "ev_coffee",
     source: "calendar",
-    source_ref: "calendar:coffee_karim",
+    source_ref: "calendar:coffee_omar",
     ts: "2026-06-15T15:00:00Z",
-    text: "Coffee w/ Karim — 2026-06-15 11:00 ET, Desautels.",
+    text: "Coffee w/ Omar — 2026-06-15 11:00 ET, Desautels.",
     url: null,
     tags: ["logistics"],
   },
@@ -75,24 +75,24 @@ const evidence: Record<string, Evidence> = {
     source: "memory",
     source_ref: "hmem:mem_seed",
     ts: "2026-06-12T18:40:00Z",
-    text: "Karim is raising a seed round for Ledgerly this quarter.",
+    text: "Omar is raising a seed round for Payloop this quarter.",
     url: null,
     tags: ["memory"],
   },
 };
 
 const draft1: Brief = {
-  person: "Karim Haddad",
+  person: "Omar Haddad",
   headline: "Seed momentum, one open intro, and a city conflict to clear",
   points: [
     {
-      text: "Ask how the Ledgerly seed round is tracking after the spend-dashboard push.",
+      text: "Ask how the Payloop seed round is tracking after the spend-dashboard push.",
       evidence_ids: ["ev_seed", "ev_mem"],
       kind: "catch_up",
       priority: 1,
     },
     {
-      text: "You still haven't replied to his Lina Chen intro — close that loop.",
+      text: "You still haven't replied to his Rachel Goldberg intro — close that loop.",
       evidence_ids: ["ev_lina"],
       kind: "open_loop",
       priority: 2,
@@ -108,17 +108,17 @@ const draft1: Brief = {
 };
 
 const draft2: Brief = {
-  person: "Karim Haddad",
+  person: "Omar Haddad",
   headline: "Seed momentum, one open intro, and a city conflict to clear",
   points: [
     {
-      text: "Ask how the Ledgerly seed round is tracking after the spend-dashboard push.",
+      text: "Ask how the Payloop seed round is tracking after the spend-dashboard push.",
       evidence_ids: ["ev_seed", "ev_mem"],
       kind: "catch_up",
       priority: 1,
     },
     {
-      text: "You still haven't replied to his Lina Chen intro — close that loop.",
+      text: "You still haven't replied to his Rachel Goldberg intro — close that loop.",
       evidence_ids: ["ev_lina"],
       kind: "open_loop",
       priority: 2,
@@ -181,7 +181,7 @@ export function clarificationState(text: string): RunState {
     utterance: { text, ts: iso(), mode: "text" },
     intent: {
       kind: "brief",
-      person_name: "Karim",
+      person_name: "Omar",
       when: null,
       action_request: null,
       sources_plan: [...DEFAULT_SOURCES_PLAN],
@@ -189,14 +189,14 @@ export function clarificationState(text: string): RunState {
     },
     candidates: [
       {
-        entity_id: "karim-haddad",
-        name: "Karim Haddad",
+        entity_id: "omar-haddad",
+        name: "Omar Haddad",
         score: 0.55,
-        reason: "Ledgerly founder in your messages",
+        reason: "Payloop founder in your messages",
       },
       {
-        entity_id: "karim-saleh",
-        name: "Karim Saleh",
+        entity_id: "omar-kassem",
+        name: "Omar Kassem",
         score: 0.45,
         reason: "Appears in a class/finance thread",
       },
@@ -213,16 +213,16 @@ export function clarificationState(text: string): RunState {
       steps: [
         {
           tool: "calendar.hold",
-          args: { title: "Coffee w/ Karim (TBD which)" },
-          summary: "Hold a 30m calendar slot once you pick which Karim",
+          args: { title: "Coffee w/ Omar (TBD which)" },
+          summary: "Hold a 30m calendar slot once you pick which Omar",
         },
       ],
-      spoken_summary: "I can hold a calendar slot once you clarify which Karim.",
+      spoken_summary: "I can hold a calendar slot once you clarify which Omar.",
       requires_confirmation: true,
     },
     status: "needs_clarification",
     round: 0,
-    question: "Karim Haddad or Karim Saleh?",
+    question: "Omar Haddad or Omar Kassem?",
   };
 }
 
@@ -232,7 +232,7 @@ export function briefState(text: string): RunState {
     utterance: { text, ts: iso(), mode: "text" },
     intent: {
       kind: "brief",
-      person_name: "Karim Haddad",
+      person_name: "Omar Haddad",
       when: null,
       action_request: null,
       sources_plan: [...DEFAULT_SOURCES_PLAN],
@@ -240,19 +240,19 @@ export function briefState(text: string): RunState {
     },
     candidates: [
       {
-        entity_id: "karim-haddad",
-        name: "Karim Haddad",
+        entity_id: "omar-haddad",
+        name: "Omar Haddad",
         score: 0.96,
         reason: "Exact name match",
       },
     ],
-    entity_id: "karim-haddad",
-    entity_name: "Karim Haddad",
+    entity_id: "omar-haddad",
+    entity_name: "Omar Haddad",
     context: { latency_ms: 4820, llm_calls: 4, critic_rounds: 2 },
     memories: [
       {
         id: "mem_seed",
-        text: "Karim is raising a seed round for Ledgerly this quarter.",
+        text: "Omar is raising a seed round for Payloop this quarter.",
         score: 0.91,
       },
     ],
@@ -266,14 +266,14 @@ export function briefState(text: string): RunState {
           tool: "gmail.draft_reply",
           args: {
             thread: "th_kh_lina_intro",
-            subject: "Intro ask: Lina Chen?",
-            to: "karim@ledgerly.io",
+            subject: "Intro ask: Rachel Goldberg?",
+            to: "omar@payloop.io",
           },
-          summary: "Draft a short reply closing the Lina Chen intro loop",
+          summary: "Draft a short reply closing the Rachel Goldberg intro loop",
         },
         {
           tool: "calendar.create",
-          args: { title: "Coffee w/ Karim", location: "Desautels" },
+          args: { title: "Coffee w/ Omar", location: "Desautels" },
           summary: "Offer a coffee hold matching your usual Desautels pattern",
         },
       ],
@@ -291,19 +291,19 @@ export function clarificationTrace(): TraceEvent[] {
   const id = RUN_CLARIFY;
   return [
     evt(id, "router", "complete", {
-      summary: "brief for person_name=Karim",
+      summary: "brief for person_name=Omar",
       model: "nvidia/nemotron-3-ultra-550b-a55b",
       latency_ms: 420,
       intent: "brief",
     }, 100),
     evt(id, "resolver", "complete", {
-      summary: "ambiguous: Karim Haddad vs Karim Saleh",
+      summary: "ambiguous: Omar Haddad vs Omar Kassem",
       model: "fast",
       latency_ms: 180,
       candidates: 2,
     }, 700),
     evt(id, "orchestrator", "clarify", {
-      summary: "Karim Haddad or Karim Saleh?",
+      summary: "Omar Haddad or Omar Kassem?",
       latency_ms: 12,
     }, 900),
   ];
@@ -314,15 +314,15 @@ export function briefTrace(): TraceEvent[] {
   const id = RUN_BRIEF;
   return [
     evt(id, "router", "complete", {
-      summary: "brief for Karim Haddad",
+      summary: "brief for Omar Haddad",
       model: "nvidia/nemotron-3-ultra-550b-a55b",
       latency_ms: 390,
     }, 80),
     evt(id, "resolver", "complete", {
-      summary: "resolved karim-haddad (score 0.96)",
+      summary: "resolved omar-haddad (score 0.96)",
       model: "world+hmem",
       latency_ms: 210,
-      entity_id: "karim-haddad",
+      entity_id: "omar-haddad",
     }, 400),
     evt(id, "retriever", "query", {
       summary: "via Zetaris USL",
@@ -337,7 +337,7 @@ export function briefTrace(): TraceEvent[] {
       row_count: 32,
     }, 900),
     evt(id, "memory", "complete", {
-      summary: "3 memories retrieved for karim-haddad",
+      summary: "3 memories retrieved for omar-haddad",
       model: "nvidia/nv-embedqa-e5-v5",
       latency_ms: 310,
     }, 1400),
@@ -381,18 +381,18 @@ export function pickScenario(text: string): {
 } {
   const normalized = text.trim().toLowerCase();
   if (
-    normalized.includes("karim haddad") ||
-    normalized === "karim-haddad" ||
+    normalized.includes("omar haddad") ||
+    normalized === "omar-haddad" ||
     normalized.includes("confirm haddad")
   ) {
     return { state: briefState(text), traces: briefTrace() };
   }
-  if (normalized.includes("karim saleh") || normalized === "karim-saleh") {
+  if (normalized.includes("omar saleh") || normalized === "omar-kassem") {
     const state = briefState(text);
-    state.entity_id = "karim-saleh";
-    state.entity_name = "Karim Saleh";
+    state.entity_id = "omar-kassem";
+    state.entity_name = "Omar Kassem";
     state.final_brief = {
-      person: "Karim Saleh",
+      person: "Omar Kassem",
       headline: "Teaching assistant at McGill — light context",
       points: [
         {
@@ -402,13 +402,13 @@ export function pickScenario(text: string): {
           priority: 1,
         },
       ],
-      caveats: ["Thin evidence vs Karim Haddad"],
+      caveats: ["Thin evidence vs Omar Haddad"],
     };
     state.action_plan = null;
     state.status = "done";
     return { state, traces: briefTrace().map((t) => ({ ...t, run_id: state.run_id })) };
   }
-  if (normalized.includes("karim")) {
+  if (normalized.includes("omar")) {
     return { state: clarificationState(text), traces: clarificationTrace() };
   }
   return {

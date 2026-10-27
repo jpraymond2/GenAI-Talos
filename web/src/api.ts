@@ -1,5 +1,10 @@
-import { authHeaders, ensureApiToken, getApiToken } from "./auth";
-import { karimLedger, karimMemories, karimPerson } from "./mock/person";
+import {
+  authHeadersAsync,
+  ensureApiToken,
+  ensureApiTokenAsync,
+  getApiToken,
+} from "./auth";
+import { omarLedger, omarMemories, omarPerson } from "./mock/person";
 import { pickScenario } from "./mock/scenarios";
 import { recordingFilename } from "./recorderMime";
 import type {
@@ -10,8 +15,8 @@ import type {
   TraceEvent,
 } from "./types";
 
-const MOCK_FLAG = String(import.meta.env.VITE_MOCK ?? "true").toLowerCase() === "true";
-const MOCK_VOICE_TRANSCRIPT = "I'm meeting Karim Haddad";
+const MOCK_FLAG = String(import.meta.env.VITE_MOCK ?? "false").toLowerCase() === "true";
+const MOCK_VOICE_TRANSCRIPT = "I'm meeting Omar Haddad";
 
 type TraceListener = (event: TraceEvent) => void;
 
@@ -19,6 +24,7 @@ const listeners = new Set<TraceListener>();
 let mockTimers: number[] = [];
 let liveSocket: WebSocket | null = null;
 let forceMock: boolean | null = null;
+let backendDown = false;
 
 export function onTrace(listener: TraceListener): () => void {
   listeners.add(listener);
@@ -52,14 +58,17 @@ async function backendReachable(): Promise<boolean> {
   }
 }
 
-async function shouldMock(): Promise<boolean> {
-  if (useMock()) return true;
-  const ok = await backendReachable();
-  if (!ok) {
-    forceMock = true;
-    return true;
-  }
-  return false;
+export function isBackendUnreachable(): boolean {
+  return backendDown;
+}
+
+export function enableRecordedDemoMock(): void {
+  forceMock = true;
+  backendDown = false;
+}
+
+export function clearForcedMock(): void {
+  forceMock = null;
 }
 
 function replayTraces(traces: TraceEvent[], gapMs = 280): Promise<void> {
@@ -151,22 +160,27 @@ export async function ask(
 ): Promise<RunState> {
   const entityId = opts?.entityId;
   const runId = opts?.runId;
-  const mock = await shouldMock();
-  if (mock) {
+  if (MOCK_FLAG || forceMock === true) {
     const key =
-      entityId === "karim-saleh"
-        ? "I'm meeting Karim Saleh"
+      entityId === "omar-kassem"
+        ? "I'm meeting Omar Kassem"
         : entityId
-          ? "I'm meeting Karim Haddad"
+          ? "I'm meeting Omar Haddad"
           : text;
     const { state, traces } = pickScenario(key);
     void replayTraces(traces);
     return structuredClone(state);
   }
+  const reachable = await backendReachable();
+  backendDown = !reachable;
+  if (!reachable) {
+    throw new Error("Backend not reachable on :8000; run `make demo`");
+  }
+  await ensureApiTokenAsync();
   connectLiveTrace();
   const res = await fetch("/api/ask", {
     method: "POST",
-    headers: authHeaders({ "Content-Type": "application/json" }),
+    headers: await authHeadersAsync({ "Content-Type": "application/json" }),
     body: JSON.stringify({
       text,
       entity_id: entityId ?? null,
@@ -177,10 +191,7 @@ export async function ask(
     if (res.status === 401) {
       throw new Error("Unauthorized — check RECALL_API_TOKEN");
     }
-    forceMock = true;
-    const { state, traces } = pickScenario(text);
-    void replayTraces(traces);
-    return structuredClone(state);
+    throw new Error(`Ask failed (${res.status})`);
   }
   return (await res.json()) as RunState;
 }
@@ -190,17 +201,17 @@ export async function confirm(payload: {
   run_id: string;
   confirmed: boolean;
 }): Promise<{ status: string; run_id?: string }> {
-  const mock = await shouldMock();
-  if (mock) {
+  if (MOCK_FLAG || forceMock === true) {
     return {
       status: payload.confirmed ? "confirmed" : "cancelled",
       run_id: payload.run_id,
     };
   }
+  await ensureApiTokenAsync();
   connectLiveTrace();
   const res = await fetch("/api/confirm", {
     method: "POST",
-    headers: authHeaders({ "Content-Type": "application/json" }),
+    headers: await authHeadersAsync({ "Content-Type": "application/json" }),
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -211,12 +222,13 @@ export async function confirm(payload: {
 
 /** GET /api/person/{entity_id}. */
 export async function fetchPerson(entityId: string): Promise<PersonView | null> {
-  if (await shouldMock()) {
-    if (!entityId || entityId === "karim-haddad") return structuredClone(karimPerson);
+  if (MOCK_FLAG || forceMock === true) {
+    if (!entityId || entityId === "omar-haddad") return structuredClone(omarPerson);
     return null;
   }
+  await ensureApiTokenAsync();
   const res = await fetch(`/api/person/${encodeURIComponent(entityId)}`, {
-    headers: authHeaders(),
+    headers: await authHeadersAsync(),
   });
   if (res.status === 404) return null;
   if (!res.ok) return null;
@@ -227,17 +239,18 @@ export async function fetchPerson(entityId: string): Promise<PersonView | null> 
 export async function fetchMemories(
   entityId: string,
 ): Promise<{ memories: MemoryItem[]; ledger: LedgerEvent[] }> {
-  if (await shouldMock()) {
-    if (!entityId || entityId === "karim-haddad") {
+  if (MOCK_FLAG || forceMock === true) {
+    if (!entityId || entityId === "omar-haddad") {
       return {
-        memories: structuredClone(karimMemories),
-        ledger: structuredClone(karimLedger),
+        memories: structuredClone(omarMemories),
+        ledger: structuredClone(omarLedger),
       };
     }
     return { memories: [], ledger: [] };
   }
+  await ensureApiTokenAsync();
   const res = await fetch(`/api/memories/${encodeURIComponent(entityId)}`, {
-    headers: authHeaders(),
+    headers: await authHeadersAsync(),
   });
   if (!res.ok) return { memories: [], ledger: [] };
   return {
@@ -282,12 +295,13 @@ export async function sendVoice(
   blob: Blob,
   opts?: { runId?: string | null },
 ): Promise<SendVoiceOutcome> {
-  if (await shouldMock()) {
+  if (MOCK_FLAG || forceMock === true) {
     return {
       ok: true,
       data: { transcript: MOCK_VOICE_TRANSCRIPT, engine: "sample" },
     };
   }
+  await ensureApiTokenAsync();
   const body = new FormData();
   body.append("audio", blob, recordingFilename(blob.type || "audio/webm"));
   if (opts?.runId) body.append("run_id", opts.runId);
@@ -295,7 +309,7 @@ export async function sendVoice(
   try {
     res = await fetch("/api/voice", {
       method: "POST",
-      headers: authHeaders(),
+      headers: await authHeadersAsync(),
       body,
     });
   } catch (err) {

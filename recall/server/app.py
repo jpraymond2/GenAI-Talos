@@ -29,7 +29,13 @@ from pydantic import BaseModel, Field
 
 from recall import __version__
 from recall.config import get_settings
-from recall.server.auth import require_bearer, require_ws_token
+from recall.server.auth import (
+    client_is_loopback,
+    ensure_sample_token,
+    expected_token,
+    require_bearer,
+    require_ws_token,
+)
 from recall.server.session import (
     enrich_ask_payload,
     ingest_status,
@@ -63,9 +69,11 @@ class ConfirmBody(BaseModel):
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    """Start the live-ingest loop when not in SAMPLE_MODE."""
+    """Start the live-ingest loop when not in SAMPLE_MODE; mint sample token."""
     global _ingest_task
     settings = get_settings()
+    if settings.sample_mode:
+        ensure_sample_token()
     if not settings.sample_mode:
         _ingest_task = asyncio.create_task(_live_ingest_loop(), name="recall-live-ingest")
     try:
@@ -88,6 +96,19 @@ def health() -> dict[str, str]:
     """Report that the process is up (no auth)."""
     return {"status": "ok"}
 
+
+@app.get("/api/local-token")
+def api_local_token(request: Request) -> dict[str, str]:
+    """Return the sample-mode token to loopback clients only (404 otherwise)."""
+    if not client_is_loopback(request):
+        raise HTTPException(status_code=404, detail="Not found")
+    settings = get_settings()
+    if not settings.sample_mode:
+        raise HTTPException(status_code=404, detail="Not found")
+    token = expected_token()
+    if not token:
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"token": token}
 
 @app.post("/api/ask", dependencies=[Depends(require_bearer)])
 async def api_ask(body: AskBody) -> dict[str, Any]:

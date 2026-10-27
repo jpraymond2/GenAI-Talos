@@ -39,8 +39,7 @@ def test_ask_ambiguous_karim_then_select_one(
 
     result = runner.invoke(
         cli,
-        ["ask", "I'm meeting Karim", "--sample"],
-        input="Haddad\n",
+        ["ask", "I'm meeting Karim", "--sample", "--pick", "1"],
     )
 
     assert result.exit_code == 0, result.stdout + result.stderr

@@ -1,0 +1,645 @@
+{
+  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "utterance": {
+    "text": "I'm seeing Sasha soon, catch me up",
+    "ts": "2026-10-27T02:42:38.002972Z",
+    "mode": "text"
+  },
+  "intent": {
+    "kind": "brief",
+    "person_name": "Alexandra Petrova",
+    "when": null,
+    "action_request": null,
+    "meal_type": null,
+    "question_field": null,
+    "sources_plan": [
+      "gmail",
+      "imessage",
+      "whatsapp",
+      "linkedin",
+      "calendar",
+      "web",
+      "memory"
+    ],
+    "confidence": 0.9
+  },
+  "candidates": [
+    {
+      "entity_id": "ent_12ae312d69de",
+      "name": "Alexandra Petrova",
+      "score": 1.0,
+      "reason": "exact alias match"
+    },
+    {
+      "entity_id": "ent_6921ed548a92",
+      "name": "Ivan Petrov",
+      "score": 0.6429,
+      "reason": "fuzzy name (64)"
+    }
+  ],
+  "entity_id": "ent_12ae312d69de",
+  "entity_name": "Alexandra Petrova",
+  "context": {
+    "relationship_label": "social",
+    "relationship_confidence": 0.62,
+    "relationship_style": "Friend. Lead with life updates, plans and anything the user promised personally. Warm, casual tone. Skip job titles unless they changed.",
+    "relationship_status": "auto",
+    "evidence_source_refs": {
+      "e1": "imessage:1497",
+      "e2": "imessage:1496",
+      "e3": "imessage:1417",
+      "e4": "imessage:1416",
+      "e5": "imessage:1384",
+      "e6": "imessage:1140",
+      "e7": "imessage:1139",
+      "e8": "imessage:1113",
+      "e9": "imessage:1112",
+      "e10": "imessage:1111",
+      "e11": "imessage:892",
+      "e12": "imessage:891",
+      "e13": "imessage:890",
+      "e14": "imessage:738",
+      "e15": "imessage:737",
+      "e16": "imessage:736",
+      "e17": "imessage:580",
+      "e18": "imessage:579",
+      "e19": "imessage:578",
+      "e20": "imessage:544"
+    },
+    "retrieve_caveats": [],
+    "person_context": {
+      "entity": {
+        "id": "ent_12ae312d69de",
+        "type": "person",
+        "canonical_name": "Alexandra Petrova",
+        "aliases": [
+          "Alexandra Petrova",
+          "+14165550129",
+          "alexandra.petrova@fieldnote.design",
+          "Sasha Petrova"
+        ],
+        "attributes": {
+          "org": "Fieldnote",
+          "title": "UX Designer",
+          "city": "Toronto"
+        },
+        "attribute_history": [
+          {
+            "field": "org",
+            "value": "Fieldnote",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_1ac807506e35"
+          },
+          {
+            "field": "title",
+            "value": "UX Designer",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_1ac807506e35"
+          },
+          {
+            "field": "city",
+            "value": "Toronto",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_1ac807506e35"
+          }
+        ],
+        "first_seen_at": "2025-10-04T01:22:16Z",
+        "last_seen_at": "2026-10-21T18:11:04Z",
+        "mention_count": 94,
+        "confidence": 0.8,
+        "agent_id": "world_ingest",
+        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+      },
+      "aliases": [
+        "Alexandra Petrova",
+        "+14165550129",
+        "alexandra.petrova@fieldnote.design",
+        "Sasha Petrova"
+      ],
+      "last_interaction_per_source": {
+        "imessage": {
+          "ts_utc": "2026-10-19T01:02:00Z",
+          "direction": "out",
+          "source_ref": "imessage:1497",
+          "subject": ""
+        }
+      },
+      "recent_interactions": [
+        {
+          "interaction_id": "i_6ad9c5923b9c",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "out",
+          "ts_utc": "2026-10-19T01:02:00Z",
+          "subject": "",
+          "text": "yes!! Saturday 14th it is, I'll book somewhere in Mile End",
+          "source_ref": "imessage:1497",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_6a2a689ffe57",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-10-19T00:44:00Z",
+          "subject": "",
+          "text": "I'll be in Montreal Nov 13 to 16 for a design conference! dinner on Saturday the 14th?",
+          "source_ref": "imessage:1496",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_c310a1f2c051",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-09-28T20:26:21Z",
+          "subject": "",
+          "text": "finally. what a week",
+          "source_ref": "imessage:1417",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_5174cf13d993",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "out",
+          "ts_utc": "2026-09-28T20:22:54Z",
+          "subject": "",
+          "text": "happy friday 🍻",
+          "source_ref": "imessage:1416",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_6404cbea954f",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-09-22T23:10:00Z",
+          "subject": "",
+          "text": "small news: they made me senior UX designer at Fieldnote 🙈",
+          "source_ref": "imessage:1384",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_669611b06abb",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-07-25T13:09:02Z",
+          "subject": "",
+          "text": "anytime ❤️",
+          "source_ref": "imessage:1140",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_38e0809d2443",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "out",
+          "ts_utc": "2026-07-25T13:07:59Z",
+          "subject": "",
+          "text": "thanks again for yesterday, really needed that",
+          "source_ref": "imessage:1139",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_37bc23efac25",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-07-17T13:59:38Z",
+          "subject": "",
+          "text": "phew, I'll grab it next time",
+          "source_ref": "imessage:1113",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_b919b5853d68",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "out",
+          "ts_utc": "2026-07-17T13:58:52Z",
+          "subject": "",
+          "text": "the grey one? yes, it's on the chair",
+          "source_ref": "imessage:1112",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_c5be3ed04ba6",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-07-17T13:43:43Z",
+          "subject": "",
+          "text": "did I leave my scarf at your place?",
+          "source_ref": "imessage:1111",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_68b44c7f5110",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-05-22T19:02:25Z",
+          "subject": "",
+          "text": "lol",
+          "source_ref": "imessage:892",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_d6f63e46726e",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "out",
+          "ts_utc": "2026-05-22T18:54:20Z",
+          "subject": "",
+          "text": "proud of you",
+          "source_ref": "imessage:891",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_5bc7b9e47301",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-05-22T18:13:56Z",
+          "subject": "",
+          "text": "ok I finally booked the dentist",
+          "source_ref": "imessage:890",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_38a7f686d8a4",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-04-14T01:16:03Z",
+          "subject": "",
+          "text": "perfect",
+          "source_ref": "imessage:738",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_89b48f2dbeaf",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "out",
+          "ts_utc": "2026-04-14T01:12:26Z",
+          "subject": "",
+          "text": "in 20 min?",
+          "source_ref": "imessage:737",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_1472c3555bc4",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-04-14T01:11:16Z",
+          "subject": "",
+          "text": "free for a quick call?",
+          "source_ref": "imessage:736",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_f05f8a208136",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-03-02T20:18:34Z",
+          "subject": "",
+          "text": "can't wait",
+          "source_ref": "imessage:580",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_af51185b354d",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "out",
+          "ts_utc": "2026-03-02T19:38:28Z",
+          "subject": "",
+          "text": "amazing, too short as always. photos soon",
+          "source_ref": "imessage:579",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_c9bbdf733118",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-03-02T19:34:46Z",
+          "subject": "",
+          "text": "how was the trip?",
+          "source_ref": "imessage:578",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_5aa64b2ccc15",
+          "source": "imessage",
+          "thread_id": "th_454747c13807",
+          "direction": "in",
+          "ts_utc": "2026-02-20T00:07:13Z",
+          "subject": "",
+          "text": "finally. what a week",
+          "source_ref": "imessage:544",
+          "peer": false,
+          "assumption": "anchored"
+        }
+      ],
+      "open_loops": [],
+      "upcoming_events": [],
+      "past_events": [],
+      "conflicts": [],
+      "selection_reason": "entity_id=ent_12ae312d69de",
+      "linked_handles": [],
+      "last_contact": {
+        "ts_utc": "2026-10-19T01:02:00Z",
+        "source": "imessage",
+        "direction": "out",
+        "source_ref": "imessage:1497",
+        "subject": ""
+      },
+      "last_met": null,
+      "next_meeting": null
+    },
+    "latency_ms": 8,
+    "llm_calls": 0,
+    "critic_rounds": 1
+  },
+  "memories": [],
+  "evidence": {
+    "e1": {
+      "id": "e1",
+      "source": "imessage",
+      "source_ref": "imessage:1497",
+      "ts": "2026-10-19T01:02:00Z",
+      "text": "yes!! Saturday 14th it is, I'll book somewhere in Mile End",
+      "url": null,
+      "tags": []
+    },
+    "e2": {
+      "id": "e2",
+      "source": "imessage",
+      "source_ref": "imessage:1496",
+      "ts": "2026-10-19T00:44:00Z",
+      "text": "I'll be in Montreal Nov 13 to 16 for a design conference! dinner on Saturday the 14th?",
+      "url": null,
+      "tags": []
+    },
+    "e3": {
+      "id": "e3",
+      "source": "imessage",
+      "source_ref": "imessage:1417",
+      "ts": "2026-09-28T20:26:21Z",
+      "text": "finally. what a week",
+      "url": null,
+      "tags": []
+    },
+    "e4": {
+      "id": "e4",
+      "source": "imessage",
+      "source_ref": "imessage:1416",
+      "ts": "2026-09-28T20:22:54Z",
+      "text": "happy friday 🍻",
+      "url": null,
+      "tags": []
+    },
+    "e5": {
+      "id": "e5",
+      "source": "imessage",
+      "source_ref": "imessage:1384",
+      "ts": "2026-09-22T23:10:00Z",
+      "text": "small news: they made me senior UX designer at Fieldnote 🙈",
+      "url": null,
+      "tags": []
+    },
+    "e6": {
+      "id": "e6",
+      "source": "imessage",
+      "source_ref": "imessage:1140",
+      "ts": "2026-07-25T13:09:02Z",
+      "text": "anytime ❤️",
+      "url": null,
+      "tags": []
+    },
+    "e7": {
+      "id": "e7",
+      "source": "imessage",
+      "source_ref": "imessage:1139",
+      "ts": "2026-07-25T13:07:59Z",
+      "text": "thanks again for yesterday, really needed that",
+      "url": null,
+      "tags": []
+    },
+    "e8": {
+      "id": "e8",
+      "source": "imessage",
+      "source_ref": "imessage:1113",
+      "ts": "2026-07-17T13:59:38Z",
+      "text": "phew, I'll grab it next time",
+      "url": null,
+      "tags": []
+    },
+    "e9": {
+      "id": "e9",
+      "source": "imessage",
+      "source_ref": "imessage:1112",
+      "ts": "2026-07-17T13:58:52Z",
+      "text": "the grey one? yes, it's on the chair",
+      "url": null,
+      "tags": []
+    },
+    "e10": {
+      "id": "e10",
+      "source": "imessage",
+      "source_ref": "imessage:1111",
+      "ts": "2026-07-17T13:43:43Z",
+      "text": "did I leave my scarf at your place?",
+      "url": null,
+      "tags": []
+    },
+    "e11": {
+      "id": "e11",
+      "source": "imessage",
+      "source_ref": "imessage:892",
+      "ts": "2026-05-22T19:02:25Z",
+      "text": "lol",
+      "url": null,
+      "tags": []
+    },
+    "e12": {
+      "id": "e12",
+      "source": "imessage",
+      "source_ref": "imessage:891",
+      "ts": "2026-05-22T18:54:20Z",
+      "text": "proud of you",
+      "url": null,
+      "tags": []
+    },
+    "e13": {
+      "id": "e13",
+      "source": "imessage",
+      "source_ref": "imessage:890",
+      "ts": "2026-05-22T18:13:56Z",
+      "text": "ok I finally booked the dentist",
+      "url": null,
+      "tags": []
+    },
+    "e14": {
+      "id": "e14",
+      "source": "imessage",
+      "source_ref": "imessage:738",
+      "ts": "2026-04-14T01:16:03Z",
+      "text": "perfect",
+      "url": null,
+      "tags": []
+    },
+    "e15": {
+      "id": "e15",
+      "source": "imessage",
+      "source_ref": "imessage:737",
+      "ts": "2026-04-14T01:12:26Z",
+      "text": "in 20 min?",
+      "url": null,
+      "tags": []
+    },
+    "e16": {
+      "id": "e16",
+      "source": "imessage",
+      "source_ref": "imessage:736",
+      "ts": "2026-04-14T01:11:16Z",
+      "text": "free for a quick call?",
+      "url": null,
+      "tags": []
+    },
+    "e17": {
+      "id": "e17",
+      "source": "imessage",
+      "source_ref": "imessage:580",
+      "ts": "2026-03-02T20:18:34Z",
+      "text": "can't wait",
+      "url": null,
+      "tags": []
+    },
+    "e18": {
+      "id": "e18",
+      "source": "imessage",
+      "source_ref": "imessage:579",
+      "ts": "2026-03-02T19:38:28Z",
+      "text": "amazing, too short as always. photos soon",
+      "url": null,
+      "tags": []
+    },
+    "e19": {
+      "id": "e19",
+      "source": "imessage",
+      "source_ref": "imessage:578",
+      "ts": "2026-03-02T19:34:46Z",
+      "text": "how was the trip?",
+      "url": null,
+      "tags": []
+    },
+    "e20": {
+      "id": "e20",
+      "source": "imessage",
+      "source_ref": "imessage:544",
+      "ts": "2026-02-20T00:07:13Z",
+      "text": "finally. what a week",
+      "url": null,
+      "tags": []
+    }
+  },
+  "drafts": [
+    {
+      "person": "Alexandra Petrova",
+      "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 7 days ago on imessage",
+      "points": [
+        {
+          "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
+          "evidence_ids": [
+            "e1"
+          ],
+          "kind": "catch_up",
+          "priority": 1
+        },
+        {
+          "text": "Latest thread on Tue Sep 22: small news: they made me senior UX designer at Fieldnote 🙈 (imessage)",
+          "evidence_ids": [
+            "e5"
+          ],
+          "kind": "catch_up",
+          "priority": 2
+        }
+      ],
+      "caveats": []
+    }
+  ],
+  "verdicts": [
+    {
+      "overall": "pass",
+      "verdicts": [
+        {
+          "index": 0,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        },
+        {
+          "index": 1,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        }
+      ],
+      "missing": [],
+      "refetch": []
+    }
+  ],
+  "final_brief": {
+    "person": "Alexandra Petrova",
+    "headline": "Alexandra Petrova, UX Designer at Fieldnote; last contact 7 days ago on imessage",
+    "points": [
+      {
+        "text": "Latest thread on Sun Oct 18: yes!! Saturday 14th it is, I'll book somewhere in Mile End (imessage)",
+        "evidence_ids": [
+          "e1"
+        ],
+        "kind": "catch_up",
+        "priority": 1
+      },
+      {
+        "text": "Latest thread on Tue Sep 22: small news: they made me senior UX designer at Fieldnote 🙈 (imessage)",
+        "evidence_ids": [
+          "e5"
+        ],
+        "kind": "catch_up",
+        "priority": 2
+      }
+    ],
+    "caveats": []
+  },
+  "action_plan": null,
+  "status": "done",
+  "round": 1,
+  "question": null
+}

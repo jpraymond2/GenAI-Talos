@@ -1,0 +1,1205 @@
+{
+  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "utterance": {
+    "text": "Sync with Mei tomorrow, what's open between us?",
+    "ts": "2026-10-27T02:42:38.038267Z",
+    "mode": "text"
+  },
+  "intent": {
+    "kind": "brief",
+    "person_name": "Mei Tanaka",
+    "when": "2026-10-27",
+    "action_request": null,
+    "meal_type": null,
+    "question_field": null,
+    "sources_plan": [
+      "gmail",
+      "imessage",
+      "whatsapp",
+      "linkedin",
+      "calendar",
+      "web",
+      "memory"
+    ],
+    "confidence": 0.9
+  },
+  "candidates": [
+    {
+      "entity_id": "ent_82d6a6e874e4",
+      "name": "Mei Tanaka",
+      "score": 1.0,
+      "reason": "exact alias match"
+    }
+  ],
+  "entity_id": "ent_82d6a6e874e4",
+  "entity_name": "Mei Tanaka",
+  "context": {
+    "relationship_label": "social",
+    "relationship_confidence": 0.85,
+    "relationship_style": "Friend. Lead with life updates, plans and anything the user promised personally. Warm, casual tone. Skip job titles unless they changed.",
+    "relationship_status": "auto",
+    "evidence_source_refs": {
+      "e1": "imessage:1539",
+      "e2": "imessage:1531",
+      "e3": "imessage:1502",
+      "e4": "imessage:1543",
+      "e5": "imessage:1539",
+      "e6": "imessage:1538",
+      "e7": "imessage:1537",
+      "e8": "imessage:1533",
+      "e9": "imessage:1532",
+      "e10": "imessage:1531",
+      "e11": "imessage:1530",
+      "e12": "imessage:1528",
+      "e13": "imessage:1526",
+      "e14": "imessage:1524",
+      "e15": "gmail:f58067035b2e16c1",
+      "e16": "gmail:c6486db867d8f916",
+      "e17": "imessage:1505",
+      "e18": "imessage:1504",
+      "e19": "imessage:1503",
+      "e20": "imessage:1502",
+      "e21": "imessage:1501",
+      "e22": "imessage:1500",
+      "e23": "imessage:1492",
+      "e24": "calendar:s2jqr6abvj98ccel38k63oe1vn",
+      "e25": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6",
+      "e26": "calendar:qgmq9o7ohf4e6ihg73km8fi1d3",
+      "e27": "calendar:m8fu75j3fdvt418itvbmo6fj14",
+      "e28": "calendar:tfjoki63fc68mn1ac5jsed4ve6",
+      "e29": "calendar:qpfibb3js1lkgtu2l0uo1i1qpd",
+      "e30": "calendar:cdrtmht6hku671skeca79fvqg9"
+    },
+    "retrieve_caveats": [],
+    "person_context": {
+      "entity": {
+        "id": "ent_82d6a6e874e4",
+        "type": "person",
+        "canonical_name": "Mei Tanaka",
+        "aliases": [
+          "Mei Tanaka",
+          "+14385550117",
+          "mei@tidepool.earth"
+        ],
+        "attributes": {
+          "org": "Tidepool",
+          "title": "CTO",
+          "city": "Montreal"
+        },
+        "attribute_history": [
+          {
+            "field": "org",
+            "value": "Tidepool",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_ed4f859b700e"
+          },
+          {
+            "field": "title",
+            "value": "CTO",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_ed4f859b700e"
+          },
+          {
+            "field": "city",
+            "value": "Montreal",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_ed4f859b700e"
+          }
+        ],
+        "first_seen_at": "2025-09-23T17:24:17Z",
+        "last_seen_at": "2026-10-25T15:20:00Z",
+        "mention_count": 331,
+        "confidence": 0.8,
+        "agent_id": "world_ingest",
+        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+      },
+      "aliases": [
+        "Mei Tanaka",
+        "+14385550117",
+        "mei@tidepool.earth"
+      ],
+      "last_interaction_per_source": {
+        "imessage": {
+          "ts_utc": "2026-10-25T15:20:00Z",
+          "direction": "in",
+          "source_ref": "imessage:1543",
+          "subject": ""
+        },
+        "gmail": {
+          "ts_utc": "2026-10-21T04:43:51Z",
+          "direction": "out",
+          "source_ref": "gmail:f58067035b2e16c1",
+          "subject": "Re: Quick question"
+        }
+      },
+      "recent_interactions": [
+        {
+          "interaction_id": "i_a4df4549a996",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-25T15:20:00Z",
+          "subject": "",
+          "text": "pipeline demo works end to end now. Hydrolab sample data loads in under a minute",
+          "source_ref": "imessage:1543",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_2145019cb472",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-24T19:09:09Z",
+          "subject": "",
+          "text": "early stage climate, I'll send details",
+          "source_ref": "imessage:1539",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_1bc973c04057",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-24T19:08:21Z",
+          "subject": "",
+          "text": "nice, which fund?",
+          "source_ref": "imessage:1538",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_011eb6d7572f",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-24T19:06:22Z",
+          "subject": "",
+          "text": "got a warm intro to a VC in Toronto",
+          "source_ref": "imessage:1537",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_d7186472b6d5",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-23T18:31:40Z",
+          "subject": "",
+          "text": "let's book a demo this week",
+          "source_ref": "imessage:1533",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_463d6da6cb78",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-23T18:25:59Z",
+          "subject": "",
+          "text": "new signup from a utility in Ontario 👀",
+          "source_ref": "imessage:1532",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_78729db62254",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-22T21:05:00Z",
+          "subject": "",
+          "text": "yes, will send it by Tuesday",
+          "source_ref": "imessage:1531",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_9e5a76b42850",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-22T20:48:00Z",
+          "subject": "",
+          "text": "can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section",
+          "source_ref": "imessage:1530",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_8471b9571c81",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-22T17:36:45Z",
+          "subject": "",
+          "text": "phew, I'll grab it next time",
+          "source_ref": "imessage:1528",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_2578184bd2ec",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-22T17:32:56Z",
+          "subject": "",
+          "text": "the grey one? yes, it's on the chair",
+          "source_ref": "imessage:1526",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_2095e56f86da",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-22T17:31:34Z",
+          "subject": "",
+          "text": "did I leave my scarf at your place?",
+          "source_ref": "imessage:1524",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_b89a25925020",
+          "source": "gmail",
+          "thread_id": "c6486db867d8f916",
+          "direction": "out",
+          "ts_utc": "2026-10-21T04:43:51Z",
+          "subject": "Re: Quick question",
+          "text": "Hi Mei,\n\nSure — Thursday afternoon works. Send me a time.\n\nJordan",
+          "source_ref": "gmail:f58067035b2e16c1",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_061e906b5e3d",
+          "source": "gmail",
+          "thread_id": "c6486db867d8f916",
+          "direction": "in",
+          "ts_utc": "2026-10-19T23:43:51Z",
+          "subject": "Quick question",
+          "text": "Hi Jordan,\n\nDo you have 15 minutes this week for a quick question about your experience with pricing?\n\nThanks,\nMei",
+          "source_ref": "gmail:c6486db867d8f916",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_395738f14158",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-19T21:51:57Z",
+          "subject": "",
+          "text": "phew, I'll grab it next time",
+          "source_ref": "imessage:1505",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_b4f6206fa513",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-19T21:51:54Z",
+          "subject": "",
+          "text": "the grey one? yes, it's on the chair",
+          "source_ref": "imessage:1504",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_eef8d2697075",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-19T21:46:11Z",
+          "subject": "",
+          "text": "did I leave my scarf at your place?",
+          "source_ref": "imessage:1503",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_ad89ec5e18d7",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-19T19:15:01Z",
+          "subject": "",
+          "text": "early stage climate, I'll send details",
+          "source_ref": "imessage:1502",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_e1926aeb5183",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-19T19:13:13Z",
+          "subject": "",
+          "text": "nice, which fund?",
+          "source_ref": "imessage:1501",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_ff65f48252df",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "out",
+          "ts_utc": "2026-10-19T19:11:37Z",
+          "subject": "",
+          "text": "got a warm intro to a VC in Toronto",
+          "source_ref": "imessage:1500",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_58033e9448a6",
+          "source": "imessage",
+          "thread_id": "th_5c0fd5224d31",
+          "direction": "in",
+          "ts_utc": "2026-10-18T01:34:19Z",
+          "subject": "",
+          "text": "yes approved",
+          "source_ref": "imessage:1492",
+          "peer": false,
+          "assumption": "anchored"
+        }
+      ],
+      "open_loops": [
+        {
+          "thread_id": "th_5c0fd5224d31",
+          "ts_utc": "2026-10-24T19:09:09Z",
+          "subject": "",
+          "text": "early stage climate, I'll send details",
+          "source": "imessage",
+          "source_ref": "imessage:1539",
+          "loop_kind": "promise",
+          "prior_ask": "nice, which fund?"
+        },
+        {
+          "thread_id": "th_5c0fd5224d31",
+          "ts_utc": "2026-10-22T21:05:00Z",
+          "subject": "",
+          "text": "yes, will send it by Tuesday",
+          "source": "imessage",
+          "source_ref": "imessage:1531",
+          "loop_kind": "promise",
+          "prior_ask": "can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section"
+        },
+        {
+          "thread_id": "th_5c0fd5224d31",
+          "ts_utc": "2026-10-19T19:15:01Z",
+          "subject": "",
+          "text": "early stage climate, I'll send details",
+          "source": "imessage",
+          "source_ref": "imessage:1502",
+          "loop_kind": "promise",
+          "prior_ask": "nice, which fund?"
+        }
+      ],
+      "upcoming_events": [
+        {
+          "event_id": "e_31e6e16eae06",
+          "title": "Tidepool pitch — Maple Ridge Ventures",
+          "start_utc": "2026-10-29T19:00:00Z",
+          "end_utc": "2026-10-29T20:00:00Z",
+          "location": "Maple Ridge Ventures, 1250 Boul. René-Lévesque O, 18e étage",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "daniel@mapleridge.vc",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:tlgm1gedn95u771tplpft9v6se"
+        },
+        {
+          "event_id": "e_3c5efe0dd30b",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-11-02T14:30:00Z",
+          "end_utc": "2026-11-02T15:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:0uav8vobp7cjjr2req0icgm5g1"
+        },
+        {
+          "event_id": "e_d78becdf4efa",
+          "title": "Énergie Boréale — appel de présentation",
+          "start_utc": "2026-11-03T19:00:00Z",
+          "end_utc": "2026-11-03T20:00:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "elodie.gagnon@hydrolab.ca",
+            "innovation@energieboreale.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:018hh9788tfjgvq8kbn1jbtfq1"
+        },
+        {
+          "event_id": "e_70e3eeb1b578",
+          "title": "Stellarfin × Tidepool pilot kickoff",
+          "start_utc": "2026-11-04T18:00:00Z",
+          "end_utc": "2026-11-04T19:00:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "priya@stellarfin.com",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:gi5mnbqnspuq4id074ijb6lajl"
+        },
+        {
+          "event_id": "e_74254b32c231",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-11-16T14:30:00Z",
+          "end_utc": "2026-11-16T15:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:p03vdvu81pp0jina7363tkejtt"
+        },
+        {
+          "event_id": "e_fefd982a5cdf",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-11-23T14:30:00Z",
+          "end_utc": "2026-11-23T15:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:705e9ulrqbkrpbnd36msgmpdid"
+        },
+        {
+          "event_id": "e_ead2628f547b",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-11-30T14:30:00Z",
+          "end_utc": "2026-11-30T15:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:bnuub93vld4cfv93q7abuud4vk"
+        },
+        {
+          "event_id": "e_35515df94a27",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-12-07T14:30:00Z",
+          "end_utc": "2026-12-07T15:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:jvoq8ct7r1riqa8g1jo3fbihdn"
+        },
+        {
+          "event_id": "e_4d5d8a8e9c03",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-12-14T14:30:00Z",
+          "end_utc": "2026-12-14T15:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:p69n027nubgae30do242obqbq5"
+        }
+      ],
+      "past_events": [
+        {
+          "event_id": "e_db89aa662468",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-10-26T13:30:00Z",
+          "end_utc": "2026-10-26T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:s2jqr6abvj98ccel38k63oe1vn"
+        },
+        {
+          "event_id": "e_49f5421af6a4",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-10-19T13:30:00Z",
+          "end_utc": "2026-10-19T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6"
+        },
+        {
+          "event_id": "e_879da3be2c76",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-10-12T13:30:00Z",
+          "end_utc": "2026-10-12T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:qgmq9o7ohf4e6ihg73km8fi1d3"
+        },
+        {
+          "event_id": "e_d6e99b0341ba",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-10-05T13:30:00Z",
+          "end_utc": "2026-10-05T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:m8fu75j3fdvt418itvbmo6fj14"
+        },
+        {
+          "event_id": "e_3b3116ded0ec",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-09-28T13:30:00Z",
+          "end_utc": "2026-09-28T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:tfjoki63fc68mn1ac5jsed4ve6"
+        },
+        {
+          "event_id": "e_34462b786bb8",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-09-21T13:30:00Z",
+          "end_utc": "2026-09-21T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:qpfibb3js1lkgtu2l0uo1i1qpd"
+        },
+        {
+          "event_id": "e_2ad0b3380b53",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-09-14T13:30:00Z",
+          "end_utc": "2026-09-14T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:cdrtmht6hku671skeca79fvqg9"
+        },
+        {
+          "event_id": "e_d9c08e4c0126",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-09-07T13:30:00Z",
+          "end_utc": "2026-09-07T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:dk004fmtii98ppa6i0tijpvh5k"
+        },
+        {
+          "event_id": "e_b4817225aa86",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-08-31T13:30:00Z",
+          "end_utc": "2026-08-31T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:scdphcun0f43orf056v6dn5i9m"
+        },
+        {
+          "event_id": "e_3f51c1ff55a3",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-08-24T13:30:00Z",
+          "end_utc": "2026-08-24T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:04b7p30glshroc3ck5mtj2ctlo"
+        },
+        {
+          "event_id": "e_2f444e6d4fc1",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-08-17T13:30:00Z",
+          "end_utc": "2026-08-17T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:fr2bjta2floumge1tmetfosi3s"
+        },
+        {
+          "event_id": "e_5ec523a63c11",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-08-10T13:30:00Z",
+          "end_utc": "2026-08-10T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:bvjpifmri67pk10n32nt8no6iq"
+        },
+        {
+          "event_id": "e_e46e52c13327",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-08-03T13:30:00Z",
+          "end_utc": "2026-08-03T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:ep2o4t39bpflk02las31hv2v3e"
+        },
+        {
+          "event_id": "e_4b7917b453db",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-07-27T13:30:00Z",
+          "end_utc": "2026-07-27T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:daujp0rkcrge0m62bdo3c6dppo"
+        },
+        {
+          "event_id": "e_4e01bc36de2c",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-07-20T13:30:00Z",
+          "end_utc": "2026-07-20T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:m4ldg0c4aatat3gabml9rjm4hj"
+        },
+        {
+          "event_id": "e_eba27fa5cdec",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-07-13T13:30:00Z",
+          "end_utc": "2026-07-13T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:c06aeog413jm4936vfk1u1etlh"
+        },
+        {
+          "event_id": "e_4971f8f093f6",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-07-06T13:30:00Z",
+          "end_utc": "2026-07-06T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:2ua926tltj52ofvupun5abdq9t"
+        },
+        {
+          "event_id": "e_970fbf3a62c2",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-06-29T13:30:00Z",
+          "end_utc": "2026-06-29T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:260goj4v0imrg8ri4ga4h93j4r"
+        },
+        {
+          "event_id": "e_059c6e85285f",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-06-22T13:30:00Z",
+          "end_utc": "2026-06-22T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:7o2m17t88tbpvom23a0kpuu9rs"
+        },
+        {
+          "event_id": "e_afa603d3f51b",
+          "title": "Tidepool weekly sync",
+          "start_utc": "2026-06-15T13:30:00Z",
+          "end_utc": "2026-06-15T14:15:00Z",
+          "location": "",
+          "attendees": [
+            "jordan.lefebvre@mail.mcgill.ca",
+            "mei@tidepool.earth"
+          ],
+          "source_ref": "calendar:37cccrrcgqha5pcsht0khdrf7j"
+        }
+      ],
+      "conflicts": [],
+      "selection_reason": "entity_id=ent_82d6a6e874e4",
+      "linked_handles": [],
+      "last_contact": {
+        "ts_utc": "2026-10-25T15:20:00Z",
+        "source": "imessage",
+        "direction": "in",
+        "source_ref": "imessage:1543",
+        "subject": ""
+      },
+      "last_met": {
+        "title": "Tidepool weekly sync",
+        "start_utc": "2026-10-26T13:30:00Z",
+        "location": "",
+        "source_ref": "calendar:s2jqr6abvj98ccel38k63oe1vn"
+      },
+      "next_meeting": {
+        "title": "Tidepool pitch — Maple Ridge Ventures",
+        "start_utc": "2026-10-29T19:00:00Z",
+        "location": "Maple Ridge Ventures, 1250 Boul. René-Lévesque O, 18e étage",
+        "source_ref": "calendar:tlgm1gedn95u771tplpft9v6se"
+      }
+    },
+    "latency_ms": 11,
+    "llm_calls": 0,
+    "critic_rounds": 1
+  },
+  "memories": [],
+  "evidence": {
+    "e1": {
+      "id": "e1",
+      "source": "imessage",
+      "source_ref": "imessage:1539",
+      "ts": "2026-10-24T19:09:09Z",
+      "text": "Promise: early stage climate, I'll send details (re: nice, which fund?)",
+      "url": null,
+      "tags": [
+        "open_loop",
+        "promise"
+      ]
+    },
+    "e2": {
+      "id": "e2",
+      "source": "imessage",
+      "source_ref": "imessage:1531",
+      "ts": "2026-10-22T21:05:00Z",
+      "text": "Promise: yes, will send it by Tuesday (re: can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section)",
+      "url": null,
+      "tags": [
+        "open_loop",
+        "promise"
+      ]
+    },
+    "e3": {
+      "id": "e3",
+      "source": "imessage",
+      "source_ref": "imessage:1502",
+      "ts": "2026-10-19T19:15:01Z",
+      "text": "Promise: early stage climate, I'll send details (re: nice, which fund?)",
+      "url": null,
+      "tags": [
+        "open_loop",
+        "promise"
+      ]
+    },
+    "e4": {
+      "id": "e4",
+      "source": "imessage",
+      "source_ref": "imessage:1543",
+      "ts": "2026-10-25T15:20:00Z",
+      "text": "pipeline demo works end to end now. Hydrolab sample data loads in under a minute",
+      "url": null,
+      "tags": []
+    },
+    "e5": {
+      "id": "e5",
+      "source": "imessage",
+      "source_ref": "imessage:1539",
+      "ts": "2026-10-24T19:09:09Z",
+      "text": "early stage climate, I'll send details",
+      "url": null,
+      "tags": []
+    },
+    "e6": {
+      "id": "e6",
+      "source": "imessage",
+      "source_ref": "imessage:1538",
+      "ts": "2026-10-24T19:08:21Z",
+      "text": "nice, which fund?",
+      "url": null,
+      "tags": []
+    },
+    "e7": {
+      "id": "e7",
+      "source": "imessage",
+      "source_ref": "imessage:1537",
+      "ts": "2026-10-24T19:06:22Z",
+      "text": "got a warm intro to a VC in Toronto",
+      "url": null,
+      "tags": []
+    },
+    "e8": {
+      "id": "e8",
+      "source": "imessage",
+      "source_ref": "imessage:1533",
+      "ts": "2026-10-23T18:31:40Z",
+      "text": "let's book a demo this week",
+      "url": null,
+      "tags": []
+    },
+    "e9": {
+      "id": "e9",
+      "source": "imessage",
+      "source_ref": "imessage:1532",
+      "ts": "2026-10-23T18:25:59Z",
+      "text": "new signup from a utility in Ontario 👀",
+      "url": null,
+      "tags": []
+    },
+    "e10": {
+      "id": "e10",
+      "source": "imessage",
+      "source_ref": "imessage:1531",
+      "ts": "2026-10-22T21:05:00Z",
+      "text": "yes, will send it by Tuesday",
+      "url": null,
+      "tags": []
+    },
+    "e11": {
+      "id": "e11",
+      "source": "imessage",
+      "source_ref": "imessage:1530",
+      "ts": "2026-10-22T20:48:00Z",
+      "text": "can you send me the revised financial model? the one with the new hiring plan. need it to finish the data room section",
+      "url": null,
+      "tags": []
+    },
+    "e12": {
+      "id": "e12",
+      "source": "imessage",
+      "source_ref": "imessage:1528",
+      "ts": "2026-10-22T17:36:45Z",
+      "text": "phew, I'll grab it next time",
+      "url": null,
+      "tags": []
+    },
+    "e13": {
+      "id": "e13",
+      "source": "imessage",
+      "source_ref": "imessage:1526",
+      "ts": "2026-10-22T17:32:56Z",
+      "text": "the grey one? yes, it's on the chair",
+      "url": null,
+      "tags": []
+    },
+    "e14": {
+      "id": "e14",
+      "source": "imessage",
+      "source_ref": "imessage:1524",
+      "ts": "2026-10-22T17:31:34Z",
+      "text": "did I leave my scarf at your place?",
+      "url": null,
+      "tags": []
+    },
+    "e15": {
+      "id": "e15",
+      "source": "gmail",
+      "source_ref": "gmail:f58067035b2e16c1",
+      "ts": "2026-10-21T04:43:51Z",
+      "text": "Hi Mei,\n\nSure — Thursday afternoon works. Send me a time.\n\nJordan",
+      "url": null,
+      "tags": []
+    },
+    "e16": {
+      "id": "e16",
+      "source": "gmail",
+      "source_ref": "gmail:c6486db867d8f916",
+      "ts": "2026-10-19T23:43:51Z",
+      "text": "Hi Jordan,\n\nDo you have 15 minutes this week for a quick question about your experience with pricing?\n\nThanks,\nMei",
+      "url": null,
+      "tags": []
+    },
+    "e17": {
+      "id": "e17",
+      "source": "imessage",
+      "source_ref": "imessage:1505",
+      "ts": "2026-10-19T21:51:57Z",
+      "text": "phew, I'll grab it next time",
+      "url": null,
+      "tags": []
+    },
+    "e18": {
+      "id": "e18",
+      "source": "imessage",
+      "source_ref": "imessage:1504",
+      "ts": "2026-10-19T21:51:54Z",
+      "text": "the grey one? yes, it's on the chair",
+      "url": null,
+      "tags": []
+    },
+    "e19": {
+      "id": "e19",
+      "source": "imessage",
+      "source_ref": "imessage:1503",
+      "ts": "2026-10-19T21:46:11Z",
+      "text": "did I leave my scarf at your place?",
+      "url": null,
+      "tags": []
+    },
+    "e20": {
+      "id": "e20",
+      "source": "imessage",
+      "source_ref": "imessage:1502",
+      "ts": "2026-10-19T19:15:01Z",
+      "text": "early stage climate, I'll send details",
+      "url": null,
+      "tags": []
+    },
+    "e21": {
+      "id": "e21",
+      "source": "imessage",
+      "source_ref": "imessage:1501",
+      "ts": "2026-10-19T19:13:13Z",
+      "text": "nice, which fund?",
+      "url": null,
+      "tags": []
+    },
+    "e22": {
+      "id": "e22",
+      "source": "imessage",
+      "source_ref": "imessage:1500",
+      "ts": "2026-10-19T19:11:37Z",
+      "text": "got a warm intro to a VC in Toronto",
+      "url": null,
+      "tags": []
+    },
+    "e23": {
+      "id": "e23",
+      "source": "imessage",
+      "source_ref": "imessage:1492",
+      "ts": "2026-10-18T01:34:19Z",
+      "text": "yes approved",
+      "url": null,
+      "tags": []
+    },
+    "e24": {
+      "id": "e24",
+      "source": "calendar",
+      "source_ref": "calendar:s2jqr6abvj98ccel38k63oe1vn",
+      "ts": "2026-10-26T13:30:00Z",
+      "text": "Tidepool weekly sync",
+      "url": null,
+      "tags": [
+        "past_meeting"
+      ]
+    },
+    "e25": {
+      "id": "e25",
+      "source": "calendar",
+      "source_ref": "calendar:fmh0k1vaqhp109c0g0uhcpq0m6",
+      "ts": "2026-10-19T13:30:00Z",
+      "text": "Tidepool weekly sync",
+      "url": null,
+      "tags": [
+        "past_meeting"
+      ]
+    },
+    "e26": {
+      "id": "e26",
+      "source": "calendar",
+      "source_ref": "calendar:qgmq9o7ohf4e6ihg73km8fi1d3",
+      "ts": "2026-10-12T13:30:00Z",
+      "text": "Tidepool weekly sync",
+      "url": null,
+      "tags": [
+        "past_meeting"
+      ]
+    },
+    "e27": {
+      "id": "e27",
+      "source": "calendar",
+      "source_ref": "calendar:m8fu75j3fdvt418itvbmo6fj14",
+      "ts": "2026-10-05T13:30:00Z",
+      "text": "Tidepool weekly sync",
+      "url": null,
+      "tags": [
+        "past_meeting"
+      ]
+    },
+    "e28": {
+      "id": "e28",
+      "source": "calendar",
+      "source_ref": "calendar:tfjoki63fc68mn1ac5jsed4ve6",
+      "ts": "2026-09-28T13:30:00Z",
+      "text": "Tidepool weekly sync",
+      "url": null,
+      "tags": [
+        "past_meeting"
+      ]
+    },
+    "e29": {
+      "id": "e29",
+      "source": "calendar",
+      "source_ref": "calendar:qpfibb3js1lkgtu2l0uo1i1qpd",
+      "ts": "2026-09-21T13:30:00Z",
+      "text": "Tidepool weekly sync",
+      "url": null,
+      "tags": [
+        "past_meeting"
+      ]
+    },
+    "e30": {
+      "id": "e30",
+      "source": "calendar",
+      "source_ref": "calendar:cdrtmht6hku671skeca79fvqg9",
+      "ts": "2026-09-14T13:30:00Z",
+      "text": "Tidepool weekly sync",
+      "url": null,
+      "tags": [
+        "past_meeting"
+      ]
+    }
+  },
+  "drafts": [
+    {
+      "person": "Mei Tanaka",
+      "headline": "Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (imessage); next meeting: Tidepool pitch — Maple Ridge Ventures, Thu Oct 29, 15:00",
+      "points": [
+        {
+          "text": "You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.",
+          "evidence_ids": [
+            "e2"
+          ],
+          "kind": "open_loop",
+          "priority": 1
+        },
+        {
+          "text": "Tidepool weekly sync, Mondays 9:30 (calendar)",
+          "evidence_ids": [
+            "e24"
+          ],
+          "kind": "logistics",
+          "priority": 2
+        },
+        {
+          "text": "Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)",
+          "evidence_ids": [
+            "e4"
+          ],
+          "kind": "catch_up",
+          "priority": 3
+        },
+        {
+          "text": "Latest thread on Sat Oct 24: early stage climate, I'll send details (imessage)",
+          "evidence_ids": [
+            "e5"
+          ],
+          "kind": "catch_up",
+          "priority": 4
+        }
+      ],
+      "caveats": []
+    }
+  ],
+  "verdicts": [
+    {
+      "overall": "pass",
+      "verdicts": [
+        {
+          "index": 0,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        },
+        {
+          "index": 1,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        },
+        {
+          "index": 2,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        },
+        {
+          "index": 3,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        }
+      ],
+      "missing": [],
+      "refetch": []
+    }
+  ],
+  "final_brief": {
+    "person": "Mei Tanaka",
+    "headline": "Mei Tanaka, CTO at Tidepool; last met Oct 26 (calendar); last message Oct 25 (imessage); next meeting: Tidepool pitch — Maple Ridge Ventures, Thu Oct 29, 15:00",
+    "points": [
+      {
+        "text": "You told Mei on Thu Oct 22 you'd send the revised financial model by Tuesday; still open.",
+        "evidence_ids": [
+          "e2"
+        ],
+        "kind": "open_loop",
+        "priority": 1
+      },
+      {
+        "text": "Tidepool weekly sync, Mondays 9:30 (calendar)",
+        "evidence_ids": [
+          "e24"
+        ],
+        "kind": "logistics",
+        "priority": 2
+      },
+      {
+        "text": "Latest thread on Sun Oct 25: pipeline demo works end to end now. Hydrolab sample data loads in under a minute (imessage)",
+        "evidence_ids": [
+          "e4"
+        ],
+        "kind": "catch_up",
+        "priority": 3
+      },
+      {
+        "text": "Latest thread on Sat Oct 24: early stage climate, I'll send details (imessage)",
+        "evidence_ids": [
+          "e5"
+        ],
+        "kind": "catch_up",
+        "priority": 4
+      }
+    ],
+    "caveats": []
+  },
+  "action_plan": null,
+  "status": "done",
+  "round": 1,
+  "question": null
+}

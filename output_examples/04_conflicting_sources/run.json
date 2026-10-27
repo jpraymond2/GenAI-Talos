@@ -1,0 +1,679 @@
+{
+  "run_id": "46258acb-f8e5-437a-b9c2-01bff9a9e2d2",
+  "utterance": {
+    "text": "Where does Lucas live?",
+    "ts": "2026-10-27T02:42:38.011864Z",
+    "mode": "text"
+  },
+  "intent": {
+    "kind": "question",
+    "person_name": "Lucas Moreau",
+    "when": null,
+    "action_request": null,
+    "meal_type": null,
+    "question_field": "location",
+    "sources_plan": [
+      "gmail",
+      "imessage",
+      "whatsapp",
+      "linkedin",
+      "calendar",
+      "web",
+      "memory"
+    ],
+    "confidence": 0.9
+  },
+  "candidates": [
+    {
+      "entity_id": "ent_63987ef66f3a",
+      "name": "Lucas Moreau",
+      "score": 1.0,
+      "reason": "exact alias match"
+    }
+  ],
+  "entity_id": "ent_63987ef66f3a",
+  "entity_name": "Lucas Moreau",
+  "context": {
+    "relationship_label": "social",
+    "relationship_confidence": 0.62,
+    "relationship_style": "Friend. Lead with life updates, plans and anything the user promised personally. Warm, casual tone. Skip job titles unless they changed.",
+    "relationship_status": "auto",
+    "evidence_source_refs": {
+      "e1": "imessage:1484",
+      "e2": "imessage:1484",
+      "e3": "imessage:1251",
+      "e4": "imessage:1250",
+      "e5": "imessage:1249",
+      "e6": "imessage:1220",
+      "e7": "imessage:1219",
+      "e8": "imessage:1218",
+      "e9": "imessage:1149",
+      "e10": "imessage:1148",
+      "e11": "imessage:1022",
+      "e12": "imessage:1021",
+      "e13": "imessage:1020",
+      "e14": "imessage:875",
+      "e15": "imessage:874",
+      "e16": "imessage:873",
+      "e17": "imessage:868",
+      "e18": "imessage:867",
+      "e19": "imessage:570",
+      "e20": "imessage:569",
+      "e21": "imessage:469"
+    },
+    "retrieve_caveats": [],
+    "person_context": {
+      "entity": {
+        "id": "ent_63987ef66f3a",
+        "type": "person",
+        "canonical_name": "Lucas Moreau",
+        "aliases": [
+          "Lucas Moreau",
+          "+15145550156",
+          "lucas.moreau.qc@gmail.com"
+        ],
+        "attributes": {
+          "city": "Paris"
+        },
+        "attribute_history": [
+          {
+            "field": "city",
+            "value": "Montreal",
+            "observed_at": "2025-10-26T22:00:00Z",
+            "source_ref": "contact:c_30ef5a99b226"
+          },
+          {
+            "field": "city",
+            "value": "Paris",
+            "observed_at": "2026-07-28T23:20:00Z",
+            "source_ref": "imessage:1148"
+          },
+          {
+            "field": "city",
+            "value": "Paris",
+            "observed_at": "2026-08-24T18:05:00Z",
+            "source_ref": "messenger:inbox/lucasmoreau_5905741612135706:1787594700000"
+          }
+        ],
+        "first_seen_at": "2025-11-29T17:14:43Z",
+        "last_seen_at": "2026-10-16T19:44:00Z",
+        "mention_count": 59,
+        "confidence": 0.8,
+        "agent_id": "world_ingest",
+        "run_id": "28b33ddf-ceaa-4284-be91-3e97c2273c85"
+      },
+      "aliases": [
+        "Lucas Moreau",
+        "+15145550156",
+        "lucas.moreau.qc@gmail.com"
+      ],
+      "last_interaction_per_source": {
+        "imessage": {
+          "ts_utc": "2026-10-16T19:44:00Z",
+          "direction": "in",
+          "source_ref": "imessage:1484",
+          "subject": ""
+        }
+      },
+      "recent_interactions": [
+        {
+          "interaction_id": "i_c435b17c920f",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-10-16T19:44:00Z",
+          "subject": "",
+          "text": "billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?",
+          "source_ref": "imessage:1484",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_e2f67851cf22",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-08-26T16:02:12Z",
+          "subject": "",
+          "text": "Suzuki est malade cette année",
+          "source_ref": "imessage:1251",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_088a34a851db",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-08-26T16:00:37Z",
+          "subject": "",
+          "text": "juste la troisième période, quelle remontée",
+          "source_ref": "imessage:1250",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_aa57c6084a76",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-08-26T15:56:44Z",
+          "subject": "",
+          "text": "as-tu vu le match hier?",
+          "source_ref": "imessage:1249",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_05b7dd1958a1",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-08-16T05:23:22Z",
+          "subject": "",
+          "text": "jeudi ça marche",
+          "source_ref": "imessage:1220",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_f312cfbe66f6",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-08-16T05:20:56Z",
+          "subject": "",
+          "text": "jeudi?",
+          "source_ref": "imessage:1219",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_043f614bdcba",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-08-16T05:17:09Z",
+          "subject": "",
+          "text": "on se fait un souper la semaine prochaine?",
+          "source_ref": "imessage:1218",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_e659ce401d1e",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-07-28T23:31:00Z",
+          "subject": "",
+          "text": "nooon tu vas me manquer!! mais félicitations 🎉",
+          "source_ref": "imessage:1149",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_8a20173dfef1",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-07-28T23:20:00Z",
+          "subject": "",
+          "text": "c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science",
+          "source_ref": "imessage:1148",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_81f5ae5a0138",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-06-16T04:04:59Z",
+          "subject": "",
+          "text": "parfait, le code de porte c'est 2041",
+          "source_ref": "imessage:1022",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_b7657bde5b8c",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-06-16T03:56:07Z",
+          "subject": "",
+          "text": "oui! j'apporte du vin",
+          "source_ref": "imessage:1021",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_588ce71dd70e",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-06-16T03:47:58Z",
+          "subject": "",
+          "text": "tu viens toujours ce soir?",
+          "source_ref": "imessage:1020",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_48b72c8b548f",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-05-16T16:59:41Z",
+          "subject": "",
+          "text": "chanceux",
+          "source_ref": "imessage:875",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_db890043c61f",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-05-16T16:44:19Z",
+          "subject": "",
+          "text": "il est en voyage au Portugal je pense",
+          "source_ref": "imessage:874",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_60e696a72534",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-05-16T16:35:45Z",
+          "subject": "",
+          "text": "t'as des nouvelles de Marc?",
+          "source_ref": "imessage:873",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_6c3be3ef21c7",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-05-13T23:47:01Z",
+          "subject": "",
+          "text": "exactement 😂",
+          "source_ref": "imessage:868",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_3f73756e3cbd",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-05-13T23:45:29Z",
+          "subject": "",
+          "text": "haha",
+          "source_ref": "imessage:867",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_6465f5c01f22",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "in",
+          "ts_utc": "2026-02-26T01:37:14Z",
+          "subject": "",
+          "text": "exactement 😂",
+          "source_ref": "imessage:570",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_b96f5aa7e494",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-02-26T01:34:09Z",
+          "subject": "",
+          "text": "haha",
+          "source_ref": "imessage:569",
+          "peer": false,
+          "assumption": "anchored"
+        },
+        {
+          "interaction_id": "i_fac4361ff29c",
+          "source": "imessage",
+          "thread_id": "th_3bd30ee73062",
+          "direction": "out",
+          "ts_utc": "2026-01-27T20:21:11Z",
+          "subject": "",
+          "text": "oui je suis là après 17h",
+          "source_ref": "imessage:469",
+          "peer": false,
+          "assumption": "anchored"
+        }
+      ],
+      "open_loops": [
+        {
+          "thread_id": "th_3bd30ee73062",
+          "ts_utc": "2026-10-16T19:44:00Z",
+          "subject": "",
+          "text": "billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?",
+          "source": "imessage",
+          "source_ref": "imessage:1484",
+          "loop_kind": "ask"
+        }
+      ],
+      "upcoming_events": [],
+      "past_events": [],
+      "conflicts": [],
+      "selection_reason": "entity_id=ent_63987ef66f3a",
+      "linked_handles": [],
+      "last_contact": {
+        "ts_utc": "2026-10-16T19:44:00Z",
+        "source": "imessage",
+        "direction": "in",
+        "source_ref": "imessage:1484",
+        "subject": ""
+      },
+      "last_met": null,
+      "next_meeting": null
+    },
+    "latency_ms": 8,
+    "llm_calls": 0,
+    "critic_rounds": 1
+  },
+  "memories": [],
+  "evidence": {
+    "e1": {
+      "id": "e1",
+      "source": "imessage",
+      "source_ref": "imessage:1484",
+      "ts": "2026-10-16T19:44:00Z",
+      "text": "billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?",
+      "url": null,
+      "tags": [
+        "open_loop"
+      ]
+    },
+    "e2": {
+      "id": "e2",
+      "source": "imessage",
+      "source_ref": "imessage:1484",
+      "ts": "2026-10-16T19:44:00Z",
+      "text": "billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?",
+      "url": null,
+      "tags": []
+    },
+    "e3": {
+      "id": "e3",
+      "source": "imessage",
+      "source_ref": "imessage:1251",
+      "ts": "2026-08-26T16:02:12Z",
+      "text": "Suzuki est malade cette année",
+      "url": null,
+      "tags": []
+    },
+    "e4": {
+      "id": "e4",
+      "source": "imessage",
+      "source_ref": "imessage:1250",
+      "ts": "2026-08-26T16:00:37Z",
+      "text": "juste la troisième période, quelle remontée",
+      "url": null,
+      "tags": []
+    },
+    "e5": {
+      "id": "e5",
+      "source": "imessage",
+      "source_ref": "imessage:1249",
+      "ts": "2026-08-26T15:56:44Z",
+      "text": "as-tu vu le match hier?",
+      "url": null,
+      "tags": []
+    },
+    "e6": {
+      "id": "e6",
+      "source": "imessage",
+      "source_ref": "imessage:1220",
+      "ts": "2026-08-16T05:23:22Z",
+      "text": "jeudi ça marche",
+      "url": null,
+      "tags": []
+    },
+    "e7": {
+      "id": "e7",
+      "source": "imessage",
+      "source_ref": "imessage:1219",
+      "ts": "2026-08-16T05:20:56Z",
+      "text": "jeudi?",
+      "url": null,
+      "tags": []
+    },
+    "e8": {
+      "id": "e8",
+      "source": "imessage",
+      "source_ref": "imessage:1218",
+      "ts": "2026-08-16T05:17:09Z",
+      "text": "on se fait un souper la semaine prochaine?",
+      "url": null,
+      "tags": []
+    },
+    "e9": {
+      "id": "e9",
+      "source": "imessage",
+      "source_ref": "imessage:1149",
+      "ts": "2026-07-28T23:31:00Z",
+      "text": "nooon tu vas me manquer!! mais félicitations 🎉",
+      "url": null,
+      "tags": []
+    },
+    "e10": {
+      "id": "e10",
+      "source": "imessage",
+      "source_ref": "imessage:1148",
+      "ts": "2026-07-28T23:20:00Z",
+      "text": "c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science",
+      "url": null,
+      "tags": []
+    },
+    "e11": {
+      "id": "e11",
+      "source": "imessage",
+      "source_ref": "imessage:1022",
+      "ts": "2026-06-16T04:04:59Z",
+      "text": "parfait, le code de porte c'est 2041",
+      "url": null,
+      "tags": []
+    },
+    "e12": {
+      "id": "e12",
+      "source": "imessage",
+      "source_ref": "imessage:1021",
+      "ts": "2026-06-16T03:56:07Z",
+      "text": "oui! j'apporte du vin",
+      "url": null,
+      "tags": []
+    },
+    "e13": {
+      "id": "e13",
+      "source": "imessage",
+      "source_ref": "imessage:1020",
+      "ts": "2026-06-16T03:47:58Z",
+      "text": "tu viens toujours ce soir?",
+      "url": null,
+      "tags": []
+    },
+    "e14": {
+      "id": "e14",
+      "source": "imessage",
+      "source_ref": "imessage:875",
+      "ts": "2026-05-16T16:59:41Z",
+      "text": "chanceux",
+      "url": null,
+      "tags": []
+    },
+    "e15": {
+      "id": "e15",
+      "source": "imessage",
+      "source_ref": "imessage:874",
+      "ts": "2026-05-16T16:44:19Z",
+      "text": "il est en voyage au Portugal je pense",
+      "url": null,
+      "tags": []
+    },
+    "e16": {
+      "id": "e16",
+      "source": "imessage",
+      "source_ref": "imessage:873",
+      "ts": "2026-05-16T16:35:45Z",
+      "text": "t'as des nouvelles de Marc?",
+      "url": null,
+      "tags": []
+    },
+    "e17": {
+      "id": "e17",
+      "source": "imessage",
+      "source_ref": "imessage:868",
+      "ts": "2026-05-13T23:47:01Z",
+      "text": "exactement 😂",
+      "url": null,
+      "tags": []
+    },
+    "e18": {
+      "id": "e18",
+      "source": "imessage",
+      "source_ref": "imessage:867",
+      "ts": "2026-05-13T23:45:29Z",
+      "text": "haha",
+      "url": null,
+      "tags": []
+    },
+    "e19": {
+      "id": "e19",
+      "source": "imessage",
+      "source_ref": "imessage:570",
+      "ts": "2026-02-26T01:37:14Z",
+      "text": "exactement 😂",
+      "url": null,
+      "tags": []
+    },
+    "e20": {
+      "id": "e20",
+      "source": "imessage",
+      "source_ref": "imessage:569",
+      "ts": "2026-02-26T01:34:09Z",
+      "text": "haha",
+      "url": null,
+      "tags": []
+    },
+    "e21": {
+      "id": "e21",
+      "source": "imessage",
+      "source_ref": "imessage:469",
+      "ts": "2026-01-27T20:21:11Z",
+      "text": "oui je suis là après 17h",
+      "url": null,
+      "tags": []
+    }
+  },
+  "drafts": [
+    {
+      "person": "Lucas Moreau",
+      "headline": "Lucas Moreau lives in Paris (since Aug 2026, from messages); contact card still says Montreal; back in Montréal Déc 18 – Jan 4.",
+      "points": [
+        {
+          "text": "Lucas asked on Fri Oct 16 (imessage): \"billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?\" No reply yet.",
+          "evidence_ids": [
+            "e1"
+          ],
+          "kind": "open_loop",
+          "priority": 1
+        },
+        {
+          "text": "Life/job update on Tue Jul 28: c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science (imessage)",
+          "evidence_ids": [
+            "e10"
+          ],
+          "kind": "news",
+          "priority": 2
+        },
+        {
+          "text": "Latest thread on Wed Aug 26: juste la troisième période, quelle remontée (imessage)",
+          "evidence_ids": [
+            "e4"
+          ],
+          "kind": "catch_up",
+          "priority": 3
+        }
+      ],
+      "caveats": []
+    }
+  ],
+  "verdicts": [
+    {
+      "overall": "pass",
+      "verdicts": [
+        {
+          "index": 0,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        },
+        {
+          "index": 1,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        },
+        {
+          "index": 2,
+          "decision": "keep",
+          "reason": "Cited evidence in pack.",
+          "fix_hint": null
+        }
+      ],
+      "missing": [],
+      "refetch": []
+    }
+  ],
+  "final_brief": {
+    "person": "Lucas Moreau",
+    "headline": "Lucas Moreau lives in Paris (since Aug 2026, from messages); contact card still says Montreal; back in Montréal Déc 18 – Jan 4.",
+    "points": [
+      {
+        "text": "Lucas asked on Fri Oct 16 (imessage): \"billets achetés: je suis à Montréal du 18 décembre au 4 janvier 🎄 on se fait une soirée?\" No reply yet.",
+        "evidence_ids": [
+          "e1"
+        ],
+        "kind": "open_loop",
+        "priority": 1
+      },
+      {
+        "text": "Life/job update on Tue Jul 28: c'est officiel, je déménage à Paris le 10 août! nouveau job chez Atelier Nord, data science (imessage)",
+        "evidence_ids": [
+          "e10"
+        ],
+        "kind": "news",
+        "priority": 2
+      },
+      {
+        "text": "Latest thread on Wed Aug 26: juste la troisième période, quelle remontée (imessage)",
+        "evidence_ids": [
+          "e4"
+        ],
+        "kind": "catch_up",
+        "priority": 3
+      }
+    ],
+    "caveats": []
+  },
+  "action_plan": null,
+  "status": "done",
+  "round": 1,
+  "question": null
+}
