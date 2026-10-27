@@ -140,6 +140,9 @@ class Settings(BaseSettings):
         default=SecretStr(""),
         description="Demo login password; the API token is also accepted as a password.",
     )
+    tts_enabled: bool = Field(default=True, description="Speak answers with NVIDIA Magpie TTS (falls back to the browser voice).")
+    tts_function_id: str = Field(default="877104f7-e885-42b9-8de8-f6e4c6303969", description="NVCF function id for magpie-tts-multilingual.")
+    tts_voice: str = Field(default="Magpie-Multilingual.EN-US.Aria", description="Magpie voice name.")
     recall_public_url: str = Field(
         default="",
         description="Public https URL of this server, used as the Google sign-in redirect (e.g. https://recall.example.com).",

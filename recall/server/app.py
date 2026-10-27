@@ -23,7 +23,7 @@ from fastapi import (
     UploadFile,
     WebSocket,
 )
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -52,6 +52,12 @@ class AskBody(BaseModel):
     text: str = Field(min_length=1)
     run_id: str | None = None
     entity_id: str | None = None
+
+
+class SpeakBody(BaseModel):
+    """Text for Recall's voice."""
+
+    text: str = Field(min_length=1, max_length=2000)
 
 
 class ConfirmBody(BaseModel):
@@ -304,6 +310,21 @@ async def api_voice(
     payload["engine"] = engine
     payload["voice_timing"] = timing
     return payload
+
+
+@app.post("/api/tts", dependencies=[Depends(require_bearer)])
+async def api_tts(body: SpeakBody) -> Response:
+    """Recall's voice: NVIDIA Magpie TTS as WAV. 503 means 'use the browser voice instead'."""
+    settings = get_settings()
+    if not settings.tts_enabled:
+        raise HTTPException(status_code=503, detail="TTS disabled")
+    from recall.voice.magpie import TTSUnavailable, synthesize_wav
+
+    try:
+        wav = await asyncio.to_thread(synthesize_wav, body.text, settings)
+    except TTSUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    return Response(content=wav, media_type="audio/wav", headers={"Cache-Control": "private, max-age=3600"})
 
 
 @app.websocket("/ws/trace")
