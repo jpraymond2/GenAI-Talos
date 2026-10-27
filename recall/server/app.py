@@ -82,9 +82,11 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(title="Recall", version=__version__, lifespan=lifespan)
 
+from recall.server.connections import router as connections_router  # noqa: E402
 from recall.server.workspace import router as workspace_router  # noqa: E402
 
 app.include_router(workspace_router)
+app.include_router(connections_router)
 
 
 @app.get("/health")

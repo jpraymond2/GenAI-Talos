@@ -1,13 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchDevice, fetchMacContacts, latestPull, startPull } from "../workspaceApi";
-import type { DeviceMode, DeviceStatus, MacContact, PullJob, PullParams } from "../types";
+import type { ConnectionsState, DeviceMode, DeviceStatus, MacContact, PullJob, PullParams, SourceId } from "../types";
+import { ConnectionsPanel } from "./Connections";
 import { Avatar, Spinner, timeAgo } from "./ui";
 
 interface Props {
   device: DeviceMode;
   onSwitchDevice: (d: DeviceMode) => void;
   onViewContacts: () => void;
+  connections: ConnectionsState | null;
+  refreshConnections: () => Promise<void>;
 }
+
+type Focus = { source: SourceId; n: number } | null;
 
 const RANGES = [
   { days: 7, label: "7 days" },
@@ -30,12 +35,30 @@ const DEFAULT: PullParams = {
   days: 30, sources: ["imessage", "contacts"], contacts: "all", contact_ids: [], contact_handles: [], include_groups: true, max_group_size: 15,
 };
 
-export function SyncPage({ device, onSwitchDevice, onViewContacts }: Props) {
-  if (device === "phone") return <PhoneSync onSwitchDevice={onSwitchDevice} />;
-  return <MacSync onViewContacts={onViewContacts} />;
+export function SyncPage({ device, onSwitchDevice, onViewContacts, connections, refreshConnections }: Props) {
+  const [focus, setFocus] = useState<Focus>(null);
+  return (
+    <div className="space-y-5">
+      <div className="mx-auto max-w-[1100px]">
+        <ConnectionsPanel
+          state={connections}
+          refresh={refreshConnections}
+          onPull={(source) => {
+            if (device === "phone") onSwitchDevice("mac");
+            setFocus({ source, n: Date.now() });
+          }}
+        />
+      </div>
+      {device === "phone" ? (
+        <PhoneSync onSwitchDevice={onSwitchDevice} />
+      ) : (
+        <MacSync onViewContacts={onViewContacts} focus={focus} onPulled={refreshConnections} />
+      )}
+    </div>
+  );
 }
 
-function MacSync({ onViewContacts }: { onViewContacts: () => void }) {
+function MacSync({ onViewContacts, focus, onPulled }: { onViewContacts: () => void; focus: Focus; onPulled: () => Promise<void> }) {
   const [status, setStatus] = useState<DeviceStatus | null>(null);
   const [contacts, setContacts] = useState<MacContact[]>([]);
   const [params, setParams] = useState<PullParams>(DEFAULT);
@@ -45,6 +68,22 @@ function MacSync({ onViewContacts }: { onViewContacts: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const poll = useRef<number | null>(null);
+  const formRef = useRef<HTMLElement | null>(null);
+
+  // A "Pull" click on a connection tile: make sure that source is ticked, then jump to the form.
+  useEffect(() => {
+    if (!focus) return;
+    if (focus.source === "imessage" || focus.source === "whatsapp" || focus.source === "contacts") {
+      const src = focus.source;
+      setPreset("custom");
+      setParams((cur) => (cur.sources.includes(src) ? cur : { ...cur, sources: [...cur.sources, src] }));
+    }
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focus]);
+
+  useEffect(() => {
+    if (pull?.status === "ready") void onPulled();
+  }, [pull?.status, onPulled]);
 
   useEffect(() => {
     void fetchDevice().then(setStatus).catch(() => setStatus(null));
@@ -129,7 +168,7 @@ function MacSync({ onViewContacts }: { onViewContacts: () => void }) {
           {!status?.online ? <SetupSteps /> : null}
         </section>
 
-        <section className="rounded-2xl border border-ink-200/80 bg-white/80 p-5 shadow-panel">
+        <section ref={formRef} className="scroll-mt-24 rounded-2xl border border-ink-200/80 bg-white/80 p-5 shadow-panel">
           <h2 className="font-display text-xl font-semibold text-ink-950">What to pull</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {PRESETS.map((p) => (

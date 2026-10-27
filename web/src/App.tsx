@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { ask, confirm, isMockMode, onTrace } from "./api";
 import { getApiToken, getUser, logout } from "./auth";
+import { CalendarPage, NextUp, type PrepRequest } from "./components/Calendar";
 import { CenterPanel } from "./components/CenterPanel";
+import { useConnections } from "./components/Connections";
 import { ContactsPage, IdentifiedContact } from "./components/Contacts";
 import { LeftPanel } from "./components/LeftPanel";
 import { LoginPage } from "./components/LoginPage";
@@ -48,6 +50,26 @@ export default function App() {
   const [device, setDevice] = useState<DeviceMode>(initialDevice);
   const [tab, setTab] = useState<Tab>("assistant");
   const [focusContact, setFocusContact] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+  const { state: connections, refresh: refreshConnections } = useConnections();
+
+  // Back from Google sign-in: /?connected=google or /?connect_error=…
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const ok = q.get("connected");
+    const err = q.get("connect_error");
+    if (!ok && !err) return;
+    setTab("sync");
+    setToast(ok ? "Google connected — Gmail and Calendar are syncing now." : `Google sign-in didn't finish (${err}).`);
+    window.history.replaceState(null, "", window.location.pathname);
+    void refreshConnections();
+  }, [refreshConnections]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const id = window.setTimeout(() => setToast(null), 6000);
+    return () => window.clearTimeout(id);
+  }, [toast]);
 
   function chooseDevice(d: DeviceMode) {
     setDevice(d);
@@ -94,12 +116,12 @@ export default function App() {
     }
   }
 
-  async function handleAsk(text: string, opts?: { fromVoice?: boolean; runId?: string }) {
+  async function handleAsk(text: string, opts?: { fromVoice?: boolean; runId?: string; entityId?: string | null }) {
     setBusy(true);
     setEvents([]);
     pushTranscript("user", text);
     try {
-      const state = await ask(text, { runId: opts?.runId });
+      const state = await ask(text, { runId: opts?.runId, entityId: opts?.entityId });
       setRun(state);
       if (state.status === "needs_clarification" && state.question) {
         pushTranscript("assistant", state.question);
@@ -180,6 +202,17 @@ export default function App() {
     }
   }
 
+  function handlePrep(req: PrepRequest) {
+    unlockSpeech();
+    setTab("assistant");
+    void handleAsk(req.text, { entityId: req.entityId, fromVoice: device === "phone" || isPhone });
+  }
+
+  function openContact(entityId: string) {
+    setFocusContact(entityId);
+    setTab("contacts");
+  }
+
   if (!user) {
     return <LoginPage onLoggedIn={setUserState} />;
   }
@@ -193,7 +226,7 @@ export default function App() {
       events={events}
       busy={busy}
       showHeader={false}
-      onAsk={(t, o) => handleAsk(t, { runId: o?.runId, fromVoice: true })}
+      onAsk={(t, o) => handleAsk(t, { runId: o?.runId, fromVoice: !o?.typed })}
       onVoiceState={(state) => {
         setRun(state);
         if (state.status === "needs_clarification" && state.question) {
@@ -206,14 +239,25 @@ export default function App() {
       onConfirmActions={() => void handleConfirmActions()}
       onCancelActions={() => void handleCancelActions()}
       contactSlot={identified ? <IdentifiedContact entityId={identified} compact /> : null}
+      upcomingSlot={<NextUp onPrep={handlePrep} />}
     />
   );
 
   let body: React.ReactNode;
   if (tab === "contacts") {
     body = <ContactsPage onGoSync={() => setTab("sync")} focusId={focusContact} />;
+  } else if (tab === "calendar") {
+    body = <CalendarPage onPrep={handlePrep} onOpenContact={openContact} onConnect={() => setTab("sync")} />;
   } else if (tab === "sync") {
-    body = <SyncPage device={device} onSwitchDevice={chooseDevice} onViewContacts={() => setTab("contacts")} />;
+    body = (
+      <SyncPage
+        device={device}
+        onSwitchDevice={chooseDevice}
+        onViewContacts={() => setTab("contacts")}
+        connections={connections}
+        refreshConnections={refreshConnections}
+      />
+    );
   } else if (isPhone) {
     body = phoneView;
   } else if (device === "phone") {
@@ -260,7 +304,9 @@ export default function App() {
             >
               Open in Contacts →
             </button>
-          ) : null}
+          ) : (
+            <NextUp onPrep={handlePrep} />
+          )}
           <RightPanel events={events} entityId={run?.entity_id ?? null} />
         </div>
       </div>
@@ -283,7 +329,13 @@ export default function App() {
           setUserState(null);
         }}
         sampleMode={sampleMode}
+        connections={connections}
       />
+      {toast ? (
+        <div className="fixed inset-x-0 top-16 z-50 flex justify-center px-4" role="status">
+          <p className="animate-rise rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-medium text-white shadow-lg">{toast}</p>
+        </div>
+      ) : null}
       <main className={tab === "assistant" && isPhone ? "" : "px-3 py-4 md:px-6 md:py-6"}>{body}</main>
     </div>
   );

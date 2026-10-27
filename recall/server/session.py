@@ -82,6 +82,12 @@ def enrich_ask_payload(state: RunState) -> dict[str, Any]:
     data["speech"] = build_speech(state)
     data["run_id"] = state.run_id
     data["status"] = state.status
+    try:
+        from recall.judge import judge_run
+
+        data["judge"] = judge_run(data)
+    except Exception:  # noqa: BLE001 — the score is a nice-to-have, never break an answer
+        data["judge"] = None
     return data
 
 

@@ -122,6 +122,24 @@ export interface RunState {
   question: string | null;
   /** Spoken summary from the API (headline + points, ≤90 words). */
   speech?: string;
+  /** How good this recall was — recall/judge.py (computed client-side when missing). */
+  judge?: RecallJudge | null;
+}
+
+export interface JudgeCheck {
+  id: string;
+  label: string;
+  score: number | null;
+  weight: number;
+  detail: string;
+}
+
+export interface RecallJudge {
+  score: number | null;
+  grade: "Strong" | "Good" | "Shaky" | "Weak" | "Asked";
+  summary: string;
+  checks: JudgeCheck[];
+  flags: string[];
 }
 
 /** Trace event shape from recall/tracing.py Tracer.event(). */
@@ -240,4 +258,41 @@ export interface MacContact {
 export interface SessionUser {
   name: string;
   email: string;
+}
+
+export type SourceId = "imessage" | "whatsapp" | "contacts" | "gmail" | "calendar";
+
+export interface SourceConnection {
+  id: SourceId;
+  name: string;
+  via: "mac" | "google";
+  status: "connected" | "ready" | "off";
+  detail: string;
+  items: number | null;
+  last_sync: string | null;
+  action: "pull" | "setup_mac" | "connect" | "reconnect";
+}
+
+export interface ConnectionsState {
+  sources: SourceConnection[];
+  mac: DeviceStatus;
+  google: { configured: boolean; connected: boolean };
+  connected: number;
+  total: number;
+}
+
+export interface CalendarAttendee {
+  email: string;
+  entity_id: string | null;
+  name: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  location: string;
+  attendees: CalendarAttendee[];
+  source_ref: string;
 }

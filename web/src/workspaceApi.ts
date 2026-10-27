@@ -2,11 +2,12 @@
 
 import { shouldMock } from "./api";
 import { authHeaders, setApiToken, setUser } from "./auth";
-import { mockDevice, mockMacContacts, mockPeople } from "./mock/people";
-import type { DeviceStatus, MacContact, PersonCard, PersonEdit, PullJob, PullParams, SessionUser } from "./types";
+import { mockConnections, mockDevice, mockMacContacts, mockPeople, mockUpcoming } from "./mock/people";
+import type { CalendarEvent, ConnectionsState, DeviceStatus, MacContact, PersonCard, PersonEdit, PullJob, PullParams, SessionUser } from "./types";
 
 let mockStore: PersonCard[] = structuredClone(mockPeople);
 let mockPull: PullJob | null = null;
+let mockGoogle = false;
 
 async function json<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -151,4 +152,36 @@ export async function startPull(params: PullParams): Promise<PullJob> {
 export async function latestPull(): Promise<{ pull: PullJob | null; device: DeviceStatus }> {
   if (await shouldMock()) return { pull: mockAdvance(), device: { ...mockDevice, last_seen: new Date().toISOString() } };
   return json(await fetch("/api/mac/pulls/latest", { headers: authHeaders() }));
+}
+
+export async function fetchConnections(): Promise<ConnectionsState> {
+  if (await shouldMock()) return mockConnections({ ...mockDevice, last_seen: new Date().toISOString() }, mockGoogle);
+  return json<ConnectionsState>(await fetch("/api/connections", { headers: authHeaders() }));
+}
+
+/** Starts Google sign-in (Gmail + Calendar). Live: navigates to Google and comes back to /?connected=google. */
+export async function connectGoogle(): Promise<"redirecting" | "connected"> {
+  if (await shouldMock()) {
+    await new Promise((r) => window.setTimeout(r, 1200));
+    mockGoogle = true;
+    return "connected";
+  }
+  const { url } = await json<{ url: string }>(await fetch("/api/connect/google/start", { headers: authHeaders() }));
+  window.location.assign(url);
+  return "redirecting";
+}
+
+export async function disconnectGoogle(): Promise<void> {
+  if (await shouldMock()) {
+    mockGoogle = false;
+    return;
+  }
+  await json(await fetch("/api/connections/google", { method: "DELETE", headers: authHeaders() }));
+}
+
+export async function fetchUpcoming(days = 14): Promise<{ now: string; events: CalendarEvent[] }> {
+  if (await shouldMock()) return { now: new Date().toISOString(), events: mockUpcoming() };
+  const res = await fetch(`/api/calendar/upcoming?days=${days}`, { headers: authHeaders() });
+  if (res.status === 404) return { now: new Date().toISOString(), events: [] };
+  return json(res);
 }
