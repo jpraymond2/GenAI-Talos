@@ -1,0 +1,28 @@
+{
+  "run_id": "example-06_revision_loop-0505f422",
+  "status": "dry_run",
+  "previews": [
+    {
+      "tool": "gmail.draft",
+      "status": "dry_run",
+      "preview": {
+        "type": "gmail_draft",
+        "to": "Mei Tanaka",
+        "cc": null,
+        "subject": "Re: follow-up",
+        "body": "Hi Mei,\n\nCircling back on this \u2014 I'll send it over shortly.\n\nBest,\n",
+        "evidence_id": "e1"
+      }
+    },
+    {
+      "tool": "calendar.hold",
+      "status": "dry_run",
+      "preview": {
+        "type": "calendar_hold",
+        "title": "Hold: Mei Tanaka",
+        "when": "2026-10-27",
+        "entity_name": "Mei Tanaka"
+      }
+    }
+  ]
+}

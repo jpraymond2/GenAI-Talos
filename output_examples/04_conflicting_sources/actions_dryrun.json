@@ -1,0 +1,18 @@
+{
+  "run_id": "example-04_conflicting_sources-7524f060",
+  "status": "dry_run",
+  "previews": [
+    {
+      "tool": "gmail.draft",
+      "status": "dry_run",
+      "preview": {
+        "type": "gmail_draft",
+        "to": "Lucas Moreau",
+        "cc": null,
+        "subject": "Re: follow-up",
+        "body": "Hi Lucas,\n\nThanks for your patience \u2014 looping back on this now.\n\nBest,\n",
+        "evidence_id": "e1"
+      }
+    }
+  ]
+}
